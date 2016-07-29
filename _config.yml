@@ -1,0 +1,3 @@
+baseurl:
+# Build settings
+markdown: kramdown

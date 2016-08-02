@@ -1,0 +1,131 @@
+button {
+  border: none;
+  background: #333;
+  color: #eee;
+  padding: 10px;
+}
+#banner {
+  background: #777;
+  height: 700px;
+}
+#banner .inner {
+  max-width: 300px;
+  text-align: center;
+  margin: 0 auto;
+  position: relative;
+  top: 160px;
+}
+#banner .inner h1 {
+  margin: 0;
+}
+#banner .inner .more {
+  margin-top: 280px;
+}
+#banner button {
+  padding: 14px 40px;
+  color: #FFF;
+}
+.sub-header {
+  line-height: 30px;
+  margin: 30px;
+}
+nav {
+  background: #ccc;
+  height: 50px;
+}
+nav ul {
+  list-style: none;
+  margin: 0;
+  float: right;
+}
+nav ul li {
+  display: inline-block;
+  line-height: 50px;
+  margin-right: 20px;
+}
+nav ul li a {
+  line-height: inherit;
+  text-decoration: none;
+  display: inline-block;
+  height: inherit;
+  color: #FFF;
+}
+.logo {
+  font-size: 20px;
+  font-weight: 700px;
+  letter-spacing: 1px;
+  float: left;
+  padding-left: 10px;
+  display: inline-block;
+  line-height: 50px;
+  margin-right: 20px;
+}
+.logo a {
+  color: #FFFFFF;
+}
+.hr {
+  width: 100%;
+  height: 2px;
+  margin: 20px auto;
+}
+.green-section {
+  text-align: center;
+  background: #089DB0;
+  color: #FFF;
+  padding: 200px 0;
+}
+.green-section .hr {
+  background: #078494;
+  width: 60%;
+}
+.green-section .icon-group {
+  margin-top: 60px;
+}
+.green-section .icon-group .icon {
+  display: inline-block;
+  width: 80px;
+  height: 80px;
+  background: #0D6F7C;
+  transform: rotate(45deg);
+  margin: 20px;
+}
+.wrapper {
+  max-width: 1080px;
+  margin: 0 auto;
+}
+.sub-header {
+  font-size: 18px;
+}
+.gray-section {
+  background: #252F34;
+  color: #FFF;
+}
+.gray-section .img-section {
+  width: 50%;
+}
+.gray-section .img-section img {
+  width: 100%;
+}
+.gray-section .text-section {
+  width: 40%;
+}
+.article-preview > div {
+  float: left;
+}
+.article-preview:after {
+  content: "";
+  display: block;
+  clear: both;
+}
+.text-section {
+  position: relative;
+  top: 68px;
+  left: 50px;
+}
+.text-section h2 {
+  margin-bottom: 20px;
+}
+.text-section p {
+  font-size: 18px;
+  letter-spacing: 1px;
+}

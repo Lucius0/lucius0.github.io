@@ -1,36 +1,25 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-	<meta charset="UTF-8">
-	<title>{{page.title}}</title>
-	<link rel="stylesheet" href="../css/normalize.css">
-	<link rel="stylesheet" href="../css/main.css">
-</head>
-<body>
-	<header>
-		<nav>
-			<div class="logo"><a href="#">Lucius</a></div>
-			<ul>
-				<li><a href="" class="active">首页</a></li>
-				<li><a href="">链接2</a></li>
-				<li><a href="">链接3</a></li>
-				<li><a href="">链接4</a></li>
-			</ul>
-		</nav>
-		<div id="banner">
-			<div class="inner">
-				<h1>Lucius</h1>
-				<p class="sub-header">Lorem ipsum dolor sit amet.Lorem ipsum</p>
-				<button>了解我</button>
-				<div class="more">更多</div>
-			</div>
-		</div>
-	</header>
-	<div class="content">
-		{{ content }}
-	</div>
-	<footer>
-		
-	</footer>
-</body>
+<html>
+
+  {% include head.html %}
+
+  <body>
+
+    {% include header.html %}
+
+    <div class="page-content">
+      <div class="wrapper">
+        <div class="col-main">
+          {{ content }}
+        </div>
+        <div class="col-second">
+          {% include sidebar.html %}
+        </div>
+      </div>
+    </div>
+
+    {% include footer.html %}
+
+  </body>
+
 </html>

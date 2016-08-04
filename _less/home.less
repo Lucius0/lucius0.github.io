@@ -19,12 +19,12 @@
     }
     .post-list {
         margin: 0;
-        padding: 20px 40px;
+        padding: 10px 20px 10px;
         list-style: none;
         > li {
-            padding-bottom: 30px;
+            padding-bottom: 40px;
             border-bottom: 1px solid #CCC;
-            margin-bottom: 30px;
+            margin-bottom: 50px;
         }
         .post-title {
             font-size: 28px;
@@ -34,17 +34,17 @@
         .post-meta {
             font-size: @small-font-size;
             color: #666;
-            margin: 0 20px;
-            margin-bottom: .5em;
+            margin: -10px 3px 15px;
         }
         .post-excerpt {
             &,
             * {
                 font-size: @small-font-size;
-                line-height: @small-font-size;
+                line-height: normal;
                 padding-top: 0;
                 padding-bottom: 0;
                 color: #333;
+                letter-spacing: 1px;
             }
             code,
             pre,
@@ -58,6 +58,10 @@
             }
             a {
                 color: @color-link-hover;
+
+                &.post-link {
+                    float: right;
+                }
             }
             img {
                 display: block;
@@ -69,7 +73,7 @@
                     opacity: 1;
                 }
             }
-            margin: 0 20px;
+            margin-left: 3px;
         }
     }
     .pagination {

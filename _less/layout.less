@@ -111,6 +111,54 @@
     }
 }
 
+.move-tool {
+    // display: none;
+    .top-tool {
+        bottom: 105px;
+        background: #8fd5ff;
+        .moveTool();
+
+        &:after {
+            content: "";
+            position: absolute;
+            border-style: solid;
+            border-color: transparent transparent #FFF transparent;
+            border-width: 10px;
+            bottom: 20px;
+            left: 15px;
+        }
+    }
+    .bottom-tool {
+        bottom: 45px;
+        background: #8fd5ff;
+        .moveTool();
+
+        &:after {
+            content: "";
+            position: absolute;
+            border-style: solid;
+            border-color: #FFF transparent transparent;
+            border-width: 10px;
+            bottom: 10px;
+            left: 15px;
+        }
+    }
+}
+
+.moveTool() {
+    border: 1px solid #ccc;
+    height: 50px;
+    width: 50px;
+    position: fixed;
+    /*固定位置*/
+    right: 50px;
+    /*同上*/
+    cursor: pointer;
+    border-radius: 5px;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+}
+
 @media (max-width: 1120px) {
     .page-content .wrapper:before {
         display: none;
@@ -184,7 +232,6 @@
 //         padding: 15px 0;
 //     }
 // }
-
 // @include media-query(@on-palm) {
 //     .header {
 //         &,

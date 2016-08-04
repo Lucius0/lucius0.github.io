@@ -3,7 +3,7 @@ title: Lucius's Blog
 url: "https://lucius0.github.io/"
 baseurl: ""
 timezone: Asia/Shanghai
-safe: true
+
 encoding: "utf-8"
 description: >
  stay hungry, stay foolish...
@@ -11,7 +11,7 @@ description: >
 # Your information
 email: lucius3433433@gmail.com
 author: lucius
-# avatar: "//www.gravatar.com/avatar/your_email_md5?d=mm&s=135"
+avatar: "/images/avatar.jpg"
 # profile: One sentence introducing yourself.
 
 # Comment Service (Disqus or 多说)
@@ -22,16 +22,16 @@ author: lucius
 permalink: /archivers/:title
 gems:
  - jekyll-paginate
- - jekyll-gist
- - jemoji
+ # - jekyll-gist
+ # - jemoji
 
 # Build settings
 paginate: 5
 paginate_path: "page:num"
 
-highlighter: rouge
+# highlighter: rouge
 markdown: kramdown
 
-kramdown:
-  input: GFM
-  syntax_highlighter: rouge
+# kramdown:
+#   input: GFM
+#   syntax_highlighter: rouge

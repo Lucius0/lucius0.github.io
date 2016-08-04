@@ -184,6 +184,54 @@ h6 {
   margin-bottom: 10px;
   font-size: 15.4px;
 }
+.move-tool .top-tool {
+  bottom: 105px;
+  background: #8fd5ff;
+  border: 1px solid #ccc;
+  height: 50px;
+  width: 50px;
+  position: fixed;
+  /*固定位置*/
+  right: 50px;
+  /*同上*/
+  cursor: pointer;
+  border-radius: 5px;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+}
+.move-tool .top-tool:after {
+  content: "";
+  position: absolute;
+  border-style: solid;
+  border-color: transparent transparent #FFF transparent;
+  border-width: 10px;
+  bottom: 20px;
+  left: 15px;
+}
+.move-tool .bottom-tool {
+  bottom: 45px;
+  background: #8fd5ff;
+  border: 1px solid #ccc;
+  height: 50px;
+  width: 50px;
+  position: fixed;
+  /*固定位置*/
+  right: 50px;
+  /*同上*/
+  cursor: pointer;
+  border-radius: 5px;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+}
+.move-tool .bottom-tool:after {
+  content: "";
+  position: absolute;
+  border-style: solid;
+  border-color: #FFF transparent transparent;
+  border-width: 10px;
+  bottom: 10px;
+  left: 15px;
+}
 @media (max-width: 1120px) {
   .page-content .wrapper:before {
     display: none;
@@ -310,13 +358,13 @@ h6 {
 }
 .home .post-list {
   margin: 0;
-  padding: 20px 40px;
+  padding: 10px 20px 10px;
   list-style: none;
 }
 .home .post-list > li {
-  padding-bottom: 30px;
+  padding-bottom: 40px;
   border-bottom: 1px solid #CCC;
-  margin-bottom: 30px;
+  margin-bottom: 50px;
 }
 .home .post-list .post-title {
   font-size: 28px;
@@ -326,19 +374,19 @@ h6 {
 .home .post-list .post-meta {
   font-size: 14px;
   color: #666;
-  margin: 0 20px;
-  margin-bottom: .5em;
+  margin: -10px 3px 15px;
 }
 .home .post-list .post-excerpt {
-  margin: 0 20px;
+  margin-left: 3px;
 }
 .home .post-list .post-excerpt,
 .home .post-list .post-excerpt * {
   font-size: 14px;
-  line-height: 14px;
+  line-height: normal;
   padding-top: 0;
   padding-bottom: 0;
   color: #333;
+  letter-spacing: 1px;
 }
 .home .post-list .post-excerpt code,
 .home .post-list .post-excerpt pre,
@@ -352,6 +400,9 @@ h6 {
 }
 .home .post-list .post-excerpt a {
   color: #006699;
+}
+.home .post-list .post-excerpt a.post-link {
+  float: right;
 }
 .home .post-list .post-excerpt img {
   display: block;

@@ -14,10 +14,10 @@ author: lucius
 avatar: "/images/avatar.jpg"
 profile:  stay hungry, stay foolish...
 
-# Comment Service (Disqus or 多说)
+# Comment Service
 #  choose one and un-comment the line to active it
 #disqus_shortname: xxx   # get one: https://disqus.com/admin/signup/
-#duoshuo_shortname: xxx  # get one: http://duoshuo.com/create-site/
+duoshuo_shortname: lucius0  # get one: http://duoshuo.com/create-site/
 
 permalink: /archivers/:title
 gems:

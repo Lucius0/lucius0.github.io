@@ -1,8 +1,8 @@
 <header class="header">
   <div class="wrapper">
     <a class="site-title" href="{{ site.baseurl }}/">{{ site.title }}</a>
-    <input type="search" class="search_nav" placeholder="Search here..."/>
-    <input type="button" class="search_btn" value="search" />
+    <input type="search" class="search_nav" placeholder="search..."/>
+    <span class="search_btn"></span>
     <nav class="site-nav">
       {% for page in site.pages %}
         {% if page.title and page.public %}

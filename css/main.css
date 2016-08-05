@@ -109,7 +109,7 @@ h6 {
 .header .search_nav {
   float: left;
   margin: 6px 0 0 40px;
-  width: 25%;
+  width: 20%;
   display: block;
   background-color: transparent;
   border: none;
@@ -117,10 +117,29 @@ h6 {
   font-size: 16px;
   color: #FFF;
   outline: none;
+  padding: 1px 7px;
+}
+.header .search_nav::-webkit-search-cancel-button {
+  display: none;
+}
+.header .search_nav::-ms-clear {
+  display: none;
+}
+.header .search_nav:focus {
+  width: 20%;
 }
 .header .search_btn {
   float: left;
-  margin: 5px;
+  margin: 0px 0px;
+  border: none;
+  border-bottom: 1px solid #ccc;
+  background: url('/images/search.png') no-repeat 8px 7px transparent;
+  background-size: 16px 16px;
+  outline: none;
+  padding: 3px;
+  width: 26px;
+  height: 20px;
+  /* cursor: pointer; */
 }
 .header .site-nav {
   text-align: right;

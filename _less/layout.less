@@ -29,7 +29,7 @@
     .search_nav {
         float: left;
         margin: 6px 0 0 40px;
-        width: 25%;
+        width: 20%;
         display: block;
         background-color: transparent;
         border: none;
@@ -37,10 +37,34 @@
         font-size: 16px;
         color: #FFF;
         outline: none;
+        // -webkit-transition: all 0.7s ease 0s;
+        // -moz-transition: all 0.7s ease 0s;
+        // -o-transition: all 0.7s ease 0s;
+        // transition: all 0.7s ease 0s;
+        padding: 1px 7px;
+
+        &::-webkit-search-cancel-button {
+            display: none;
+        }
+        &::-ms-clear {
+            display: none;
+        }
+        &:focus {
+            width: 20%;
+        }
     }
     .search_btn {
         float: left;
-        margin: 5px
+        margin: 0px 0px;
+        border: none;
+        border-bottom: 1px solid #ccc;
+        background: url('/images/search.png') no-repeat 8px 7px transparent;
+        background-size: 16px 16px;
+        outline: none;
+        padding: 3px;
+        width: 26px;
+        height: 20px;
+        /* cursor: pointer; */
     }
     .site-nav {
         text-align: right;
@@ -133,7 +157,6 @@
         bottom: 105px;
         background: #8fd5ff;
         .moveTool();
-
         &:after {
             content: "";
             position: absolute;
@@ -148,7 +171,6 @@
         bottom: 45px;
         background: #8fd5ff;
         .moveTool();
-
         &:after {
             content: "";
             position: absolute;

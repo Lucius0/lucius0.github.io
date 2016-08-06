@@ -155,6 +155,28 @@ h6 {
 .header .site-nav a:focus {
   background: #78909c;
 }
+.header .dropdown-menu {
+  display: block;
+  position: absolute;
+  z-index: 9999;
+  list-style-type: none;
+  background: #FFF;
+  margin: 6px 38px;
+  padding: 0px;
+  border-radius: 2px;
+  box-shadow: 3px 5px 5px #888888;
+  -webkit-box-shadow: 3px 5px 5px #888888;
+  -moz-box-shadow: 3px 5px 5px #888888;
+}
+.header .dropdown-menu li.active {
+  background: #87caea;
+}
+.header .dropdown-menu li {
+  padding: 0px 10px;
+}
+.header .dropdown-menu li a:hover {
+  text-decoration: none;
+}
 .page-content {
   background: #e0e0e3;
   padding: 30px 0;

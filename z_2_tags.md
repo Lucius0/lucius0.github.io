@@ -20,6 +20,6 @@ public: true
 			</h4>
 		</li>
 		{% endfor %}
-	</ul>
 	{% endfor %}
+	</ul>
 </div>

@@ -12,6 +12,25 @@ layout: default
     {{ content }}
   </article>
   
+  <div class="prevNext">
+  	  {%if page.previous%}
+  	  <span class="prev">
+  	    上篇：
+  	    <a href="{{page.previous.url}}">
+  	      {{page.previous.title}}
+  	    </a>
+  	  </span>
+  	  {%endif%} 
+  	  {%if page.next%}
+  	  <span class="next">
+  	    下篇：
+  	    <a href="{{page.next.url}}">
+  	      {{page.next.title}}
+  	    </a>
+  	  </span>
+  	  {%endif%}
+  	</div>
+
   {% include comment.html %}
 
 </div>

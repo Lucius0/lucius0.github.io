@@ -396,6 +396,20 @@ h6 {
 .post .post-comments {
   padding-top: 30px;
 }
+.post .prevNext {
+  padding: 15px 5px;
+  margin-top: 48px;
+  margin-bottom: -40px;
+  border-top: 1px solid #ccc;
+  font-size: 14px;
+  color: #555;
+}
+.post .prevNext .pre {
+  float: left;
+}
+.post .prevNext .next {
+  float: right;
+}
 .home .page-heading {
   font-size: 40px;
   font-weight: normal;

@@ -29,9 +29,9 @@ gems:
 paginate: 5
 paginate_path: "page:num"
 
-# highlighter: rouge
+highlighter: rouge
 markdown: kramdown
 
-# kramdown:
-#   input: GFM
-#   syntax_highlighter: rouge
+kramdown:
+  input: GFM
+  syntax_highlighter: rouge

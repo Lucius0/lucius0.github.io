@@ -7,7 +7,7 @@ permalink: /archivers/javascript-expression
 tags: javascript
 publish: false
 ---
-1. **delete**
+## 1. **delete** ##
 
 {% highlight javascript %}
 var obj = {x:1};
@@ -24,14 +24,14 @@ delete obj1.x; // false
 obj1.x; // 1
 {% endhighlight %}
 
-2. **in**
+## 2. **in** ##
 
 {% highlight javascript %}
 window.x = 1; //全局变量
 "x" in window; // true
 {% endhighlight %}
 
-3. **new**
+## 3. **new** ##
 
 {% highlight javascript %}
 function Foo(){}
@@ -42,7 +42,7 @@ obj.hasOwnProperty("x"); // false
 obj.__proto__.hasOwnProperty("x"); // true
 {% endhighlight %}
 
-4. **this**
+## 4. **this** ##
 
 {% highlight javascript %}
 this; // window
@@ -50,7 +50,7 @@ var obj = {fun:function() { return this; }};
 obj.func(); // obj
 {% endhighlight %}
 
-5. **void**
+## 5. **void** ##
 
 {% highlight javascript %}
 void 0; // undefined

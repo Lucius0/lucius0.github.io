@@ -10,13 +10,13 @@ publish: false
 
 javascript 因为是弱类型，所以声明类型可以省略
 
-1. **六种基本类型**
+## 1. **六种基本类型** ##
 
    基础类型：number、string、boolean、null、undefined
 
    对象类型：object(Function、Array、Date)
 	
-2. **隐式转换**
+## 2. **隐式转换** ##
 
    ("num" - 0) -> number; (num + "") -> string
 
@@ -30,13 +30,13 @@ javascript 因为是弱类型，所以声明类型可以省略
 
       false：NaN === NaN；NaN == NaN；null === undefined；new Object() === new Object()
 
-3. **包装对象**
+## 3. **包装对象** ##
 
    ```console.log("string")```跟```console.log(new String("string"))```是不同的。
 
    ```var a = "string"; console.log(a.length); // 6 ```即表明在访问属性的时候会将a临时封装成对象，但访问完之后，临时对象也会被销毁。```a.t = 10;```封装a的临时包装对象，赋值结束后，临时对象会被销毁。```console.log(a.t);//undefined```临时对象被销毁了。
 
-4. **类型检测**
+## 4. **类型检测** ##
 	
 	typeof、instanceof、Object.prototype.toString
 

@@ -259,27 +259,61 @@ RealLoad();
 })();
 
 /******************* search *********************/
-// $(function() {
-//       $.ajax({
-//           url: "/search.xml",
-//           dataType: "xml",
-//           success: function( xmlResponse ) {
-//              var data = $( "article", xmlResponse ).map(function() {
-//                   return {
-//                       value: $( "title", this ).text() + ", " +
-//                           ( $.trim( $( "date", this ).text() ) ),
-//                       desc: $("description", this).text(),
-//                       url: $("url", this).text()
-//                   };
-//               }).get();
+ $(document).ready(function() {
+     var names = new Array(); //文章名字等
+     var urls = new Array(); //文章地址
 
-//               // $( ".search_btn" ).autocomplete({
-//               //     source: data,
-//               //     minLength: 0,
-//               //     select: function( event, ui ) {
-//               //       window.location.href = ui.item.url;
-//               //     }
-//               // });
-//           }
-//       });
-//   });
+
+     $(".search_nav").focus(function() {
+         
+     });
+
+     $(".search_nav").blur(function() {
+        
+     });
+
+     $.getJSON("/cb-search.json").done(function(data) {
+         if (data.code == 0) {
+             for (var index in data.data) {
+                 var item = data.data[index];
+                 names.push(item.title);
+                 urls.push(item.url);
+             }
+
+             $(".search_nav").typeahead({
+                 source: names,
+
+                 afterSelect: function(item) {
+                     window.location.href = (urls[names.indexOf(item)]);
+                     return item;
+                 }
+             });
+         }
+     });
+ });
+
+/******************* accordion *********************/
+$(function() {
+    var Accordion = function(el, multiple) {
+        this.el = el || {};
+        this.multiple = multiple || false;
+
+        var links = this.el.find(".link");
+        links.on("click", {el: this.el, multiple: this.multiple}, this.dropdown);
+    }
+
+    Accordion.prototype.dropdown = function(e) {
+        var $el = e.data.el;
+        var $this = $(this);
+        var $next = $this.next();
+
+        $next.slideToggle();
+        $this.toggleClass( "open" );
+
+        // if(!e.data.multiple) {
+        //     $el.find("submenu").not($next).slideUp().removeClass("open");
+        // };
+    };
+
+    var accordion = new Accordion($(".accordion"), false);
+});

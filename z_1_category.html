@@ -1,52 +1,35 @@
----
-layout: default
-title: Categories
-permalink: /category/
-public: true
+--- 
+layout: default 
+title: Categories 
+permalink: /categories/ 
+public: true 
 ---
 <div class="home">
-	<h1 class="page-heading">Category</h1>
-
-	<ul class="post-list">
-		{% for post in site.posts limit:100 %} 
-		 {% unless post.next %}
-		<h2>{{ post.date | date: '%Y' }}</h2>
-		{% else %} {% capture year %}{{ post.date | date: '%Y' }}{% endcapture %} {% capture nyear %}{{ post.next.date | date: '%Y' }}{% endcapture %} 
-		{% if year != nyear %}
-		<h2>{{ post.date | date: '%Y' }}</h2>
-		{% endif %} 
-		{% endunless %}
-		<li>
-			<h4>
-				<span>{{ post.date | date_to_string }}</span>
-				&raquo;
-				<a href="{{ post.url }}">{{ post.title }}</a>
-			</h4>
-		</li>
-		{% endfor %}
-	</ul>
-	<!-- <ul class="post-list">
-	{% capture categories %}
-			{% for category in site.categories %}
-				{{ category | first }}
-				{% unless forloop.last %},{% endunless %}{% endfor %}{% endcapture %}
-				{% assign category = categories | split:',' | sort %}
-				{% for item in (0..site.categories.size) %}
-					{% unless forloop.last %}
-					{% capture word %}
-					{{ category[item] | strip_newlines }}
-					{% endcapture %}
-	<h2 class="category" id="{{ word }}">{{ word | upcase }}</h2>
-	<ul>
-		{% for post in site.categories[word] %}{% if post.title != null %}
-		<li>
-			<span>{{ post.date | date: "%b %d" }}</span>
-			»
-			<a href="{{ site.baseurl}}{{ post.url }}">{{ post.title }}</a>
-		</li>
-		{% endif %}{% endfor %}
-	</ul>
-	{% endunless %}{% endfor %}
-</ul>
--->
+    <h1 class="page-heading">Categories</h1>
+    <ul class="post-list">
+        {% for post in site.posts limit:100 %} {% unless post.next %}
+        <h2>{{ post.date | date: '%Y' }}</h2> {% else %} {% capture year %}{{ post.date | date: '%Y' }}{% endcapture %} {% capture nyear %}{{ post.next.date | date: '%Y' }}{% endcapture %} {% if year != nyear %}
+        <h2>{{ post.date | date: '%Y' }}</h2> {% endif %} {% endunless %}
+        <ul>
+            <li>
+    			<span>{{ post.date | date_to_string }}</span>
+    			&raquo;
+    			<a href="{{ post.url }}">{{ post.title }}</a>
+            </li>	
+        </ul>
+        {% endfor %}
+    </ul>
 </div>
+<!-- <div class="home">
+    <h1 class="page-heading">Category</h1>
+    <ul class="post-list">
+        {% capture categories %}{% for category in site.categories %}{{ category | first }}{% unless forloop.last %},{% endunless %}{% endfor %}{% endcapture %} {% assign category = categories | split:',' | sort %} {% for item in (0..site.categories.size) %}{% unless forloop.last %} {% capture word %}{{ category[item] | strip_newlines }}{% endcapture %}
+        <h2 class="category" id="{{ word }}">{{ word | upcase }}</h2>
+        <ul>
+            {% for post in site.categories[word] %}{% if post.title != null %}
+            <li><span>{{ post.date | date: "%b %d" }}</span> » <a href="{{ site.baseurl}}{{ post.url }}">{{ post.title }}</a></li>
+            {% endif %}{% endfor %}
+        </ul>
+        {% endunless %}{% endfor %}
+    </ul>
+</div> -->

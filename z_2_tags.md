@@ -7,19 +7,19 @@ public: true
 <div class="home">
 	<h1 class="page-heading">Tags</h1>
 
-	<ul class="post-list">
+	<ul class="post-list accordion">
 		{% for tag in site.tags %}
 		<a name="{{ tag[0] }}"></a>
-		<h2>{{ tag[0] }}({{ tag[1].size }})</h2>
-		{% for post in tag[1] %}
-		<li>
-			<h4>
-				<span>{{ post.date | date_to_string }}</span>
-				&raquo;
-				<a href="{{ post.url }}">{{ post.title }}</a>
-			</h4>
-		</li>
-		{% endfor %}
+		<h2 class="link">{{ tag[0] }}({{ tag[1].size }})<span class="fa-chevron-down"></span></h2>
+		<div class="submenu">
+			{% for post in tag[1] %}
+			<ul>
+				<li>
+					<a href="{{ post.url }}">{{ post.date | date_to_string }} &raquo; {{ post.title }}</a>
+				</li>
+			</ul>
+			{% endfor %}
+		</div>
 	{% endfor %}
 	</ul>
 </div>

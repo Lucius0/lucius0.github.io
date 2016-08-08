@@ -28,7 +28,7 @@ pre {
 }
 code {
   color: #868686;
-  background-color: #d8d8ff;
+  background-color: #e6e6e6;
   padding: 2px 5px;
   border-radius: 5px;
 }
@@ -485,6 +485,50 @@ h6 {
 }
 .home .post-list .post-excerpt img:hover {
   opacity: 1;
+}
+.home .accordion .link {
+  border-top: 1px solid #ccc;
+  cursor: pointer;
+  display: block;
+  color: #4D4D4D;
+  position: relative;
+  margin-bottom: -10px;
+}
+.home .accordion h2:first-of-type {
+  border-top: 0;
+}
+.home .accordion .fa-chevron-down {
+  content: "";
+  background-image: url("../images/arrow_down.png");
+  position: relative;
+  top: 20px;
+  float: right;
+  -webkit-transition: all 0.4s ease;
+  -o-transition: all 0.4s ease;
+  transition: all 0.4s ease;
+}
+.home .accordion .open span.fa-chevron-down {
+  -moz-transform: rotate(180deg) scale(1, 1) translate(0px, 0px) skew(0deg, 0deg);
+  -moz-transform-origin: 50% 50%;
+  -webkit-transform: rotate(180deg) scale(1, 1) translate(0px, 0px) skew(0deg, 0deg);
+  -webkit-transform-origin: 50% 50%;
+  -o-transform: rotate(180deg) scale(1, 1) translate(0px, 0px) skew(0deg, 0deg);
+  -o-transform-origin: 50% 50%;
+  transform: rotate(180deg) scale(1, 1) translate(0px, 0px) skew(0deg, 0deg);
+  transform-origin: 50% 50%;
+}
+.home .submenu {
+  margin-top: 5px;
+  display: none;
+}
+.home .submenu a {
+  display: inline-block;
+  text-decoration: none;
+  padding: 12px;
+}
+.home .submenu ul:hover {
+  background: #eee;
+  color: #FFF;
 }
 .home .pagination {
   text-align: center;

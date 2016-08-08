@@ -2,9 +2,9 @@
 layout: post
 title:  "JavaScript之一 - 数据类型"
 date:   2016-08-07
-categories: JavaScript
+categories: javascript
 permalink: /archivers/javascript-data-types
-tags: JavaScript
+tags: javascript
 publish: false
 ---
 

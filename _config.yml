@@ -22,6 +22,7 @@ duoshuo_shortname: lucius0  # get one: http://duoshuo.com/create-site/
 permalink: /archivers/:title
 gems:
  - jekyll-paginate
+ # - jekyll-sitemap
  # - jekyll-gist
  # - jemoji
 

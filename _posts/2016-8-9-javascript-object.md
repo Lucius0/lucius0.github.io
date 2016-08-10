@@ -224,4 +224,101 @@ delete person.name; // false
 
 - ```Object.defineProperty(person, "name", {configurable: false, writable: false, enumerable: true, value: "Test"})``` 定义属性的配置，第一个参数是对象，第二个属性是不存在于该对象的属性，第三个则定义该对象的属性描述器对象
 
-![javascript-object-01]({{site.baseurl}}/images/javascript/javascript-object-01.PNG);
+ c(configurable) | c:true | c:true | c:false | c:false
+ w(writable)     | w:true | w:false| w:true  | w:false
+---------------- | ------ | ------ | ------- | -------
+ 修改属性的值  | √   | √   | √   | ×
+ 通过属性赋值、修改属性的值 | √ | × | √ | ×
+ delete该属性返回true | √ | √ | × | ×
+ 修改getter/setter方法 | √ | √ | × | ×
+ 修改属性标签(除了writable从true修改为false总是允许) | √ | √ | × | ×
+
+ **注意：**假如我们想改属性的值，configurable与writable为false的话就没办法修改了，但是假如writable为false，而configurable为true的话，我们可以变相的通过configurable修改属性的值，如Object.defineProperty(xxx, x, {value: 1})或者通过configurable来修改属性的writable的值使其能被修改，如Object.defineProperty(xxx, x, {writable: true});
+
+## 7、对象标签 ##
+
+对象标签有三种：[[proto]]、[[class]]、[[extensible]]
+
+- **[[proto]]：** 原型对象
+
+- **[[class]]：** 表明该对象是哪种类型的类
+
+- **[[extensible]]：** 对象是否能再被添加新的属性，如AS的dynamic
+
+```javascript
+var obj = {x: 1, y: 2};
+Object.isExtensible(obj); // true
+Object.preventExtensions(obj);
+Object.isExtensible(obj); // false
+obj.z = 1;
+obj.z; // undefined，添加失败
+Object.getOwnPropertyDescriptor(obj, "x");
+// Object {value: 1, writable: true, enumerable: true, configurable: true}
+
+Object.seal(obj);
+Object.getOwnPropertyDescriptor(obj, "x");
+// Object {value: 1, writable: true, enumerable: true, configurable: false}
+Object.isSeal(obj); // true
+
+Object.freeze(obj);
+Object.getOwnPropertyDescriptor(obj, "x");
+// Object {value: 1, writable: false, enumerable: true, configurable: false}
+Object.isFrozen(obj);
+```
+
+*解析：*
+
+- ```Object.preventExtensions(obj)``` 阻止obj扩展新属性，但是不会影响到旧的属性
+
+- ```Object.seal(obj)``` 设置configurable为false
+
+- ```Object.freeze(obj)``` 设置configurable跟writable为false
+
+**注意：**以上的方法只会限制当前对象，并不会影响到原型链对象，若想影响原型链的对象，就得对原型链对象做同样的操作
+
+## 8、序列化 ##
+
+### 8.1 ###
+
+```javascript
+var obj = {x: 1, y: true, z: [1, 2, 3], nullVal: null};
+JSON.stringify(obj); // "{"x":1,"y":true,"z":[1,2,3],"nullVal":null}"
+
+obj = {val: undefined, a: NaN, b: Infinity, c: new Date()};
+JSON.stringify(obj); // "{"a":null,"b":null,"c":"2016-08-10T15:45:03.197Z"}"
+
+obj = JSON.parse("{'x': 1}");
+obj.x; // 1
+```
+
+总结：
+
+- ```JSON.stringify(obj);``` 序列化
+
+- ```JSON.parse("{'x': 1}")``` 反序列化，注意属性是以""引起来
+
+- undefined 的属性不会被序列化出来
+
+- NaN或Infinity 则会被序列化成null
+
+- new Date() 则会序列化成UTC时间格式
+
+### 8.2 自定义 ###
+
+```javascript
+var obj = {
+	x: 1,
+	y: 2,
+	z: {
+		o1: 1,
+		o2: 2,
+		toJSON: function() {
+			return this.o1 + this.o2;
+		}
+	}
+};
+
+JSON.stringify(obj); // "{"x":1,"y":2,"z":3}"
+```
+
+总结：自定义z属性，其中toJSON为固定写法，若不是toJSON则为```"{"x":1,"y":2,"z":{"o1":1,"o2":2}}"```

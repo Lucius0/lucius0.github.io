@@ -96,3 +96,44 @@ var globalVal = "global";
 
 ## 4、this ##
 
+### 4.1 全局作用域下的this ###
+
+```javascript
+this.document === document; // true
+
+this ==== window; // true
+
+this.a = 37;
+console.log(window.a); // 37
+```
+
+### 4.2 一般函数的this ###
+
+```javascript
+function f1() {
+	return this;
+}
+
+f1() === window; // true
+```
+
+### 4.3 作为对象方法的函数this ###
+
+```javascript
+// CASE 1
+var o = {
+	prop: 37,
+	f: function() {
+		return this.prop;
+	}
+};
+console.log(o.f()); // 37
+
+// CASE 2
+var o = {prop: 37};
+function f() {
+	return this.prop;
+}
+o.f = f;
+console.log(o.f()); // 37
+```

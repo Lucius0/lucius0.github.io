@@ -8,6 +8,8 @@ tags: javascript
 publish: false
 ---
 
+以下笔记是观看[《深入浅出javascript》](http://www.imooc.com/view/277)所记下的。
+
 javascript 因为是弱类型，所以声明类型可以省略
 
 ## 1. **六种基本类型** ##

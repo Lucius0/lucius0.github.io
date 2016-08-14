@@ -1,63 +1,79 @@
 ---
 layout: post
-title:  "Welcome to Jekyll and EasyBook"
-date:   2014-12-30 09:00:13
-categories: jekyll update
-permalink: /archivers/hello
+title:  "Style Test"
+date:   1970-01-01 08:00
+categories: jekyll
+permalink: /archivers/test
 ---
 
-You’ll find this post in your `_posts` directory. Go ahead and edit it and re-build the site to see your changes. You can rebuild the site in many different ways, but the most common way is to run `jekyll serve`, which launches a web server and auto-regenerates your site when a file is updated.
+This is just a style test post, filled with LoremIpsue. Feel free to delete the file.
 
-To add new posts, simply add a file in the `_posts` directory that follows the convention `YYYY-MM-DD-name-of-post.ext` and includes the necessary front matter. Take a look at the source for this post to get an idea about how it works.
+![](http://lorempixel.com/400/200/)
 
-GitHub Flavored Markdown is supported.
+# Lorem ipsum dolor 
 
-```ruby
-def print_hi(name)
-  puts "Hi, #{name}"
-end
-print_hi('Tom')
-#=> prints 'Hi, Tom' to STDOUT.
-```
+Sit amet, consectetur adipiscing elit. Phasellus nisi odio, scelerisque vitae volutpat non, facilisis non erat. In gravida placerat pulvinar. Maecenas ac pretium sem. In consectetur nulla leo, ut maximus nisi volutpat eget. Vestibulum vitae malesuada risus, egestas placerat felis. In sed sollicitudin elit. Sed bibendum porttitor dui.
 
-## EasyBook Advanced Functions ##
+## Condimentum mauris Accumsan 
 
-You are using [EasyBook][github-easybook] the template from [laobubu.net](http://laobubu.net). Therefore some features are supported now:
+Eu. Suspendisse scelerisque, orci vel elementum accumsan, sem turpis congue justo, et vulputate lacus orci vel felis. Pellentesque at gravida felis, vitae pretium erat. Pellentesque convallis mi vitae lectus semper, quis pellentesque lectus tristique.
 
-* **Pagination** is enabled.
-* **Disqus** or **多说** is ready.
-* **TOC** for posts is enabled.
-* **Profile** including your links and avatar on the sidebar.
-* *And more...*
+## Duis a nibh in 
 
-> **Tips:** You can disable Disqus or 多说 on posts/pages by adding `nocomments: true` into [YAML Front Matter][frontmatter].
+Consectetur ultrices. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. 
 
-EasyBook uses upaiyun CDN to make everyone lncluding Chinese visitors feel speedy. You can find it in `_includes/footer.html` and change it to your favorite CDN like Google CDN.
+> Vivamus placerat, tortor et aliquam porttitor, risus mi dapibus neque, vitae vulputate urna.
+> -- Lorem
 
-## Support me by... ##
+Apurus vel sapien. Fusce at condimentum nibh. 
 
-### Add a link ###
+### Donec ut urna 
 
-EasyBook does not make the footer heavy; the link to theme could be on `about.md`:
+A dolor rhoncus posuere vel porttitor tortor. Integer ex lacus, sagittis ac tellus et, laoreet condimentum massa. 
 
-> This website is using [laobubu](http://laobubu.net)'s theme: [EasyBook](https://github.com/laobubu/jekyll-theme-EasyBook)
+![](http://lorempixel.com/400/400/)
 
-### Donate (PayPal or 支付宝) ###
+Aliquam tempor pharetra lacus, vel bibendum purus dapibus nec. Integer hendrerit massa ut libero euismod, id gravida neque facilisis. 
 
-That's the best :smile: 
+## Nunc nec
 
-Please visit [http://laobubu.net/donate.html](http://laobubu.net/donate.html)
+Karan justo id turpis auctor pharetra. Fusce pretium ornare facilisis. Aliquam eget scelerisque ex, eu volutpat leo. Proin pharetra est felis, sit amet suscipit orci mattis quis.
 
-### Star and Fork on GitHub (free) ###
+1. Etiam bibendum purus tincidunt
+2. As dapibus enim et, porta ligula. 
+3. Morbi tempus, mauris sed sodales auctor, nulla erat fringilla purus, vel sodales nulla nunc sit amet purus. 
+4. Praesent pellentesque urna et leo eleifend molestie ac ac ex. 
+5. Ut eu sagittis metus, et malesuada libero. 
 
-Not going to donate? That's okay. You can also send out your precious star [on GitHub][github-easybook].
+Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Etiam placerat mauris a libero tempus facilisis. Maecenas ut augue lacinia, ornare mi in, lobortis arcu. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis justo elit, blandit vel tincidunt ac, imperdiet ut neque. 
 
-## And Here We Go ##
+# Class aptent
 
-Check out the [Jekyll docs][jekyll] for more info on how to get the most out of Jekyll. File all bugs/feature requests at [Jekyll’s GitHub repo][jekyll-gh]. If you have questions, you can ask them on [Jekyll’s dedicated Help repository][jekyll-help].
+taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Aliquam erat volutpat. Sed at semper sem. Morbi in finibus tellus. Pellentesque nec dapibus risus.
 
-[jekyll]:      http://jekyllrb.com
-[jekyll-gh]:   https://github.com/jekyll/jekyll
-[jekyll-help]: https://github.com/jekyll/jekyll-help
-[frontmatter]: http://jekyllrb.com/docs/frontmatter/
-[github-easybook]: https://github.com/laobubu/jekyll-theme-EasyBook
+~~~cpp
+  #include <iostream>
+ 
+  int main () {
+    std::cout << "Hello world!" << std::endl;
+  }
+~~~
+
+vitae erat non congue. Proin sagittis vitae justo at cursus. Phasellus egestas bibendum urna vel condimentum.
+
+## Fusce a ullamcorper nisl
+
+Pellentesque vehicula faucibus nibh, **a pharetra odio pretium ac.** Mauris eget gravida orci, vitae tincidunt urna. Integer pharetra ante in porta maximus. Morbi ac arcu lacinia, posuere mauris vitae, lobortis dui. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vitae metus nibh. Cras quis malesuada nisi. Ut porttitor, ipsum vel suscipit posuere, elit purus egestas velit, ac lobortis urna orci nec mi.
+
+## Maecenas bibendum nisi
+
+Aleo facilisis porttitor ac ac metus. **Vivamus faucibus faucibus bibendum.** Donec efficitur consectetur erat quis porttitor. Ut id euismod nunc. Sed venenatis eleifend suscipit. Donec magna purus, porta eget enim a, ornare porttitor nibh. Cras nisl nibh, viverra vitae magna quis, hendrerit facilisis sem.
+
+| table | test | lorem |
+|:-----:|:----:|:-----:|
+| Praesent ultrices | convallis lorem | at sollicitudin enim |
+| Mauris | tristique cursus | arcu ac |
+| facilisis | Proin |  vulputate neque lectus|
+
+ maximus malesuada est rutrum ac. Sed blandit semper faucibus. Nam venenatis consectetur malesuada. Nulla lacus purus, ultrices ac eros porttitor, finibus sodales augue. Suspendisse tincidunt, felis in placerat euismod, libero nulla interdum nisl, commodo efficitur felis dui in libero. Integer lobortis sapien sit amet orci tristique auctor a sit amet neque. Nunc tincidunt iaculis purus eget maximus. Fusce risus justo, rutrum at magna sed, rhoncus lacinia lectus. Vivamus lobortis odio ex, ac vehicula nunc facilisis non. Aliquam fermentum diam massa. Sed cursus, nisi varius laoreet aliquet, tortor urna porta turpis, in dictum urna enim vel leo. Etiam at lacus lorem. Vivamus ornare vitae nisl vel malesuada.
+

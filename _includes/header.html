@@ -4,11 +4,18 @@
     <input type="search" class="search_nav" placeholder="search..." />
     <span class="search_btn"></span>
     <nav class="site-nav">
-      {% for page in site.pages %}
+      <!-- {% for page in site.pages %}
         {% if page.title and page.public %}
         <a class="page-link" href="{{ page.url | prepend: site.baseurl }}">{{ page.title }}</a>
         {% endif %}
-      {% endfor %}
+      {% endfor %} -->
+      <a class="page-link" href="/">Home</a>
+      
+      <a class="page-link" href="/categories/">Categories</a>
+      
+      <a class="page-link" href="/tags/">Tags</a>
+      
+      <a class="page-link" href="/about/">About</a>
     </nav>
   </div>
 </header>

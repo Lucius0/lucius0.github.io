@@ -36,7 +36,7 @@ publish: false
 
 最后，Object.prototype的**__proto__**属性指向null。
 
-*注意：* ```typeof null```返回undefined是由于历史原因导致的，实际上ECMA规范尝试把```typeof null```返回值改为"null"，但是会导致很多旧的代码出现问题，因此又改回来了。所以说null并不是一个对象，而是一个基础类型。
+*注意：* ```typeof null```返回object是由于历史原因导致的，实际上ECMA规范尝试把```typeof null```返回值改为"null"，但是会导致很多旧的代码出现问题，因此又改回来了。所以说null并不是一个对象，而是一个基础类型。在**[stackoverflow](http://stackoverflow.com/questions/18808226/why-is-typeof-null-object)**有详细的说明。
 
 **总结：**
 

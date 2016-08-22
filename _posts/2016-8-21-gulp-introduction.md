@@ -139,6 +139,8 @@ gulp常用地址：
 
 特别注意：参看[http://www.zhihu.com/question/23004511](http://www.zhihu.com/question/23004511) - package.json是一个普通json文件，所以不能添加任何注释。
 
+5.但当package.json里面有依赖了，我们可以使用命令行```cnpm install```安装依赖包的插件。
+
 ## 本地安装gulp插件 ##
 
 1.安装：定位目录命令后提示符执行```cnpm install --save-dev```；

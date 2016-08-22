@@ -10,7 +10,7 @@ public: true
 	<ul class="post-list accordion">
 		{% for tag in site.tags %}
 		<a name="{{ tag[0] }}"></a>
-		<h2 class="link">{{ tag[0] }}({{ tag[1].size }})<span class="fa-chevron-down"></span></h2>
+		<h2 class="link" id="{{ tag[0] }}">{{ tag[0] }}({{ tag[1].size }})<span class="fa-chevron-down"></span></h2>
 		<div class="submenu">
 			{% for post in tag[1] %}
 			<ul>

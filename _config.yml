@@ -19,6 +19,10 @@ profile:  stay hungry, stay foolish...
 #disqus_shortname: xxx   # get one: https://disqus.com/admin/signup/
 duoshuo_shortname: lucius0  # get one: http://duoshuo.com/create-site/
 
+# ignore node_modules
+
+exclude: 
+  - node_modules
 permalink: /archivers/:title
 gems:
  - jekyll-paginate

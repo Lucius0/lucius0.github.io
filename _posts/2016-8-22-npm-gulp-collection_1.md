@@ -10,6 +10,10 @@ publish: false
 
 这里收集了一些npm&gulp常用的插件，以方便查找。
 
+- gulp：[http://gulpjs.com/](http://gulpjs.com/)
+
+- npm：[https://www.npmjs.com](https://www.npmjs.com)
+
 ## rimraf ##
 
 这一款实际上不是gulp的插件，是npm的插件，只是因为在windows下生成的node_module路径名太长了导致无法正常删除，因此可以用npm安装这个插件

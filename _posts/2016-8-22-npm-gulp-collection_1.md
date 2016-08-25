@@ -57,3 +57,31 @@ browser-sync start --server --files "css/*.css, *.html"
 // 主机名可以是ip或域名
 browser-sync start --proxy "主机名" "css/*.css"
 ```
+
+## JSHint && JSLint ##
+
+**简介：**无论是JSHint，还是JSLint，都是通过检查和分析JavaScript代码，将不符合编码规则的代码警告开发者。JSHint是在JSLint进行二次开发，实际上，两种插件一样都拥有成熟的社区，就算是用途以及原理，都是相同的。但我们要选哪一种呢？
+
+**区别：**
+
+- JSLint检查规则较JSHint严格；
+
+- JSLint配置选项上比JSHint少；
+
+1. JSLint：[JSLint](https://github.com/douglascrockford/JSLint);
+
+2. JSHint：[JSHint](https://github.com/spalger/gulp-jshint);
+
+这里介绍JSHint
+
+安装：```npm install jshint gulp-jshint --save-dev```
+
+使用：
+
+```javascript
+gulp.task('lint', function() {
+  return gulp.src('./lib/*.js')
+    .pipe(jshint({ linter: 'some-jshint-module' }))
+    .pipe(...);
+});	
+```

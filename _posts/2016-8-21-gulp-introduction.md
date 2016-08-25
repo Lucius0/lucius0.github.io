@@ -207,3 +207,5 @@ gulp.task('default',['testLess', 'elseTask']);
 6. 通过命令提示符运行gulp任务。
 
 转自：**[《gulp详细入门教程》](http://www.ydcss.com/archives/18)**
+
+可参考文档：**[Gulp入门教程](https://markpop.github.io/2014/09/17/Gulp%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B/)**

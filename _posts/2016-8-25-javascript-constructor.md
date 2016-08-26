@@ -27,3 +27,5 @@ console.log(typeof p); // 输出object
 console.log(p); // p内部属性和值
 console.log(p.constructor); // 输出Person函数
 ```
+
+未完待续...

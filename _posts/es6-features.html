@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>es6-features</title>
+	<link rel="stylesheet" type="text/css" href="../css/normalize.css">
+	<link rel="stylesheet" type="text/css" href="../css/main.css">
+	<style type="text/css">
+		.nav {
+			position: fixed;
+			left: 0px;
+			top: 80px;
+			margin-left: 30px;
+			width: 230px;
+			background-color: #222222;
+			overflow-x: hidden;
+			overflow-y: scroll;
+			padding-left: 0px;
+			height: calc(100% - 180px);
+			border-radius: 4px;
+			-webkit-border-radius: 4px;
+			-o-border-radius: 4px;
+			-moz-border-radius: 4px;
+		}
+
+		.nav > ul {
+			position: relative;
+			list-style-type: none;
+			margin-top: 0px;
+			margin-bottom: 0px;
+			padding-left: 0px;
+			width: 100%;
+		}
+
+		.nav > ul > li {
+			background-color: #222222;
+			color: #e0e0e0;
+			font-weight: bold;
+			padding-left: 10px;
+			width: 100%;
+		}
+
+		.nav > ul > li > ul {
+			position: relative;
+			left: -10px;
+			background-color: red;
+			list-style-type: none;
+			margin-top: 0px;
+			margin-bottom: 0px;
+			padding-left: 0px;
+			width: 100%;
+		}
+
+		.nav > ul > li > ul > li {
+			background-color: #111111;
+			color: #000000;
+			font-weight: normal;
+			width: 100%;
+			position: relative;
+		}
+
+		.nav > ul > li > ul > li a {
+			text-decoration: none;
+			color: #e0e0e0;
+			padding-left: 30px;
+			width: 100%;
+			display: inline-block;
+		}
+
+		.nav > ul > li > ul > li.selected a {
+			background-color: #336699;
+			color: #ffffff;
+			width: 100%;
+		}
+
+		.content {
+			position: absolute;
+			left: 380px;
+			top: 80px;
+			width: calc(100% - 380px - 30px);
+			padding-bottom: 100px;
+		}
+	</style>
+</head>
+<body>
+	<div class="nav">
+		<ul>
+			<li class="title">
+				常量
+				<ul>
+					<li class="subtitle">
+						<a href="#">常量</a>
+					</li>
+				</ul>
+			</li>
+
+			<li class="title">
+				作用域
+				<ul>
+					<li class="subtitle">
+						<a href="#">块作用域变量</a>
+					</li>
+					<li class="subtitle">
+						<a href="#">函数作用域变量</a>
+					</li>
+				</ul>
+			</li>
+
+			<li class="title">
+				箭头函数
+				<ul>
+					<li class="subtitle">
+						<a href="#">表达式</a>
+					</li>
+					<li class="subtitle">
+						<a href="#">声明</a>
+					</li>
+					<li class="subtitle">
+						<a href="#">this</a>
+					</li>
+				</ul>
+			</li>
+
+			<li class="title">
+				箭头函数
+				<ul>
+					<li class="subtitle">
+						<a href="#">默认参数值</a>
+					</li>
+					<li class="subtitle">
+						<a href="#">Rest参数值</a>
+					</li>
+					<li class="subtitle">
+						<a href="#"></a>
+					</li>
+				</ul>
+			</li>
+		</ul>
+	</div>
+	<div class="content">1</div>
+</body>
+</html>

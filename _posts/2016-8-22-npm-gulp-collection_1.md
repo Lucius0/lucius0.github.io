@@ -85,3 +85,25 @@ gulp.task('lint', function() {
     .pipe(...);
 });	
 ```
+
+## gulp-babel ##
+
+- git：[gulp-babel](https://github.com/babel/gulp-babel)
+
+- npmjs:[gulp-babel](https://www.npmjs.com/package/gulp-babel)
+
+安装：```npm install --save-dev gulp-babel```
+
+在使用```gulp-babel```之前，需要安装```babel-preset-es2015```
+
+使用：
+
+```javascript
+gulp.task('babel', function() {
+	gulp.src("./src/*.js")
+	    .pipe(babel({
+            presets: ['es2015']
+        }))
+	    .pipe(gulp.dest("./dist/"));
+});
+```

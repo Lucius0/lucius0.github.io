@@ -27,9 +27,9 @@ Your runtime supports 69% of ECMAScript 6
 =========================================
 ```
 
-## Babel转码器 ##
+## 转码器 ##
 
-[Babel](https://babeljs.io/)是用于ES6转码器，可以将ES6转为ES5代码，从而兼容现有环境。在上文的**[es6-features](http://es6-features.org/)**，也有罗列出基本上的转换。
+**[Babel](https://babeljs.io/)**是用于ES6转码器，可以将ES6转为ES5代码，从而兼容现有环境。在上文的**[es6-features](http://es6-features.org/)**，也有罗列出基本上的转换。
 
 - **配置文件**```.babelrc```
 	
@@ -80,3 +80,87 @@ $ npm install --save-dev babel-preset-stage-3
 ```javascript
 $ npm install --global babel-cli
 ```
+
+  基本使用方法
+
+```javascript
+# 转码结果输出到标准输出
+$ babel example.js
+
+# 转码结果写入一个文件
+# --out-file 或 -o 参数指定输出文件
+$ babel example.js --out-file compiled.js
+# 或者
+$ babel example.js -o compiled.js
+
+# 整个目录转码
+# --out-dir 或 -d 参数指定输出目录
+$ babel src --out-dir lib
+# 或者
+$ babel src -d lib
+
+# -s 参数生成source map文件
+$ babel src -d lib -s
+```
+
+但是上面是在全局环境下安装的，也就是说项目假如有需要转换的话则需要安装Babel，那我们也可以采取在项目内安装```babel-cli```。
+
+安装
+
+```javascript
+$ npm install --save-dev babel-cli
+```
+
+然后改写```package.json```
+
+```json
+{
+  // ...
+  "devDependencies": {
+    "babel-cli": "^6.14.0"
+  },
+  "scripts": {
+    "babel-build": "babel src -d lib"
+  },
+}
+```
+
+执行
+
+```javascript
+$ npm run babel-build
+```
+
+- **babel-node：**babel-cli自带的命令，提供了支持ES6的RELP环境；
+
+- **babel-register：**模块改写```require```命令，为它加上钩子，每当```require```加载```js```、```jsx```、```es```、```es6```后缀文件，就会先用babel转码；
+
+- **babel-core：**如若需要进行对Babel的API进行转码，可以使用```babel-core```
+
+- **babel-polyfill：**Babel默认只转换新的JavaScript句法(syntax)，不转换新的API，比如Iterator、Generator、Set、Maps、Proxy、Reflect、Symbol、Promise等全局对象，以及一些定义在全局对象上的方法（比如Object.assign）都不会转码。举例来说，ES6在Array对象上新增了Array.from方法。Babel就不会转码这个方法。如果想让这个方法运行，必须使用babel-polyfill，为当前环境提供一个垫片。
+
+安装
+
+```javascript
+$ npm install --save babel-polyfill
+```
+
+使用，在脚本头部，加入如下一行代码。
+
+```javascript
+import 'babel-polyfill';
+// 或者
+require('babel-polyfill');
+```
+
+Babel默认不转码的API非常多，详细清单可以查看babel-plugin-transform-runtime模块的**[definitions.js](https://github.com/babel/babel/blob/master/packages/babel-plugin-transform-runtime/src/definitions.js)**文件。
+
+除了在用```Babel-cli```将ES6转码，还可以在```node_modules/babel-core/```找到```babel```版本的```browser.js```嵌入项目网页，或者也可以使用**[babel-standalone](https://github.com/Daniel15/babel-standalone)**、**[Traceur](https://github.com/google/traceur-compiler)**嵌入网页，也可以使用在线转码平台**[REPL在线编译器](https://babeljs.io/repl/)**、**[Traceur](http://google.github.io/traceur-compiler/demo/repl.html#)**。
+
+## gulp-babel ##
+
+gulp的入门方法可以查看[《gulp之一 - 入门教程[转]》]({{site.baseurl}}/archivers/gulp-introduction)。
+
+gulp-babel可以跳转到[《gulp-babel》]({{site.baseurl}}/archivers/npm-and-gulp-collection_1#gulp-babel)
+
+最后：ECMAScript当前的所有提案，可以在TC39的官方网站**[https://github.com/tc39/ecma262](https://github.com/tc39/ecma262)**查看。

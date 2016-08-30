@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "ES6(1) - 入门"
+title:  "ES6 - 入门"
 date:   2016-08-28
 categories: ES6
 permalink: /archivers/ecmascript6-introduction
@@ -162,5 +162,38 @@ Babel默认不转码的API非常多，详细清单可以查看babel-plugin-trans
 gulp的入门方法可以查看[《gulp之一 - 入门教程[转]》]({{site.baseurl}}/archivers/gulp-introduction)。
 
 gulp-babel可以跳转到[《gulp-babel》]({{site.baseurl}}/archivers/npm-and-gulp-collection_1#gulp-babel)
+
+## 运行 ##
+
+我是Windows操作系统，使用sublime text3来运行es6.
+
+首先安装[nodejs](http://nodejs.org/)
+
+sublime text3 中打开**tools -> build system -> new build system...**，粘贴以下代码保存
+
+```json
+{
+    "cmd": ["node", "--use-strict", "--harmony", "$file"],
+    "selector": "source.js"
+}
+```
+
+**解释：**```node```是执行命令，而```--use-strict```跟```--harmony```则是执行参数，```$file```则是当前文件，如果不想要有es6特性，则只需要将配置文件改为以下的代码
+
+```json
+{
+    "cmd": ["node", "$file"],
+    "selector": "source.js"
+}
+```
+
+使用：在sublime新建一个测试文件
+
+```javascript
+let a = 1;
+console.log(a);
+```
+
+```ctrl + b```就可以得到结果```1```
 
 最后：ECMAScript当前的所有提案，可以在TC39的官方网站**[https://github.com/tc39/ecma262](https://github.com/tc39/ecma262)**查看。

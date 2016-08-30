@@ -1,0 +1,4 @@
+{
+  "shell_cmd": "taskkill /F /IM node.exe & node \"$file\"",
+  "selector": "source.js",
+}

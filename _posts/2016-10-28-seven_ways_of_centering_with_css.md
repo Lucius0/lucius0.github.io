@@ -12,7 +12,7 @@ publish: false
 
 接下来更新一下如何用css居中元素，原文链接[《Seven-Ways-of-Centering-With-CSS》](http://thenewcode.com/723/Seven-Ways-of-Centering-With-CSS)。
 
-### 七种元素居中的方法
+## 七种元素居中的方法
 
 居中html元素在网页开发似乎看起来挺简单的。但是在某些案例中，复杂的布局会经常消除一些解决方法，使得网页开发人员特别的头痛。
 
@@ -121,5 +121,113 @@ The Css
   left: 0;
   bottom: 0;
   top: 0;
+}
+```
+
+### 使用translate居中
+
+![]({{site.baseurl}}/images/css/css-04.png)
+
+Chris Coiyer 提出了一种能同时支持水平居中跟垂直居中的[《新方案》](http://thenewcode.com/273/CSS3-2D-Transformations-Introduction)
+
+```css
+.center {
+  background: hsl(180, 100%, 97%);
+  position: relative;
+  min-height: 500px;
+}
+.center img {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 30%;
+  height: auto;
+}
+```
+
+**同时也带来了以下几点缺点：**
+
+- CSS transform 会要求在不同的浏览器添加浏览器前缀；
+
+- 不能在比较老的IE浏览器兼容(IE 8及以下版本)；
+
+- 外部容器将需要设置高度(或其他方式)，并且不能从处于绝对位置的内容获取任何高度；
+
+- 如何内容包含文本，当前浏览器合成技术也会使已发生转换的文本模糊。
+
+### Flexbox 居中
+
+![]({{site.baseurl}}/images/css/css-05.png)
+
+一旦属性差异性以及浏览器前缀的问题逐渐消失，这种解决方案将会成为主流方案。
+
+```css
+.center {
+  backgroud: hsl(240, 100%, 97%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.center img {
+  width: 30%;
+  height: auto;
+}
+```
+
+在许多方面```flexbox```是最简单的解决方案，但有一个缺点的是新旧两种语法以及早期版本的IE浏览器不支持(尽管使用```display:table-cell```可以作为降级方案)。
+
+如今的规范已经确定下来，并且现代的浏览器也支持了，具体的使用方法可以参考[《flexbox layout and its uses》](http://thenewcode.com/780/A-Designers-Guide-To-Flexbox)
+
+### 使用calc居中
+
+![]({{site.baseurl}}/images/css/css-06.png)
+
+在某些方面比```flexbox```更灵活：
+
+```css
+.center {
+  background: hsl(300, 100%, 97%);
+  min-height: 600px;
+  position: relative;
+}
+.center img {
+  width: 40%;
+  height: auto;
+  position: absolute;
+  top: calc(50% - 20%);
+  left: calc(50% - 20%);
+}
+```
+
+非常简单，```calc```允许你基于当前页面的布局进行计算。在上面的计算中，50%是容器元素的中心点，但是仅仅使用50%会使*图片的左上角*对其```<div>```的中心。我们需要将图片的宽高同时移回一半。计算方式如下：
+
+```css
+top: calc(50% - (40% / 2));
+left: calc(50% - (40% / 2));
+```
+
+在如今的浏览器，你会发现这种解决方案更适合内容的宽高为固定尺寸：
+
+```css
+.center img {
+  width: 500px;
+  height: 500px;
+  position: absolute;
+  top: calc(50% - (300px / 2));
+  left: calc(50% - (300px - 2));
+}
+```
+
+详细的```calc```使用方法可以查看：[Layout Math with CSS: Understanding calc](http://thenewcode.com/953/Layout-Math-with-CSS-Understanding-calc)
+
+这种解决方案跟```flexbox```一样有许多缺点：当代浏览器能很好的支持该方案，但是在早期的浏览器还是还是需要浏览器前缀，并且不支持IE 8
+
+```css
+.center img {
+  width: 40%;
+  height: auto;
+  top: calc(50% - 20%);
+  left: calc(50% - 20%);
 }
 ```

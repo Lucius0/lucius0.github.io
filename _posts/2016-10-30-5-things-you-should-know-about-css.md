@@ -62,7 +62,7 @@ publish: false
 
 接下来这些类型会在下面的例子中演示：
 
-可以参考下George[@georgemarts](http://codepen.io/georgemarts)在[codepen](http://codepen.io/)的[定位概述](http://codepen.io/georgemarts/pen/qOqNgm/)
+<p data-height="499" data-theme-id="0" data-slug-hash="qOqNgm" data-user="georgemarts" data-default-tab="result" class='codepen'>See the Pen <a href='http://codepen.io/georgemarts/pen/qOqNgm'>Timer</a> forked by Georgemarts (<a href='http://codepen.io'>@georgemarts</a>) on <a href='http://codepen.io'>CodePen</a></p>
 
 *注意：粘性定位类型还是处于实验性的技术，并且浏览器的支持有限。当然，假如你想要尝试这个效果，可以用polyfill(例如：[stickyfill](https://github.com/wilddeer/stickyfill))加到不支持此类型的浏览器。鉴于支持有限，因此我们在以下的文章将不会对它进行讲解*
 
@@ -74,3 +74,40 @@ publish: false
 
 因此，一个被设置为绝对定位类型的元素是相对于最近的父元素。当然，这仅仅在父元素的定位类型不是```static```时有效。考虑到这一点，假如父元素没有声明任何类型，那么它是相对于视图定位。
 
+<p data-height="499" data-theme-id="0" data-slug-hash="dYOpMm" data-user="georgemarts" data-default-tab="result" class='codepen'>See the Pen <a href='http://codepen.io/georgemarts/pen/dYOpMm'>Timer</a> forked by Georgemarts (<a href='http://codepen.io'>@georgemarts</a>) on <a href='http://codepen.io'>CodePen</a></p>
+
+在这个例子中，我们给绿盒子初始```absolute```定位并且将```offset```值设置为```bottom: 0````和```left: 0```。此外，我们并没有指定其上一级父元素的定位类型。
+
+然而，我们使外包围盒相对定位(例如：```jumbotron```元素)。注意一下只要我们修改了绿盒子的父元素的定位类型就会使得绿盒子的位置发生改变。
+
+## 绝对定位元素无视```float```属性的存在
+
+假如一个元素是左浮动或者右浮动并且我们设置它的定位类型为```absolute```或者```fixed```，属性```float```的值则会变成```none```。另一方面，假如我们将该元素的定位类型设置为```relative```，则会保留其浮动属性。
+
+看一下以下的相关例子
+
+<p data-height="499" data-theme-id="0" data-slug-hash="WQovLM" data-user="georgemarts" data-default-tab="result" class='codepen'>See the Pen <a href='http://codepen.io/georgemarts/pen/WQovLM'>Timer</a> forked by Georgemarts (<a href='http://codepen.io'>@georgemarts</a>) on <a href='http://codepen.io'>CodePen</a></p>
+
+在这个例子里面，我们定义了两个向右浮动的不同元素。值得注意的是，当我们将红盒子改变为**绝对**定位元素，它会忽略```float```属性，而**相对**定位的绿盒子则保留其属性值。
+
+## 绝对定位的内联元素跟块级元素的表现一样
+
+```absolute```定位或者```fixed```定位的内联元素，跟块级元素具有同样的能力。[这份列表](https://drafts.csswg.org/css-position-3/#dis-pos-flo)总结了什么类型的元素可以转换为块级元素。
+
+这里同样也是一个例子
+
+<p data-height="499" data-theme-id="0" data-slug-hash="xwEymK" data-user="georgemarts" data-default-tab="result" class='codepen'>See the Pen <a href='http://codepen.io/georgemarts/pen/xwEymK'>Timer</a> forked by Georgemarts (<a href='http://codepen.io'>@georgemarts</a>) on <a href='http://codepen.io'>CodePen</a></p>
+
+在这个案例里，我们定义了两个不同的元素。第一个就是块级元素(绿盒子，例如:```div```)，第二个就是内联元素(红盒子，例如：```span```)。值得注意的是虽然只有绿盒子显示出来。
+
+红色盒子之所以现在不可见是因为我们赋予它的```width```跟```height```只能作用域块级元素跟内联块级元素。再加上，它是一个空的元素(即：它不包含任何的子元素例如文本节点)。
+
+记住一点的是，假如我们将它的定位类型设置为```absolute```或者```fixed```，则该元素会出现是因为这时候它的表现已经跟块级元素一样了。
+
+## 外边距(margins)无法合并绝对定位元素
+
+默认情况下，当两个垂直外边距互相接触，它们会合并成一个，并且```margin```值指定为较大的那一个。这种表现称之为[外边距合并](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Box_Model/Mastering_margin_collapsing)。
+
+<p data-height="499" data-theme-id="0" data-slug-hash="jbVrGd" data-user="georgemarts" data-default-tab="result" class='codepen'>See the Pen <a href='http://codepen.io/georgemarts/pen/jbVrGd'>Timer</a> forked by Georgemarts (<a href='http://codepen.io'>@georgemarts</a>) on <a href='http://codepen.io'>CodePen</a></p>
+
+<script src="http://codepen.io/assets/embed/ei.js"> </script>

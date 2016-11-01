@@ -108,6 +108,42 @@ publish: false
 
 默认情况下，当两个垂直外边距互相接触，它们会合并成一个，并且```margin```值指定为较大的那一个。这种表现称之为[外边距合并](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Box_Model/Mastering_margin_collapsing)。
 
+就像在一个浮动的元素上的外边距一样，绝对定位的外边距不会跟其他元素合并。
+
+思考一下以下的例子：
+
 <p data-height="499" data-theme-id="0" data-slug-hash="jbVrGd" data-user="georgemarts" data-default-tab="result" class='codepen'>See the Pen <a href='http://codepen.io/georgemarts/pen/jbVrGd'>Timer</a> forked by Georgemarts (<a href='http://codepen.io'>@georgemarts</a>) on <a href='http://codepen.io'>CodePen</a></p>
+
+在这个例子，初始化该元素的外边距为```20px```。另外，该元素的```top```外边距跟父元素的```top```外边距合并，同样也是```20px```。正如你所见，只有当我们绝对定位其元素，```top```外边距才不会跟父元素相关外边距合并。
+
+但是，如何防止我们的外边距发生合并呢？当然，我们需要放一些东西来分割它们。
+
+也就是说，例如有些许的内边距或者边框(我们应该将这条规则应用在父元素或者子元素)。另外一个选择就是在父元素添加```clearfix```类。
+
+## 通过像素和百分比来定位元素
+
+你是否通过百分比取代像素的方法定义```offset```来定位元素？假如你的回答是有的话，你可能已经注意到计算```offset```的值跟你选择的CSS单位(例如：像素或者百分比)不一样。
+
+这看起来有点让人迷惑，对吧？所以，让我们一起来看一下[规范](https://drafts.csswg.org/css-position-3/#valdef-top-percentage)对于用百分比来声明元素的```offset```值是怎么描述的。
+
+>The offset is a percentage of the containing block’s width (for left or right) or height (for top and bottom). For stickily positioned elements, the offset is a percentage of the flow root’s width (for left or right) or height (for top or bottom). Negative values are allowed.
+
+也就是说，只要我们通过百分比来定义```offset```的值，那么目标元素的位置依赖于父元素的宽(对于左右偏移)和高(对于上下偏移)。
+
+下面的例子演示了这种差异
+
+<p data-height="499" data-theme-id="0" data-slug-hash="PPbGbL" data-user="georgemarts" data-default-tab="result" class='codepen'>See the Pen <a href='http://codepen.io/georgemarts/pen/PPbGbL'>Timer</a> forked by Georgemarts (<a href='http://codepen.io'>@georgemarts</a>) on <a href='http://codepen.io'>CodePen</a></p>
+
+在这个例子，我们通过了像素跟百分比来移动这个元素。果然，当我们用像素来声明```offset```的值，元素会在按照我们所期望的位置。
+
+相反，当我们选择百分比来设计CSS偏移单位时，其元素的位移依赖于父元素的尺寸。这里有个有用的可视化图展示了新位置是如何计算的(通过百分比)：
+
+![]({{site.baseurl}}/images/css/css-07.png)
+
+*注意：估计你已经知道了，```transform```属性(伴随着不同的```translate```方法)同样也可以改变一个元素的位置。但是，请注意假如我们使用百分比来作为CSS的单位，那么该元素是相对于它的尺寸位移而不是相对于父元素的尺寸位移。*
+
+## 结论
+
+我希望这篇文章能帮你牢固的理解CSS的位置布局方法和突出CSS概念的疑惑点。同样我也很乐意在以下的评论你能分享你的想法，问题或者建议。感谢你的阅读！
 
 <script src="http://codepen.io/assets/embed/ei.js"> </script>

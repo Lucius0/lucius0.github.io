@@ -293,3 +293,73 @@ var myApp = {};
   </body>
 </html>
 ```
+
+注意一点以上的文件除了*myApp.js*现在都包装成IIFE格式。
+
+```(function(){ /*... your code goes here ...*/ })();```
+
+通过将每一个文件都包装成IIFE，所有的本地变量都在函数作用域里面。因此不会对全局造成污染。
+
+我们通过附加```add, reduce, sum```到```myApp```对象来暴露它们。我们只要引用```myApp```对象就能调用这些方法：
+
+```javascript
+myApp.add(1,2);
+myApp.sum([1,2,3,4]);
+myApp.reduce(add, value);
+```
+
+我们也可以通过往IIFE传递```myApp```全局对象作为它的参数，就像```main.js```文件所示。通过给IIFE传递参数对象，并可以为该对象设置为短别名。这样我们的代码就会稍微简短一点。
+
+```javascript
+(function(obj){
+  // obj is new veryLongNameOfGlobalObject
+})(veryLongNameOfGloablObject);
+```
+
+这相对于上一个例子是一个比较大的改进。并且大部分的js库都是采用这样的模式，包括jq。Jq暴露一个全局变量，$，这样所有的函数都在```$```的对象里面。
+
+是的，这不是一个完美的解决方案。这个方法患有跟上一个案例同样的问题。
+
+- **缺乏依赖解析：**文件的排序很重要。你需要在*main.js*之前引入了*add.js, reduce.js, add.js*。
+
+- **全局变量污染：**全局变量的数量现在是1，而不是0。
+
+## CommonJS
+
+在2009年，出现关于要把JavaScript带到服务端的话题。于是，ServerJs诞生了。后来ServerJs改名为CommonJS。
+
+CommonJS不是一个JavaScript库，而是一个标准化组织。它就跟ECMA或者W3C一样。ECMA制定了JavaScript语言的规范。W3C制定了JavaScript网页API，例如DOM或者DOM事件。CommonJS的目标是为网页服务器，桌面程序，命令行应用程序制定一套通用的API。
+
+CommonJS同样为模块制定API。在服务端应用程序是没有HTML页面，也没有```<script>```标签，因此为模块制定一套清晰的API就显得十分有意义了。模块需要暴露(**export**)给其他模块使用，并且还是可访问性的(**import**)。它的模块输出语法就像下面这样：
+
+```javascript
+// add.js
+module.exports = function add(a, b){
+  return a+b;
+}
+```
+
+上面的代码定义和输出了一个模块，并且保存在```add.js```文件里面。
+
+为了使用和引入```add```模块，你需要将文件名或者模块名传参给```require```函数。下面就是如何引入模块的语法描述：
+
+```javascript
+var add = require(‘./add’);
+```
+
+假如你有写过NodeJS，这种语法会看起来十分的熟悉。这是因为NodeJS实现了CommonJS风格的模块API。
+
+## Asynchronous Module Definition(AMD)
+
+CommonJS带来的问题就是模块的定义是同步的。当你调用```‘var add=require(‘add’);```，系统会暂停直到模块准备好了。意思就是这行代码会使浏览器发生阻塞直到所有的模块都加载完毕。因此这也不是在浏览器端定义模块应用的最佳方法。
+
+为了将服务端的语法转移到客户端的语法，CommonJS提出了几种模块格式，"Module/Transfer"。其中一个提案就是，"Module/Transfer/C"，后来就成了[AMD](https://github.com/amdjs/amdjs-api/blob/master/AMD.md)。
+
+AMD的格式如下：
+
+```javascript
+define([‘add’, ‘reduce’], function(add, reduce){
+  return function(){...};
+});
+```
+

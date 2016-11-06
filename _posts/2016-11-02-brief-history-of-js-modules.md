@@ -363,3 +363,342 @@ define([‘add’, ‘reduce’], function(add, reduce){
 });
 ```
 
+注意```define```这个函数(或者说关键字)用依赖列表和回调函数作为参数。参数里的回调函数跟依赖列表的顺序一一对应。这跟模块导入无差别，并且回调函数返回的值就是输出(```export```)的值。
+
+CommonJS和AMD同时解决了模块模式带来的两个遗留问题：**依赖解析**和**全局作用域污染**：我们只需要关心每个模块或者每个文件的依赖关系，和是否存在全局作用域污染问题。。
+
+## RequireJS
+
+AMD可以帮我们解决浏览器应用程序中的脚本标签跟全局污染的问题。那么，我们该如何使用它呢？RequireJS出现了。RequireJS是Javascript的**模块加载器**。它的作用就是帮助我们异步加载我们所需的模块。
+
+今晚它的名字带有```require```，但是它的目标并不是支持CommonJS的```require```语法。有了RequireJS，我们就可以编写AMD风格的模块。。
+
+在你开始写程序之前，你需要到[RequireJS website](http://requirejs.org/docs/start.html)下载*require.js*文件。如下就是用RequireJS风格编写的例子。
+
+0-index.html
+
+```html
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>JS Modules</title>
+  </head>
+  <body>
+    <h1>
+      The Answer is
+      <span id="answer"></span>
+    </h1>
+
+    <script data-main="main" src="require.js"></script>
+  </body>
+</html>
+```
+
+1-main.js
+
+```javascript
+// main.js
+define(['sum'], function(sum){
+  var values = [ 1, 2, 4, 5, 6, 7, 8, 9 ];
+  var answer = sum(values)
+  document.getElementById("answer").innerHTML = answer;
+})
+```
+
+2-sum.js
+
+```javascript
+// add.js
+define([], function(){
+  var add = function(a, b){
+    return a + b;
+  };
+
+  return add;
+});
+```
+
+3-add.js
+
+```javascript
+// add.js
+define([], function(){
+  var add = function(a, b){
+    return a + b;
+  };
+
+  return add;
+});
+```
+
+4-reduce.js
+
+```javascript
+// reduce.js
+define([], function(){
+  var reduce = function(arr, iteratee) {
+    var index = 0,
+      length = arr.length,
+      memo = arr[index];
+
+    index += 1;
+    for(; index < length; index += 1){
+      memo = iteratee(memo, arr[index])
+    }
+    return memo;
+  }
+
+  return reduce;
+})
+```
+
+注意在index.html文件只有一个脚本标签
+
+```html
+<script data-main=”main” src=”require.js”></script>
+```
+
+该页面加载了```require.js```，并且```data-main='main'```属性通知RequireJs在这个页面哪里是开始节点。通常默认情况下，它假定所有的文件都有*'.js'*扩展名，因此可以忽略*'.js'*后缀名的文件。但当RequireJS加载完*main.js*之后，它会加载该文件的依赖，以及依赖的依赖，等等。浏览器的开发者工具展示了所有文件的加载顺序。
+
+![]({{site.baseurl}}/images/css/css-08.png)
+
+浏览器加载```index.html```以及加载它的```require.js```。剩下的文件和依赖由```require.js```来负责加载。
+
+RequireJS和AMD解决了我们之前的所有问题。然而，它也带来了其他一些不是很严重的问题。
+
+- AMD语法太过于复杂。因为所有都包装在```define```函数里面，所以会在我们的代码产生一些额外的缩进。假如是比较小的文件，这也没什么大问题，但假如是比较庞大的文件，那么它将是一种精神折磨。
+
+- 数组里的依赖列表必须与函数的参数列表相匹配。假如有大量的依赖，那么要理清依赖顺序也是比较困难的一件事情。如果模块有几个个依赖，后来又要从中删除一个，那么久很难找到匹配的模块和参数。
+
+- 伴随着现代浏览器(HTTP 1.1)，加载很多小文件也会降低性能。
+
+## Browserify
+
+由于这些原因，一些人想要用CommonJS语法来代替。但是CommonJS语法主要是针对服务器以及同步的，对吧？那么Browserify的出现就是要来解决这些问题的。有了Browserify，你就可以在浏览器应用程序使用CommonJS。Browserify是一个**模块加载器**。Browserify遍历你代码的依赖树，并且将它们打包成一个文件。
+
+不像RequireJS，Browserify更像是一个命令行工具。你需要使用NodeJS和NPM来安装它。只要你在你的系统安装了nodeJS，那么输入以下命令行。
+
+```npm install -g browserify```
+
+让我们来看下用CommonJS语法的例子程序。
+
+0-index.html
+
+```html
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>JS Modules</title>
+  </head>
+  <body>
+    <h1>
+      The Answer is
+      <span id="answer"></span>
+    </h1>
+
+    <script src="bundle.js"></script>
+  </body>
+</html>
+```
+
+1-main.js
+
+```javascript
+//main.js
+var sum = require('./sum');
+var values = [ 1, 2, 4, 5, 6, 7, 8, 9 ];
+var answer = sum(values)
+
+document.getElementById("answer").innerHTML = answer;
+```
+
+2-sum.js
+
+```javascript
+//sum.js
+var reduce = require('./reduce');
+var add = require('./add');
+
+module.exports = function(arr){
+  return reduce(arr, add);
+};
+```
+
+3-add.js
+
+```javascript
+//add.js
+module.exports = function add(a,b){
+    return a + b;
+};
+```
+
+4-reduce.js
+
+```javascript
+//reduce.js
+module.exports = function reduce(arr, iteratee) {
+  var index = 0,
+    length = arr.length,
+    memo = arr[index];
+
+  index += 1;
+  for(; index < length; index += 1){
+    memo = iteratee(memo, arr[index])
+  }
+  return memo;
+};
+```
+
+你可能已经注意到在```index.html```文件中，加载了脚本文件```bundle.js```。那么```bundle.js```文件在哪里呢？只要你执行下面的命令行，Browserify会为我们生成该文件。
+
+```$ brwoserify main.js -o bundle.js```
+
+Browserify会解析```main.js```里的```require```函数调用和遍历项目里面的依赖树。然后将他们都打包成一个文件。
+
+如下就是```bundle```文件的相关代码。
+
+```javascript
+function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+module.exports = function add(a,b){
+    return a + b;
+};
+
+},{}],2:[function(require,module,exports){
+var sum = require('./sum');
+var values = [ 1, 2, 4, 5, 6, 7, 8, 9 ];
+var answer = sum(values)
+
+document.getElementById("answer").innerHTML = answer;
+
+},{"./sum":4}],3:[function(require,module,exports){
+module.exports = function reduce(arr, iteratee) {
+  var index = 0,
+    length = arr.length,
+    memo = arr[index];
+
+  index += 1;
+  for(; index < length; index += 1){
+    memo = iteratee(memo, arr[index])
+  }
+  return memo;
+};
+
+},{}],4:[function(require,module,exports){
+var reduce = require('./reduce');
+var add = require('./add');
+
+module.exports = function(arr){
+  return reduce(arr, add);
+};
+
+},{"./add":1,"./reduce":3}]},{},[2]);
+```
+
+你无需每一行的去理解这个打包文件的意思。你只要注意一点的是，所有熟悉的代码，主文件，以及所有的依赖都在这文件里面。
+
+## UMD — 只会让你感到更加的困惑
+
+现在我们已经学会了*全局对象*，*CommonJS*和*AMD*风格的模块。并且有很多库可以帮助我们要不用CommonJS，要不AMD。但是假如我们正在写一个模块，并想部署到互联网上去怎么办？我们该用那种风格的模块。
+
+用三种不同的模块都是可以的，如全局模块对象，CommonJS和AMD都是最终选择来的。但是我们不得不维护这三种类型的文件，并且用户不得不他们所下载的是哪种模块类型。
+
+通用模块定义(UMD)就是来处理这个特殊的问题的。在本质上，UMD就是用一套```if/else```来判断目前的运行环境支持哪种模块类型。
+
+```javascript
+//sum.umd.js
+(function (root, factory) {
+    if (typeof define === 'function' && define.amd) {
+        // AMD
+        define(['add', 'reduce'], factory);
+    } else if (typeof exports === 'object') {
+        // Node, CommonJS-like
+        module.exports = factory(require('add'), require('reduce'));
+    } else {
+        // Browser globals (root is window)
+        root.sum = factory(root.add, root.reduce);
+    }
+}(this, function (add, reduce) {
+    //  private methods
+
+    //    exposed public methods
+    return function(arr) {
+      return reduce(arr, add);
+    }
+}));
+```
+
+## ES6模块语法
+
+Javascript全局模块变量，CommonJS，AMD和UMD，这里有太多选择了。现在你可能会问，我下一个项目应该使用什么模块风格？答案是一个也不用。
+
+Javascript语言没有内置的模块系统。这就是为什么我们有太多不同的方式去导入导出模块了。但是最近以来这些改变了。伴随着ES6的到来，模块是Javascript其中的一部分。所以问题的答案是你假如想要你下一个项目前卫不过时的话，ES6模块语法是你最好的选择。
+
+ES6通过```import```和```export```关键字来导入导出模块。下面是关于使用ES6模块语法的例子。
+
+01-main.js
+
+```javascript
+// main.js
+import sum from "./sum";
+
+var values = [ 1, 2, 4, 5, 6, 7, 8, 9 ];
+var answer = sum(values);
+
+document.getElementById("answer").innerHTML = answer;
+```
+
+02-sum.js
+
+```javascript
+// sum.js
+import add from './add';
+import reduce from './reduce';
+
+export default function sum(arr){
+  return reduce(arr, add);
+}
+```
+
+03-add.js
+
+```javascript
+// add.js
+export default function add(a,b){
+  return a + b;
+}
+```
+
+04-reduce.js
+
+```javascript
+//reduce.js
+export default function reduce(arr, iteratee) {
+  let index = 0,
+  length = arr.length,
+  memo = arr[index];
+
+  index += 1;
+  for(; index < length; index += 1){
+    memo = iteratee(memo, arr[index]);
+  }
+  return memo;
+}
+```
+
+关于ES6模块有很多短语：ES6模块语法相当简洁。ES6模块将会引领Javascript未来的世界。但是不幸的是，有一个问题，浏览器对这种新语法还没准备好(并未全面支持)。在写这篇文章的时候，只有Chrome浏览器支持[import](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/import)语句。即使当大部分的浏览支持```import```和```export```，假如你的应用程序需要在低版本的浏览器运行，那我们同样也会运行出错。
+
+幸运的是，现在有很多工具可以用，这些工具允许我们使用ES6模块语法。
+
+## Webpack
+
+Webpack是一个**模块打包器**，就跟Browserify一样，它会遍历依赖树并且将它打包成一个至多个文件。假如真的跟Browserify一样，那我们为什么还需要另一个模块打包器？Webpack可以管理CommonJS，AMD和ES6模块。并且Webpack带来了更灵活更酷的特性：
+
+- **代码分离：**当你有多个app同时共享同一些模块，Webpack可以将你的代码打包成两个或者多个文件。例如，当你有两个app，app1跟app2，两者共用多个模块。使用Browserify，你会得到```app1.js```和```app2.js```，并且两者都同时拥有所依赖的模块。但是假如使用Webpack，你可以创建```app1.js```，```app2.js```，和```share-lib.js```。是的，你必须在html页面加载这2个文件，但是由于哈希文件名，浏览器缓存以及CDN的原因，它可以减少初始化的加载时间。
+
+- **加载：**通过自定义加载，你可以在加载任何文件到你的资源去。你可以通过使用```require```语法加载不单单是Javascript文件，还有css，CoffeeScript，Sass，Less，HTML模板，图片等等。
+
+- **插件：**Webpack插件可以在你打包写入到文件之前对打包进行操作，有很多社区都在创建Webpack插件。例如，给打包代码添加注释，添加source map，将打包文件分离成众多小文件等等。
+

@@ -702,3 +702,308 @@ Webpack是一个**模块打包器**，就跟Browserify一样，它会遍历依�
 
 - **插件：**Webpack插件可以在你打包写入到文件之前对打包进行操作，有很多社区都在创建Webpack插件。例如，给打包代码添加注释，添加source map，将打包文件分离成众多小文件等等。
 
+*WebpackDevServer*是一个检测到当你的代码发生变化时，会自动打包你的源代码以及自动刷新浏览器的开发服务器。通过代码的及时反馈，从而可以加速开发进度。
+
+让我们看看我们是如何通过Webpack来打包我们的案例程序的。Webpack需要一点引导以及配置。
+
+既然Webpack是JavaScript命令行工具，你就需要安装好nodejs和npm。装好npm之后，执行以下命令行初始化项目：
+
+```
+$ mkdir project; cd project
+$ npm init -y
+$ npm install -D webpack webpack-dev-server
+```
+
+你需要给Webpack添加配置文件。在你的配置文件中最少需要```entry```跟```output```两个字段。保存以下内容到```webpack.config.js```。
+
+```javascript
+module.exports = {
+   entry: ‘./app/main.js’,
+   output: {
+       filename: ‘bundle.js’
+   }
+}
+```
+
+打开```package.json```并添加以下```script```内容。
+
+```json
+"scripts": {
+    "start": "webpack-dev-server -progress -colors",
+    "build": "webpack"
+ },
+```
+
+现在添加所有你的JavaScript模块到*project/app*目录和添加*index.html*到*project*目录下。
+
+01-index.html
+
+```html
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>JS Modules</title>
+  </head>
+  <body>
+    <h1>
+      The Answer is
+      <span id="answer"></span>
+    </h1>
+
+    <script src="bundle.js"></script>
+  </body>
+</html>
+```
+
+02-webpack.config.js
+
+```javascript
+
+module.exports = {
+  entry: './app/main.js',
+  output: {
+    path: './dist',
+    filename: 'bundle.js'
+  }
+}
+```
+
+03-package.json
+
+```json
+{
+  "name": "jsmodules",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "scripts": {
+    "start": "webpack-dev-server --progress --colors",
+    "build": "webpack"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "webpack": "^1.12.14",
+    "webpack-dev-server": "^1.14.1"
+  }
+}
+```
+
+04-app-add.js
+
+```javascript
+// app/add.js
+module.exports = function add(a,b){
+    return a + b;
+};
+```
+
+05-app-reduce.js
+
+```javascript
+// app/sum.js
+// app/reduce.js
+module.exports = function reduce(arr, iteratee) {
+  var index = 0,
+    length = arr.length,
+    memo = arr[index];
+
+  index += 1;
+  for(; index < length; index += 1){
+    memo = iteratee(memo, arr[index])
+  }
+  return memo;
+};
+```
+
+06-app-sum.js
+
+```javascript
+// app/sum.js
+define(['./reduce', './add'], function(reduce, add){
+  sum =  function(arr){
+    return reduce(arr, add);
+  }
+
+  return sum;
+});
+```
+
+07-app-main.js
+
+```javascript
+// app/main.js
+var sum = require('./sum');
+var values = [ 1, 2, 4, 5, 6, 7, 8, 9 ];
+var answer = sum(values)
+
+document.getElementById("answer").innerHTML = answer;
+```
+
+注意一下```add.js```和```reduce.js```编写风格是CommonJS风格，而```sum.js```则是用AMD风格。Webpack，默认情况下，是可以管理CommonJS和AMD的。假如你的源码有用到ES6模块编码风格，那么你就不得不安装和配置*“babel loader”*。
+
+一旦你已经安装好所有文件，你可以执行下面命令行来运行你的程序。
+
+```
+$ npm start
+```
+
+随后打开网站输入网址：```http://localhost:8080/webpack-dev-server/```
+
+此时，你可以打开你喜爱的编译器和输入你的代码。待你保存之后，浏览器会自动刷新和展示你代码改动之后的结果。
+
+有一件事你可能已经注意到了，就是你已经找不到*'dist/bundle.js'*文件。这是因为Wepback Dev Server会创建打包文件，并且没有将此写入文件系统中，而是保存在内存里。
+
+为了可以部署，你可能想要创建一个打包文件。你可以执行下面的命令行创建*bundle.js*文件。
+
+```
+$ npm run build
+```
+
+假如你有兴趣想了解更多关于Webpack的知识，你可以访问[Webpack](https://webpack.github.io/docs/)。
+
+## Rollup (2015-05)
+
+你是否有过导入了一个很大的JavaScript文件但是却使用到里面的一小部分函数？Rollup是JavaScript ES6的另一个模块打包器。跟Browserify和Webpack不同的是，Rollup只会引入你在项目中使用到的代码。假如你的项目引入了一个有很多方法的大模块并且你只用到里面的一小部分方法，Rollup只会打包你在项目中你调用到的方法。这可以很显著的减少打包文件的大小。
+
+Rollup 可以被用作为命令行工具。如果安装好 NodeJS 和 NPM，那么就可以用以下的命令安装。
+
+```
+$ npm install -g rollup
+```
+
+Rollup可以跟任何类型的模块类型一起执行。但是，推荐使用ES6模块风格，这样就可以使用 *tree-shaking* 功能。下面是用ES6 编写的例子。
+
+01-add.js
+
+```javascript
+let add = (a,b) => a + b;
+let sub = (a,b) => a - b;
+
+export { add, sub };
+```
+
+02-reduce.js
+
+```javascript
+// reduce.js
+export default (arr, iteratee) => {
+  let index = 0,
+  length = arr.length,
+  memo = arr[index];
+
+  index += 1;
+  for(; index < length; index += 1){
+    memo = iteratee(memo, arr[index]);
+  }
+  return memo;
+}
+```
+
+03-sum.js
+
+```javascript
+// sum.js
+import { add } from './add';
+import reduce from './reduce';
+
+export default (arr) => reduce(arr, add);
+```
+
+04-main.js
+
+```javascript
+// main.js
+import sum from "./sum";
+
+var values = [ 1, 2, 4, 5, 6, 7, 8, 9 ];
+var answer = sum(values);
+
+document.getElementById("answer").innerHTML = answer;
+```
+
+注意在```add```模块，我引入了另一个函数```sub()```，但是这个函数在这个项目里面并没有使用。
+
+现在我们用Rollup来打包我们的项目
+
+```$ rollup main.js -o bundle.js```
+
+生成的```bundle.js```
+
+bundle.js
+
+```javascript
+let add = (a,b) => a + b;
+
+var reduce = (arr, iteratee) => {
+  let index = 0,
+  length = arr.length,
+  memo = arr[index];
+
+  index += 1;
+  for(; index < length; index += 1){
+    memo = iteratee(memo, arr[index]);
+  }
+  return memo;
+}
+
+var sum = (arr) => reduce(arr, add);
+
+var values = [ 1, 2, 4, 5, 6, 7, 8, 9 ];
+var answer = sum(values);
+
+document.getElementById("answer").innerHTML = answer;
+```
+
+注意观察，```sub```函数并没有出现在此```bunldle.js```文件里面。
+
+## SystemJS
+
+SystemJS是一个通用的模块加载器，它可以在浏览器或者NodeJs动态的加载模块，并且它还支持CommonJS，AMD，全局对象和ES6模块。通过插件，它还不仅仅能加载JavaScript，还可以加载CoffeeScript和TypeScript。
+
+SystemJS的另一个好处，就是它是基于ES6 module Loader polyfill。因此它的语法和API在未来很有可能成为JavaScript语言的一部分，它可以让你的代码更加前卫。
+
+可以使用以下语法，通过SystemJS来异步的导入模块。
+
+```System.import(‘module-name’);```
+
+然后我们可以用配置 API 来配置 SystemJS 的行为。
+
+```javascript
+System.config({
+  transplier: ‘babel’,
+  baseURL: ‘/app’
+});
+```
+
+上面的配置会让SystemJS使用```babel```来作为ES6模块的编译器，并且从*/app*目录加载模块。
+
+随着现代JavaScript变得越来越大越来越复杂，开发工作流亦是如此。所以我们需要的，不仅仅是模块加载器，还有寻找开发服务器，生产的模块打包器以及第三方模块包管理器。
+
+## JSPM
+
+JSPM是JavaScript开发工具的一把瑞士军刀。JSPM是一个(1)包管理器；(2)模块加载器；(3)模块打包器。
+
+现在的JavaScript开发很少只需要自己的一些模块就可以完成的，大部分，我们是需要借用第三方模块的。
+
+通过JSPM，你可以通过以下的命令行从NPM或者github来安装第三方模块。
+
+```jspm install npm:package-name or github:package/name```
+
+随后会从*'npm'*或者*'github'*下载至*'jspm_package'*目录下。
+
+在开发模式下，你可以使用*'jspm-server'*，就跟Webpack Dev Server一样，它会探测到代码是否发生改变并且会自动刷新浏览器展示修改后的结果。但是不同Webpack Dev Server，jspm-server用的是SystemJS模块加载器。因此当它探测到文件有发生变化时，它不会打包所有的模块，而是只加载页面所需要的模块。
+
+但当涉及到部署的问题，你可能想要打包你的代码。JSPM带有打包器，你可以使用以下的命令行来打包你的代码。
+
+```jspm bundle main.js bundle.js```
+
+在背后，JSPM采取了Rollup作为它的打包器。
+
+## 总结
+
+我希望已经给你足够的信息让你去理解关于JavaScript模块化的问题。现在你可能会问，那我在下一个项目应该采用什么的方式呢？很抱歉，我现在无法回答你的问题。现在你已经具备能力去为自己寻找答案。希望本文能让你更容易理解提到有关工具的文档和文章。
+
+你可以到[github](https://github.com/sungthecoder/js-modules-examples)查看本文中所有的代码例子，假如你有任何疑问，欢迎到下面的评论区留下的问题。

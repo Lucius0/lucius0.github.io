@@ -967,7 +967,9 @@ SystemJS的另一个好处，就是它是基于ES6 module Loader polyfill。因�
 
 可以使用以下语法，通过SystemJS来异步的导入模块。
 
-```System.import(‘module-name’);```
+```javascript
+System.import(‘module-name’);
+```
 
 然后我们可以用配置 API 来配置 SystemJS 的行为。
 

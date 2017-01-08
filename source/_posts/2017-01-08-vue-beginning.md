@@ -9,7 +9,7 @@ tags: vue
 
 ## 介绍
 
-Vue.js 主要是利用到ECMAScript 5的特性，因此IE 8以下的浏览器都不支持，可以通过(caniuse)[http://caniuse.com/#feat=es5]来查看浏览器的支持情况。
+Vue.js 主要是利用到ECMAScript 5的特性，因此IE 8以下的浏览器都不支持，可以通过[caniuse](http://caniuse.com/#feat=es5)来查看浏览器的支持情况。
 
 [官方](http://doc.vue-js.com/v2/guide/index.html)的介绍是：
 

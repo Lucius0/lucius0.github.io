@@ -6,7 +6,7 @@
     <entry>
       <title><![CDATA[Vue.js 初体验]]></title>
       <url>https://lucius0.github.io/2017/01/08//archivers/vue-beginning/</url>
-      <content type="html"><![CDATA[<h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><p>Vue.js 主要是利用到ECMAScript 5的特性，因此IE 8以下的浏览器都不支持，可以通过(caniuse)[<a href="http://caniuse.com/#feat=es5]来查看浏览器的支持情况。" target="_blank" rel="external">http://caniuse.com/#feat=es5]来查看浏览器的支持情况。</a></p>
+      <content type="html"><![CDATA[<h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><p>Vue.js 主要是利用到ECMAScript 5的特性，因此IE 8以下的浏览器都不支持，可以通过<a href="http://caniuse.com/#feat=es5" target="_blank" rel="external">caniuse</a>来查看浏览器的支持情况。</p>
 <p><a href="http://doc.vue-js.com/v2/guide/index.html" target="_blank" rel="external">官方</a>的介绍是：</p>
 <p>Vue.js（读音 /vjuː/, 类似于 view） 是一套构建用户界面的 渐进式框架。与其他重量级框架不同的是，Vue 采用自底向上增量开发的设计。Vue 的核心库只关注视图层，并且非常容易学习，非常容易与其它库或已有项目整合。另一方面，Vue 完全有能力驱动采用<a href="http://doc.vue-js.com/v2/guide/single-file-components.html" target="_blank" rel="external">单文件组件</a>和<a href="http://github.com/vuejs/awesome-vue#libraries--plugins" target="_blank" rel="external">Vue生态系统支持的库</a>开发的复杂单页应用。</p>
 <p>Vue.js 的目标是通过尽可能简单的 API 实现响应的数据绑定和组合的视图组件。</p>

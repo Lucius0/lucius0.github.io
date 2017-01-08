@@ -1,0 +1,912 @@
+<!doctype html>
+
+
+
+
+<html class="theme-next mist" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="CSS," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="原文链接： https://www.sitepoint.com/quick-tip-how-z-index-and-auto-margins-work-in-flexbox/
+Flexbox 是解决例如固定页脚和等高列等的普通布局的一种有效的解决方法。抛开这些，它还提供了一些不太流行的有用特性。让我们来一一探索它们。
+Flexbox 和 z-index正如你已经知道的那样，z-index属性只能在">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Flexbox与z-index">
+<meta property="og:url" content="https://lucius0.github.io/2016/11/13//archivers/flexbox-and-z-index/index.html">
+<meta property="og:site_name" content="Lucius's Blog">
+<meta property="og:description" content="原文链接： https://www.sitepoint.com/quick-tip-how-z-index-and-auto-margins-work-in-flexbox/
+Flexbox 是解决例如固定页脚和等高列等的普通布局的一种有效的解决方法。抛开这些，它还提供了一些不太流行的有用特性。让我们来一一探索它们。
+Flexbox 和 z-index正如你已经知道的那样，z-index属性只能在">
+<meta property="og:image" content="https://lucius0.github.io/images/css/css-18.png">
+<meta property="og:image" content="https://lucius0.github.io/images/css/css-19.png">
+<meta property="og:image" content="https://lucius0.github.io/images/css/css-20.png">
+<meta property="og:image" content="https://lucius0.github.io/images/css/css-21.png">
+<meta property="og:updated_time" content="2017-01-07T09:58:28.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Flexbox与z-index">
+<meta name="twitter:description" content="原文链接： https://www.sitepoint.com/quick-tip-how-z-index-and-auto-margins-work-in-flexbox/
+Flexbox 是解决例如固定页脚和等高列等的普通布局的一种有效的解决方法。抛开这些，它还提供了一些不太流行的有用特性。让我们来一一探索它们。
+Flexbox 和 z-index正如你已经知道的那样，z-index属性只能在">
+<meta name="twitter:image" content="https://lucius0.github.io/images/css/css-18.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: false,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://lucius0.github.io/2016/11/13//archivers/flexbox-and-z-index/"/>
+
+
+
+
+
+  <title> Flexbox与z-index | Lucius's Blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Lucius's Blog</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            日志
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup">
+ <span class="search-icon fa fa-search"></span>
+ <input type="text" id="local-search-input">
+ <div id="local-search-result"></div>
+ <span class="popup-btn-close">close</span>
+</div>
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="https://lucius0.github.io/2016/11/13/archivers/flexbox-and-z-index/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="Lucius">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.jpg">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="Lucius's Blog">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="Lucius's Blog" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Flexbox与z-index
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              <span class="post-meta-item-text">更新于</span>
+              <time title="更新于" itemprop="dateModified" datetime="2017-01-07T17:58:28+08:00">
+                2017-01-07
+              </time>
+            
+          </span>
+
+          
+            <span class="post-category" >
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/front-end/" itemprop="url" rel="index">
+                    <span itemprop="name">front-end</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <a href="/2016/11/13/archivers/flexbox-and-z-index/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/11/13//archivers/flexbox-and-z-index/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>原文链接： <a href="https://www.sitepoint.com/quick-tip-how-z-index-and-auto-margins-work-in-flexbox/" target="_blank" rel="external">https://www.sitepoint.com/quick-tip-how-z-index-and-auto-margins-work-in-flexbox/</a></p>
+<p><a href="https://www.w3.org/TR/css-flexbox-1/" target="_blank" rel="external">Flexbox</a> 是解决例如固定页脚和等高列等的普通布局的一种有效的解决方法。抛开这些，它还提供了一些不太流行的有用特性。让我们来一一探索它们。</p>
+<h2 id="Flexbox-和-z-index"><a href="#Flexbox-和-z-index" class="headerlink" title="Flexbox 和 z-index"></a>Flexbox 和 z-index</h2><p>正如你已经知道的那样，<code>z-index</code>属性只能在定位的元素有效。默认情况下，所有元素都拥有<code>position: static</code>并且无法定位。除非<code>position</code>属性的值被设置为<code>relative</code>，<code>absolute</code>，<code>fixed</code>，或者<code>sticky</code>。</p>
+<p>然而，一个没有定位性质的元素，例如flex项目同样也可以接收<code>z-index</code>属性。有关信息，在<a href="https://drafts.csswg.org/css-flexbox-1/#painting" target="_blank" rel="external">CSS弹性盒子布局规范</a>有介绍。</p>
+<blockquote>
+<p>Flex项目在渲染时如同内联块状元素一样，除了命令修改文档流顺序是用来替换未修改文档流顺序，<code>z-index</code>和自动边距在创建层叠上下文表现是不一样的，即使值为static。</p>
+</blockquote>
+<p>为了理解这些行为，让我们跟随着以下的例子来思考吧：</p>
+<p data-height="499" data-theme-id="0" data-slug-hash="JKYEgj" data-user="SitePoint" data-default-tab="result" class="codepen">See the Pen <a href="http://codepen.io/SitePoint/pen/JKYEgj" target="_blank" rel="external">Flexbox and z-index</a> forked by SitePoint(<a href="http://codepen.io" target="_blank" rel="external">@SitePoint</a>) on <a href="http://codepen.io" target="_blank" rel="external">CodePen</a></p>
+
+<p>这里我们定义两个元素：<code>.font</code>元素和<code>.back</code>元素。<code>.font</code>元素有一内容值为‘1’的子元素，并且<code>.font</code>元素为绝对定位元素。特别地，它拥有<code>position:fixed</code>属性并且覆盖了整个视图。</p>
+<p>至于<code>.back</code>元素是一个flex容器，它包含了两个子元素-一个内容为2和一个为3的子元素。基于我们在上面讨论的，我们可以对flex项目设置<code>z-index</code>属性，即使它们不是定位元素(即它们有<code>position:static</code>)</p>
+<p>注意到当我们通过点击上面例子的按钮给flex项目添加<code>z-index:2</code>，它们会被定位到<code>.front</code>元素的上面。</p>
+<h2 id="Flexbox和自动边距"><a href="#Flexbox和自动边距" class="headerlink" title="Flexbox和自动边距"></a>Flexbox和自动边距</h2><p>通过给flex项目设置自动边距，我们可以解决相同的UI样式。一开始，我们先假象我们要构造这种类型的页头布局。</p>
+<p><img src="/images/css/css-18.png" alt=""></p>
+<p>为了构造这种样式的页头，我们使用Flexbox，没有浮动，没有固定宽诸如此类的属性。</p>
+<p>代码：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">header</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">nav</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">h1</span> <span class="attr">class</span>=<span class="string">"logo"</span>&gt;</span>LOGO<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></div><div class="line"></div><div class="line">    <span class="tag">&lt;<span class="name">ul</span> <span class="attr">class</span>=<span class="string">"menu"</span>&gt;</span></div><div class="line">      <span class="tag">&lt;<span class="name">li</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">""</span>&gt;</span>About<span class="tag">&lt;/<span class="name">a</span>&gt;</span></div><div class="line">       <span class="tag">&lt;/<span class="name">li</span>&gt;</span></div><div class="line">      <span class="tag">&lt;<span class="name">li</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">""</span>&gt;</span>Projects<span class="tag">&lt;/<span class="name">a</span>&gt;</span></div><div class="line">      <span class="tag">&lt;/<span class="name">li</span>&gt;</span></div><div class="line">      <span class="tag">&lt;<span class="name">li</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">""</span>&gt;</span>Contact<span class="tag">&lt;/<span class="name">a</span>&gt;</span></div><div class="line">      <span class="tag">&lt;/<span class="name">li</span>&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">ul</span>&gt;</span></div><div class="line"></div><div class="line">    <span class="tag">&lt;<span class="name">ul</span> <span class="attr">class</span>=<span class="string">"social"</span>&gt;</span></div><div class="line">      <span class="tag">&lt;<span class="name">li</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">""</span>&gt;</span>Facebook<span class="tag">&lt;/<span class="name">a</span>&gt;</span></div><div class="line">      <span class="tag">&lt;/<span class="name">li</span>&gt;</span></div><div class="line">      <span class="tag">&lt;<span class="name">li</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">""</span>&gt;</span>Twitter<span class="tag">&lt;/<span class="name">a</span>&gt;</span></div><div class="line">      <span class="tag">&lt;/<span class="name">li</span>&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">ul</span>&gt;</span></div><div class="line">  <span class="tag">&lt;/<span class="name">nav</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">header</span>&gt;</span></div></pre></td></tr></table></figure>
+<p>CSS:</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="selector-tag">header</span> &#123;</div><div class="line">  <span class="attribute">background</span>: <span class="number">#333</span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="selector-tag">nav</span> &#123;</div><div class="line">  <span class="attribute">display</span>: flex;</div><div class="line">  <span class="attribute">align-items</span>: center;</div><div class="line">  <span class="attribute">width</span>: <span class="number">90%</span>;</div><div class="line">  <span class="attribute">max-width</span>: <span class="number">1200px</span>;</div><div class="line">  <span class="attribute">margin</span>: <span class="number">0</span> auto;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="selector-class">.menu</span> &#123;</div><div class="line">  <span class="attribute">margin-left</span>: <span class="number">60px</span>;</div><div class="line">  <span class="attribute">margin-right</span>: auto;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>在这个例子，<code>nav</code>元素是flex容器，而logo，主菜单，社交菜单则是flex项目。正如你在上一个代码结果看到的，前两个flex项目是沿着主轴排列在flex容器的左边。相反的，社交菜单则是沿着主轴排列在父容器的右边。</p>
+<p>还有一种可以实现排列方式的就是给主菜单添加<code>margin-right: auto</code>。只要一行代码，我们就可以重载社交菜单的排列方式并把它始终排列在容器的右边。同样的，我们也可以用<code>align-self</code>属性去覆盖flex项目交叉轴的默认排列方式。</p>
+<p>除了自动边距，我们还可以有第二种方法去设计我们的布局。首先，我们移除主菜单的<code>margin-right</code>属性，然后我们对其添加<code>flex-grow</code>属性。</p>
+<p>尽管结果看起来两者无异，但却有一个很大的不同点。在第一个解决方法里面，菜单有它计算好的初始宽度。所以举个例子，当视图的宽度为1100px，菜单的宽度看起来则是下面这样的。</p>
+<p><img src="/images/css/css-19.png" alt=""></p>
+<p>另一方面，对于第二种解决方案，菜单的宽度值会更大，因为我们指定了<code>flex-grow: 1</code>，这是当我们视图宽度为1100px时相对应的宽度。</p>
+<p><img src="/images/css/css-20.png" alt=""></p>
+<p>以下是例子：</p>
+<p data-height="499" data-theme-id="0" data-slug-hash="ezpgqx" data-user="SitePoint" data-default-tab="result" class="codepen">See the Pen <a href="http://codepen.io/SitePoint/pen/ezpgqx" target="_blank" rel="external">Custom Flexbox Alignment With Auto Margins</a> forked by SitePoint(<a href="http://codepen.io" target="_blank" rel="external">@SitePoint</a>) on <a href="http://codepen.io" target="_blank" rel="external">CodePen</a></p>
+
+<p>现在让我们来假设一下我们想要修改的页头布局，新的设计布局是这样的：</p>
+<p><img src="/images/css/css-21.png" alt=""></p>
+<p>HTML部分的代码保持不变，我们只是对CSS做稍微修改：</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="selector-tag">nav</span> &#123;</div><div class="line">  <span class="attribute">background</span>: <span class="number">#333</span>;</div><div class="line">  <span class="attribute">display</span>: flex;</div><div class="line">  <span class="attribute">flex-direction</span>: column;</div><div class="line">  <span class="attribute">height</span>: <span class="number">100vh</span>;</div><div class="line">  <span class="attribute">width</span>: <span class="number">180px</span>;</div><div class="line">  <span class="attribute">padding</span>: <span class="number">20px</span>;</div><div class="line">  <span class="attribute">box-sizing</span>: border-box;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="selector-class">.menu</span> &#123;</div><div class="line">  <span class="attribute">margin-top</span>: <span class="number">60px</span>;</div><div class="line">  <span class="attribute">margin-bottom</span>: auto;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>在这个例子，注意下社交菜单排列在父元素的底部。这是因为我们给主菜单添加了<code>margin-bottom: auto</code>。当然，我们同样还可以使用<code>flex-grow: 1</code>。但是这种方法会增加menu的高度。</p>
+<p>同样来看一下codepen的示例代码：</p>
+<p data-height="499" data-theme-id="0" data-slug-hash="GqpWKW" data-user="SitePoint" data-default-tab="result" class="codepen">See the Pen <a href="http://codepen.io/SitePoint/pen/GqpWKW" target="_blank" rel="external">Custom Flexbox Alignment With flex-grow:1</a> forked by SitePoint(<a href="http://codepen.io" target="_blank" rel="external">@SitePoint</a>) on <a href="http://codepen.io" target="_blank" rel="external">CodePen</a></p>
+
+<p>有一件事我们需要留意的是我们在所有的例子都定义了<code>justify-content</code>属性，我们在视觉上看不出有任何的差异。这是因为我们对flex项目使用了<code>auto margin</code>。只有当我们移除了自动边距(auto margin)之后，<code>justify-content</code>才会生效。根据以下的规范</p>
+<blockquote>
+<p>If free space is distributed to auto margins, the alignment properties will have no effect in that dimension because the margins will have stolen all the free space left over after flexing.</p>
+<p>假如把剩余的空间都分配给自动边距，那么对其属性将会失效。这是因为假如是flex布局之后，margin会占据所剩余的空间。</p>
+</blockquote>
+<p>接下来，让我们来对页头做出新的改造。</p>
+<p>毫无疑问，我们可以通过设置<code>justify-content: space-between</code>来很简单的实现这样的效果。但是再提一次，我们同样也可以通过设置自动边距来达到同样的效果。我们只要给主菜单设置<code>margin: 0 auto</code>。</p>
+<p>Codepen 案例：</p>
+<p data-height="499" data-theme-id="0" data-slug-hash="beVqax" data-user="SitePoint" data-default-tab="result" class="codepen">See the Pen <a href="http://codepen.io/SitePoint/pen/beVqax" target="_blank" rel="external">Custom Flexbox Alignment With Auto Margins</a> forked by SitePoint(<a href="http://codepen.io" target="_blank" rel="external">@SitePoint</a>) on <a href="http://codepen.io" target="_blank" rel="external">CodePen</a></p>
+
+<h2 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h2><p>在这篇文章，我们介绍了两种鲜为人知关于Flexbox的小技巧。在结束之前，让我们来概括一下：</p>
+<ul>
+<li><p>我们可以对flex项目设置<code>z-index</code>，即使他们的定位为<code>static</code>，<code>position: static</code>。</p>
+</li>
+<li><p>我们可以使用自动边距来实现主轴上的flex项目的自定义排列。</p>
+</li>
+</ul>
+<p>假如你还在你的项目中使用了其他的技巧，欢迎在下面留言。</p>
+<script src="http://codepen.io/assets/embed/ei.js"> </script>
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/CSS/" rel="tag"># CSS</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/11/09/archivers/dive-into-flexbox/" rel="next" title="深入浅出Flexbox">
+                <i class="fa fa-chevron-left"></i> 深入浅出Flexbox
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/11/16/archivers/chrome-rendering-tools-1/" rel="prev" title="Chrome渲染分析之Rendering工具使用(1)">
+                Chrome渲染分析之Rendering工具使用(1) <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2016/11/13//archivers/flexbox-and-z-index/"
+           data-title="Flexbox与z-index" data-url="https://lucius0.github.io/2016/11/13//archivers/flexbox-and-z-index/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.jpg"
+               alt="Lucius" />
+          <p class="site-author-name" itemprop="name">Lucius</p>
+          <p class="site-description motion-element" itemprop="description">stay hungry, stay foolish...</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">31</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">3</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">11</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/Lucius0" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Flexbox-和-z-index"><span class="nav-number">1.</span> <span class="nav-text">Flexbox 和 z-index</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Flexbox和自动边距"><span class="nav-number">2.</span> <span class="nav-text">Flexbox和自动边距</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#结论"><span class="nav-number">3.</span> <span class="nav-text">结论</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Lucius</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"lucius0"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    
+    <script src="/lib/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+
+
+  
+  
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length == 0) {
+      search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body").append('<div class="popoverlay">').css('overflow', 'hidden');
+      $('.popup').toggle();
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+      $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = $( "entry", xmlResponse ).map(function() {
+            return {
+              title: $( "title", this ).text(),
+              content: $("content",this).text(),
+              url: $( "url" , this).text()
+            };
+          }).get();
+          var $input = document.getElementById(search_id);
+          var $resultContent = document.getElementById(content_id);
+          $input.addEventListener('input', function(){
+            var matchcounts = 0;
+            var str='<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length > 1) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var content_index = [];
+                var data_title = data.title.trim().toLowerCase();
+                var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                var data_url = decodeURIComponent(data.url);
+                var index_title = -1;
+                var index_content = -1;
+                var first_occur = -1;
+                // only match artiles with not empty titles and contents
+                if(data_title != '') {
+                  keywords.forEach(function(keyword, i) {
+                    index_title = data_title.indexOf(keyword);
+                    index_content = data_content.indexOf(keyword);
+                    if( index_title >= 0 || index_content >= 0 ){
+                      isMatch = true;
+                      if (i == 0) {
+                        first_occur = index_content;
+                      }
+                    }
+
+                  });
+                }
+                // show search results
+                if (isMatch) {
+                  matchcounts += 1;
+                  str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                  var content = data.content.trim().replace(/<[^>]+>/g,"");
+                  if (first_occur >= 0) {
+                    // cut out 100 characters
+                    var start = first_occur - 20;
+                    var end = first_occur + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if(start == 0){
+                      end = 50;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    var match_content = content.substring(start, end);
+                    // highlight all keywords
+                    keywords.forEach(function(keyword){
+                      var regS = new RegExp(keyword, "gi");
+                      match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                    });
+
+                    str += "<p class=\"search-result\">" + match_content +"...</p>"
+                  }
+                  str += "</li>";
+                }
+              })};
+            str += "</ul>";
+            if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+            if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+            $resultContent.innerHTML = str;
+          });
+          proceedsearch();
+        }
+      });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".popoverlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+
+  
+
+  
+
+  
+
+  
+
+
+</body>
+</html>

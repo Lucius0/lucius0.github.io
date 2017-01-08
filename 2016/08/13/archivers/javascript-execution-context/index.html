@@ -1,0 +1,895 @@
+<!doctype html>
+
+
+
+
+<html class="theme-next mist" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="javascript," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="作用域：全局、函数、eval。可参考《函数与作用域01》和《函数与作用域02》。
+1、概念执行上下文类似于栈的结构，可参考《深入理解Javascript之执行上下文》
+12345678910111213141516console.log(&quot;EC0&quot;);function funcEC1() &amp;#123;	console.log(&quot;EC1&quot;);	var funcEC2 = function() &amp;#1">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JavaScript之八 - 执行上下文">
+<meta property="og:url" content="https://lucius0.github.io/2016/08/13//archivers/javascript-execution-context/index.html">
+<meta property="og:site_name" content="Lucius's Blog">
+<meta property="og:description" content="作用域：全局、函数、eval。可参考《函数与作用域01》和《函数与作用域02》。
+1、概念执行上下文类似于栈的结构，可参考《深入理解Javascript之执行上下文》
+12345678910111213141516console.log(&quot;EC0&quot;);function funcEC1() &amp;#123;	console.log(&quot;EC1&quot;);	var funcEC2 = function() &amp;#1">
+<meta property="og:updated_time" content="2017-01-07T09:58:28.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="JavaScript之八 - 执行上下文">
+<meta name="twitter:description" content="作用域：全局、函数、eval。可参考《函数与作用域01》和《函数与作用域02》。
+1、概念执行上下文类似于栈的结构，可参考《深入理解Javascript之执行上下文》
+12345678910111213141516console.log(&quot;EC0&quot;);function funcEC1() &amp;#123;	console.log(&quot;EC1&quot;);	var funcEC2 = function() &amp;#1">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: false,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://lucius0.github.io/2016/08/13//archivers/javascript-execution-context/"/>
+
+
+
+
+
+  <title> JavaScript之八 - 执行上下文 | Lucius's Blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Lucius's Blog</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            日志
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup">
+ <span class="search-icon fa fa-search"></span>
+ <input type="text" id="local-search-input">
+ <div id="local-search-result"></div>
+ <span class="popup-btn-close">close</span>
+</div>
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="https://lucius0.github.io/2016/08/13/archivers/javascript-execution-context/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="Lucius">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.jpg">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="Lucius's Blog">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="Lucius's Blog" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                JavaScript之八 - 执行上下文
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              <span class="post-meta-item-text">更新于</span>
+              <time title="更新于" itemprop="dateModified" datetime="2017-01-07T17:58:28+08:00">
+                2017-01-07
+              </time>
+            
+          </span>
+
+          
+            <span class="post-category" >
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/front-end/" itemprop="url" rel="index">
+                    <span itemprop="name">front-end</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <a href="/2016/08/13/archivers/javascript-execution-context/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/08/13//archivers/javascript-execution-context/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>作用域：全局、函数、eval。可参考<a href="/2016/08/11//archivers/javascript-function-01/" title="《函数与作用域01》">《函数与作用域01》</a>和<a href="/2016/08/13//archivers/javascript-function-02/" title="《函数与作用域02》">《函数与作用域02》</a>。</p>
+<h2 id="1、概念"><a href="#1、概念" class="headerlink" title="1、概念"></a>1、概念</h2><p>执行上下文类似于栈的结构，可参考<a href="http://blogread.cn/it/article/6178" target="_blank" rel="external">《深入理解Javascript之执行上下文》</a></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">console</span>.log(<span class="string">"EC0"</span>);</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">funcEC1</span>(<span class="params"></span>) </span>&#123;</div><div class="line">	<span class="built_in">console</span>.log(<span class="string">"EC1"</span>);</div><div class="line">	<span class="keyword">var</span> funcEC2 = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">		<span class="built_in">console</span>.log(<span class="string">"EC2"</span>);</div><div class="line">		<span class="keyword">var</span> funcEC3 = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">			<span class="built_in">console</span>.log(<span class="string">"EC3"</span>);</div><div class="line">		&#125;;</div><div class="line">		funcEC3();</div><div class="line">	&#125;</div><div class="line">	funcEC2();</div><div class="line">&#125;</div><div class="line">funcEC1();</div><div class="line"></div><div class="line"><span class="comment">// EC0 -&gt; EC1 -&gt; EC2 -&gt; EC3</span></div></pre></td></tr></table></figure>
+<p><em>解析：</em> 变量对象(VO)是一个抽象概念的“对象”，它用于存储执行上下文中的变量、函数声明、函数参数</p>
+<p>可以将上下文看成一个对象</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line">activeExecutionContext = &#123;</div><div class="line">	<span class="attr">VO</span>: &#123;</div><div class="line">		data_var,</div><div class="line">		data_func_declaration,</div><div class="line">		data_func_arguments</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">var</span> a = <span class="number">10</span>;</div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">test</span>(<span class="params">x</span>) </span>&#123;</div><div class="line">	<span class="keyword">var</span> b = <span class="number">20</span>;</div><div class="line">&#125;</div><div class="line">test(<span class="number">30</span>);</div><div class="line"></div><div class="line">VO(globalContext) = &#123;</div><div class="line">	a = <span class="number">10</span>,</div><div class="line">	<span class="attr">test</span>: <span class="xml"><span class="tag">&lt; <span class="attr">ref</span> <span class="attr">to</span> <span class="attr">function</span> &gt;</span></span></div><div class="line">&#125;;</div><div class="line"></div><div class="line">VO(test function) = &#123;</div><div class="line">	x: 30,</div><div class="line">	b: 20</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="2、全局执行上下文-浏览器"><a href="#2、全局执行上下文-浏览器" class="headerlink" title="2、全局执行上下文(浏览器)"></a>2、全局执行上下文(浏览器)</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">VO(globalContext) === [[global]];</div><div class="line"><span class="comment">// 全局初始化</span></div><div class="line">[[global]] = &#123;</div><div class="line">	<span class="attr">Math</span>: <span class="xml"><span class="tag">&lt;<span class="name">...</span>&gt;</span>,</span></div><div class="line">	String: <span class="tag">&lt;<span class="name">...</span>&gt;</span>,</div><div class="line">	isNaN: <span class="tag">&lt;<span class="name">...</span>&gt;</span>,</div><div class="line">	...</div><div class="line">	window: global // 依赖浏览器	</div><div class="line">&#125;;</div><div class="line"></div><div class="line">String(10); // [[global]].string(10)</div><div class="line">window.a = 10; // [[global]].window.a = 10</div><div class="line">this.b = 10; // [[global]].b = 10</div></pre></td></tr></table></figure>
+<h2 id="3、函数激活对象-AO"><a href="#3、函数激活对象-AO" class="headerlink" title="3、函数激活对象(AO)"></a>3、函数激活对象(AO)</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 函数初始化</span></div><div class="line">VO(functionContext) === AO;</div><div class="line">AO = &#123;</div><div class="line">	<span class="attr">arguments</span>: <span class="xml"><span class="tag">&lt; <span class="attr">Arg0</span> &gt;</span></span></div><div class="line">&#125;;</div><div class="line">arguments = &#123;</div><div class="line">	callee,</div><div class="line">	length,</div><div class="line">	properties-indexes</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<h3 id="3-1-变量初始化阶段"><a href="#3-1-变量初始化阶段" class="headerlink" title="3.1 变量初始化阶段"></a>3.1 变量初始化阶段</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">test</span>(<span class="params">a, b</span>) </span>&#123;</div><div class="line">	<span class="keyword">var</span> c = <span class="number">10</span>;</div><div class="line">	<span class="function"><span class="keyword">function</span> <span class="title">d</span>(<span class="params"></span>) </span>&#123;&#125;</div><div class="line">	<span class="keyword">var</span> e = <span class="function"><span class="keyword">function</span> <span class="title">_e</span>(<span class="params"></span>) </span>&#123;&#125;;</div><div class="line">	(<span class="function"><span class="keyword">function</span> <span class="title">x</span>(<span class="params"></span>) </span>&#123;&#125;);</div><div class="line">	b = <span class="number">20</span>;</div><div class="line">&#125;</div><div class="line">test(<span class="number">10</span>);</div><div class="line"></div><div class="line">AO(test) = &#123;</div><div class="line">	<span class="attr">a</span>: <span class="number">10</span>,</div><div class="line">	<span class="attr">b</span>: <span class="literal">undefined</span>,</div><div class="line">	<span class="attr">c</span>: <span class="literal">undefined</span>,</div><div class="line">	<span class="attr">d</span>: <span class="xml"><span class="tag">&lt; <span class="attr">ref</span> <span class="attr">to</span> <span class="attr">func</span> "<span class="attr">d</span>" &gt;</span>,</span></div><div class="line">	e: undefined</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><strong>VO按照如下顺序填充：</strong></p>
+<ol>
+<li><p>函数参数(若未传入，初始化该参数值为undefined)</p>
+</li>
+<li><p>函数声明(若发生命名冲突，会覆盖)</p>
+</li>
+<li><p>变量声明(初始化变量值为undefined，若发生命名冲突，忽略)</p>
+</li>
+</ol>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">foo</span>(<span class="params">x, y, z</span>) </span>&#123;</div><div class="line">	<span class="function"><span class="keyword">function</span> <span class="title">x</span>(<span class="params"></span>) </span>&#123;&#125;;</div><div class="line">	<span class="built_in">console</span>.log(x);</div><div class="line">&#125;</div><div class="line">foo(<span class="number">100</span>); <span class="comment">// function x() &#123;&#125;</span></div></pre></td></tr></table></figure>
+<p><em>解析：</em> 函数参数传进去之后，因为函数声明跟参数命名发生冲突，即x直接覆盖函数参数变量</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">foo</span>(<span class="params">x, y, z</span>) </span>&#123;</div><div class="line">	<span class="function"><span class="keyword">function</span> <span class="title">func</span>(<span class="params"></span>)</span>&#123;&#125;;</div><div class="line">	<span class="keyword">var</span> func;</div><div class="line">	<span class="built_in">console</span>.log(func);</div><div class="line">&#125;</div><div class="line">foo(<span class="number">100</span>); <span class="comment">// function x() &#123;&#125;</span></div></pre></td></tr></table></figure>
+<p><em>解析：</em> 变量声明跟函数声明的命名发生冲突，根据VO的顺序，变量声明发生冲突，则会被忽略</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">foo</span>(<span class="params">x, y, z</span>) </span>&#123;</div><div class="line">	<span class="function"><span class="keyword">function</span> <span class="title">func</span>(<span class="params"></span>)</span>&#123;&#125;;</div><div class="line">	<span class="keyword">var</span> func = <span class="number">1</span>;</div><div class="line">	<span class="built_in">console</span>.log(func);</div><div class="line">&#125;</div><div class="line">foo(<span class="number">100</span>); <span class="comment">// 1</span></div></pre></td></tr></table></figure>
+<p><em>解析：</em> 初始化阶段变量声明因为命名冲突会被忽略，但是在第二个阶段，即执行阶段<code>func = 1</code>会被赋值为1，则就是为什么结果1的原因了。</p>
+<p><strong>注意：</strong> 函数表达式不会影响VO。上文的<code>var e = function _e(){}</code>中的_e匿名函数，e的变量声明会被放在右边的AO里面，执行阶段的时候才有把匿名函数_e赋值给变量e。这就是为什么我们没办法通过_e来访问函数对象。</p>
+<h3 id="3-2-代码执行阶段"><a href="#3-2-代码执行阶段" class="headerlink" title="3.2 代码执行阶段"></a>3.2 代码执行阶段</h3><p>该阶段会对上一阶段初始化的变量进行赋值</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">AO(test) = &#123;</div><div class="line">	<span class="attr">a</span>: <span class="number">10</span>,</div><div class="line">	<span class="attr">b</span>: <span class="literal">undefined</span>,</div><div class="line">	<span class="attr">c</span>: <span class="literal">undefined</span>,</div><div class="line">	<span class="attr">d</span>: <span class="xml"><span class="tag">&lt; <span class="attr">ref</span> <span class="attr">to</span> <span class="attr">func</span> "<span class="attr">d</span>" &gt;</span>,</span></div><div class="line">	e: undefined</div><div class="line">&#125;</div><div class="line"></div><div class="line">/** ↓ **/</div><div class="line">VO["c"] = 10;</div><div class="line">VO["e"] = function _e() &#123;&#125;;</div><div class="line">VO["b"] = 20;</div><div class="line"></div><div class="line">/** ↓ **/</div><div class="line">AO(test) = &#123;</div><div class="line">	a: 10,</div><div class="line">	b: 20,</div><div class="line">	c: 10,</div><div class="line">	d: <span class="tag">&lt; <span class="attr">reference</span> <span class="attr">to</span> <span class="attr">FunctionDeclaration</span> "<span class="attr">d</span>" &gt;</span></div><div class="line">	e: function _e() &#123;&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><strong>栗子：</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">console</span>.log(x); <span class="comment">// function x() &#123;&#125;</span></div><div class="line"><span class="keyword">var</span> x = <span class="number">10</span>;</div><div class="line"><span class="built_in">console</span>.log(x); <span class="comment">// 10</span></div><div class="line">x = <span class="number">20</span>;</div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">x</span>(<span class="params"></span>) </span>&#123;&#125;;</div><div class="line"><span class="built_in">console</span>.log(x); <span class="comment">// 20</span></div><div class="line"><span class="keyword">if</span>(<span class="literal">true</span>) &#123;</div><div class="line">	<span class="keyword">var</span> a = <span class="number">1</span>;</div><div class="line">&#125; <span class="keyword">else</span> &#123;</div><div class="line">	<span class="keyword">var</span> b = <span class="literal">true</span>;</div><div class="line">&#125;</div><div class="line"><span class="built_in">console</span>.log(a); <span class="comment">// 1</span></div><div class="line"><span class="built_in">console</span>.log(b); <span class="comment">// undefined</span></div></pre></td></tr></table></figure>
+<p><em>解析：</em></p>
+<ol>
+<li><p>初始化阶段</p>
+<ul>
+<li><p>函数参数：上下文测试不存在函数参数问题</p>
+</li>
+<li><p>函数声明：<code>function x() {}</code></p>
+</li>
+<li><p>变量声明：<code>var x</code> 命名冲突，忽略；<code>var a; var b</code> undefined</p>
+</li>
+</ul>
+</li>
+<li><p>执行阶段</p>
+</li>
+</ol>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">console</span>.log(x); <span class="comment">// function x() &#123;&#125;</span></div><div class="line">x = <span class="number">10</span>; <span class="comment">// x 被赋值</span></div><div class="line"><span class="built_in">console</span>.log(x); <span class="comment">// 10</span></div><div class="line">x = <span class="number">20</span>; <span class="comment">// x 再次被赋值</span></div><div class="line"><span class="built_in">console</span>.log(x); <span class="comment">// 20</span></div><div class="line">a = <span class="number">1</span>; <span class="comment">// a 被赋值</span></div><div class="line"><span class="built_in">console</span>.log(a); <span class="comment">// 1</span></div><div class="line"><span class="built_in">console</span>.log(b); <span class="comment">// undefined</span></div></pre></td></tr></table></figure>
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/javascript/" rel="tag"># javascript</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/08/13/archivers/javascript-function-02/" rel="next" title="JavaScript之七 - 函数与作用域(2)">
+                <i class="fa fa-chevron-left"></i> JavaScript之七 - 函数与作用域(2)
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/08/14/archivers/javascript-oop/" rel="prev" title="JavaScript之九 - OOP">
+                JavaScript之九 - OOP <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2016/08/13//archivers/javascript-execution-context/"
+           data-title="JavaScript之八 - 执行上下文" data-url="https://lucius0.github.io/2016/08/13//archivers/javascript-execution-context/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.jpg"
+               alt="Lucius" />
+          <p class="site-author-name" itemprop="name">Lucius</p>
+          <p class="site-description motion-element" itemprop="description">stay hungry, stay foolish...</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">31</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">3</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">11</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/Lucius0" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1、概念"><span class="nav-number">1.</span> <span class="nav-text">1、概念</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2、全局执行上下文-浏览器"><span class="nav-number">2.</span> <span class="nav-text">2、全局执行上下文(浏览器)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3、函数激活对象-AO"><span class="nav-number">3.</span> <span class="nav-text">3、函数激活对象(AO)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-变量初始化阶段"><span class="nav-number">3.1.</span> <span class="nav-text">3.1 变量初始化阶段</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-代码执行阶段"><span class="nav-number">3.2.</span> <span class="nav-text">3.2 代码执行阶段</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Lucius</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"lucius0"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    
+    <script src="/lib/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+
+
+  
+  
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length == 0) {
+      search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body").append('<div class="popoverlay">').css('overflow', 'hidden');
+      $('.popup').toggle();
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+      $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = $( "entry", xmlResponse ).map(function() {
+            return {
+              title: $( "title", this ).text(),
+              content: $("content",this).text(),
+              url: $( "url" , this).text()
+            };
+          }).get();
+          var $input = document.getElementById(search_id);
+          var $resultContent = document.getElementById(content_id);
+          $input.addEventListener('input', function(){
+            var matchcounts = 0;
+            var str='<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length > 1) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var content_index = [];
+                var data_title = data.title.trim().toLowerCase();
+                var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                var data_url = decodeURIComponent(data.url);
+                var index_title = -1;
+                var index_content = -1;
+                var first_occur = -1;
+                // only match artiles with not empty titles and contents
+                if(data_title != '') {
+                  keywords.forEach(function(keyword, i) {
+                    index_title = data_title.indexOf(keyword);
+                    index_content = data_content.indexOf(keyword);
+                    if( index_title >= 0 || index_content >= 0 ){
+                      isMatch = true;
+                      if (i == 0) {
+                        first_occur = index_content;
+                      }
+                    }
+
+                  });
+                }
+                // show search results
+                if (isMatch) {
+                  matchcounts += 1;
+                  str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                  var content = data.content.trim().replace(/<[^>]+>/g,"");
+                  if (first_occur >= 0) {
+                    // cut out 100 characters
+                    var start = first_occur - 20;
+                    var end = first_occur + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if(start == 0){
+                      end = 50;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    var match_content = content.substring(start, end);
+                    // highlight all keywords
+                    keywords.forEach(function(keyword){
+                      var regS = new RegExp(keyword, "gi");
+                      match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                    });
+
+                    str += "<p class=\"search-result\">" + match_content +"...</p>"
+                  }
+                  str += "</li>";
+                }
+              })};
+            str += "</ul>";
+            if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+            if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+            $resultContent.innerHTML = str;
+          });
+          proceedsearch();
+        }
+      });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".popoverlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+
+  
+
+  
+
+  
+
+  
+
+
+</body>
+</html>

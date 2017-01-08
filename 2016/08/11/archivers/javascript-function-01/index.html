@@ -1,0 +1,998 @@
+<!doctype html>
+
+
+
+
+<html class="theme-next mist" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="javascript," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="1、调用方式
+直接调用：foo();
+
+对象方法：o.method();
+
+构造器：new Foo();
+
+call/apply/bind：func.call(o);
+
+
+2、创建函数
+函数声明
+
+123function add(a, b) &amp;#123;	return a + b;&amp;#125;
+
+函数表达式
+
+12345678910111213141516171819202122// 函数变量va">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JavaScript之六 - 函数与作用域(1)">
+<meta property="og:url" content="https://lucius0.github.io/2016/08/11//archivers/javascript-function-01/index.html">
+<meta property="og:site_name" content="Lucius's Blog">
+<meta property="og:description" content="1、调用方式
+直接调用：foo();
+
+对象方法：o.method();
+
+构造器：new Foo();
+
+call/apply/bind：func.call(o);
+
+
+2、创建函数
+函数声明
+
+123function add(a, b) &amp;#123;	return a + b;&amp;#125;
+
+函数表达式
+
+12345678910111213141516171819202122// 函数变量va">
+<meta property="og:updated_time" content="2017-01-07T09:58:28.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="JavaScript之六 - 函数与作用域(1)">
+<meta name="twitter:description" content="1、调用方式
+直接调用：foo();
+
+对象方法：o.method();
+
+构造器：new Foo();
+
+call/apply/bind：func.call(o);
+
+
+2、创建函数
+函数声明
+
+123function add(a, b) &amp;#123;	return a + b;&amp;#125;
+
+函数表达式
+
+12345678910111213141516171819202122// 函数变量va">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: false,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://lucius0.github.io/2016/08/11//archivers/javascript-function-01/"/>
+
+
+
+
+
+  <title> JavaScript之六 - 函数与作用域(1) | Lucius's Blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Lucius's Blog</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            日志
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup">
+ <span class="search-icon fa fa-search"></span>
+ <input type="text" id="local-search-input">
+ <div id="local-search-result"></div>
+ <span class="popup-btn-close">close</span>
+</div>
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="https://lucius0.github.io/2016/08/11/archivers/javascript-function-01/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="Lucius">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.jpg">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="Lucius's Blog">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="Lucius's Blog" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                JavaScript之六 - 函数与作用域(1)
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              <span class="post-meta-item-text">更新于</span>
+              <time title="更新于" itemprop="dateModified" datetime="2017-01-07T17:58:28+08:00">
+                2017-01-07
+              </time>
+            
+          </span>
+
+          
+            <span class="post-category" >
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/front-end/" itemprop="url" rel="index">
+                    <span itemprop="name">front-end</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <a href="/2016/08/11/archivers/javascript-function-01/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/08/11//archivers/javascript-function-01/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="1、调用方式"><a href="#1、调用方式" class="headerlink" title="1、调用方式"></a>1、调用方式</h2><ul>
+<li><p>直接调用：foo();</p>
+</li>
+<li><p>对象方法：o.method();</p>
+</li>
+<li><p>构造器：new Foo();</p>
+</li>
+<li><p>call/apply/bind：func.call(o);</p>
+</li>
+</ul>
+<h2 id="2、创建函数"><a href="#2、创建函数" class="headerlink" title="2、创建函数"></a>2、创建函数</h2><ul>
+<li>函数声明</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">add</span>(<span class="params">a, b</span>) </span>&#123;</div><div class="line">	<span class="keyword">return</span> a + b;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<ul>
+<li>函数表达式</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 函数变量</span></div><div class="line"><span class="keyword">var</span> add = <span class="function"><span class="keyword">function</span>(<span class="params">a, b</span>) </span>&#123;</div><div class="line">	<span class="comment">// do something here</span></div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 立即执行函数表达式</span></div><div class="line">(<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">	<span class="comment">// do something here</span></div><div class="line">&#125;);</div><div class="line"></div><div class="line"><span class="comment">// 匿名函数</span></div><div class="line"><span class="keyword">return</span> <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">	<span class="comment">// do something here</span></div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="comment">// 命名式函数表达式</span></div><div class="line"><span class="keyword">var</span> add = <span class="function"><span class="keyword">function</span> <span class="title">foo</span>(<span class="params">a, b</span>) </span>&#123;</div><div class="line">	<span class="comment">// do something here</span></div><div class="line">&#125;</div><div class="line"><span class="comment">// 一般来说foo是在add所创建的作用域里，即外部调用一般都是访问不到</span></div><div class="line"><span class="built_in">console</span>.log(foo); <span class="comment">// Uncaught ReferenceError: foo is not defined(…) </span></div><div class="line"><span class="comment">// IE6 ~ IE8则是可以的</span></div></pre></td></tr></table></figure>
+<h2 id="3、函数构造器"><a href="#3、函数构造器" class="headerlink" title="3、函数构造器"></a>3、函数构造器</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> func = <span class="keyword">new</span> <span class="built_in">Function</span>(<span class="string">"a"</span>, <span class="string">"b"</span>, <span class="string">"console.log(a + b);"</span>);</div><div class="line">func(<span class="number">1</span>, <span class="number">2</span>); <span class="comment">// 3</span></div><div class="line"></div><div class="line"><span class="keyword">var</span> func = <span class="built_in">Function</span>(<span class="string">"a"</span>, <span class="string">"b"</span>, <span class="string">"console.log(a + b);"</span>);</div><div class="line">func(<span class="number">1</span>, <span class="number">2</span>); <span class="comment">// 3</span></div></pre></td></tr></table></figure>
+<p>函数构造器一般很少使用，会出现一些很奇怪的现象</p>
+<ul>
+<li>localValue 仍为局部变量</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">Function</span>(<span class="string">"var localVal='local'; console.log(localVal);"</span>)(); <span class="comment">// local</span></div><div class="line"><span class="built_in">console</span>.log(<span class="keyword">typeof</span> localVal); <span class="comment">// undefined</span></div></pre></td></tr></table></figure>
+<ul>
+<li>local不可访问，全局变量global可以访问</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> globalVal = <span class="string">"global"</span>;</div><div class="line">(<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">	<span class="keyword">var</span> localVal = <span class="string">"local"</span>;</div><div class="line">	<span class="built_in">Function</span>(<span class="string">"console.log(typeof localVal, typeof globalVal);"</span>)(); <span class="comment">// undefined, string</span></div><div class="line">&#125;)();</div></pre></td></tr></table></figure>
+<p>总结：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">空白</th>
+<th>函数声明</th>
+<th>函数表达式</th>
+<th>函数构造器</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">前置</td>
+<td>√</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td style="text-align:left">允许匿名</td>
+<td></td>
+<td>√</td>
+<td>√ </td>
+</tr>
+<tr>
+<td style="text-align:left">立即调用</td>
+<td></td>
+<td>√</td>
+<td>√ </td>
+</tr>
+<tr>
+<td style="text-align:left">在定义该函数的作用域通过函数名访问</td>
+<td>√</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td style="text-align:left">没有函数名</td>
+<td></td>
+<td></td>
+<td>√ </td>
+</tr>
+</tbody>
+</table>
+<h2 id="4、this"><a href="#4、this" class="headerlink" title="4、this"></a>4、this</h2><h3 id="4-1-全局作用域下的this"><a href="#4-1-全局作用域下的this" class="headerlink" title="4.1 全局作用域下的this"></a>4.1 全局作用域下的this</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">this</span>.document === <span class="built_in">document</span>; <span class="comment">// true</span></div><div class="line"></div><div class="line"><span class="keyword">this</span> ==== <span class="built_in">window</span>; <span class="comment">// true</span></div><div class="line"></div><div class="line"><span class="keyword">this</span>.a = <span class="number">37</span>;</div><div class="line"><span class="built_in">console</span>.log(<span class="built_in">window</span>.a); <span class="comment">// 37</span></div></pre></td></tr></table></figure>
+<h3 id="4-2-一般函数的this"><a href="#4-2-一般函数的this" class="headerlink" title="4.2 一般函数的this"></a>4.2 一般函数的this</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">f1</span>(<span class="params"></span>) </span>&#123;</div><div class="line">	<span class="keyword">return</span> <span class="keyword">this</span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line">f1() === <span class="built_in">window</span>; <span class="comment">// true</span></div></pre></td></tr></table></figure>
+<h3 id="4-3-作为对象方法的函数this"><a href="#4-3-作为对象方法的函数this" class="headerlink" title="4.3 作为对象方法的函数this"></a>4.3 作为对象方法的函数this</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// CASE 1</span></div><div class="line"><span class="keyword">var</span> o = &#123;</div><div class="line">	<span class="attr">prop</span>: <span class="number">37</span>,</div><div class="line">	<span class="attr">f</span>: <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">		<span class="keyword">return</span> <span class="keyword">this</span>.prop;</div><div class="line">	&#125;</div><div class="line">&#125;;</div><div class="line"><span class="built_in">console</span>.log(o.f()); <span class="comment">// 37</span></div><div class="line"></div><div class="line"><span class="comment">// CASE 2</span></div><div class="line"><span class="keyword">var</span> o = &#123;<span class="attr">prop</span>: <span class="number">37</span>&#125;;</div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">f</span>(<span class="params"></span>) </span>&#123;</div><div class="line">	<span class="keyword">return</span> <span class="keyword">this</span>.prop;</div><div class="line">&#125;</div><div class="line">o.f = f;</div><div class="line"><span class="built_in">console</span>.log(o.f()); <span class="comment">// 37</span></div></pre></td></tr></table></figure>
+<h3 id="4-4-对象原型链上的this"><a href="#4-4-对象原型链上的this" class="headerlink" title="4.4 对象原型链上的this"></a>4.4 对象原型链上的this</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> o = &#123;<span class="attr">f</span>: <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">	<span class="keyword">return</span> <span class="keyword">this</span>.a + <span class="keyword">this</span>.b;</div><div class="line">&#125;&#125;;</div><div class="line"><span class="keyword">var</span> p = <span class="built_in">Object</span>.create(o); <span class="comment">// p 的原型o</span></div><div class="line">p.a = <span class="number">1</span>;</div><div class="line">p.b = <span class="number">4</span>;</div><div class="line"><span class="built_in">console</span>.log(p.f()); <span class="comment">// 调用原型链的f函数，this指向p</span></div></pre></td></tr></table></figure>
+<h3 id="4-5-get-set方法与this"><a href="#4-5-get-set方法与this" class="headerlink" title="4.5 get/set方法与this"></a>4.5 get/set方法与this</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">modules</span>(<span class="params"></span>) </span>&#123;</div><div class="line">	<span class="keyword">return</span> <span class="built_in">Math</span>.sqrt(<span class="keyword">this</span>.re * <span class="keyword">this</span>.re + <span class="keyword">this</span>.im + <span class="keyword">this</span>.im);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">var</span> o = &#123;</div><div class="line">	<span class="attr">re</span>: <span class="number">1</span>,</div><div class="line">	<span class="attr">im</span>:<span class="number">-1</span>,</div><div class="line">	get phase() &#123;</div><div class="line">		<span class="keyword">return</span> <span class="built_in">Math</span>.atan2(<span class="keyword">this</span>.im, <span class="keyword">this</span>.re);</div><div class="line">	&#125;</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="built_in">Object</span>.defineProperty(o, <span class="string">"modules"</span>, &#123;<span class="attr">get</span>: modules, <span class="attr">enumerable</span>: <span class="literal">true</span>, <span class="attr">configurable</span>: <span class="literal">true</span>&#125;);</div><div class="line"><span class="built_in">console</span>.log(o.phase, o.modules);</div></pre></td></tr></table></figure>
+<h3 id="4-6-构造器中的this"><a href="#4-6-构造器中的this" class="headerlink" title="4.6 构造器中的this"></a>4.6 构造器中的this</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">MyClass</span>(<span class="params"></span>) </span>&#123;</div><div class="line">	<span class="keyword">this</span>.a = <span class="number">37</span>; <span class="comment">// 全局变量a</span></div><div class="line">&#125;</div><div class="line"><span class="keyword">var</span> o = <span class="keyword">new</span> MyClass(); <span class="comment">// this 指向o</span></div><div class="line"><span class="built_in">console</span>.log(o.a); <span class="comment">// 37，o的原型链是MyClass</span></div></pre></td></tr></table></figure>
+<h3 id="4-7-call-apply方法与this"><a href="#4-7-call-apply方法与this" class="headerlink" title="4.7 call/apply方法与this"></a>4.7 call/apply方法与this</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">add</span>(<span class="params">c, d</span>) </span>&#123;</div><div class="line">	<span class="keyword">return</span> <span class="keyword">this</span>.a + <span class="keyword">this</span>.b + c + d;</div><div class="line">&#125;</div><div class="line"><span class="keyword">var</span> o = &#123;<span class="attr">a</span>: <span class="number">1</span>, <span class="attr">b</span>: <span class="number">3</span>&#125;;</div><div class="line">add.call(o, <span class="number">5</span>, <span class="number">7</span>);</div><div class="line">add.apply(o, [<span class="number">5</span>, <span class="number">7</span>]);</div><div class="line"><span class="comment">// call与apply常见使用方法，即想把某个函数指向某个this</span></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">bar</span>(<span class="params"></span>) </span>&#123;</div><div class="line">	<span class="built_in">console</span>.log(<span class="built_in">Object</span>.prototype.toString.call(<span class="keyword">this</span>));</div><div class="line">&#125;</div><div class="line">bar.call(<span class="number">7</span>); <span class="comment">// [object Number] this 指向 new Number(7)</span></div></pre></td></tr></table></figure>
+<h3 id="4-8-bind方法与this"><a href="#4-8-bind方法与this" class="headerlink" title="4.8 bind方法与this"></a>4.8 bind方法与this</h3><p>ES5才提供，IE9+才支持的函数</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">f</span>(<span class="params"></span>) </span>&#123;</div><div class="line">	<span class="keyword">return</span> <span class="keyword">this</span>.a;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">var</span> g = f.bind(&#123;<span class="attr">a</span>: <span class="string">"test"</span>&#125;); <span class="comment">// f的this指向对象&#123;a:"test"&#125;</span></div><div class="line"><span class="built_in">console</span>.log(g()); <span class="comment">// test</span></div><div class="line"><span class="keyword">var</span> o = &#123;<span class="attr">a</span>: <span class="number">37</span>, <span class="attr">f</span>: f, <span class="attr">g</span>: g&#125;; <span class="comment">// f中的this指向o，而g的this指向为&#123;a:"test"&#125;</span></div><div class="line"><span class="built_in">console</span>.log(o.f(), o.g()); <span class="comment">// 37, test</span></div></pre></td></tr></table></figure>
+<h3 id="4-9-函数属性-amp-amp-arguments"><a href="#4-9-函数属性-amp-amp-arguments" class="headerlink" title="4.9 函数属性 &amp;&amp; arguments"></a>4.9 函数属性 &amp;&amp; arguments</h3><ul>
+<li><strong>arguments</strong></li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">foo</span>(<span class="params">x, y, z</span>) </span>&#123;</div><div class="line">	<span class="built_in">arguments</span>.length; <span class="comment">// 2</span></div><div class="line">	<span class="built_in">arguments</span>[<span class="number">0</span>]; <span class="comment">// 1</span></div><div class="line">	<span class="built_in">arguments</span>[<span class="number">0</span>] = <span class="number">10</span>; <span class="comment">// 在use strict模式下，无法赋值，x还是为 1</span></div><div class="line">	x; <span class="comment">// 10</span></div><div class="line"></div><div class="line">	<span class="built_in">arguments</span>[<span class="number">2</span>] = <span class="number">100</span>;</div><div class="line">	z; <span class="comment">// undefined</span></div><div class="line">	<span class="built_in">arguments</span>.callee === foo; <span class="comment">// true，严格模式下则无法使用callee</span></div><div class="line">&#125;</div><div class="line"></div><div class="line">foo(<span class="number">1</span>, <span class="number">2</span>);</div><div class="line">foo.length; <span class="comment">// 3</span></div><div class="line">foo.name; <span class="comment">// foo</span></div></pre></td></tr></table></figure>
+<ul>
+<li><strong>apply/call</strong></li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">foo</span>(<span class="params">x, y</span>) </span>&#123;</div><div class="line">	<span class="built_in">console</span>.log(x, y, <span class="keyword">this</span>);</div><div class="line">&#125;</div><div class="line">foo.call(<span class="number">100</span>, <span class="number">1</span>, <span class="number">2</span>); <span class="comment">// 1, 2, Number</span></div><div class="line">foo.apply(<span class="literal">true</span>, [<span class="number">1</span>,<span class="number">2</span>]); <span class="comment">// 1, 2, Boolean(true)</span></div><div class="line">foo.apply(<span class="literal">null</span>); <span class="comment">// undefined, undefined, window (严格模式下为null)</span></div><div class="line">foo.apply(<span class="literal">undefined</span>); <span class="comment">// undefined, undefined, window (严格模式下为undefined)</span></div></pre></td></tr></table></figure>
+<ul>
+<li><strong>bind</strong></li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">this</span>.x = <span class="number">9</span>;</div><div class="line"><span class="keyword">var</span> <span class="built_in">module</span> = &#123;</div><div class="line">	<span class="attr">x</span>: <span class="number">81</span>, </div><div class="line">	<span class="attr">getX</span>: <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">		<span class="keyword">return</span> <span class="keyword">this</span>.x;</div><div class="line">	&#125;</div><div class="line">&#125;;</div><div class="line"><span class="built_in">module</span>.getX(); <span class="comment">// 81 this 指向module</span></div><div class="line"><span class="keyword">var</span> getX = <span class="built_in">module</span>.getX;</div><div class="line">getX(); <span class="comment">// 9 this 指向全局变量</span></div><div class="line"><span class="keyword">var</span> boundGetX = getX.bind(<span class="built_in">module</span>); </div><div class="line"><span class="comment">// 使用call/apply，boundGetX会报未定义的错误.</span></div><div class="line"><span class="comment">// 原因是call跟apply没有返回值，但是可以这样，</span></div><div class="line"><span class="comment">// getX.call(module)();</span></div><div class="line"><span class="comment">// getX.apply(module)();</span></div><div class="line">boundGetX(); <span class="comment">// 81 将上文的全局变量指向module</span></div></pre></td></tr></table></figure>
+<ul>
+<li><strong>bind与函数颗粒化</strong></li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">add</span>(<span class="params">a, b, c</span>) </span>&#123;</div><div class="line">	<span class="keyword">return</span> a + b + c;</div><div class="line">&#125;</div><div class="line"><span class="keyword">var</span> func = add.bind(<span class="literal">undefined</span>, <span class="number">100</span>);</div><div class="line">func(<span class="number">1</span>, <span class="number">2</span>); <span class="comment">// 103</span></div></pre></td></tr></table></figure>
+<p><em>解析：</em> <code>add.bind(undefined, 100)</code> 先将100传参给add函数的第一个参数，即a；然后<code>func(1, 2)</code>则会传参给函数的b跟c</p>
+<ul>
+<li><strong>bind与new</strong></li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">foo</span>(<span class="params"></span>) </span>&#123;</div><div class="line">	<span class="keyword">this</span>.b = <span class="number">100</span>;</div><div class="line">	<span class="keyword">return</span> <span class="keyword">this</span>.a;</div><div class="line">&#125;</div><div class="line"><span class="keyword">var</span> func = foo.bind(&#123;<span class="attr">a</span>: <span class="number">1</span>&#125;);</div><div class="line">func(); <span class="comment">// 1</span></div><div class="line"><span class="keyword">new</span> func(); <span class="comment">// &#123;b: 100&#125;</span></div></pre></td></tr></table></figure>
+<p><em>解析：</em> foo函数中返回值除非是<strong>对象</strong>，否则就将<strong>this</strong>作为返回值返回，<strong>this</strong>会被初始化为默认的一个空对象，并且<strong>this</strong>的原型是<em>foo.prototype</em>，该空对象的b属性会赋值为100，然后整个对象会被作为返回值返回并且忽略return的返回值。</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/javascript/" rel="tag"># javascript</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/08/11/archivers/javascript-array/" rel="next" title="JavaScript之五 - 数组">
+                <i class="fa fa-chevron-left"></i> JavaScript之五 - 数组
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/08/13/archivers/javascript-function-02/" rel="prev" title="JavaScript之七 - 函数与作用域(2)">
+                JavaScript之七 - 函数与作用域(2) <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2016/08/11//archivers/javascript-function-01/"
+           data-title="JavaScript之六 - 函数与作用域(1)" data-url="https://lucius0.github.io/2016/08/11//archivers/javascript-function-01/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.jpg"
+               alt="Lucius" />
+          <p class="site-author-name" itemprop="name">Lucius</p>
+          <p class="site-description motion-element" itemprop="description">stay hungry, stay foolish...</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">31</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">3</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">11</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/Lucius0" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1、调用方式"><span class="nav-number">1.</span> <span class="nav-text">1、调用方式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2、创建函数"><span class="nav-number">2.</span> <span class="nav-text">2、创建函数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3、函数构造器"><span class="nav-number">3.</span> <span class="nav-text">3、函数构造器</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4、this"><span class="nav-number">4.</span> <span class="nav-text">4、this</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#4-1-全局作用域下的this"><span class="nav-number">4.1.</span> <span class="nav-text">4.1 全局作用域下的this</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-2-一般函数的this"><span class="nav-number">4.2.</span> <span class="nav-text">4.2 一般函数的this</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-3-作为对象方法的函数this"><span class="nav-number">4.3.</span> <span class="nav-text">4.3 作为对象方法的函数this</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-4-对象原型链上的this"><span class="nav-number">4.4.</span> <span class="nav-text">4.4 对象原型链上的this</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-5-get-set方法与this"><span class="nav-number">4.5.</span> <span class="nav-text">4.5 get/set方法与this</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-6-构造器中的this"><span class="nav-number">4.6.</span> <span class="nav-text">4.6 构造器中的this</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-7-call-apply方法与this"><span class="nav-number">4.7.</span> <span class="nav-text">4.7 call/apply方法与this</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-8-bind方法与this"><span class="nav-number">4.8.</span> <span class="nav-text">4.8 bind方法与this</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-9-函数属性-amp-amp-arguments"><span class="nav-number">4.9.</span> <span class="nav-text">4.9 函数属性 && arguments</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Lucius</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"lucius0"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    
+    <script src="/lib/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+
+
+  
+  
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length == 0) {
+      search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body").append('<div class="popoverlay">').css('overflow', 'hidden');
+      $('.popup').toggle();
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+      $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = $( "entry", xmlResponse ).map(function() {
+            return {
+              title: $( "title", this ).text(),
+              content: $("content",this).text(),
+              url: $( "url" , this).text()
+            };
+          }).get();
+          var $input = document.getElementById(search_id);
+          var $resultContent = document.getElementById(content_id);
+          $input.addEventListener('input', function(){
+            var matchcounts = 0;
+            var str='<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length > 1) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var content_index = [];
+                var data_title = data.title.trim().toLowerCase();
+                var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                var data_url = decodeURIComponent(data.url);
+                var index_title = -1;
+                var index_content = -1;
+                var first_occur = -1;
+                // only match artiles with not empty titles and contents
+                if(data_title != '') {
+                  keywords.forEach(function(keyword, i) {
+                    index_title = data_title.indexOf(keyword);
+                    index_content = data_content.indexOf(keyword);
+                    if( index_title >= 0 || index_content >= 0 ){
+                      isMatch = true;
+                      if (i == 0) {
+                        first_occur = index_content;
+                      }
+                    }
+
+                  });
+                }
+                // show search results
+                if (isMatch) {
+                  matchcounts += 1;
+                  str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                  var content = data.content.trim().replace(/<[^>]+>/g,"");
+                  if (first_occur >= 0) {
+                    // cut out 100 characters
+                    var start = first_occur - 20;
+                    var end = first_occur + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if(start == 0){
+                      end = 50;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    var match_content = content.substring(start, end);
+                    // highlight all keywords
+                    keywords.forEach(function(keyword){
+                      var regS = new RegExp(keyword, "gi");
+                      match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                    });
+
+                    str += "<p class=\"search-result\">" + match_content +"...</p>"
+                  }
+                  str += "</li>";
+                }
+              })};
+            str += "</ul>";
+            if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+            if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+            $resultContent.innerHTML = str;
+          });
+          proceedsearch();
+        }
+      });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".popoverlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+
+  
+
+  
+
+  
+
+  
+
+
+</body>
+</html>

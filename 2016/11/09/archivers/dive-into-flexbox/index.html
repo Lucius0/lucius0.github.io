@@ -1,0 +1,1055 @@
+<!doctype html>
+
+
+
+
+<html class="theme-next mist" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="CSS," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="先给大家介绍一个可以边学边玩的Flexbox网站。
+
+FLEXBOX FROGGY
+
+镜像网页
+
+
+Flexible boxes layout是W3C为了更好的在网页中排版和布局而设计出来的一个模块。它用来可以处理更加复杂的布局。它本质是盒模型的延伸，它可以进一步去规范容器中子元素盒模型之间的相对关系。
+基础知识点
+Flexible boxes盒子按照宽和高分出了main axis(主轴)和cro">
+<meta property="og:type" content="article">
+<meta property="og:title" content="深入浅出Flexbox">
+<meta property="og:url" content="https://lucius0.github.io/2016/11/09//archivers/dive-into-flexbox/index.html">
+<meta property="og:site_name" content="Lucius's Blog">
+<meta property="og:description" content="先给大家介绍一个可以边学边玩的Flexbox网站。
+
+FLEXBOX FROGGY
+
+镜像网页
+
+
+Flexible boxes layout是W3C为了更好的在网页中排版和布局而设计出来的一个模块。它用来可以处理更加复杂的布局。它本质是盒模型的延伸，它可以进一步去规范容器中子元素盒模型之间的相对关系。
+基础知识点
+Flexible boxes盒子按照宽和高分出了main axis(主轴)和cro">
+<meta property="og:image" content="https://lucius0.github.io/images/css/css-09.png">
+<meta property="og:image" content="https://lucius0.github.io/images/css/css-10.png">
+<meta property="og:image" content="https://lucius0.github.io/images/css/css-11.png">
+<meta property="og:image" content="https://lucius0.github.io/images/css/css-12.jpg">
+<meta property="og:image" content="https://lucius0.github.io/images/css/css-13.png">
+<meta property="og:image" content="https://lucius0.github.io/images/css/css-14.png">
+<meta property="og:image" content="https://lucius0.github.io/images/css/css-15.png">
+<meta property="og:image" content="https://lucius0.github.io/images/css/css-16.png">
+<meta property="og:image" content="https://lucius0.github.io/images/css/css-17.gif">
+<meta property="og:updated_time" content="2017-01-07T09:58:28.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="深入浅出Flexbox">
+<meta name="twitter:description" content="先给大家介绍一个可以边学边玩的Flexbox网站。
+
+FLEXBOX FROGGY
+
+镜像网页
+
+
+Flexible boxes layout是W3C为了更好的在网页中排版和布局而设计出来的一个模块。它用来可以处理更加复杂的布局。它本质是盒模型的延伸，它可以进一步去规范容器中子元素盒模型之间的相对关系。
+基础知识点
+Flexible boxes盒子按照宽和高分出了main axis(主轴)和cro">
+<meta name="twitter:image" content="https://lucius0.github.io/images/css/css-09.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: false,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://lucius0.github.io/2016/11/09//archivers/dive-into-flexbox/"/>
+
+
+
+
+
+  <title> 深入浅出Flexbox | Lucius's Blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Lucius's Blog</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            日志
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup">
+ <span class="search-icon fa fa-search"></span>
+ <input type="text" id="local-search-input">
+ <div id="local-search-result"></div>
+ <span class="popup-btn-close">close</span>
+</div>
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="https://lucius0.github.io/2016/11/09/archivers/dive-into-flexbox/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="Lucius">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.jpg">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="Lucius's Blog">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="Lucius's Blog" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                深入浅出Flexbox
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              <span class="post-meta-item-text">更新于</span>
+              <time title="更新于" itemprop="dateModified" datetime="2017-01-07T17:58:28+08:00">
+                2017-01-07
+              </time>
+            
+          </span>
+
+          
+            <span class="post-category" >
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/front-end/" itemprop="url" rel="index">
+                    <span itemprop="name">front-end</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <a href="/2016/11/09/archivers/dive-into-flexbox/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/11/09//archivers/dive-into-flexbox/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>先给大家介绍一个可以边学边玩的Flexbox网站。</p>
+<ul>
+<li><p><a href="http://flexboxfroggy.com/#zh-cn" target="_blank" rel="external">FLEXBOX FROGGY</a></p>
+</li>
+<li><p><a href="http://www.css88.com/tool/flexboxfroggy/#zh-cn" target="_blank" rel="external">镜像网页</a></p>
+</li>
+</ul>
+<p>Flexible boxes layout是W3C为了更好的在网页中排版和布局而设计出来的一个模块。它用来可以处理更加复杂的布局。它本质是盒模型的延伸，它可以进一步去规范容器中子元素盒模型之间的相对关系。</p>
+<h2 id="基础知识点"><a href="#基础知识点" class="headerlink" title="基础知识点"></a>基础知识点</h2><p><img src="/images/css/css-09.png" alt=""></p>
+<p>Flexible boxes盒子按照宽和高分出了<code>main axis</code>(主轴)和<code>cross axis</code>(和主轴交叉的轴)，盒子的上边称为<code>cross start</code>,下边称为<code>cross end</code>,左边称为<code>main start</code>,右边称为<code>main end</code>。</p>
+<h2 id="Flexible-boxes可以解决什么问题"><a href="#Flexible-boxes可以解决什么问题" class="headerlink" title="Flexible boxes可以解决什么问题"></a>Flexible boxes可以解决什么问题</h2><p><strong>完全居中</strong></p>
+<p>在前端中实现居中是一件很头疼的事情，尤其是实现垂直居中，之前翻译了一篇<a href="/2016/10/28//archivers/seven_ways_of_centering_with_css/" title="实现置中的七种方法">实现置中的七种方法</a>，其中提到一种最简单的方法就是使用<code>transform</code>，需要5行代码可以实现完全置中。</p>
+<p>下面看一下<code>Flexible boxes</code>实现置中:</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="selector-class">.flex-container</span>&#123;</div><div class="line">  <span class="attribute">display</span>:flex;</div><div class="line">  <span class="attribute">justify-content</span>: center;</div><div class="line">  <span class="attribute">align-items</span>: center;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>Flexible boxes只要3行代码就可以实现置中。</p>
+<p><strong>等高的卡片式布局</strong></p>
+<p>在没有用Flexible boxes之前很多卡片设计的网站都有这样一个问题，由于卡片里面的内容多少不同，而产生的不等高问题。</p>
+<p>Flexible boxes简单的实现等高列：</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="selector-class">.flex-container</span>&#123;</div><div class="line">  <span class="attribute">display</span>:flex;</div><div class="line">  <span class="attribute">align-items</span>: stretch;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="Flexible-boxes能用在哪里"><a href="#Flexible-boxes能用在哪里" class="headerlink" title="Flexible boxes能用在哪里"></a>Flexible boxes能用在哪里</h2><p><strong>兼容性</strong></p>
+<p><img src="/images/css/css-10.png" alt=""></p>
+<p>可以看出Flexible boxes从提出到现在也已经有了8个草案。Flexible boxes更新了三种写法。</p>
+<p><img src="/images/css/css-11.png" alt=""></p>
+<p>caniuse上各个浏览器支持的情况</p>
+<p><img src="/images/css/css-12.jpg" alt=""></p>
+<p>稍微整理一下(这里借用gitcafe的JaychSu的图用一下)</p>
+<p>从这里可以看出现代浏览器都支持最新的那个版本,只有<code>IE10</code>支持中间那个版本。</p>
+<p><strong>使用CSS预处理器定义的@mixin解决Flexible boxes版本兼容</strong></p>
+<p>在github上有大神把Flexible boxes三个版本搞成一个Sass的<code>@mixin</code>,这样可以在需要的地方直接<code>@include</code>进来就可以轻松解决三个版本的兼容问题。</p>
+<p><a href="https://github.com/mastastealth/sass-flex-mixin" target="_blank" rel="external">sass关于Flexible boxes的mixin的github项目地址</a></p>
+<h2 id="Flexible-boxes实现的原理逻辑"><a href="#Flexible-boxes实现的原理逻辑" class="headerlink" title="Flexible boxes实现的原理逻辑"></a>Flexible boxes实现的原理逻辑</h2><p><strong>display（定义容器里面为flex文档流）</strong></p>
+<ul>
+<li><p><code>dislpay:flex</code>使父容器表现为块盒子</p>
+</li>
+<li><p><code>display:inline-flex</code>使容器表现为行盒子</p>
+</li>
+</ul>
+<p><strong>flex</strong></p>
+<p>flex是<code>flex-grow,flex-shrink,flex-basis</code>的缩写形式。默认值是<code>0 1 auto</code>。</p>
+<p><strong>flex-basis</strong></p>
+<p>flex-basis:flex-basis可以理解为我们给子元素设置的宽度。默认值是auto,宽度设置为auto时，盒子的宽度取决你们元素的宽度。</p>
+<p><img src="/images/css/css-13.png" alt=""></p>
+<p><strong>flex-grow和flex-shrink</strong></p>
+<p>grow和shrink是一对双胞胎，grow表示伸张因子，shrink表示是收缩因子。</p>
+<p>grow在flex容器下的子元素的宽度和比容器和小的时候起作用。 grow定义了子元素的宽度增长因子，容器中除去子元素之和剩下的宽度会按照各个子元素的gorw值进行平分加大各个子元素上。</p>
+<p><strong>公式：</strong></p>
+<p>计算容器还剩空间</p>
+<p><code>available_space(容器还剩的空间）=container_size(容器宽度)-flex_item_total(子元素宽度之和)</code></p>
+<p>计算增长单位</p>
+<p><code>grow_unit(增长单位)=available_space/flex_grow_total(子元素增长因子之和)</code></p>
+<p>得到子元素的宽度</p>
+<p><code>flex-item-width(子元素计算得到的宽度)=flex-basis+grow-unit*flex-grow</code></p>
+<p><img src="/images/css/css-14.png" alt=""></p>
+<p>上面例子的计算</p>
+<p><code>container-size=480px;
+flex-item-total=100*3=300px;
+flex-grow-total=3+2+1=6;
+available_space=480-300=180px;
+grow_unit=180/6=30px;</code></p>
+<p>子元素1的宽度为：</p>
+<p><code>flex_item_width1=100+3*30=190px;</code></p>
+<p>子元素2的宽度为：</p>
+<p><code>flex_item_width1=100+2*30=160px;</code></p>
+<p>子元素3的宽度为：</p>
+<p><code>flex_item_width1=100+30=130px;</code></p>
+<p data-height="499" data-theme-id="0" data-slug-hash="pvQZoy" data-user="luxiaojijan" data-default-tab="result" class="codepen">See the Pen <a href="http://codepen.io/luxiaojijan/pen/pvQZoy" target="_blank" rel="external">Timer</a> forked by luxiaojijan (<a href="http://codepen.io" target="_blank" rel="external">@luxiaojijan</a>) on <a href="http://codepen.io" target="_blank" rel="external">CodePen</a></p>
+
+<p>shrink则是在宽度和比容器宽度大时候，才有用。按照shrink的值减去相应大小得到子元素的值。</p>
+<p><strong>公式：</strong></p>
+<p>overflow_space(溢出的宽度)</p>
+<p><strong>计算溢出的宽度</strong></p>
+<p><code>overflow-space=flex-item-total(子元素basis宽度之和)-container_width(容器宽度)</code></p>
+<p><strong>得到计算的子元素的宽度</strong></p>
+<p><code>item-basis:子元素设置的flex-basis；
+item-shrink:子元素的flex-shrink；
+item-shrink-sum:所有子元素flex_shrink的和。     
+flex_item_width(计算的子元素的宽度)=item-basis 
+--(overflow-space*(item-shrink/item-shrink-sum))</code></p>
+<p><img src="/images/css/css-15.png" alt=""></p>
+<p><code>container-width=480px; item-shrink分别为3，2，1.item-basis=200px;  overflow-space=120px;</code></p>
+<p>则：</p>
+<p><code>flex_item1_width=200-(120*(3/6))=140px;
+flex_item2_width=200-(120*(2/6))=160px; 
+flex_item3_width=200-(120*(1/6))=180px;</code></p>
+<p data-height="499" data-theme-id="0" data-slug-hash="GgPOJw" data-user="luxiaojijan" data-default-tab="result" class="codepen">See the Pen <a href="http://codepen.io/luxiaojijan/pen/GgPOJw" target="_blank" rel="external">Timer</a> forked by luxiaojijan (<a href="http://codepen.io" target="_blank" rel="external">@luxiaojijan</a>) on <a href="http://codepen.io" target="_blank" rel="external">CodePen</a></p>
+
+<p><strong>align-content</strong></p>
+<p>对单行和单列不起作用，多行时才有效，需设置<code>flex-direction:row;flex-wrap:wrap;</code>或者<code>flex-flow:row-wrap</code>,对<code>flex container</code>中的行进行布局排版。</p>
+<ul>
+<li><p><code>flex-start</code>:行填充到容器的开始。</p>
+</li>
+<li><p><code>flex-bottom</code>:行填充到容器的结束。</p>
+</li>
+<li><p><code>center</code>:行居中分布。</p>
+</li>
+<li><p><code>space-between</code>:行平均分布，第一行在容器开始，最后一行在容器结束。</p>
+</li>
+<li><p><code>space-around</code>:行平均分布，但行与行之间有空隙。</p>
+</li>
+</ul>
+<p><strong>实例效果</strong></p>
+<p data-height="499" data-theme-id="0" data-slug-hash="wBRebG" data-user="luxiaojijan" data-default-tab="result" class="codepen">See the Pen <a href="http://codepen.io/luxiaojijan/pen/wBRebG" target="_blank" rel="external">Timer</a> forked by luxiaojijan (<a href="http://codepen.io" target="_blank" rel="external">@luxiaojijan</a>) on <a href="http://codepen.io" target="_blank" rel="external">CodePen</a></p>
+
+<p><strong>align-items</strong></p>
+<p>用于当前行中的子元素进行对齐布局。</p>
+<ul>
+<li><p><code>flex-start</code>: 子元素的上边缘对齐到行的上边缘。</p>
+</li>
+<li><p><code>flex-end</code>: 子元素的上边缘对齐到行的下边缘。</p>
+</li>
+<li><p><code>center</code>: 以中轴线居中。</p>
+</li>
+<li><p><code>baseline</code>: 子元素的基线对齐。</p>
+</li>
+<li><p><code>stretch</code>:子元素拉伸至充满容器。</p>
+</li>
+</ul>
+<p data-height="499" data-theme-id="0" data-slug-hash="ZYVJeR" data-user="luxiaojijan" data-default-tab="result" class="codepen">See the Pen <a href="http://codepen.io/luxiaojijan/pen/ZYVJeR" target="_blank" rel="external">Timer</a> forked by luxiaojijan (<a href="http://codepen.io" target="_blank" rel="external">@luxiaojijan</a>) on <a href="http://codepen.io" target="_blank" rel="external">CodePen</a></p>
+
+<p><strong>align-self</strong></p>
+<p>应用在子元素上，可以覆盖<code>align-item</code>来获得特殊的元素对齐。</p>
+<ul>
+<li><p><code>flex-start</code>: 子元素的上边缘对齐到行的上边缘。</p>
+</li>
+<li><p><code>flex-end</code>: 子元素的上边缘对齐到行的下边缘。</p>
+</li>
+<li><p><code>center</code>: 以中轴线居中。</p>
+</li>
+<li><p><code>baseline</code>: 子元素的基线对齐。</p>
+</li>
+<li><p><code>stretch</code>:子元素拉伸至充满容器。</p>
+</li>
+</ul>
+<p><strong>实例效果</strong></p>
+<p data-height="499" data-theme-id="0" data-slug-hash="gbZxRM" data-user="luxiaojijan" data-default-tab="result" class="codepen">See the Pen <a href="http://codepen.io/luxiaojijan/pen/gbZxRM" target="_blank" rel="external">Timer</a> forked by luxiaojijan (<a href="http://codepen.io" target="_blank" rel="external">@luxiaojijan</a>) on <a href="http://codepen.io" target="_blank" rel="external">CodePen</a></p>
+
+<p>一个利用<code>align-self</code>来改变默认<code>align-items</code>排版的例子</p>
+<p data-height="499" data-theme-id="0" data-slug-hash="MYZvoX" data-user="luxiaojijan" data-default-tab="result" class="codepen">See the Pen <a href="http://codepen.io/luxiaojijan/pen/MYZvoX" target="_blank" rel="external">Timer</a> forked by luxiaojijan (<a href="http://codepen.io" target="_blank" rel="external">@luxiaojijan</a>) on <a href="http://codepen.io" target="_blank" rel="external">CodePen</a></p>
+
+<p><strong>justify-content</strong></p>
+<ul>
+<li><p><code>flex-start</code>: 子元素靠容器的左边线对齐</p>
+</li>
+<li><p><code>flex-end</code>: 子元素靠容器的右边线对齐</p>
+</li>
+<li><p><code>center</code>: 以中轴线居中。</p>
+</li>
+<li><p><code>space-between</code>: 子元素被平均分布,第一子元素在容器最左边，最后一个子元素在最右边</p>
+</li>
+<li><p><code>space-around</code>:子元素平均分布，但子元素与子元素之间有空隙</p>
+</li>
+</ul>
+<p><strong>实例效果</strong></p>
+<p data-height="499" data-theme-id="0" data-slug-hash="KwbRJe" data-user="luxiaojijan" data-default-tab="result" class="codepen">See the Pen <a href="http://codepen.io/luxiaojijan/pen/KwbRJe" target="_blank" rel="external">Timer</a> forked by luxiaojijan (<a href="http://codepen.io" target="_blank" rel="external">@luxiaojijan</a>) on <a href="http://codepen.io" target="_blank" rel="external">CodePen</a></p>
+
+<p><strong>order</strong></p>
+<p>用来改变子元素之间的排列循序，默认值是0，值越小，越往前排。</p>
+<p><img src="/images/css/css-16.png" alt=""></p>
+<h2 id="Flexible-boxes解决的一些问题。"><a href="#Flexible-boxes解决的一些问题。" class="headerlink" title="Flexible boxes解决的一些问题。"></a>Flexible boxes解决的一些问题。</h2><p><strong>优雅的实现响应式布局。</strong></p>
+<p><img src="/images/css/css-17.gif" alt=""></p>
+<p data-height="499" data-theme-id="0" data-slug-hash="EaGrOy" data-user="luxiaojijan" data-default-tab="result" class="codepen">See the Pen <a href="http://codepen.io/luxiaojijan/pen/EaGrOy" target="_blank" rel="external">Timer</a> forked by luxiaojijan (<a href="http://codepen.io" target="_blank" rel="external">@luxiaojijan</a>) on <a href="http://codepen.io" target="_blank" rel="external">CodePen</a></p>
+
+<p><strong>最简洁的实现媒体对象效果。（不需要浮动和创建BFC哦！）</strong></p>
+<p data-height="499" data-theme-id="0" data-slug-hash="ZYVwVY" data-user="luxiaojijan" data-default-tab="result" class="codepen">See the Pen <a href="http://codepen.io/luxiaojijan/pen/ZYVwVY" target="_blank" rel="external">Timer</a> forked by luxiaojijan (<a href="http://codepen.io" target="_blank" rel="external">@luxiaojijan</a>) on <a href="http://codepen.io" target="_blank" rel="external">CodePen</a></p>
+
+<h2 id="关于Flexible-boxes的一些文章"><a href="#关于Flexible-boxes的一些文章" class="headerlink" title="关于Flexible boxes的一些文章"></a>关于Flexible boxes的一些文章</h2><ul>
+<li><a href="http://philipwalton.github.io/solved-by-Flexible boxes/" target="_blank" rel="external">Solved by Flexible boxes</a></li>
+<li><a href="https://css-tricks.com/snippets/css/a-guide-to-Flexible boxes/" target="_blank" rel="external">A Complete Guide to Flexible boxes</a></li>
+<li><a href="http://chriswrightdesign.com/experiments/Flexible boxes-adventures/" target="_blank" rel="external">Flexible boxes adventures</a></li>
+</ul>
+<script src="http://codepen.io/assets/embed/ei.js"> </script>
+
+<p>出处来自：<a href="http://www.w3cplus.com/css3/flexboxgeng-jia-you-ya-de-webbu-ju.html" target="_blank" rel="external">Flexible boxes更加优雅的Web布局</a></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/CSS/" rel="tag"># CSS</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/11/02/archivers/brief-history-of-js-modules/" rel="next" title="JavaScript的模块简史">
+                <i class="fa fa-chevron-left"></i> JavaScript的模块简史
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/11/13/archivers/flexbox-and-z-index/" rel="prev" title="Flexbox与z-index">
+                Flexbox与z-index <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2016/11/09//archivers/dive-into-flexbox/"
+           data-title="深入浅出Flexbox" data-url="https://lucius0.github.io/2016/11/09//archivers/dive-into-flexbox/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.jpg"
+               alt="Lucius" />
+          <p class="site-author-name" itemprop="name">Lucius</p>
+          <p class="site-description motion-element" itemprop="description">stay hungry, stay foolish...</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">31</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">3</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">11</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/Lucius0" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#基础知识点"><span class="nav-number">1.</span> <span class="nav-text">基础知识点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Flexible-boxes可以解决什么问题"><span class="nav-number">2.</span> <span class="nav-text">Flexible boxes可以解决什么问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Flexible-boxes能用在哪里"><span class="nav-number">3.</span> <span class="nav-text">Flexible boxes能用在哪里</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Flexible-boxes实现的原理逻辑"><span class="nav-number">4.</span> <span class="nav-text">Flexible boxes实现的原理逻辑</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Flexible-boxes解决的一些问题。"><span class="nav-number">5.</span> <span class="nav-text">Flexible boxes解决的一些问题。</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#关于Flexible-boxes的一些文章"><span class="nav-number">6.</span> <span class="nav-text">关于Flexible boxes的一些文章</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Lucius</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"lucius0"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    
+    <script src="/lib/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+
+
+  
+  
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length == 0) {
+      search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body").append('<div class="popoverlay">').css('overflow', 'hidden');
+      $('.popup').toggle();
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+      $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = $( "entry", xmlResponse ).map(function() {
+            return {
+              title: $( "title", this ).text(),
+              content: $("content",this).text(),
+              url: $( "url" , this).text()
+            };
+          }).get();
+          var $input = document.getElementById(search_id);
+          var $resultContent = document.getElementById(content_id);
+          $input.addEventListener('input', function(){
+            var matchcounts = 0;
+            var str='<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length > 1) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var content_index = [];
+                var data_title = data.title.trim().toLowerCase();
+                var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                var data_url = decodeURIComponent(data.url);
+                var index_title = -1;
+                var index_content = -1;
+                var first_occur = -1;
+                // only match artiles with not empty titles and contents
+                if(data_title != '') {
+                  keywords.forEach(function(keyword, i) {
+                    index_title = data_title.indexOf(keyword);
+                    index_content = data_content.indexOf(keyword);
+                    if( index_title >= 0 || index_content >= 0 ){
+                      isMatch = true;
+                      if (i == 0) {
+                        first_occur = index_content;
+                      }
+                    }
+
+                  });
+                }
+                // show search results
+                if (isMatch) {
+                  matchcounts += 1;
+                  str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                  var content = data.content.trim().replace(/<[^>]+>/g,"");
+                  if (first_occur >= 0) {
+                    // cut out 100 characters
+                    var start = first_occur - 20;
+                    var end = first_occur + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if(start == 0){
+                      end = 50;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    var match_content = content.substring(start, end);
+                    // highlight all keywords
+                    keywords.forEach(function(keyword){
+                      var regS = new RegExp(keyword, "gi");
+                      match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                    });
+
+                    str += "<p class=\"search-result\">" + match_content +"...</p>"
+                  }
+                  str += "</li>";
+                }
+              })};
+            str += "</ul>";
+            if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+            if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+            $resultContent.innerHTML = str;
+          });
+          proceedsearch();
+        }
+      });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".popoverlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+
+  
+
+  
+
+  
+
+  
+
+
+</body>
+</html>

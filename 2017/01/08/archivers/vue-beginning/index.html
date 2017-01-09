@@ -98,7 +98,7 @@ Vue.js（读音 /vjuː/, 类似于 view） 是一套构建用户界面的 渐进
 <meta property="og:image" content="https://lucius0.github.io/images/vue/vue-04.jpeg">
 <meta property="og:image" content="https://lucius0.github.io/images/vue/vue-05.png">
 <meta property="og:image" content="https://lucius0.github.io/images/vue/vue-06.png">
-<meta property="og:updated_time" content="2017-01-08T15:35:05.000Z">
+<meta property="og:updated_time" content="2017-01-09T16:19:53.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Vue.js 初体验">
 <meta name="twitter:description" content="介绍Vue.js 主要是利用到ECMAScript 5的特性，因此IE 8以下的浏览器都不支持，可以通过caniuse来查看浏览器的支持情况。
@@ -333,8 +333,8 @@ Vue.js（读音 /vjuː/, 类似于 view） 是一套构建用户界面的 渐进
                 <i class="fa fa-calendar-check-o"></i>
               </span>
               <span class="post-meta-item-text">更新于</span>
-              <time title="更新于" itemprop="dateModified" datetime="2017-01-08T23:35:05+08:00">
-                2017-01-08
+              <time title="更新于" itemprop="dateModified" datetime="2017-01-10T00:19:53+08:00">
+                2017-01-10
               </time>
             
           </span>
@@ -525,17 +525,19 @@ Vue.js（读音 /vjuː/, 类似于 view） 是一套构建用户界面的 渐进
 <li><p>v-on：绑定事件监听器。事件类型由参数指定。</p>
 <p><strong>修饰符：</strong></p>
 <ul>
-<li><p>.stop - 调用<code>event.stopPropagation()</code></p>
+<li><p>.stop - 调用<code>event.stopPropagation()</code>，阻止单击事件冒泡。</p>
 </li>
-<li><p>.prevent - 调用 <code>event.preventDefault()</code></p>
+<li><p>.prevent - 调用 <code>event.preventDefault()</code>，提交事件不再重载页面。</p>
 </li>
-<li><p>.capture - 添加事件侦听器时使用 capture 模式。</p>
+<li><p>.capture - 添加事件侦听器时使用 capture 模式，即捕获模式。</p>
 </li>
 <li><p>.self - 只当事件是从侦听器绑定的元素本身触发时才触发回调。</p>
 </li>
 <li><p>{keyCode | keyAlias} - 只当事件是从侦听器绑定的元素本身触发时才触发回调。</p>
 </li>
 <li><p>.native - 监听组件根元素的原生事件。</p>
+</li>
+<li><p>.keyup[.enter | .tab | .delete | .esc | .space | .up | .down | .left | .right] - 无需解释</p>
 </li>
 </ul>
 <p><strong>用法：</strong></p>
@@ -596,12 +598,34 @@ Vue.js（读音 /vjuː/, 类似于 view） 是一套构建用户界面的 渐进
 <p>1、当你利用索引直接设置一个项时，例如： <code>vm.items[indexOfItem] = newValue</code></p>
 <p>解决方法：</p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// Vue.set</span></div><div class="line">Vue.set(example1.items, indexOfItem, newValue)</div><div class="line"><span class="comment">// 或</span></div><div class="line"><span class="comment">// Array.prototype.splice`</span></div><div class="line">example1.items.splice(indexOfItem, <span class="number">1</span>, newValue)</div></pre></td></tr></table></figure>
-<ol>
-<li>当你修改数组的长度时，例如： <code>vm.items.length = newLength</code></li>
-</ol>
+<p>2、当你修改数组的长度时，例如： <code>vm.items.length = newLength</code></p>
 <p>解决方法：</p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">example1.items.splice(newLength)</div></pre></td></tr></table></figure>
 <h3 id="过滤-排序"><a href="#过滤-排序" class="headerlink" title="过滤|排序"></a>过滤|排序</h3><figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line">&lt;li v-for="n in evenNumbers"&gt;&#123;&#123; n &#125;&#125;&lt;/li&gt;</div><div class="line">data: &#123;</div><div class="line">  numbers: [ 1, 2, 3, 4, 5 ]</div><div class="line">&#125;,</div><div class="line">computed: &#123;</div><div class="line">  evenNumbers: function () &#123;</div><div class="line">    return this.numbers.filter(function (number) &#123;</div><div class="line">      return number % 2 === 0</div><div class="line">    &#125;)</div><div class="line">  &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">======================================================================</div><div class="line"></div><div class="line">&lt;li v-for="n in even(numbers)"&gt;&#123;&#123; n &#125;&#125;&lt;/li&gt;</div><div class="line">data: &#123;</div><div class="line">  numbers: [ 1, 2, 3, 4, 5 ]</div><div class="line">&#125;,</div><div class="line">methods: &#123;</div><div class="line">  even: function (numbers) &#123;</div><div class="line">    return numbers.filter(function (number) &#123;</div><div class="line">      return number % 2 === 0</div><div class="line">    &#125;)</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="事件监听器"><a href="#事件监听器" class="headerlink" title="事件监听器"></a>事件监听器</h2><p>可以查看<em>指令</em>中的<code>.keyup</code>，除了上面官方给的，还可以自定义<code>keycode</code>，如<code>Vue.config.keyCodes.f1 = 112</code>。</p>
+<p>其中在v2.1.0版本中新增了以下的特性：</p>
+<p>可以用如下修饰符开启鼠标或键盘事件监听，使在按键按下时发生响应。</p>
+<ul>
+<li><p><code>.ctrl</code></p>
+</li>
+<li><p><code>.alt</code></p>
+</li>
+<li><p><code>.shift</code></p>
+</li>
+<li><p><code>.meta</code></p>
+</li>
+</ul>
+<p>举个例子：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">&lt;!-- Alt + C --&gt;</div><div class="line"><span class="xml"><span class="tag">&lt;<span class="name">input</span> @<span class="attr">keyup.alt.67</span>=<span class="string">"clear"</span>&gt;</span></span></div><div class="line"><span class="comment">&lt;!-- Ctrl + Click --&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">div</span> @<span class="attr">click.ctrl</span>=<span class="string">"doSomething"</span>&gt;</span>Do something<span class="tag">&lt;/<span class="name">div</span>&gt;</span></div></pre></td></tr></table></figure>
+<p><strong>优点</strong>：</p>
+<ol>
+<li><p>从<code>v-on</code>方便定位方法；</p>
+</li>
+<li><p>无须再js绑定事件，viewmodel只是处理纯粹的逻辑；</p>
+</li>
+<li><p>viewModel被销毁，事件也会随之被清理</p>
+</li>
+</ol>
 
       
     </div>
@@ -643,6 +667,10 @@ Vue.js（读音 /vjuː/, 类似于 view） 是一套构建用户界面的 渐进
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/01/10/archivers/vue-component/" rel="prev" title="Vue.js 组件">
+                Vue.js 组件 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -714,7 +742,7 @@ Vue.js（读音 /vjuː/, 类似于 view） 是一套构建用户界面的 渐进
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">31</span>
+              <span class="site-state-item-count">32</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -777,7 +805,7 @@ Vue.js（读音 /vjuː/, 类似于 view） 是一套构建用户界面的 渐进
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#介绍"><span class="nav-number">1.</span> <span class="nav-text">介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安装"><span class="nav-number">2.</span> <span class="nav-text">安装</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#直接引入"><span class="nav-number">2.1.</span> <span class="nav-text">直接引入</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#通过vue-cli"><span class="nav-number">2.2.</span> <span class="nav-text">通过vue-cli</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#基本属性及其方法"><span class="nav-number">3.</span> <span class="nav-text">基本属性及其方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#工作原理"><span class="nav-number">4.</span> <span class="nav-text">工作原理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#生命周期"><span class="nav-number">5.</span> <span class="nav-text">生命周期</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#数据绑定"><span class="nav-number">6.</span> <span class="nav-text">数据绑定</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#指令"><span class="nav-number">7.</span> <span class="nav-text">指令</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#计算属性"><span class="nav-number">8.</span> <span class="nav-text">计算属性</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Class-与-Style-绑定"><span class="nav-number">9.</span> <span class="nav-text">Class 与 Style 绑定</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#列表渲染"><span class="nav-number">10.</span> <span class="nav-text">列表渲染</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#key"><span class="nav-number">10.1.</span> <span class="nav-text">key</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#过滤-排序"><span class="nav-number">10.2.</span> <span class="nav-text">过滤|排序</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#介绍"><span class="nav-number">1.</span> <span class="nav-text">介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安装"><span class="nav-number">2.</span> <span class="nav-text">安装</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#直接引入"><span class="nav-number">2.1.</span> <span class="nav-text">直接引入</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#通过vue-cli"><span class="nav-number">2.2.</span> <span class="nav-text">通过vue-cli</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#基本属性及其方法"><span class="nav-number">3.</span> <span class="nav-text">基本属性及其方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#工作原理"><span class="nav-number">4.</span> <span class="nav-text">工作原理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#生命周期"><span class="nav-number">5.</span> <span class="nav-text">生命周期</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#数据绑定"><span class="nav-number">6.</span> <span class="nav-text">数据绑定</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#指令"><span class="nav-number">7.</span> <span class="nav-text">指令</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#计算属性"><span class="nav-number">8.</span> <span class="nav-text">计算属性</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Class-与-Style-绑定"><span class="nav-number">9.</span> <span class="nav-text">Class 与 Style 绑定</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#列表渲染"><span class="nav-number">10.</span> <span class="nav-text">列表渲染</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#key"><span class="nav-number">10.1.</span> <span class="nav-text">key</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#过滤-排序"><span class="nav-number">10.2.</span> <span class="nav-text">过滤|排序</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#事件监听器"><span class="nav-number">11.</span> <span class="nav-text">事件监听器</span></a></li></ol></div>
             
 
           </div>

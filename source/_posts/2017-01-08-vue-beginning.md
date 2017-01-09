@@ -225,17 +225,19 @@ javascript表达式
 
  **修饰符：**
 
- - .stop - 调用`event.stopPropagation()`
+ - .stop - 调用`event.stopPropagation()`，阻止单击事件冒泡。
 
- - .prevent - 调用 `event.preventDefault()`
+ - .prevent - 调用 `event.preventDefault()`，提交事件不再重载页面。
 
- - .capture - 添加事件侦听器时使用 capture 模式。
+ - .capture - 添加事件侦听器时使用 capture 模式，即捕获模式。
 
  - .self - 只当事件是从侦听器绑定的元素本身触发时才触发回调。
 
  - {keyCode | keyAlias} - 只当事件是从侦听器绑定的元素本身触发时才触发回调。
 
  - .native - 监听组件根元素的原生事件。
+ 
+ - .keyup[.enter | .tab | .delete | .esc | .space | .up | .down | .left | .right] - 无需解释
 
  **用法：**
 
@@ -464,7 +466,7 @@ Vue.set(example1.items, indexOfItem, newValue)
 example1.items.splice(indexOfItem, 1, newValue)
 ```
 
-2. 当你修改数组的长度时，例如： `vm.items.length = newLength`
+2、当你修改数组的长度时，例如： `vm.items.length = newLength`
 
 解决方法：
 
@@ -502,6 +504,38 @@ methods: {
 }
 ```
 
+## 事件监听器
+
+可以查看*指令*中的`.keyup`，除了上面官方给的，还可以自定义`keycode`，如`Vue.config.keyCodes.f1 = 112`。
+
+其中在v2.1.0版本中新增了以下的特性：
+
+可以用如下修饰符开启鼠标或键盘事件监听，使在按键按下时发生响应。
+
+- `.ctrl`
+
+- `.alt`
+
+- `.shift`
+
+- `.meta`
+
+举个例子：
+
+```javascript
+<!-- Alt + C -->
+<input @keyup.alt.67="clear">
+<!-- Ctrl + Click -->
+<div @click.ctrl="doSomething">Do something</div>
+```
+
+**优点**：
+
+1. 从`v-on`方便定位方法；
+
+2. 无须再js绑定事件，viewmodel只是处理纯粹的逻辑；
+
+3. viewModel被销毁，事件也会随之被清理
 
 
 

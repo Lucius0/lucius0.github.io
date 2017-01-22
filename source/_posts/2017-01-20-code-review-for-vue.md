@@ -27,7 +27,7 @@ Vue的最新源码可以去[https://github.com/vuejs/vue](https://github.com/vue
 
 ![](/images/vue/vue-07.png)
 
-上图就是官方给出的Vue 2.0的生命周期图，其中包含了Vue对象生命周期过程中的鸡哥核心步骤。了解这几个过程，可以很好帮助我们理解Vue的创建与销毁过程。从图中我们可以看出，生命周期分为4个周期：
+上图就是官方给出的Vue 2.0的生命周期图，其中包含了Vue对象生命周期过程中的几个核心步骤。了解这几个过程，可以很好帮助我们理解Vue的创建与销毁过程。从图中我们可以看出，生命周期分为4个周期：
 
 - **create**：`new Vue`时，会先进行create，创建出Vue对象。
 
@@ -333,6 +333,60 @@ run () {
   ...
 }
 ```
+
+`update` 方法中，`queueWatcher` 方法的目的是通过 `nextTicker` 来执行 `run` 方法，属于支线逻辑，就不分析了，这里直接看 `run` 的实现。`run` 方法其实很简单，就是简单的调用 `get` 方法，而 `get` 方法会通过执行 `this.getter()` 来更新DOM。
+
+那么`this.getter`是什么呢？本文最开始分析`new Vue`过程时，有讲到运行`_mount`方法时，会运行如下代码：
+
+```javascript
+vm._watcher = new Watcher(vm, () => {
+  vm._update(vm._render(), hydrating)
+}, noop)
+```
+
+那么`this.getter`就是这里Watcher方法的第二参数。来看下`new Watcher`的代码：
+
+```javascript
+export default class Watcher {
+  constructor (
+    vm: Component,
+    expOrFn: string | Function,
+    cb: Function,
+    options?: Object = {}
+  ) {
+    ...
+    if (typeof expOrFn === 'function') {
+      this.getter = expOrFn
+    } else {
+      this.getter = parsePath(expOrFn)
+    }
+    ...
+    this.value = this.lazy
+      ? undefined
+      : this.get()
+  }
+}
+```
+
+可以看出，在new Vue过程中，Watcher会在构造完成后主动调用this.get()来触发this.getter()方法的运行，以达到更新DOM节点。
+
+总结一下这个过程：首先_init时，会对Data设置好setter方法，setter方法中会调用dep.notify()，以便数据变化时通知DOM进行更新。然后new Watcher时，会更新DOM的方法进行设置，也就是Watcher.getter方法。最后，当Data发生变化时候，dep.notify()运行，运行到watcher.getter()时，就会去运行render和update逻辑，最终达到DOM更新的目的。
+
+## 总结和收获
+
+刚开始觉得看源码，是因为希望能了解下Vue 2.0的实现，看看能不能得到一些从文档中无法知道的细节，用于提升运行效率。把主要流程理清楚后，的确了解到一些，这里做个整理：
+
+- el属性传入的如果不是element，最后会通过`document.querySelector`来获取的，这个接口性能较差，所以，el传入一个element性能会更好。
+
+- `$mount`方法中对html，body标签做了过滤，这两个不能用来作为渲染的根节点。
+
+- 每一个组件都会从`_init`开始重新运行，所以，当存在一个长列表时，将子节点作为一个组件，性能会较差。
+
+- `*.vue`文件会在构建时转化为render方法，而render方法的性能比指定template更好。所以，源码使用`*.vue`的方式，性能会更好。
+
+- 如果需要自定义`delimiters`，每一个组件都需要单独指定。
+
+- 如果是`*.vue`文件，制定`delimiters`是失效的，因为`vue-loader`对`*.vue`文件进行解析时，并没有将`delimiters`传递到`compiler.compile()`中。
 
 转自：[https://segmentfault.com/a/1190000007484936](https://segmentfault.com/a/1190000007484936)
 

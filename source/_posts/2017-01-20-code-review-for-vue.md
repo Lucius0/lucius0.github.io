@@ -390,11 +390,17 @@ export default class Watcher {
 
 转自：[https://segmentfault.com/a/1190000007484936](https://segmentfault.com/a/1190000007484936)
 
+## 结构图
 
+下面是取自[通过一张图走进 Vue 2.0](http://jiongks.name/blog/a-big-map-to-intro-vue-next/)的Vue2.0的结构图
 
+![](/images/vue/vue-11.jpg)
 
+------
 
+**参考资料**
 
+[详解vue的数据binding原理](http://www.cnblogs.com/dh-dh/p/5606596.html)
 
-
+[Vue的事件解读](https://github.com/banama/aboutVue/blob/master/vue-event.md)
 

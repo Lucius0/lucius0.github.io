@@ -3,7 +3,7 @@ layout: post
 title:  "CSS - relative 和 absolute 小记"
 date:   2017-03-02
 categories: front-end
-permalink: /archivers/relative-absolute
+permalink: /archivers/relative-absolute-note
 tags: CSS
 ---
 
@@ -91,4 +91,83 @@ margin 可以代替 absolute 对其元素定位，如B相对于A元素右下角�
 
 **3、配合JavaScript的控制：** 隐藏可以看上面的，但是显示我们只需要`dom.style.position = "static";
 `，就无需担心原本标签的是inline水平还是block水平。
+
+### absolute与等高布局
+
+[纯CSS实现侧边栏/分栏高度自动相等](http://www.zhangxinxu.com/wordpress/?p=694) 与 [我所知道的几种display:table-cell的应用](http://www.zhangxinxu.com/wordpress/?p=1187) 均可以实现等高布局。
+
+现在是利用 absolute 来实现等高布局，应用了`position: absolute`元素无宽度无高度。[绝对定位与等高布局demo](http://www.zhangxinxu.com/study/201103/absolute-equal-height-layout.html)
+
+核心代码如下：
+
+```html
+.equal_height{width:100%; height:999em; position:absolute; left:0; top:0;}
+```
+
+同时，满足以下条件：
+
+1. 高度999em的绝对定位层位于侧栏容器内，侧栏`position`为`relative`
+
+2. 该栏实际元素内容用一个与absolute绝对定位层为兄弟关系的标签层包裹，`position`为`relative`，`z-index`值1或其他
+
+3. 左右栏的父标签需设置`overflow:hidden`，同时为了兼容IE6/7，需设置`position`为`relative`
+
+![](/images/css/css-23.png)
+
+**原理：**由于绝对定位元素无高度的特性无宽度的特性，我们可以伪造一个高度足够高的绝对定位层（设置背景色，边框等属性），同时设置父标签溢出隐藏，那么其多出来的高度就不会显示了，也就实现了看上去的等高布局效果了。
+
+## relative
+
+1、定位
+
+relative 与 absolute 不同的是，relative 相对于自身位移，而 absolute 是相对于容器位移，张老师形象的称为“幻影位移“，什么这么说呢？因为 relative 是不会脱离文档流的，即就算你离开了自己本来的位置，那个位置还在，还是属于你的，只是你的”幻影“离开了原来的位置，表现也就变了。[relative属性幻影瞬移技能demo](http://www.zhangxinxu.com/study/201108/css-relative-skill-move.html)
+
+2、z-index
+
+relative 跟 absolute 一样拥有 `z-index` 属性
+
+3、限制 absolute
+
+当 absolute 的父容器的定位是 relative 时，absolute 元素也就只能在 relative 限制下移动了，即 absolute 的`top\left`则是相对于 relative 移动的。
+
+### relative 最小化影响
+
+[未遵循最小化影响原则实现demo](http://www.zhangxinxu.com/study/201108/css-relative-mini-effect-rule-unfollow.html)
+
+```html
+.test {width:25em; margin:2em auto;}
+.box { padding:2em; border:1px solid #beceeb; border-radius:2px; background-color:#f0f3f9; position:relative; }
+.ok { color:green; font-size:6em; position:absolute; right:-11px; bottom:-.5em; }
+
+<div class="test">
+    <div class="box">
+        CSS relative相对定位的最小化影响原则
+        <strong class="ok">√</strong>
+    </div>
+</div>
+```
+
+[遵循最小化影响原则实现demo](http://www.zhangxinxu.com/study/201108/css-relative-mini-effect-rule.html)
+
+```html
+.test {width:25em; margin:2em auto;}
+.box { padding:2em; border:1px solid #beceeb; border-radius:2px; background-color:#f0f3f9; }
+.rel { position:relative; }
+.ok { color:green; font-size:6em; position:absolute; right:-10px; top:-1em; }
+
+<div class="test">
+    <div class="box">CSS relative相对定位的最小化影响原则</div>
+    <div class="rel"><strong class="ok">√</strong></div>
+</div>
+```
+
+## 总结
+
+`absolute+margin`（左上角元素定位，作用于当前元素）、`float+relative`（右上角元素定位，作用于当前元素）和`relative+absolute`（右下角元素定位，直接父标签+当前定位元素）。而目前web届大肆使用的外层div层设置relative属性，里面一些absolute元素定位的方法是不推荐的。
+
+
+
+
+
+
 

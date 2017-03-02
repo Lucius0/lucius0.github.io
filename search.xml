@@ -428,45 +428,6 @@
     </entry>
     
     <entry>
-      <title><![CDATA[微信小程序]]></title>
-      <url>https://lucius0.github.io/2017/01/14//archivers/wechat-app/</url>
-      <content type="html"><![CDATA[<blockquote>
-<p>小程序是一种不需要下载安装即可使用的应用，它实现了应用‘触手可及’的梦想，用户扫一扫或搜一下即可打开应用；也体现了‘用完即走’的理念，用户不用关心是否安装太多应用的问题。应用将无处不在，随时可用，但又无需安装卸载。 - 微信之父张小龙</p>
-</blockquote>
-<p>既然是小程序，本着用完即走的轻应用借着微信这个活跃度上亿的平台，那么就有如雨后春笋般的微信小程序，有轻芒杂志、美团外卖+、滴滴出行DiDi、携程酒店机票火车票、腾讯视频、京东购物、猫眼电影等微信小程序。</p>
-<p>那么微信小程序真的就那么好么？真的就那么值得各家公司去开发么？</p>
-<h2 id="体验"><a href="#体验" class="headerlink" title="体验"></a>体验</h2><p>1、在微信里，小程序比非小程序的网页流畅，因为非微信小程序都被转换为手机预览模式。</p>
-<p>2、模糊查找，只有部分小程序才支持名称模糊查找，例如京东这类有交易的企业。</p>
-<p>3、小程序的components都是基于webview渲染的，性能上比不上web，性能是比不上，但在有限的资源里提高了小程序的可用性，如播放器，地图，顶部切换栏等，大大的提高了产品的开发效率。</p>
-<p>4、小程序的编写语法已经是经过了微信的一层封装，前期的性能、功能、接口虽然有很多诟病，但是因为有runtime，所以之后微信团队可以在不影响他人产品的影响下，优化runtime以及组件的执行渲染效率。</p>
-<p>5、启动速度，小程序是经过打包安装在微信里的，在启动在可以直接中文件系统中直接启动，这样启动的时候就不会因网络延迟带来不好的感官体验。</p>
-<h2 id="局限性"><a href="#局限性" class="headerlink" title="局限性"></a>局限性</h2><p>1、小程序只能通过二维码扫码，不能分享至朋友圈，不能以长按识别的方式进入小程序；</p>
-<p>2、小程序没有超链接，也就意味着无法打开外链。</p>
-<p>3、在没有用户确认的情况下，小程序每周只能主动推送一条消息，而且，不是任何消息都能推送，只有通过审核的模板消息才能推送。</p>
-<p>微信内嵌webview控件，本质上就是一个定制化的web浏览器，与普通浏览器相比只是增加了一些丰富的内部交互，比如可以轻松用户信息等等，虽然站在前端的角度，小程序和H5应用有一点区别，但是虚拟机永远是虚拟机，跟原生永远差了一个解释执行的鸿沟。</p>
-<p>目前微信小程序video组件经测试支持mp4和m3u8格式，其中 m3u8 格式只能在手机上使用，开发者可以使用腾讯云点播控制台将视频源转码成 mp4 或 m3u8 格式。 </p>
-<p>小程序对 HTTP 有限制，除了要求通信协议是 HTTPS，出现的域名必须提前预设之外，还将应用层协议限定到了 Json 格式下</p>
-<p>小程序提供了算是丰富的 APIs 供开发者在手机系统上存取文件。开发者可以本地文件来做缓存、做状态记忆，等等，为开发提供了不错的便利</p>
-<p>小程序开放了一些 APIs，帮助开发者获得设备上的一些基本信息，比如：手机型号、屏幕尺寸，网络状态，等等。</p>
-<p>在其他平台上，如果需要获取到微信的账号信息，需要通过一次用户授权。如果用户暂时不想提供，则会使得程序出于 “未登录” 状态，给整个服务的展开带来困难。而在小程序中，只要用户点开小程序，就意味着完成了授权，开发者可以直接读取到小程序的账号信息，并可以同步到自己的服务端作为该用户的身份标识，从而实现 “始终登录” 的状态，使得后续服务可以更好的提供。</p>
-<p>适配上简单多</p>
-<p>开发者无法用 JavaScript 去调用 window、document 对象来修改界面元素完成逻辑，因此没法用jquery</p>
-<p>从设计思路看，小程序做了大量的 “限制”，最大的限制，是开发者其实是无法通过 JavaScript 这样的编程语言，直接对界面进行控制，而是通过数据驱动来间接实现。</p>
-<p>和 Web 的兼容性 。小程序引入了 HTML/CSS 做为技术栈，并在其基础上进行了定制。很多开发中的问题都来自于 “定制”，因为你并不知道哪部分就被定制了，哪部分是被继承了。比如，你用了一个 CSS语法，发现并不生效，或者效果和浏览器中的不一样，于是，你只能换一个写法，结果很有可能，又会继续发现，这个新的写法可能效果也不对，于是你只能继续尝试，如此反复，可能会消耗大量的时间。</p>
-<p>开发环境不稳定 。小程序的开发，是基于微信自制的一个 IDE，但当下，IDE 的稳定性、易用性都非常之差，时常出现 Bug，你以为是你的程序写错了，但其实，是 IDE 的 Bug，重启一下 IDE，一切都引刃而解了。于是，当你日后开发小程序时出现某种异样，先重启 IDE，再看问题还在不在，也许是种更节省时间的方式。</p>
-<p>缺少真机调试环境 。小程序的运行时其实就是微信，微信几乎没提供任何真机上调试工具给你（也不能说完全没有，有一个只能在真机上瞪着眼睛看的日志框）。你在模拟器中调试好的程序，可能在真机上运行起来并不如预期。比如，我们碰到过真机上白屏、位置错乱、动画效果不对，以及 Android 上至今还不能运行，等等问题。这对于稍微复杂的程序而言，颇为梦魇，想做一些细粒度的调整和优化，基本只能靠猜。</p>
-<p>闭源且缺少学习资料 。小程序整体上是闭源状态（虽然模拟器和 IDE 部分可以通过反编译来看），且缺少足够的学习资料，如果一旦碰到控件如何使用、为什么这么用不对，之类的问题，就只能靠不停的试来解决，也需要耗费大量时间。</p>
-<p><a href="https://zhuanlan.zhihu.com/p/24176267" target="_blank" rel="external">https://zhuanlan.zhihu.com/p/24176267</a></p>
-<p>小程序还太早期，变化可能会比较多，还是尽可能当作一个单独的技术线来处理，不需要太考虑复用。</p>
-<p>Q：在小程序后台切换前台后，如何控制进入到指定页面？<br>A：很遗憾，还没有办法，这个事情还蛮奇怪的，感觉微信还是有点保守。小程序仅支持本页刷新和打开新页面两种模式，连从一个 tab 跳到另一个 tab 都不行。不过，如果用户推出再进入小程序，小程序会记住上次的位置，这个可以利用一下。</p>
-<p>Q：在小程序中无法使用requestAnimationFrame方法，那在实现自定义动画时，如何规避setData改变style属性而带来的掉帧呢？<br>A：坦白讲，我也还没发现有太好的办法。小程序也有 animation 相关的 APIs，但做拖动这样的操作的时候，丢帧还是非常明显（而且不同平台表现不一致，这个也很痛苦）。短期内，还是不要做过于复杂的交互为妙。</p>
-<p>小程序是算编译后的大小是否小于 1024，而不是代码的大小。</p>
-<p>打包上传、预览、发布的微信小程序代码不得超过1024kb，即1M<br>单次wx.request请求数据、图片资源下载不得超过1024kb，即1M</p>
-<p><a href="http://guoze.me/2016/10/16/wechat-app/" target="_blank" rel="external">http://guoze.me/2016/10/16/wechat-app/</a></p>
-]]></content>
-    </entry>
-    
-    <entry>
       <title><![CDATA[Vue.js 组件]]></title>
       <url>https://lucius0.github.io/2017/01/10//archivers/vue-component/</url>
       <content type="html"><![CDATA[<h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><p>组件（Component）是 Vue.js 最强大的功能之一。组件可以扩展 HTML 元素，封装可重用的代码。在较高层面上，组件是自定义元素， Vue.js 的编译器为它添加特殊功能。在有些情况下，组件也可以是原生 HTML 元素的形式，以 is 特性扩展。</p>
@@ -2323,6 +2284,24 @@ $ npm install -D webpack webpack-dev-server</code></p>
     </entry>
     
     <entry>
+      <title><![CDATA[JavaScript之五 - 数组]]></title>
+      <url>https://lucius0.github.io/2016/08/11//archivers/javascript-array/</url>
+      <content type="html"><![CDATA[<p>有序，弱类型(多类型)集合。数组是有长度限制的，即0~2^23 - 1</p>
+<p>数组的原型链：<code>[] -&gt; Array.prototype</code>; 对象的原型链：<code>{} -&gt; Object.prototype</code></p>
+<p><strong>常用方法</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">Array</span>.prototype.join</div><div class="line"><span class="built_in">Array</span>.prototype.reverse</div><div class="line"><span class="built_in">Array</span>.prototype.sort</div><div class="line"><span class="built_in">Array</span>.prototype.concat</div><div class="line"><span class="built_in">Array</span>.prototype.slice</div><div class="line"><span class="built_in">Array</span>.prototype.splice</div><div class="line"><span class="built_in">Array</span>.prototype.foreach(ES5)</div><div class="line"><span class="built_in">Array</span>.prototype.map(ES5)</div><div class="line"><span class="built_in">Array</span>.prototype.filter(ES5)</div><div class="line"><span class="built_in">Array</span>.prototype.every(ES5)</div><div class="line"><span class="built_in">Array</span>.prototype.some(ES5)</div><div class="line"><span class="built_in">Array</span>.prototype.reduce/reduceRight(ES5)</div><div class="line"><span class="built_in">Array</span>.prototype.indexOf/<span class="built_in">Array</span>.prototype.lastIndexOf(ES5)</div><div class="line"><span class="built_in">Array</span>.isArray(ES5)</div></pre></td></tr></table></figure>
+<ul>
+<li>reduce</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> arr = [<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>];</div><div class="line"><span class="keyword">var</span> sum = arr.reduce(<span class="function"><span class="keyword">function</span>(<span class="params">x,y</span>) </span>&#123; <span class="keyword">return</span> x + y&#125;, <span class="number">0</span>); <span class="comment">// 6</span></div></pre></td></tr></table></figure>
+<p><em>解析：</em> reduce接受两个参数，第一个参数则是逻辑函数，第二个参数表明是否要跟首次传入逻辑函数的参数进行逻辑处理，例如上文例子，会先进行 0 + 1 = 1，1 + 2 = 3，3 + 3 = 6</p>
+<ul>
+<li>isArray</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">Array</span>.isArray([]); <span class="comment">// true</span></div><div class="line">[] <span class="keyword">instanceof</span> <span class="built_in">Array</span>; <span class="comment">// true</span></div><div class="line">(&#123;&#125;).toString.apply([]) === [<span class="string">"object Array"</span>]; <span class="comment">// true</span></div><div class="line">[].constructor === <span class="built_in">Array</span>; <span class="comment">// true</span></div></pre></td></tr></table></figure>]]></content>
+    </entry>
+    
+    <entry>
       <title><![CDATA[JavaScript之六 - 函数与作用域(1)]]></title>
       <url>https://lucius0.github.io/2016/08/11//archivers/javascript-function-01/</url>
       <content type="html"><![CDATA[<h2 id="1、调用方式"><a href="#1、调用方式" class="headerlink" title="1、调用方式"></a>1、调用方式</h2><ul>
@@ -2428,24 +2407,6 @@ $ npm install -D webpack webpack-dev-server</code></p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">foo</span>(<span class="params"></span>) </span>&#123;</div><div class="line">	<span class="keyword">this</span>.b = <span class="number">100</span>;</div><div class="line">	<span class="keyword">return</span> <span class="keyword">this</span>.a;</div><div class="line">&#125;</div><div class="line"><span class="keyword">var</span> func = foo.bind(&#123;<span class="attr">a</span>: <span class="number">1</span>&#125;);</div><div class="line">func(); <span class="comment">// 1</span></div><div class="line"><span class="keyword">new</span> func(); <span class="comment">// &#123;b: 100&#125;</span></div></pre></td></tr></table></figure>
 <p><em>解析：</em> foo函数中返回值除非是<strong>对象</strong>，否则就将<strong>this</strong>作为返回值返回，<strong>this</strong>会被初始化为默认的一个空对象，并且<strong>this</strong>的原型是<em>foo.prototype</em>，该空对象的b属性会赋值为100，然后整个对象会被作为返回值返回并且忽略return的返回值。</p>
 ]]></content>
-    </entry>
-    
-    <entry>
-      <title><![CDATA[JavaScript之五 - 数组]]></title>
-      <url>https://lucius0.github.io/2016/08/11//archivers/javascript-array/</url>
-      <content type="html"><![CDATA[<p>有序，弱类型(多类型)集合。数组是有长度限制的，即0~2^23 - 1</p>
-<p>数组的原型链：<code>[] -&gt; Array.prototype</code>; 对象的原型链：<code>{} -&gt; Object.prototype</code></p>
-<p><strong>常用方法</strong></p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">Array</span>.prototype.join</div><div class="line"><span class="built_in">Array</span>.prototype.reverse</div><div class="line"><span class="built_in">Array</span>.prototype.sort</div><div class="line"><span class="built_in">Array</span>.prototype.concat</div><div class="line"><span class="built_in">Array</span>.prototype.slice</div><div class="line"><span class="built_in">Array</span>.prototype.splice</div><div class="line"><span class="built_in">Array</span>.prototype.foreach(ES5)</div><div class="line"><span class="built_in">Array</span>.prototype.map(ES5)</div><div class="line"><span class="built_in">Array</span>.prototype.filter(ES5)</div><div class="line"><span class="built_in">Array</span>.prototype.every(ES5)</div><div class="line"><span class="built_in">Array</span>.prototype.some(ES5)</div><div class="line"><span class="built_in">Array</span>.prototype.reduce/reduceRight(ES5)</div><div class="line"><span class="built_in">Array</span>.prototype.indexOf/<span class="built_in">Array</span>.prototype.lastIndexOf(ES5)</div><div class="line"><span class="built_in">Array</span>.isArray(ES5)</div></pre></td></tr></table></figure>
-<ul>
-<li>reduce</li>
-</ul>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> arr = [<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>];</div><div class="line"><span class="keyword">var</span> sum = arr.reduce(<span class="function"><span class="keyword">function</span>(<span class="params">x,y</span>) </span>&#123; <span class="keyword">return</span> x + y&#125;, <span class="number">0</span>); <span class="comment">// 6</span></div></pre></td></tr></table></figure>
-<p><em>解析：</em> reduce接受两个参数，第一个参数则是逻辑函数，第二个参数表明是否要跟首次传入逻辑函数的参数进行逻辑处理，例如上文例子，会先进行 0 + 1 = 1，1 + 2 = 3，3 + 3 = 6</p>
-<ul>
-<li>isArray</li>
-</ul>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">Array</span>.isArray([]); <span class="comment">// true</span></div><div class="line">[] <span class="keyword">instanceof</span> <span class="built_in">Array</span>; <span class="comment">// true</span></div><div class="line">(&#123;&#125;).toString.apply([]) === [<span class="string">"object Array"</span>]; <span class="comment">// true</span></div><div class="line">[].constructor === <span class="built_in">Array</span>; <span class="comment">// true</span></div></pre></td></tr></table></figure>]]></content>
     </entry>
     
     <entry>
@@ -2734,15 +2695,15 @@ $ npm install -D webpack webpack-dev-server</code></p>
     </entry>
     
     <entry>
-      <title><![CDATA[about]]></title>
-      <url>https://lucius0.github.io/about/index.html</url>
-      <content type="html"><![CDATA[<h1>WElCOME</h1>]]></content>
-    </entry>
-    
-    <entry>
       <title><![CDATA[categories]]></title>
       <url>https://lucius0.github.io/categories/index.html</url>
       <content type="html"></content>
+    </entry>
+    
+    <entry>
+      <title><![CDATA[about]]></title>
+      <url>https://lucius0.github.io/about/index.html</url>
+      <content type="html"><![CDATA[<h1>WElCOME</h1>]]></content>
     </entry>
     
     <entry>

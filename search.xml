@@ -2284,24 +2284,6 @@ $ npm install -D webpack webpack-dev-server</code></p>
     </entry>
     
     <entry>
-      <title><![CDATA[JavaScript之五 - 数组]]></title>
-      <url>https://lucius0.github.io/2016/08/11//archivers/javascript-array/</url>
-      <content type="html"><![CDATA[<p>有序，弱类型(多类型)集合。数组是有长度限制的，即0~2^23 - 1</p>
-<p>数组的原型链：<code>[] -&gt; Array.prototype</code>; 对象的原型链：<code>{} -&gt; Object.prototype</code></p>
-<p><strong>常用方法</strong></p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">Array</span>.prototype.join</div><div class="line"><span class="built_in">Array</span>.prototype.reverse</div><div class="line"><span class="built_in">Array</span>.prototype.sort</div><div class="line"><span class="built_in">Array</span>.prototype.concat</div><div class="line"><span class="built_in">Array</span>.prototype.slice</div><div class="line"><span class="built_in">Array</span>.prototype.splice</div><div class="line"><span class="built_in">Array</span>.prototype.foreach(ES5)</div><div class="line"><span class="built_in">Array</span>.prototype.map(ES5)</div><div class="line"><span class="built_in">Array</span>.prototype.filter(ES5)</div><div class="line"><span class="built_in">Array</span>.prototype.every(ES5)</div><div class="line"><span class="built_in">Array</span>.prototype.some(ES5)</div><div class="line"><span class="built_in">Array</span>.prototype.reduce/reduceRight(ES5)</div><div class="line"><span class="built_in">Array</span>.prototype.indexOf/<span class="built_in">Array</span>.prototype.lastIndexOf(ES5)</div><div class="line"><span class="built_in">Array</span>.isArray(ES5)</div></pre></td></tr></table></figure>
-<ul>
-<li>reduce</li>
-</ul>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> arr = [<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>];</div><div class="line"><span class="keyword">var</span> sum = arr.reduce(<span class="function"><span class="keyword">function</span>(<span class="params">x,y</span>) </span>&#123; <span class="keyword">return</span> x + y&#125;, <span class="number">0</span>); <span class="comment">// 6</span></div></pre></td></tr></table></figure>
-<p><em>解析：</em> reduce接受两个参数，第一个参数则是逻辑函数，第二个参数表明是否要跟首次传入逻辑函数的参数进行逻辑处理，例如上文例子，会先进行 0 + 1 = 1，1 + 2 = 3，3 + 3 = 6</p>
-<ul>
-<li>isArray</li>
-</ul>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">Array</span>.isArray([]); <span class="comment">// true</span></div><div class="line">[] <span class="keyword">instanceof</span> <span class="built_in">Array</span>; <span class="comment">// true</span></div><div class="line">(&#123;&#125;).toString.apply([]) === [<span class="string">"object Array"</span>]; <span class="comment">// true</span></div><div class="line">[].constructor === <span class="built_in">Array</span>; <span class="comment">// true</span></div></pre></td></tr></table></figure>]]></content>
-    </entry>
-    
-    <entry>
       <title><![CDATA[JavaScript之六 - 函数与作用域(1)]]></title>
       <url>https://lucius0.github.io/2016/08/11//archivers/javascript-function-01/</url>
       <content type="html"><![CDATA[<h2 id="1、调用方式"><a href="#1、调用方式" class="headerlink" title="1、调用方式"></a>1、调用方式</h2><ul>
@@ -2407,6 +2389,24 @@ $ npm install -D webpack webpack-dev-server</code></p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">foo</span>(<span class="params"></span>) </span>&#123;</div><div class="line">	<span class="keyword">this</span>.b = <span class="number">100</span>;</div><div class="line">	<span class="keyword">return</span> <span class="keyword">this</span>.a;</div><div class="line">&#125;</div><div class="line"><span class="keyword">var</span> func = foo.bind(&#123;<span class="attr">a</span>: <span class="number">1</span>&#125;);</div><div class="line">func(); <span class="comment">// 1</span></div><div class="line"><span class="keyword">new</span> func(); <span class="comment">// &#123;b: 100&#125;</span></div></pre></td></tr></table></figure>
 <p><em>解析：</em> foo函数中返回值除非是<strong>对象</strong>，否则就将<strong>this</strong>作为返回值返回，<strong>this</strong>会被初始化为默认的一个空对象，并且<strong>this</strong>的原型是<em>foo.prototype</em>，该空对象的b属性会赋值为100，然后整个对象会被作为返回值返回并且忽略return的返回值。</p>
 ]]></content>
+    </entry>
+    
+    <entry>
+      <title><![CDATA[JavaScript之五 - 数组]]></title>
+      <url>https://lucius0.github.io/2016/08/11//archivers/javascript-array/</url>
+      <content type="html"><![CDATA[<p>有序，弱类型(多类型)集合。数组是有长度限制的，即0~2^23 - 1</p>
+<p>数组的原型链：<code>[] -&gt; Array.prototype</code>; 对象的原型链：<code>{} -&gt; Object.prototype</code></p>
+<p><strong>常用方法</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">Array</span>.prototype.join</div><div class="line"><span class="built_in">Array</span>.prototype.reverse</div><div class="line"><span class="built_in">Array</span>.prototype.sort</div><div class="line"><span class="built_in">Array</span>.prototype.concat</div><div class="line"><span class="built_in">Array</span>.prototype.slice</div><div class="line"><span class="built_in">Array</span>.prototype.splice</div><div class="line"><span class="built_in">Array</span>.prototype.foreach(ES5)</div><div class="line"><span class="built_in">Array</span>.prototype.map(ES5)</div><div class="line"><span class="built_in">Array</span>.prototype.filter(ES5)</div><div class="line"><span class="built_in">Array</span>.prototype.every(ES5)</div><div class="line"><span class="built_in">Array</span>.prototype.some(ES5)</div><div class="line"><span class="built_in">Array</span>.prototype.reduce/reduceRight(ES5)</div><div class="line"><span class="built_in">Array</span>.prototype.indexOf/<span class="built_in">Array</span>.prototype.lastIndexOf(ES5)</div><div class="line"><span class="built_in">Array</span>.isArray(ES5)</div></pre></td></tr></table></figure>
+<ul>
+<li>reduce</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> arr = [<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>];</div><div class="line"><span class="keyword">var</span> sum = arr.reduce(<span class="function"><span class="keyword">function</span>(<span class="params">x,y</span>) </span>&#123; <span class="keyword">return</span> x + y&#125;, <span class="number">0</span>); <span class="comment">// 6</span></div></pre></td></tr></table></figure>
+<p><em>解析：</em> reduce接受两个参数，第一个参数则是逻辑函数，第二个参数表明是否要跟首次传入逻辑函数的参数进行逻辑处理，例如上文例子，会先进行 0 + 1 = 1，1 + 2 = 3，3 + 3 = 6</p>
+<ul>
+<li>isArray</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">Array</span>.isArray([]); <span class="comment">// true</span></div><div class="line">[] <span class="keyword">instanceof</span> <span class="built_in">Array</span>; <span class="comment">// true</span></div><div class="line">(&#123;&#125;).toString.apply([]) === [<span class="string">"object Array"</span>]; <span class="comment">// true</span></div><div class="line">[].constructor === <span class="built_in">Array</span>; <span class="comment">// true</span></div></pre></td></tr></table></figure>]]></content>
     </entry>
     
     <entry>
@@ -2695,15 +2695,15 @@ $ npm install -D webpack webpack-dev-server</code></p>
     </entry>
     
     <entry>
-      <title><![CDATA[categories]]></title>
-      <url>https://lucius0.github.io/categories/index.html</url>
-      <content type="html"></content>
-    </entry>
-    
-    <entry>
       <title><![CDATA[about]]></title>
       <url>https://lucius0.github.io/about/index.html</url>
       <content type="html"><![CDATA[<h1>WElCOME</h1>]]></content>
+    </entry>
+    
+    <entry>
+      <title><![CDATA[categories]]></title>
+      <url>https://lucius0.github.io/categories/index.html</url>
+      <content type="html"></content>
     </entry>
     
     <entry>

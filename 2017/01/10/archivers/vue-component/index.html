@@ -402,7 +402,7 @@
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> data = &#123; <span class="attr">a</span> : <span class="number">1</span>&#125;</div><div class="line"></div><div class="line"><span class="comment">// wrong </span></div><div class="line"><span class="keyword">var</span> c1 = Vue.extend(&#123;</div><div class="line">	<span class="attr">data</span>: data</div><div class="line">&#125;)</div><div class="line"></div><div class="line"><span class="comment">// right</span></div><div class="line"><span class="keyword">var</span> c2 = Vue.extend(&#123;</div><div class="line">	data () &#123;</div><div class="line">		<span class="keyword">return</span> &#123; <span class="attr">a</span> : <span class="number">1</span>&#125;</div><div class="line">	&#125;</div><div class="line">&#125;)</div></pre></td></tr></table></figure>
 <h2 id="协同工作"><a href="#协同工作" class="headerlink" title="协同工作"></a>协同工作</h2><p>在 Vue.js 中，父子组件的关系可以总结为 props down, events up 。父组件通过 props 向下传递数据给子组件，子组件通过 events 给父组件发送消息。</p>
 <h3 id="props"><a href="#props" class="headerlink" title="props"></a>props</h3><p>组件实例的作用域是<strong>孤立</strong>的，<code>props</code>是单向的，只能由父组件传递给子组件，反之则会报错。</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">Vue.component(<span class="string">'child'</span>, &#123;</div><div class="line">  <span class="comment">// 声明 props</span></div><div class="line">  props: [<span class="string">'message'</span>],</div><div class="line">  <span class="comment">// 就像 data 一样，prop 可以用在模板内</span></div><div class="line">  <span class="comment">// 同样也可以在 vm 实例中像 “this.message” 这样使用</span></div><div class="line">  template: <span class="string">'&lt;span&gt;&#123;&#123; message &#125;&#125;&lt;/span&gt;'</span></div><div class="line">&#125;)</div><div class="line"></div><div class="line">&lt;child message=<span class="string">"hello!"</span>&gt;&lt;/child&gt;</div></pre></td></tr></table></figure>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">Vue.component(<span class="string">'child'</span>, &#123;</div><div class="line">  <span class="comment">// 声明 props</span></div><div class="line">  props: [<span class="string">'message'</span>],</div><div class="line">  <span class="comment">// 就像 data 一样，prop 可以用在模板内</span></div><div class="line">  <span class="comment">// 同样也可以在 vm 实例中像 “this.message” 这样使用</span></div><div class="line">  template: <span class="string">'&lt;span&gt;&#123;&#123; message &#125;&#125;&lt;/span&gt;'</span></div><div class="line">&#125;)</div><div class="line"></div><div class="line">&lt;child message=<span class="string">"hello!"</span>&gt;<span class="xml"><span class="tag">&lt;/<span class="name">child</span>&gt;</span></span></div></pre></td></tr></table></figure>
 <p>结果</p>
 <figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">span</span>&gt;</span>hello<span class="tag">&lt;/<span class="name">span</span>&gt;</span></div></pre></td></tr></table></figure>
 <p><strong>注意：</strong></p>
@@ -493,6 +493,10 @@
 
           <div class="post-nav-prev post-nav-item">
             
+              <a href="/2017/01/14/archivers/wechat-app/" rel="prev" title="微信小程序">
+                微信小程序 <i class="fa fa-chevron-right"></i>
+              </a>
+            
           </div>
         </div>
       
@@ -563,7 +567,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">32</span>
+              <span class="site-state-item-count">39</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -571,7 +575,7 @@
           
             <div class="site-state-item site-state-categories">
               <a href="/categories">
-                <span class="site-state-item-count">3</span>
+                <span class="site-state-item-count">4</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
@@ -580,7 +584,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">11</span>
+                <span class="site-state-item-count">12</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

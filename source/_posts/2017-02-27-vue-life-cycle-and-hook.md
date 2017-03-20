@@ -99,13 +99,13 @@ var app = new Vue({
 
 **小结：**
 
-1. `beforecreated`：el 和 data 还未初始化，但是refs已经初始化完成了
+1. `beforecreated`：el 和 data 还未初始化，~~但是refs已经初始化完成了~~，refs也是只是拿到对象，属性方法还没渲染完毕([Vue warn]: Error in beforecreated hook)。
 
 2. `created`：完成了 data 数据的初始化，el没有
 
 3. `beforeMount`：完成了 el 和 data 初始化 
 
-4. `mounted`：完成挂载
+4. `mounted`：完成挂载，refs的组件属性方法渲染完成
 
 在控制台输入`app.message = 'hello vue'`，会看到vue触发`beforeUpdate`以及`updated`。
 

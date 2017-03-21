@@ -223,14 +223,14 @@ delete person.name; // false
 
 - `Object.defineProperty(person, "name", {configurable: false, writable: false, enumerable: true, value: "Test"})` 定义属性的配置，第一个参数是对象，第二个属性是不存在于该对象的属性，第三个则定义该对象的属性描述器对象
 
- c(configurable) | c:true | c:true | c:false | c:false
- w(writable)     | w:true | w:false| w:true  | w:false
----------------- | ------ | ------ | ------- | -------
- 修改属性的值  | √   | √   | √   | ×
- 通过属性赋值、修改属性的值 | √ | × | √ | ×
- delete该属性返回true | √ | √ | × | ×
- 修改getter/setter方法 | √ | √ | × | ×
- 修改属性标签(除了writable从true修改为false总是允许) | √ | √ | × | ×
+c(configurable)/w(writable)  | c:true/w:true | c:true/w:false | c:false/w:true | c:false/w:false
+:--------------------------  | ------------- | -------------- | -------------- | ----------------
+修改属性的值                 |       √       |        √       |        √       |         ×
+通过属性赋值、修改属性的值   |       √       |        ×       |        √       |         ×
+delete该属性返回true         |       √       |        √       |        ×       |         ×
+修改getter/setter方法        |       √       |        √       |        ×       |         ×
+修改属性标签(除了writable从true修改为false总是允许) | √ | √ | × | ×
+
 
  **注意：**假如我们想改属性的值，configurable与writable为false的话就没办法修改了，但是假如writable为false，而configurable为true的话，我们可以变相的通过configurable修改属性的值，如Object.defineProperty(xxx, x, {value: 1})或者通过configurable来修改属性的writable的值使其能被修改，如Object.defineProperty(xxx, x, {writable: true});
 

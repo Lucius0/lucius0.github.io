@@ -4,6 +4,102 @@
   
     
     <entry>
+      <title><![CDATA[七个你可能不了解的CSS单位]]></title>
+      <url>https://lucius0.github.io/2017/03/19//archivers/7-css-units-you-might-not-know-about/</url>
+      <content type="html"><![CDATA[<p>我们很容易无法摆脱的使用我们所熟悉的CSS技术，当新的问题出现，这样会使我们处于不利的地位。</p>
+<p>随着Web继续的发展，对新的解决方案的需求也会继续增大。因此，作为网页设计师和前端开发人员，我们别无选择，只有去了解我们的工具集并且熟悉它。</p>
+<p>这意味着我们还要了解一些特殊的工具-那些不经常使用的，但是当需要它们的时候，它们恰恰是最正确的工具。</p>
+<p>今天，我将要向你介绍一些你以前可能不知道的CSS工具。这些工具都是计量单位，就像像素或者相对单位,但是很可能你从来没听说过它们！让我们一探究竟吧。</p>
+<h2 id="rem"><a href="#rem" class="headerlink" title="rem"></a>rem</h2><p>我们将从你已经熟悉的东西开始。<code>em</code>单位被定义为当前字体大小。例如，如果你在<code>body</code>元素上设置一个字体大小，那么在<code>body</code>元素内的任何子元素的<code>em</code>值都等于这个字体大小。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span> </div><div class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"test"</span>&gt;</span>Test<span class="tag">&lt;/<span class="name">div</span>&gt;</span> </div><div class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span> </div><div class="line"></div><div class="line">body &#123; font-size: 14px; &#125; </div><div class="line">div &#123; font-size: 1.2em; // calculated at 14px * 1.2, or 16.8px &#125;</div></pre></td></tr></table></figure>
+<p>在这里，我们说这个<code>div</code>将有一个<code>1.2em</code>的<code>font-size</code>。它是所继承的字体大小的<code>1.2</code>倍，在这个例子中为<code>14px</code>。结果为<code>16.8px</code>.</p>
+<p>但是，当你在每个元素内都级联<code>em</code>定义的字体大小将会发生什么？在下面的代码片段中我们应用和上面一模一样的CSS.每个<code>div</code>从它们的父节点继承字体大小，带给我们逐渐增加的字体大小。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span> </div><div class="line">    <span class="tag">&lt;<span class="name">div</span>&gt;</span> </div><div class="line">        Test <span class="comment">&lt;!-- 14 * 1.2 = 16.8px --&gt;</span> </div><div class="line">        <span class="tag">&lt;<span class="name">div</span>&gt;</span> </div><div class="line">            Test <span class="comment">&lt;!-- 16.8 * 1.2 = 20.16px --&gt;</span> </div><div class="line">            <span class="tag">&lt;<span class="name">div</span>&gt;</span> </div><div class="line">                Test <span class="comment">&lt;!-- 20.16 * 1.2 = 24.192px --&gt;</span> </div><div class="line">            <span class="tag">&lt;/<span class="name">div</span>&gt;</span> </div><div class="line">        <span class="tag">&lt;/<span class="name">div</span>&gt;</span> </div><div class="line">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span> </div><div class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></div></pre></td></tr></table></figure>
+<p data-height="300" data-theme-id="0" data-slug-hash="xbZQRQ" data-user="Envato Tuts" data-default-tab="result" class="codepen">See the Pen <a href="http://codepen.io/tutsplus/pen/xbZQRQ" target="_blank" rel="external">Custom Flexbox Alignment With Auto Margins</a> forked by Envato Tuts(<a href="http://codepen.io" target="_blank" rel="external">@Envato Tuts</a>) on <a href="http://codepen.io" target="_blank" rel="external">CodePen</a></p>
+
+<p>虽然在某些情况下可能需要这个，但是通常你可能想基于一个唯一的度量标准来按比例缩放。在这种情况下，你应该用<code>rem</code>。<code>rem</code>中的”<code>r</code>“代表”<code>root</code>“；这等同于<code>font-size</code>基于根元素进行设置；在大多数情况下根元素为<code>html</code>元素。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">html &#123; font-size: 14px; &#125; </div><div class="line">div &#123; font-size: 1.2rem; &#125;</div></pre></td></tr></table></figure>
+<p>在上一个示例中三个嵌套的<code>div</code>的字体大小计算结果都为<code>16.8px</code>。</p>
+<h3 id="对网格布局的好处"><a href="#对网格布局的好处" class="headerlink" title="对网格布局的好处"></a>对网格布局的好处</h3><p><code>rem</code>不是只对定义字体大小有用。比如，你可以使用<code>rem</code>把整个网格系统或者UI样式库基于HTML根元素的字体大小上,然后在特定的地方使用<code>em</code>比例缩放。这将带给你更加可预测的字体大小和比例缩放。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">.container &#123; </div><div class="line">    width: 70rem; // 70 * 14px = 980px </div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>从概念上讲，像这样一个策略背后的想法是为了允许你的界面随着你的内容按比例缩放。然而，这可能不一定对每个案例都有意义。</p>
+<p>“<a href="http://caniuse.com/#feat=rem" target="_blank" rel="external">rem(root em)单位</a>“的兼容性列表。</p>
+<h2 id="vh和vw"><a href="#vh和vw" class="headerlink" title="vh和vw"></a>vh和vw</h2><p>响应式网页设计技术很大程度上依赖于比例规则。然而，CSS比例不总是每个问题的最佳解决方案。CSS宽度是相对于最近的包含父元素。如果你想使用显示窗口的宽度或高度而不是父元素的宽度将会怎么样？这正是<code>vh</code>和<code>vw</code>单位所提供的。</p>
+<p><code>vh</code>等于viewport高度的<code>1/100</code>.例如，如果浏览器的高是<code>900px</code>,<code>1vh</code>求得的值为<code>9px</code>。同理，如果显示窗口宽度为<code>750px</code>,<code>1vw</code>求得的值为<code>7.5px</code>。</p>
+<p>这些规则表面上看起来有无尽的用途。例如，做一个占满高度的或者接近占满高度的幻灯片，可以用一个非常简单的方法实现，只要用一行CSS：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">.slide &#123;</div><div class="line">    height: 100vh;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>设想你想要一个占满屏幕宽度的标题。为做到这一点，你将会用<code>vw</code>来设置一个字体大小。这个大小将会随着浏览器的宽度按比例缩放。</p>
+<p data-height="300" data-theme-id="0" data-slug-hash="gbPQga" data-user="Envato Tuts" data-default-tab="result" class="codepen">See the Pen <a href="http://codepen.io/tutsplus/pen/gbPQga" target="_blank" rel="external">Custom Flexbox Alignment With Auto Margins</a> forked by Envato Tuts(<a href="http://codepen.io" target="_blank" rel="external">@Envato Tuts</a>) on <a href="http://codepen.io" target="_blank" rel="external">CodePen</a></p>
+
+<p><a href="http://caniuse.com/#feat=viewport-units" target="_blank" rel="external">视窗单位: vw, vh</a>的兼容性列表。</p>
+<h2 id="vmin-和-vmax"><a href="#vmin-和-vmax" class="headerlink" title="vmin 和 vmax"></a>vmin 和 vmax</h2><p><code>vh</code>和<code>vm</code>总是与视口的高度和宽度有关，与之不同的，<code>vmin</code>和<code>vmax</code>是与这次宽度和高度的最大值或最小值有关，取决于哪个更大和更小。例如，如果浏览器设置为<code>1100px</code>宽、<code>700px</code>高，<code>1vmin</code>会是<code>7px</code>,<code>1vmax</code>为<code>11px</code>。然而，如果宽度设置为<code>800px</code>，高度设置为<code>1080px</code>，<code>1vmin</code>将会等于<code>8px</code>而<code>1vmax</code>将会是<code>10.8px</code>。</p>
+<p>所以你什么时候可能用到这些值？</p>
+<p>设想你需要一个总是在屏幕上可见的元素。使用高度和宽度设置为低于<code>100</code>的<code>vmin</code>值将可以实现这个效果。例如，一个正方形的元素总是至少接触屏幕的两条边可能是这样定义的：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">.box &#123; </div><div class="line">    height: 100vmin; width: 100vmin; </div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><img src="/images/css/css-24.png" alt=""></p>
+<p>如果你需要一个总是覆盖可视窗口的正方形(一直接触屏幕的四条边),使用相同的规则只是把单位换成<code>vmax</code>。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">.box &#123; </div><div class="line">    height: 100vmax; width: 100vmax; </div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><img src="/images/css/css-25.png" alt=""></p>
+<p>这些规则的组合提供了一个非常灵活的方式，用新的、令人兴奋的方式利用你的可视窗口的大小。</p>
+<p><a href="http://caniuse.com/#feat=viewport-units" target="_blank" rel="external">Viewport units: vmin, vmax</a> “兼容列表。</p>
+<h2 id="ex和ch"><a href="#ex和ch" class="headerlink" title="ex和ch"></a>ex和ch</h2><p><code>ex</code>和<code>ch</code>单位，与<code>em</code>和<code>rem</code>相似，依赖于当前字体和字体大小。然而，与<code>em</code>和<code>rem</code>不同的是，这两个单位只也依赖于<code>font-family</code>，因为它们被定为基于特殊字体的法案。</p>
+<p><code>ch</code>单位，或者字符单位被定义为0字符的宽度的“先进的尺寸”。在”Eric Meyer’s的博客”中可以找到一些非常有趣的讨论关于这意味着什么，但是基本的概念是，给定一个等宽字体的字体，一个N个字符单位宽的盒子，比如<code>width：40ch;</code>,可以一直容纳一个有40个字符的应用那个特定字体的字符串。虽然这个特殊规则的传统用途与列出盲文有关，但是这里创造性的可行性一定会超越这些简单的用途。</p>
+<p><code>ex</code>单位被定义为”当前字体的x-height或者一个<code>em</code>的一半”。给定的字体的<code>x-height</code>是指那个字体的小写x的高度。通常，这是这个字体的中间的标志。</p>
+<p><img src="/images/css/css-26.png" alt=""></p>
+<p>对于这种单位有很多的用途，大多数是用于排版的微调。例如，<code>sup</code>元素,代表上标，可以用相对定位和一个<code>1ex</code>的底部值在行内被推高。类似地，你可以拉低一个下标元素。浏览器默认支持这些利用上标和下标特性的<code>vertical-align</code>规则，但是如果你想要更精细的控制，你可以像这样更明确的处理样式：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">sup &#123; </div><div class="line">    position: relative; bottom: 1ex; </div><div class="line">&#125; </div><div class="line"></div><div class="line">sub &#123; </div><div class="line">    position: relative; bottom: -1ex; </div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><code>ex</code>单位在<a href="http://www.w3.org/TR/REC-CSS1/#length-units" target="_blank" rel="external">CSS1</a>中已经存在，但是你不会找到对<code>ch</code>单位有像这样坚实的支持。具体支持，在Eric Meyer’s 的博客中查看<a href="http://www.quirksmode.org/css/units-values/" target="_blank" rel="external">CSS单位和值</a>。</p>
+<h2 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h2><p>密切关注CSS的持续发展和扩张是非常重要的，一边在你的工具集里知道所有的工具。也许你会遇到一个特殊的问题需要一个意想不到的解决方案，利用这些更隐蔽的计量单位之一。花时间去阅读新规范，记录来自好的资源的新闻资讯！</p>
+<h2 id="扩展阅读"><a href="#扩展阅读" class="headerlink" title="扩展阅读"></a>扩展阅读</h2><ul>
+<li><a href="https://webdesign.tutsplus.com/articles/taking-the-erm-out-of-ems--webdesign-12321" target="_blank" rel="external">Taking the “Erm..” Out of Ems</a></li>
+<li><a href="https://webdesign.tutsplus.com/articles/taking-ems-even-further--webdesign-12543" target="_blank" rel="external">Taking Ems Even Further</a></li>
+<li><a href="http://caniuse.com/#feat=viewport-units" target="_blank" rel="external">Caniuse Viewport units</a></li>
+<li><a href="http://www.w3cplus.com/css/css-font-sizing.html" target="_blank" rel="external">CSS的font-size属性</a></li>
+<li><a href="http://www.w3cplus.com/css/r-i-p-rem-viva-css-reference-pixel.html" target="_blank" rel="external">Rem VS Px</a></li>
+<li><a href="http://www.w3cplus.com/css/the-lengths-of-css.html" target="_blank" rel="external">CSS的长度单位</a></li>
+<li><a href="http://www.w3cplus.com/css3/define-font-size-with-css3-rem" target="_blank" rel="external">CSS3的REM设置字体大小</a></li>
+<li><a href="http://www.w3cplus.com/css/px-to-em" target="_blank" rel="external">CSS中强大的EM</a></li>
+</ul>
+<script src="http://codepen.io/assets/embed/ei.js"> </script>
+
+<p>转自：<a href="https://www.w3cplus.com/css/7-css-units-you-might-not-know-about.html" target="_blank" rel="external">https://www.w3cplus.com/css/7-css-units-you-might-not-know-about.html</a></p>
+]]></content>
+    </entry>
+    
+    <entry>
+      <title><![CDATA[css的一些小记]]></title>
+      <url>https://lucius0.github.io/2017/03/19//archivers/css-notes/</url>
+      <content type="html"><![CDATA[<h2 id="before-和-after"><a href="#before-和-after" class="headerlink" title=":before 和 :after"></a>:before 和 :after</h2><p>伪类<code>:before</code>和<code>:after</code>默认是一个行内元素，所以这个元素设置<code>width/height</code>是无效的，就像给<code>a</code>元素设置<code>width/height</code>一样，但是可以通过设置<code>position:absolute;</code>，对这个元素的<code>display</code>属性计算为<code>inline-block</code>值，但是设置了<code>width/height</code>针对的是<code>:before/:after</code>生成的匿名替换元素，而不是其中的<code>content</code>。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">// 无效</div><div class="line">span:before &#123;</div><div class="line">    content: url(xxx.png);</div><div class="line">    width: 800px;</div><div class="line">    height: 600px;</div><div class="line">&#125;</div><div class="line">// 可以</div><div class="line">span:before &#123;</div><div class="line">    content: '';</div><div class="line">    background-image:url(xxx.png);</div><div class="line">    background-size:800px 600px;</div><div class="line">    width: 800px;</div><div class="line">    height: 600px;</div><div class="line">    position: absolute; // 设置定位类型</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="inline-block"><a href="#inline-block" class="headerlink" title="inline-block"></a>inline-block</h2><h3 id="元素间隔"><a href="#元素间隔" class="headerlink" title="元素间隔"></a>元素间隔</h3><p><code>inline-block</code>使得元素水平排列，但如果两个<code>inline-block</code>元素之间存在<strong>空格</strong>或者<strong>换行</strong>就会出现奇怪的元素间隔，即使使用了<code>{padding: 0; margin: 0}</code>。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">#text p &#123; display: inline-block; padding: 10px; background-color: red; color: #fff;&#125;</div><div class="line"></div><div class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">"text"</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">p</span>&gt;</span>1<span class="tag">&lt;/<span class="name">p</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">p</span>&gt;</span>2<span class="tag">&lt;/<span class="name">p</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></div></pre></td></tr></table></figure>
+<p><img src="/images/css/css-27.png" alt=""></p>
+<p>常见的解决方法：</p>
+<p>1、元素之间不要存在<strong>空格</strong>或者<strong>换行符</strong>；</p>
+<p>2、父容器的<code>font-size:0</code>。</p>
+<p>去除<code>inline-block</code>之间的间隔有很多种方法，可以参考张鑫旭老师的<a href="http://www.zhangxinxu.com/wordpress/2012/04/inline-block-space-remove-%E5%8E%BB%E9%99%A4%E9%97%B4%E8%B7%9D/" target="_blank" rel="external">去除inline-block元素间间距的N种方法</a></p>
+<h3 id="元素对齐问题"><a href="#元素对齐问题" class="headerlink" title="元素对齐问题"></a>元素对齐问题</h3><p>两<code>inline-block</code>元素，不存在文本的情况下</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">#test p &#123;display: inline-block;&#125;</div><div class="line">.c1, .c2 &#123;width: 100px; height: 100px;&#125;</div><div class="line">.c1 &#123;border: 1px solid #f00;&#125;</div><div class="line">.c2 &#123;border: 1px solid #000;&#125;</div><div class="line"></div><div class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">"test"</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">p</span> <span class="attr">class</span>=<span class="string">"c1"</span>&gt;</span><span class="tag">&lt;/<span class="name">p</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">p</span> <span class="attr">class</span>=<span class="string">"c2"</span>&gt;</span><span class="tag">&lt;/<span class="name">p</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></div></pre></td></tr></table></figure>
+<p><img src="/images/css/css-28.png" alt=""></p>
+<p>两<code>inline-block</code>元素存在文本的情况下</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">#test p &#123;display: inline-block;&#125;</div><div class="line">.c1, .c2 &#123;width: 100px; height: 100px;&#125;</div><div class="line">.c1 &#123;border: 1px solid #f00;&#125;</div><div class="line">.c2 &#123;border: 1px solid #000;&#125;</div><div class="line"></div><div class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">"test"</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">p</span> <span class="attr">class</span>=<span class="string">"c1"</span>&gt;</span><span class="tag">&lt;/<span class="name">p</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">p</span> <span class="attr">class</span>=<span class="string">"c2"</span>&gt;</span>1<span class="tag">&lt;/<span class="name">p</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></div></pre></td></tr></table></figure>
+<p><img src="/images/css/css-29.png" alt=""></p>
+<p>常见的解决方法：</p>
+<p>给图片或者背景设置<code>vertical-align: top</code>即可，或者给有文本的元素设置<code>overflow:hidden</code></p>
+<p>出现这种的原因是因为<code>inline-block</code>的默认属性是<code>vertical-align: baseline</code>，即以父元素的基线对齐，但当出现文本的时候，则会影响了对齐的基线。</p>
+<p>来自官方的答案：<a href="https://link.zhihu.com/?target=http%3A//www.w3.org/TR/CSS21/visudet.html%23leading" target="_blank" rel="external">“Visual formatting model details”</a></p>
+<blockquote>
+<p>The baseline of an ‘inline-block’ is the baseline of its last line box in the normal flow, unless it has either no in-flow line boxes or if its ‘overflow’ property has a computed value other than ‘visible’, in which case the baseline is the bottom margin edge.</p>
+</blockquote>
+<h2 id="盒模型"><a href="#盒模型" class="headerlink" title="盒模型"></a>盒模型</h2><p>页面上的每一个元素都可以看成一个盒模型。</p>
+<p><img src="/images/css/css-30.png" alt=""></p>
+<p>可以知道盒模型由四部分组成<code>content + padding + border + margin</code>，因此一个元素的宽度应该是：<code>总宽度 = margin-left + border-left + padding-left + width + padding-right + border-right + margin-right</code>。</p>
+<p>但是以上有问题的是，在<strong>IE(低于IE 9)</strong>的宽度为：<code>总宽度 = width + margin-right + margin-left</code>。因此出现了<code>box-sizing: border-box</code>的属性，当设置<code>box-sizing: border-box</code>属性时，<code>border</code> 和 <code>padding</code> 就被包含在了宽高之内，和 IE 之前的标准是一样的。</p>
+<h2 id="Chrome-小于12号字体"><a href="#Chrome-小于12号字体" class="headerlink" title="Chrome 小于12号字体"></a>Chrome 小于12号字体</h2><p>相对于其他的浏览器，chrome的默认最小字体只能是<code>12px</code>，无论你设置再小也是只能是<code>12px</code>，那假如有一个需求是要你兼容其他平台，包括chrome的字体表现小于<code>12px</code>的呢？可以使用css3的一个属性<code>transform: scale(n)</code>。</p>
+]]></content>
+    </entry>
+    
+    <entry>
       <title><![CDATA[CSS - relative 和 absolute 小记]]></title>
       <url>https://lucius0.github.io/2017/03/02//archivers/relative-absolute-note/</url>
       <content type="html"><![CDATA[<p>我在之前翻译过有关于css定位的文章 <a href="/2016/10/30//archivers/5-things-you-should-know-about-css/" title="《5件你需要知道的css定位》">《5件你需要知道的css定位》</a>。那么这次是看了张鑫旭老师的<a href="http://www.zhangxinxu.com/wordpress/2010/12/css-%E7%9B%B8%E5%AF%B9%E7%BB%9D%E5%AF%B9%E5%AE%9A%E4%BD%8D%E7%B3%BB%E5%88%97%EF%BC%88%E4%B8%80%EF%BC%89/" target="_blank" rel="external">相对定位和绝对定位</a>之后的小记，巩固下基础知识。</p>
@@ -152,13 +248,13 @@
 <p><img src="/images/vue/vue-15.png" alt=""></p>
 <p><strong>小结：</strong></p>
 <ol>
-<li><p><code>beforecreated</code>：el 和 data 还未初始化，但是refs已经初始化完成了</p>
+<li><p><code>beforecreated</code>：el 和 data 还未初始化，<del>但是refs已经初始化完成了</del>，refs也是只是拿到对象，属性方法还没渲染完毕([Vue warn]: Error in beforecreated hook)。</p>
 </li>
 <li><p><code>created</code>：完成了 data 数据的初始化，el没有</p>
 </li>
 <li><p><code>beforeMount</code>：完成了 el 和 data 初始化 </p>
 </li>
-<li><p><code>mounted</code>：完成挂载</p>
+<li><p><code>mounted</code>：完成挂载，refs的组件属性方法渲染完成</p>
 </li>
 </ol>
 <p>在控制台输入<code>app.message = &#39;hello vue&#39;</code>，会看到vue触发<code>beforeUpdate</code>以及<code>updated</code>。</p>
@@ -2503,10 +2599,57 @@ $ npm install -D webpack webpack-dev-server</code></p>
 <li><p><code>Object.getOwnPropertyDescriptor(obj, propertyName)</code> 获取对象描述器，第一个参数是获取描述的对象，第二个参数是该对象的属性，若不存在则返回undefined，反之则返回该对象的属性配置</p>
 </li>
 <li><p><code>Object.defineProperty(person, &quot;name&quot;, {configurable: false, writable: false, enumerable: true, value: &quot;Test&quot;})</code> 定义属性的配置，第一个参数是对象，第二个属性是不存在于该对象的属性，第三个则定义该对象的属性描述器对象</p>
-<p>c(configurable) | c:true | c:true | c:false | c:false<br>w(writable)     | w:true | w:false| w:true  | w:false<br>—————- | —— | —— | ——- | ——-<br>修改属性的值  | √   | √   | √   | ×<br>通过属性赋值、修改属性的值 | √ | × | √ | ×<br>delete该属性返回true | √ | √ | × | ×<br>修改getter/setter方法 | √ | √ | × | ×<br>修改属性标签(除了writable从true修改为false总是允许) | √ | √ | × | ×</p>
-<p><strong>注意：</strong>假如我们想改属性的值，configurable与writable为false的话就没办法修改了，但是假如writable为false，而configurable为true的话，我们可以变相的通过configurable修改属性的值，如Object.defineProperty(xxx, x, {value: 1})或者通过configurable来修改属性的writable的值使其能被修改，如Object.defineProperty(xxx, x, {writable: true});</p>
 </li>
 </ul>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">c(configurable)/w(writable)</th>
+<th>c:true/w:true</th>
+<th>c:true/w:false</th>
+<th>c:false/w:true</th>
+<th>c:false/w:false</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">修改属性的值</td>
+<td>√</td>
+<td>√</td>
+<td>√</td>
+<td>×</td>
+</tr>
+<tr>
+<td style="text-align:left">通过属性赋值、修改属性的值</td>
+<td>√</td>
+<td>×</td>
+<td>√</td>
+<td>×</td>
+</tr>
+<tr>
+<td style="text-align:left">delete该属性返回true</td>
+<td>√</td>
+<td>√</td>
+<td>×</td>
+<td>×</td>
+</tr>
+<tr>
+<td style="text-align:left">修改getter/setter方法</td>
+<td>√</td>
+<td>√</td>
+<td>×</td>
+<td>×</td>
+</tr>
+<tr>
+<td style="text-align:left">修改属性标签(除了writable从true修改为false总是允许)</td>
+<td>√</td>
+<td>√</td>
+<td>×</td>
+<td>×</td>
+</tr>
+</tbody>
+</table>
+<p> <strong>注意：</strong>假如我们想改属性的值，configurable与writable为false的话就没办法修改了，但是假如writable为false，而configurable为true的话，我们可以变相的通过configurable修改属性的值，如Object.defineProperty(xxx, x, {value: 1})或者通过configurable来修改属性的writable的值使其能被修改，如Object.defineProperty(xxx, x, {writable: true});</p>
 <h2 id="7、对象标签"><a href="#7、对象标签" class="headerlink" title="7、对象标签"></a>7、对象标签</h2><p>对象标签有三种：[[proto]]、[[class]]、[[extensible]]</p>
 <ul>
 <li><p><strong>[[proto]]：</strong> 原型对象</p>

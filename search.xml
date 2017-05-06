@@ -4,6 +4,49 @@
   
     
     <entry>
+      <title><![CDATA[100-days-of-css]]></title>
+      <url>https://lucius0.github.io/2017/05/05//archivers/100-days-of-css/</url>
+      <content type="html"><![CDATA[<h2 id="001-登录界面"><a href="#001-登录界面" class="headerlink" title="001 登录界面"></a>001 登录界面</h2><p><img src="/images/workshop/001.jpeg" alt=""></p>
+<p><strong><a href="https://github.com/Lucius0/100-days-of-css/blob/master/lucius-001/index.html" target="_blank" rel="external">github ==&gt; </a></strong></p>
+<h2 id="002-ofo共享单车输入框"><a href="#002-ofo共享单车输入框" class="headerlink" title="002 ofo共享单车输入框"></a>002 ofo共享单车输入框</h2><p><img src="/images/workshop/002.jpeg" alt=""></p>
+<p><strong><a href="https://github.com/Lucius0/100-days-of-css/blob/master/lucius-002/index.html" target="_blank" rel="external">github ==&gt; </a></strong></p>
+<h2 id="003-账单分期"><a href="#003-账单分期" class="headerlink" title="003 账单分期"></a>003 账单分期</h2><p><img src="/images/workshop/003.jpeg" alt=""></p>
+<p><strong><a href="https://github.com/Lucius0/100-days-of-css/blob/master/lucius-003/index.html" target="_blank" rel="external">github ==&gt; </a></strong></p>
+<h2 id="004-不同方向hover效果"><a href="#004-不同方向hover效果" class="headerlink" title="004 不同方向hover效果"></a>004 不同方向hover效果</h2><p><img src="/images/workshop/004.gif" alt=""></p>
+<p><strong><a href="https://github.com/Lucius0/100-days-of-css/blob/master/lucius-004/index.html" target="_blank" rel="external">github ==&gt; </a></strong></p>
+<h1 id="005-canvas-圆环倒计时"><a href="#005-canvas-圆环倒计时" class="headerlink" title="005 canvas 圆环倒计时"></a>005 canvas 圆环倒计时</h1><p><img src="/images/workshop/005.gif" alt=""></p>
+<p><strong><a href="https://github.com/Lucius0/100-days-of-css/blob/master/lucius-005/index.html" target="_blank" rel="external">github ==&gt; </a></strong></p>
+]]></content>
+    </entry>
+    
+    <entry>
+      <title><![CDATA[h5播放器学习]]></title>
+      <url>https://lucius0.github.io/2017/05/05//archivers/h5-video-learning/</url>
+      <content type="html"><![CDATA[<p><code>video</code>的概念在h5已经是存在了很久了，但是等到小视频、短视频元年的大火大热之后，国内才慢慢的进入淘汰flash播放器加紧脚本学习h5播放器。然而在国外（YouTube）早已用上了h5播放器，因此我也不能落后，得加紧时间学习，不然就没饭吃了。</p>
+<p>好了，在了解html5播放器的知识之前，我们需要了解一下以下的前置知识，当作扩充一下自己的知识库。</p>
+<h2 id="前置知识"><a href="#前置知识" class="headerlink" title="前置知识"></a>前置知识</h2><h3 id="封装格式"><a href="#封装格式" class="headerlink" title="封装格式"></a>封装格式</h3><p>将一些<strong>视频信息</strong>，<strong>音频信息</strong>，<strong>时间码</strong>，<strong>编码器信息</strong>，打包成一个文件，便于管理以及编辑，常见的有AVI，RMVB，MOV，MP4，FLV等。为什么要有这么多封装格式呢？可以想下为什么图片有那么多封装格式呢？如PNG，JPG，GIF等，道理是一个样的。</p>
+<h3 id="编码方式"><a href="#编码方式" class="headerlink" title="编码方式"></a>编码方式</h3><p>简单来说，编码方式就是我们压缩或者解压音视频数据的一个算法。MPEG 2，MPEG 4，Prores 422，Prores 444，H.265 以及常用的 H.264。不同的编码方式会让视频呈现出不同的分辨率以及视频大小，封装格式以及编码方式都会影响视频的质量。</p>
+<h3 id="码率"><a href="#码率" class="headerlink" title="码率"></a>码率</h3><p>码率就是指视频或者音频每秒钟的数据量，单位是MBPS或者KBPS。码率越高视频就越清晰，但是码率同时会受分辨率和帧速率影响。</p>
+<p>举个例子：</p>
+<ul>
+<li><p><em>一个视频分辨率为 1080P，码率为5MBPS</em> 会比 <em>一个视频分辨率为 4K，码率照样为5MBPS</em>的清晰。因为分辨率更高的同时，是需要高码率来做支撑的，也就是同码率的情况下，分辨率越高视频越不清晰。</p>
+</li>
+<li><p><em>一个视频帧速率为 30帧，码率为5MBPS</em> 会比 <em>一个视频帧速率为 60帧，码率照样为5MBPS</em>的清晰。因为帧速率更高的同时，是需要高码率来做支撑的，也就是同码率的情况下，帧速率越高视频越不清晰。</p>
+</li>
+</ul>
+<p>码率分为：CBR（固定码率），VBR（可变码率）。</p>
+<ul>
+<li><p>CBR（固定码率）：指的是每一秒码率都是相同的。假如在网络观看视频且网速比较快的情况下，就不会出现卡顿的情况，但是，画面若比较单薄，画面信息比较少，突然颜色变丰富了，画面信息突然多了，那么这下子可能会出现模糊的情况。</p>
+</li>
+<li><p>VBR（可变码率）：指的是每一秒码率都是变化不固定的。可变码率会根据你视频当中画面的信息量，来自动调整码率，这样就不会出现突然颜色变丰富导致的模糊现象。但是，当我们观看的视频对网速有一定的要求，码率忽高忽低时，那么可能就会造成卡顿的情况。</p>
+</li>
+</ul>
+<h3 id="分辨率"><a href="#分辨率" class="headerlink" title="分辨率"></a>分辨率</h3><p>指的是单位长度内，视频包含的像素数量。常见的有 1280 x 720，1920 x 1080，2560 x 1440（2K），4096 x 2304（4K）。</p>
+<p><a href="https://www.zhihu.com/question/20997688" target="_blank" rel="external">https://www.zhihu.com/question/20997688</a></p>
+]]></content>
+    </entry>
+    
+    <entry>
       <title><![CDATA[css常见的前端布局]]></title>
       <url>https://lucius0.github.io/2017/05/01//archivers/css-layouts/</url>
       <content type="html"><![CDATA[<h2 id="水平居中"><a href="#水平居中" class="headerlink" title="水平居中"></a>水平居中</h2><h3 id="margin-定宽"><a href="#margin-定宽" class="headerlink" title="margin + 定宽"></a>margin + 定宽</h3><figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"parent"</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"child"</span>&gt;</span>Demo<span class="tag">&lt;/<span class="name">div</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></div><div class="line"></div><div class="line"><span class="tag">&lt;<span class="name">style</span>&gt;</span><span class="undefined"></span></div><div class="line">.child &#123;</div><div class="line">  width: 100px;</div><div class="line">  margin: 0 auto;</div><div class="line">&#125;</div><div class="line"><span class="tag">&lt;/<span class="name">style</span>&gt;</span></div></pre></td></tr></table></figure>
@@ -2491,24 +2534,6 @@ $ npm install -D webpack webpack-dev-server</code></p>
     </entry>
     
     <entry>
-      <title><![CDATA[JavaScript之五 - 数组]]></title>
-      <url>https://lucius0.github.io/2016/08/11//archivers/javascript-array/</url>
-      <content type="html"><![CDATA[<p>有序，弱类型(多类型)集合。数组是有长度限制的，即0~2^23 - 1</p>
-<p>数组的原型链：<code>[] -&gt; Array.prototype</code>; 对象的原型链：<code>{} -&gt; Object.prototype</code></p>
-<p><strong>常用方法</strong></p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">Array</span>.prototype.join</div><div class="line"><span class="built_in">Array</span>.prototype.reverse</div><div class="line"><span class="built_in">Array</span>.prototype.sort</div><div class="line"><span class="built_in">Array</span>.prototype.concat</div><div class="line"><span class="built_in">Array</span>.prototype.slice</div><div class="line"><span class="built_in">Array</span>.prototype.splice</div><div class="line"><span class="built_in">Array</span>.prototype.foreach(ES5)</div><div class="line"><span class="built_in">Array</span>.prototype.map(ES5)</div><div class="line"><span class="built_in">Array</span>.prototype.filter(ES5)</div><div class="line"><span class="built_in">Array</span>.prototype.every(ES5)</div><div class="line"><span class="built_in">Array</span>.prototype.some(ES5)</div><div class="line"><span class="built_in">Array</span>.prototype.reduce/reduceRight(ES5)</div><div class="line"><span class="built_in">Array</span>.prototype.indexOf/<span class="built_in">Array</span>.prototype.lastIndexOf(ES5)</div><div class="line"><span class="built_in">Array</span>.isArray(ES5)</div></pre></td></tr></table></figure>
-<ul>
-<li>reduce</li>
-</ul>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> arr = [<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>];</div><div class="line"><span class="keyword">var</span> sum = arr.reduce(<span class="function"><span class="keyword">function</span>(<span class="params">x,y</span>) </span>&#123; <span class="keyword">return</span> x + y&#125;, <span class="number">0</span>); <span class="comment">// 6</span></div></pre></td></tr></table></figure>
-<p><em>解析：</em> reduce接受两个参数，第一个参数则是逻辑函数，第二个参数表明是否要跟首次传入逻辑函数的参数进行逻辑处理，例如上文例子，会先进行 0 + 1 = 1，1 + 2 = 3，3 + 3 = 6</p>
-<ul>
-<li>isArray</li>
-</ul>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">Array</span>.isArray([]); <span class="comment">// true</span></div><div class="line">[] <span class="keyword">instanceof</span> <span class="built_in">Array</span>; <span class="comment">// true</span></div><div class="line">(&#123;&#125;).toString.apply([]) === [<span class="string">"object Array"</span>]; <span class="comment">// true</span></div><div class="line">[].constructor === <span class="built_in">Array</span>; <span class="comment">// true</span></div></pre></td></tr></table></figure>]]></content>
-    </entry>
-    
-    <entry>
       <title><![CDATA[JavaScript之六 - 函数与作用域(1)]]></title>
       <url>https://lucius0.github.io/2016/08/11//archivers/javascript-function-01/</url>
       <content type="html"><![CDATA[<h2 id="1、调用方式"><a href="#1、调用方式" class="headerlink" title="1、调用方式"></a>1、调用方式</h2><ul>
@@ -2614,6 +2639,24 @@ $ npm install -D webpack webpack-dev-server</code></p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">foo</span>(<span class="params"></span>) </span>&#123;</div><div class="line">	<span class="keyword">this</span>.b = <span class="number">100</span>;</div><div class="line">	<span class="keyword">return</span> <span class="keyword">this</span>.a;</div><div class="line">&#125;</div><div class="line"><span class="keyword">var</span> func = foo.bind(&#123;<span class="attr">a</span>: <span class="number">1</span>&#125;);</div><div class="line">func(); <span class="comment">// 1</span></div><div class="line"><span class="keyword">new</span> func(); <span class="comment">// &#123;b: 100&#125;</span></div></pre></td></tr></table></figure>
 <p><em>解析：</em> foo函数中返回值除非是<strong>对象</strong>，否则就将<strong>this</strong>作为返回值返回，<strong>this</strong>会被初始化为默认的一个空对象，并且<strong>this</strong>的原型是<em>foo.prototype</em>，该空对象的b属性会赋值为100，然后整个对象会被作为返回值返回并且忽略return的返回值。</p>
 ]]></content>
+    </entry>
+    
+    <entry>
+      <title><![CDATA[JavaScript之五 - 数组]]></title>
+      <url>https://lucius0.github.io/2016/08/11//archivers/javascript-array/</url>
+      <content type="html"><![CDATA[<p>有序，弱类型(多类型)集合。数组是有长度限制的，即0~2^23 - 1</p>
+<p>数组的原型链：<code>[] -&gt; Array.prototype</code>; 对象的原型链：<code>{} -&gt; Object.prototype</code></p>
+<p><strong>常用方法</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">Array</span>.prototype.join</div><div class="line"><span class="built_in">Array</span>.prototype.reverse</div><div class="line"><span class="built_in">Array</span>.prototype.sort</div><div class="line"><span class="built_in">Array</span>.prototype.concat</div><div class="line"><span class="built_in">Array</span>.prototype.slice</div><div class="line"><span class="built_in">Array</span>.prototype.splice</div><div class="line"><span class="built_in">Array</span>.prototype.foreach(ES5)</div><div class="line"><span class="built_in">Array</span>.prototype.map(ES5)</div><div class="line"><span class="built_in">Array</span>.prototype.filter(ES5)</div><div class="line"><span class="built_in">Array</span>.prototype.every(ES5)</div><div class="line"><span class="built_in">Array</span>.prototype.some(ES5)</div><div class="line"><span class="built_in">Array</span>.prototype.reduce/reduceRight(ES5)</div><div class="line"><span class="built_in">Array</span>.prototype.indexOf/<span class="built_in">Array</span>.prototype.lastIndexOf(ES5)</div><div class="line"><span class="built_in">Array</span>.isArray(ES5)</div></pre></td></tr></table></figure>
+<ul>
+<li>reduce</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> arr = [<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>];</div><div class="line"><span class="keyword">var</span> sum = arr.reduce(<span class="function"><span class="keyword">function</span>(<span class="params">x,y</span>) </span>&#123; <span class="keyword">return</span> x + y&#125;, <span class="number">0</span>); <span class="comment">// 6</span></div></pre></td></tr></table></figure>
+<p><em>解析：</em> reduce接受两个参数，第一个参数则是逻辑函数，第二个参数表明是否要跟首次传入逻辑函数的参数进行逻辑处理，例如上文例子，会先进行 0 + 1 = 1，1 + 2 = 3，3 + 3 = 6</p>
+<ul>
+<li>isArray</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">Array</span>.isArray([]); <span class="comment">// true</span></div><div class="line">[] <span class="keyword">instanceof</span> <span class="built_in">Array</span>; <span class="comment">// true</span></div><div class="line">(&#123;&#125;).toString.apply([]) === [<span class="string">"object Array"</span>]; <span class="comment">// true</span></div><div class="line">[].constructor === <span class="built_in">Array</span>; <span class="comment">// true</span></div></pre></td></tr></table></figure>]]></content>
     </entry>
     
     <entry>

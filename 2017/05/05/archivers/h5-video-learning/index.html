@@ -92,7 +92,7 @@
 <meta property="og:description" content="video的概念在h5已经是存在了很久了，但是等到小视频、短视频元年的大火大热之后，国内才慢慢的进入淘汰flash播放器加紧脚本学习h5播放器。然而在国外（YouTube）早已用上了h5播放器，因此我也不能落后，得加紧时间学习，不然就没饭吃了。
 好了，在了解html5播放器的知识之前，我们需要了解一下以下的前置知识，当作扩充一下自己的知识库。
 前置知识封装格式将一些视频信息，音频信息，时间码，编码">
-<meta property="og:updated_time" content="2017-05-04T13:35:11.000Z">
+<meta property="og:updated_time" content="2017-05-07T08:29:33.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="h5播放器学习">
 <meta name="twitter:description" content="video的概念在h5已经是存在了很久了，但是等到小视频、短视频元年的大火大热之后，国内才慢慢的进入淘汰flash播放器加紧脚本学习h5播放器。然而在国外（YouTube）早已用上了h5播放器，因此我也不能落后，得加紧时间学习，不然就没饭吃了。
@@ -326,8 +326,8 @@
                 <i class="fa fa-calendar-check-o"></i>
               </span>
               <span class="post-meta-item-text">更新于</span>
-              <time title="更新于" itemprop="dateModified" datetime="2017-05-04T21:35:11+08:00">
-                2017-05-04
+              <time title="更新于" itemprop="dateModified" datetime="2017-05-07T16:29:33+08:00">
+                2017-05-07
               </time>
             
           </span>
@@ -403,7 +403,281 @@
 </li>
 </ul>
 <h3 id="分辨率"><a href="#分辨率" class="headerlink" title="分辨率"></a>分辨率</h3><p>指的是单位长度内，视频包含的像素数量。常见的有 1280 x 720，1920 x 1080，2560 x 1440（2K），4096 x 2304（4K）。</p>
-<p><a href="https://www.zhihu.com/question/20997688" target="_blank" rel="external">https://www.zhihu.com/question/20997688</a></p>
+<p><strong>小结：</strong></p>
+<p>一个完整的视频大概会拥有<em>meta信息，视频编码器(H.264, MPEG 4)，音频编码器(AAC,OGG)，字幕，描述信息等</em></p>
+<h2 id="Flash"><a href="#Flash" class="headerlink" title="Flash"></a>Flash</h2><p>在h5没有出来之前，市面上的播放器几乎都是Flash来播放视频的。最开始是使用<code>embed</code>的方式嵌入播放器，其会调用系统的原生播放器，如windows的media player，mac的quick time等。</p>
+<p><code>embed</code>虽然只需要一行代码</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">embed</span> <span class="attr">src</span>=<span class="string">"src/player.swf"</span> /&gt;</span></div></pre></td></tr></table></figure>
+<p>但是它完全就像黑盒子，无法获取它里面的动态信息，甚至无法跟它交互。但是还可以用<code>object</code>的形式</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">object</span> <span class="attr">type</span>=<span class="string">"application/x-shockwave-flash"</span> <span class="attr">class</span>=<span class="string">"player"</span> <span class="attr">data</span>=<span class="string">"//static.hdslb.com/play.swf"</span> <span class="attr">width</span>=<span class="string">"950"</span> <span class="attr">height</span>=<span class="string">"482"</span> <span class="attr">id</span>=<span class="string">"player_placeholder"</span> <span class="attr">style</span>=<span class="string">"visibility: visible;"</span>&gt;</span></div><div class="line">	<span class="tag">&lt;<span class="name">param</span> <span class="attr">name</span>=<span class="string">"bgcolor"</span> <span class="attr">value</span>=<span class="string">"#ffffff"</span>&gt;</span></div><div class="line">	<span class="tag">&lt;<span class="name">param</span> <span class="attr">name</span>=<span class="string">"allowfullscreeninteractive"</span> <span class="attr">value</span>=<span class="string">"true"</span>&gt;</span></div><div class="line">	<span class="tag">&lt;<span class="name">param</span> <span class="attr">name</span>=<span class="string">"allowfullscreen"</span> <span class="attr">value</span>=<span class="string">"true"</span>&gt;</span></div><div class="line">	<span class="tag">&lt;<span class="name">param</span> <span class="attr">name</span>=<span class="string">"quality"</span> <span class="attr">value</span>=<span class="string">"high"</span>&gt;</span></div><div class="line">	<span class="tag">&lt;<span class="name">param</span> <span class="attr">name</span>=<span class="string">"allowscriptaccess"</span> <span class="attr">value</span>=<span class="string">"always"</span>&gt;</span></div><div class="line">	<span class="tag">&lt;<span class="name">param</span> <span class="attr">name</span>=<span class="string">"wmode"</span> <span class="attr">value</span>=<span class="string">"direct"</span>&gt;</span></div><div class="line">	<span class="tag">&lt;<span class="name">param</span> <span class="attr">name</span>=<span class="string">"flashvars"</span> <span class="attr">value</span>=<span class="string">"cid=17022717&amp;amp;aid=10303607&amp;amp;pre_ad=0"</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">object</span>&gt;</span></div></pre></td></tr></table></figure>
+<p>flash播放flv，是因为flash本身就内建了H.264，而h5则需要浏览器产商如chrome去支持，但是发现一个问题没有，使用<code>object</code>需要这么长的信息，而且，flash在h5出来之后就被打上了不安全，耗性能的标签，所以存在很严重的兼容问题（各大浏览器产商还懒得去解决的那种），因此迎来了<code>video</code>的春天。</p>
+<h2 id="Video"><a href="#Video" class="headerlink" title="Video"></a>Video</h2><p>先上demo代码</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">video</span> <span class="attr">src</span>=<span class="string">"src/player.mp4"</span> <span class="attr">controls</span>&gt;</span></div><div class="line">	您的浏览器不支持 video 标签。</div><div class="line"><span class="tag">&lt;/<span class="name">video</span>&gt;</span></div></pre></td></tr></table></figure>
+<p>但是目前<code>video</code>只支持的视频格式有：MP4(MPEG 4文件使用H264视频编解码器和AAC音频编解码器)，WebM(WebM文件使用VP8视频编解码器和Vorbis音频编解码器)，Ogg(Ogg文件使用Theoraship编解码器和Vorbis音频编解码器)，并且在不同浏览器上不同表现。实际上h5还可以支持m3u8，但m3u8是mac专有的视频格式，所以mac\ios下的浏览器都支持m3u8的播放，而其他浏览器则需要第三方支持解码。</p>
+<h3 id="Browser-Support"><a href="#Browser-Support" class="headerlink" title="Browser Support"></a>Browser Support</h3><table>
+<thead>
+<tr>
+<th>Browser</th>
+<th>MP4</th>
+<th>WebM</th>
+<th>Ogg</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>IE</td>
+<td>YES</td>
+<td>NO</td>
+<td>NO</td>
+</tr>
+<tr>
+<td>Chrome</td>
+<td>YES</td>
+<td>YES</td>
+<td>YES</td>
+</tr>
+<tr>
+<td>Firefox</td>
+<td>YES</td>
+<td>YES</td>
+<td>YES</td>
+</tr>
+<tr>
+<td>Safari</td>
+<td>YES</td>
+<td>NO</td>
+<td>NO</td>
+</tr>
+<tr>
+<td>Opera</td>
+<td>YES(&gt;=25)</td>
+<td>YES</td>
+<td>YES</td>
+</tr>
+</tbody>
+</table>
+<p>注意：<code>video</code>可以添加多个source源来进行兼容适配，这样当第一个不兼容可以往下读取，同样也可以兼容flash播放器</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">video</span> <span class="attr">controls</span> <span class="attr">width</span>=<span class="string">"600"</span> <span class="attr">height</span>=<span class="string">"400"</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">source</span> <span class="attr">src</span>=<span class="string">"src/test.mp4"</span> <span class="attr">type</span>=<span class="string">"video/mp4"</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">source</span> <span class="attr">src</span>=<span class="string">"src/test.webm"</span> <span class="attr">type</span>=<span class="string">"video/webm"</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">track</span> <span class="attr">src</span>=<span class="string">"src/lyric.vtt"</span> <span class="attr">srclang</span>=<span class="string">"en"</span> <span class="attr">kind</span>=<span class="string">"subtitles"</span> <span class="attr">label</span>=<span class="string">"English"</span> <span class="attr">default</span>&gt;</span> <span class="comment">&lt;!-- 字幕 --&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">object</span> <span class="attr">id</span>=<span class="string">"flowplayer"</span> <span class="attr">width</span>=<span class="string">"600"</span> <span class="attr">height</span>=<span class="string">"400"</span> <span class="attr">data</span>=<span class="string">"player.swf"</span> <span class="attr">type</span>=<span class="string">"application/x-shockwave-flash"</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">param</span> <span class="attr">name</span>=<span class="string">"movie"</span> <span class="attr">value</span>=<span class="string">"player.swf"</span> /&gt;</span> </div><div class="line">        <span class="tag">&lt;<span class="name">param</span> <span class="attr">name</span>=<span class="string">"flashvars"</span> <span class="attr">value</span>=<span class="string">'config=&#123;"url":"src/test.mp4"&#125;'</span> /&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">p</span>&gt;</span>您的浏览器不支持此视频<span class="tag">&lt;/<span class="name">p</span>&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">object</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">video</span>&gt;</span></div></pre></td></tr></table></figure>
+<h3 id="Media-Type"><a href="#Media-Type" class="headerlink" title="Media Type"></a>Media Type</h3><table>
+<thead>
+<tr>
+<th>File Format</th>
+<th>Media Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>MP4</td>
+<td>video/mp4</td>
+</tr>
+<tr>
+<td>WebM</td>
+<td>video/webm</td>
+</tr>
+<tr>
+<td>Ogg</td>
+<td>video/ogg</td>
+</tr>
+</tbody>
+</table>
+<h3 id="Events"><a href="#Events" class="headerlink" title="Events"></a>Events</h3><p>因为pc、android、ios存在差异性，在这里只罗列pc的事件</p>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>event(PC)</th>
+<th>readyState</th>
+<th>视频状态</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>loadstart</td>
+<td>NOTHING</td>
+<td>-</td>
+</tr>
+<tr>
+<td>2</td>
+<td>suspend</td>
+<td>NOTHING</td>
+<td>-</td>
+</tr>
+<tr>
+<td>3</td>
+<td>play</td>
+<td>NOTHING</td>
+<td>-</td>
+</tr>
+<tr>
+<td>4</td>
+<td>waiting</td>
+<td>NOTHING</td>
+<td>-</td>
+</tr>
+<tr>
+<td>5</td>
+<td>durationchange</td>
+<td>METADATA</td>
+<td>获取到视频长度</td>
+</tr>
+<tr>
+<td>6</td>
+<td>loadedmetadata</td>
+<td>METADATA</td>
+<td>获取到元数据</td>
+</tr>
+<tr>
+<td>7</td>
+<td>loadeddata</td>
+<td>ENOUGHDATA</td>
+<td>-</td>
+</tr>
+<tr>
+<td>8</td>
+<td>canplay</td>
+<td>ENOUGHDATA</td>
+<td>-</td>
+</tr>
+<tr>
+<td>9</td>
+<td>playing</td>
+<td>ENOUGHDATA</td>
+<td>开始播放</td>
+</tr>
+<tr>
+<td>10</td>
+<td>canplaythrough</td>
+<td>ENOUGHDATA</td>
+<td>可以流畅播放</td>
+</tr>
+<tr>
+<td>11</td>
+<td>progress</td>
+<td>ENOUGHDATA</td>
+<td>持续下载</td>
+</tr>
+<tr>
+<td>12</td>
+<td>timeupdate</td>
+<td>ENOUGHDATA</td>
+<td>播放进度变化</td>
+</tr>
+<tr>
+<td>..</td>
+<td>…</td>
+<td>…</td>
+<td>…</td>
+</tr>
+<tr>
+<td>23</td>
+<td>progress</td>
+<td>ENOUGHDATA</td>
+<td>下载完毕</td>
+</tr>
+<tr>
+<td>24</td>
+<td>suspend</td>
+<td>ENOUGHDATA</td>
+<td>-</td>
+</tr>
+<tr>
+<td>25</td>
+<td>timeupdate</td>
+<td>ENOUGHDATA</td>
+<td>继续播放中</td>
+</tr>
+<tr>
+<td>..</td>
+<td>…</td>
+<td>…</td>
+<td>…</td>
+</tr>
+<tr>
+<td>48</td>
+<td>timeupdate</td>
+<td>ENOUGHDATA</td>
+<td>-</td>
+</tr>
+<tr>
+<td>49</td>
+<td>timeupdate</td>
+<td>ENOUGHDATA</td>
+<td>-</td>
+</tr>
+<tr>
+<td>50</td>
+<td>seeking</td>
+<td>METADATA</td>
+<td>-</td>
+</tr>
+<tr>
+<td>51</td>
+<td>waiting</td>
+<td>METADATA</td>
+<td>-</td>
+</tr>
+<tr>
+<td>52</td>
+<td>timeupdate</td>
+<td>ENOUGHDATA</td>
+<td>-</td>
+</tr>
+<tr>
+<td>53</td>
+<td>seeked</td>
+<td>ENOUGHDATA</td>
+<td>播放完毕进度回到起点</td>
+</tr>
+<tr>
+<td>54</td>
+<td>canplay</td>
+<td>ENOUGHDATA</td>
+<td>-</td>
+</tr>
+<tr>
+<td>55</td>
+<td>playing</td>
+<td>ENOUGHDATA</td>
+<td>循环播放</td>
+</tr>
+<tr>
+<td>56</td>
+<td>canplaythrough</td>
+<td>ENOUGHDATA</td>
+<td>-</td>
+</tr>
+<tr>
+<td>57</td>
+<td>timeupdate</td>
+<td>ENOUGHDATA</td>
+<td>-</td>
+</tr>
+<tr>
+<td>..</td>
+<td>…</td>
+<td>…</td>
+<td>…</td>
+</tr>
+</tbody>
+</table>
+<p><strong>参考资料：</strong></p>
+<ul>
+<li><p><a href="http://ask.dcloud.net.cn/article/569" target="_blank" rel="external">http://ask.dcloud.net.cn/article/569</a></p>
+</li>
+<li><p><a href="https://segmentfault.com/a/1190000006461476" target="_blank" rel="external">https://segmentfault.com/a/1190000006461476</a></p>
+</li>
+<li><p><a href="https://www.w3schools.com/html/html5_video.asp" target="_blank" rel="external">https://www.w3schools.com/html/html5_video.asp</a></p>
+</li>
+<li><p><a href="https://en.wikipedia.org/wiki/HTML5_video" target="_blank" rel="external">https://en.wikipedia.org/wiki/HTML5_video</a></p>
+</li>
+<li><p><a href="http://www.xuanfengge.com/html5-video-play.html" target="_blank" rel="external">http://www.xuanfengge.com/html5-video-play.html</a></p>
+</li>
+<li><p><a href="https://www.zhihu.com/question/20997688" target="_blank" rel="external">https://www.zhihu.com/question/20997688</a></p>
+</li>
+<li><p><a href="http://yanhaijing.com/html/2016/03/12/html5-video/" target="_blank" rel="external">http://yanhaijing.com/html/2016/03/12/html5-video/</a></p>
+</li>
+</ul>
 
       
     </div>
@@ -585,7 +859,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前置知识"><span class="nav-number">1.</span> <span class="nav-text">前置知识</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#封装格式"><span class="nav-number">1.1.</span> <span class="nav-text">封装格式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#编码方式"><span class="nav-number">1.2.</span> <span class="nav-text">编码方式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#码率"><span class="nav-number">1.3.</span> <span class="nav-text">码率</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#分辨率"><span class="nav-number">1.4.</span> <span class="nav-text">分辨率</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前置知识"><span class="nav-number">1.</span> <span class="nav-text">前置知识</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#封装格式"><span class="nav-number">1.1.</span> <span class="nav-text">封装格式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#编码方式"><span class="nav-number">1.2.</span> <span class="nav-text">编码方式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#码率"><span class="nav-number">1.3.</span> <span class="nav-text">码率</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#分辨率"><span class="nav-number">1.4.</span> <span class="nav-text">分辨率</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Flash"><span class="nav-number">2.</span> <span class="nav-text">Flash</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Video"><span class="nav-number">3.</span> <span class="nav-text">Video</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Browser-Support"><span class="nav-number">3.1.</span> <span class="nav-text">Browser Support</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Media-Type"><span class="nav-number">3.2.</span> <span class="nav-text">Media Type</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Events"><span class="nav-number">3.3.</span> <span class="nav-text">Events</span></a></li></ol></li></ol></div>
             
 
           </div>

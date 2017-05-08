@@ -1,0 +1,875 @@
+<!doctype html>
+
+
+
+
+<html class="theme-next mist" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="javascript," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="解法一关于这个我在网上找到了答案，常见的解法如下：
+123456var x = (e.pageX - this.offsetLeft - (w / 2)) * (w &amp;gt; h ? (h / w) : 1); var y = (e.pageY - this.offsetTop - (h / 2)) * (h &amp;gt; w ? (w / h) : 1); var direction = Math">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JavaScript 鼠标从不同方向移入移出判断">
+<meta property="og:url" content="https://lucius0.github.io/2017/05/08//archivers/mouse-direction/index.html">
+<meta property="og:site_name" content="Lucius's Blog">
+<meta property="og:description" content="解法一关于这个我在网上找到了答案，常见的解法如下：
+123456var x = (e.pageX - this.offsetLeft - (w / 2)) * (w &amp;gt; h ? (h / w) : 1); var y = (e.pageY - this.offsetTop - (h / 2)) * (h &amp;gt; w ? (w / h) : 1); var direction = Math">
+<meta property="og:image" content="https://lucius0.github.io/images/workshop/004.gif">
+<meta property="og:image" content="https://lucius0.github.io/images/javascript/js-23.png">
+<meta property="og:image" content="https://lucius0.github.io/images/javascript/js-24.png">
+<meta property="og:updated_time" content="2017-05-08T15:16:09.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="JavaScript 鼠标从不同方向移入移出判断">
+<meta name="twitter:description" content="解法一关于这个我在网上找到了答案，常见的解法如下：
+123456var x = (e.pageX - this.offsetLeft - (w / 2)) * (w &amp;gt; h ? (h / w) : 1); var y = (e.pageY - this.offsetTop - (h / 2)) * (h &amp;gt; w ? (w / h) : 1); var direction = Math">
+<meta name="twitter:image" content="https://lucius0.github.io/images/workshop/004.gif">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: false,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://lucius0.github.io/2017/05/08//archivers/mouse-direction/"/>
+
+
+
+
+
+  <title> JavaScript 鼠标从不同方向移入移出判断 | Lucius's Blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Lucius's Blog</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            日志
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup">
+ <span class="search-icon fa fa-search"></span>
+ <input type="text" id="local-search-input">
+ <div id="local-search-result"></div>
+ <span class="popup-btn-close">close</span>
+</div>
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="https://lucius0.github.io/2017/05/08/archivers/mouse-direction/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="Lucius">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.jpg">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="Lucius's Blog">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="Lucius's Blog" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                JavaScript 鼠标从不同方向移入移出判断
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              <span class="post-meta-item-text">更新于</span>
+              <time title="更新于" itemprop="dateModified" datetime="2017-05-08T23:16:09+08:00">
+                2017-05-08
+              </time>
+            
+          </span>
+
+          
+            <span class="post-category" >
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/front-end/" itemprop="url" rel="index">
+                    <span itemprop="name">front-end</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <a href="/2017/05/08/archivers/mouse-direction/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/05/08//archivers/mouse-direction/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><img src="/images/workshop/004.gif" alt=""></p>
+<h2 id="解法一"><a href="#解法一" class="headerlink" title="解法一"></a>解法一</h2><p>关于这个我在网上找到了答案，常见的解法如下：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> x = (e.pageX - <span class="keyword">this</span>.offsetLeft - (w / <span class="number">2</span>)) * (w &gt; h ? (h / w) : <span class="number">1</span>); </div><div class="line"><span class="keyword">var</span> y = (e.pageY - <span class="keyword">this</span>.offsetTop - (h / <span class="number">2</span>)) * (h &gt; w ? (w / h) : <span class="number">1</span>); </div><div class="line"><span class="keyword">var</span> direction = <span class="built_in">Math</span>.round((((<span class="built_in">Math</span>.atan2(y, x) * (<span class="number">180</span> / <span class="built_in">Math</span>.PI)) + <span class="number">180</span>) / <span class="number">90</span>) + <span class="number">3</span>) % <span class="number">4</span>;</div><div class="line"></div><div class="line"><span class="comment">// e.pageX 			鼠标的x坐标</span></div><div class="line"><span class="comment">// this.offsetLeft 	移动的容器距离左边的位置，也可以说x坐标</span></div></pre></td></tr></table></figure>
+<p>解题思路：</p>
+<p><img src="/images/javascript/js-23.png" alt=""></p>
+<p>1、主要是将这个问题化为角度来算；</p>
+<p>2、我们将P设为原点<code>(this.offetLeft, this.offetTop)</code>，o设为圆心<code>（this.offsetLeft + (w / 2), this.offsetTop + (h / 2)）</code>；</p>
+<p>3、鼠标移入该容器相对于圆心o的坐标为<code>（e.pageX - o.x, e.pageY - o.y）</code>，即上文的<code>(e.pageX - this.offsetLeft - (w / 2))</code>与<code>(e.pageY - this.offsetTop - (h / 2))</code>；</p>
+<p>4、<code>(w &gt; h ? (h / w) : 1)</code>与<code>(h &gt; w ? (w / h) : 1)</code>的意思就是将<strong>矩形换算为正方形</strong>，例如有一个宽3x，高是x的矩形，相对原点P的右下角坐标就是{x:3x,y:1x}，换算成正方形，即坐标点为正方形的右下角，矩形的四个角即一一对一个正方形的四个角形成正方形ABCD；</p>
+<p>5、<code>Math.atan2(x, y)</code>返回角度值，换算成弧度则为<code>((Math.atan2(y, x) * (180 / Math.PI))</code>，结果为(-180, 180)，加上180，就是(0, 360)。</p>
+<p>6、除以90，即跟4一样道理，AoD，DoC，CoB，BoA都是90度角，目的就是将矩阵的角度跟方形的角度做个换算。</p>
+<p>7、加3是因为想让计算的顺序为上，之前我们的角度区间是从右边开始，那么加3就会从上开始计算，也就是上，右，下，左的顺序；</p>
+<p>8、Math.round以及4取模使得计算结果为0，1，2，3，为什么要这么做呢？Math.round使得坐标轴45度角划分四个象限，而4取模就可以知道鼠标移入移出是在计算过后的哪个象限了。</p>
+<h2 id="解法二"><a href="#解法二" class="headerlink" title="解法二"></a>解法二</h2><p>根据斜率，转自<a href="http://www.cnblogs.com/lyzg/p/5689761.html" target="_blank" rel="external">http://www.cnblogs.com/lyzg/p/5689761.html</a></p>
+<p><img src="/images/javascript/js-24.png" alt=""></p>
+<p>1、上图以浏览器可视区域左上角为原点建立坐标系，坐标系与数学坐标系方向一致，往右表示x轴正方向，往下表示y轴负方向；</p>
+<p>2、图中点(x1,y1)代表元素框左上角，(x4,y4)代表元素框右下角，(x0,y0)代表元素框的中心点，（x,y）表示鼠标移入移出时与元素框的边的交点；</p>
+<p>3、根据下面的公式：(y2 - y1) / (x2 - x1)</p>
+<p>可得(x1,y1)与（x4,y4)这条对角线的斜率为 k = (y1-y4)/(x1-x4)。由于对称性，元素框另外一条对角线的斜率一定是 -k。</p>
+<p>同时由于(x1,y1)与（x4,y4)这条对角线在坐标系中一定经过的是第二和第四象限，所以k肯定是负值，而 -k一定是正值。</p>
+<p>4、根据同样的公式，当鼠标移入移出时的瞬间，与元素边框的交点与元素框中心点的斜率 k1 = (y-y0)/(x-x0)。</p>
+<p>5、由图可知，当 k &lt; k1 &lt; –k时，鼠标一定是从元素的左右方向移动的；反之，一定是从上下方向移动的。</p>
+<p>当鼠标是从左右方向移动时，如果x &gt; x0，那么鼠标就是从右边移动的，反之就是从左边移动的；</p>
+<p>当鼠标是从上下方向移动时，如果y &gt; y0时，那么鼠标就是从上边移动的，反之就是从下边移动的。</p>
+<p>注意：坐标系中所有的y值都是负的。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//这个模块完成鼠标方向判断的功能</span></div><div class="line"><span class="keyword">var</span> MouseDirection = <span class="function"><span class="keyword">function</span> (<span class="params">element, opts</span>) </span>&#123;</div><div class="line"></div><div class="line">    <span class="keyword">var</span> $element = $(element);</div><div class="line"></div><div class="line">    <span class="comment">//enter leave代表鼠标移入移出时的回调</span></div><div class="line">    opts = $.extend(&#123;&#125;, &#123;</div><div class="line">        <span class="attr">enter</span>: $.noop,</div><div class="line">        <span class="attr">leave</span>: $.noop</div><div class="line">    &#125;, opts || &#123;&#125;);</div><div class="line"></div><div class="line">    <span class="keyword">var</span> dirs = [<span class="string">'top'</span>, <span class="string">'right'</span>, <span class="string">'bottom'</span>, <span class="string">'left'</span>];</div><div class="line"></div><div class="line">    <span class="keyword">var</span> calculate = <span class="function"><span class="keyword">function</span> (<span class="params">element, e</span>) </span>&#123;</div><div class="line">        <span class="comment">/*以浏览器可视区域的左上角建立坐标系*/</span></div><div class="line"></div><div class="line">        <span class="comment">//表示左上角和右下角及中心点坐标</span></div><div class="line">        <span class="keyword">var</span> x1, y1, x4, y4, x0, y0;</div><div class="line"></div><div class="line">        <span class="comment">//表示左上角和右下角的对角线斜率</span></div><div class="line">        <span class="keyword">var</span> k;</div><div class="line"></div><div class="line">        <span class="comment">//用getBoundingClientRect比较省事，而且它的兼容性还不错</span></div><div class="line">        <span class="keyword">var</span> rect = element.getBoundingClientRect();</div><div class="line"></div><div class="line">        <span class="keyword">if</span> (!rect.width) &#123;</div><div class="line">            rect.width = rect.right - rect.left;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="keyword">if</span> (!rect.height) &#123;</div><div class="line">            rect.height = rect.bottom - rect.top;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="comment">//求各个点坐标 注意y坐标应该转换为负值，因为浏览器可视区域左上角为(0,0)，整个可视区域属于第四象限</span></div><div class="line">        x1 = rect.left;</div><div class="line">        y1 = -rect.top;</div><div class="line"></div><div class="line">        x4 = rect.left + rect.width;</div><div class="line">        y4 = -(rect.top + rect.height);</div><div class="line"></div><div class="line">        x0 = rect.left + rect.width / <span class="number">2</span>;</div><div class="line">        y0 = -(rect.top + rect.height / <span class="number">2</span>);</div><div class="line"></div><div class="line">        <span class="comment">//矩形不够大，不考虑</span></div><div class="line">        <span class="keyword">if</span> (<span class="built_in">Math</span>.abs(x1 - x4) &lt; <span class="number">0.0001</span>) <span class="keyword">return</span> <span class="number">4</span>;</div><div class="line"></div><div class="line">        <span class="comment">//计算对角线斜率</span></div><div class="line">        k = (y1 - y4) / (x1 - x4);</div><div class="line"></div><div class="line">        <span class="keyword">var</span> range = [k, -k];</div><div class="line"></div><div class="line">        <span class="comment">//表示鼠标当前位置的点坐标</span></div><div class="line">        <span class="keyword">var</span> x, y;</div><div class="line"></div><div class="line">        x = e.clientX;</div><div class="line">        y = -e.clientY;</div><div class="line"></div><div class="line">        <span class="comment">//表示鼠标当前位置的点与元素中心点连线的斜率</span></div><div class="line">        <span class="keyword">var</span> kk;</div><div class="line"></div><div class="line">        kk = (y - y0) / (x - x0);</div><div class="line"></div><div class="line">        <span class="comment">//如果斜率在range范围内，则鼠标是从左右方向移入移出的</span></div><div class="line">        <span class="keyword">if</span> (<span class="built_in">isFinite</span>(kk) &amp;&amp; range[<span class="number">0</span>] &lt; kk &amp;&amp; kk &lt; range[<span class="number">1</span>]) &#123;</div><div class="line">            <span class="comment">//根据x与x0判断左右</span></div><div class="line">            <span class="keyword">return</span> x &gt; x0 ? <span class="number">1</span> : <span class="number">3</span>;</div><div class="line">        &#125; <span class="keyword">else</span> &#123;</div><div class="line">            <span class="comment">//根据y与y0判断上下</span></div><div class="line">            <span class="keyword">return</span> y &gt; y0 ? <span class="number">0</span> : <span class="number">2</span>;</div><div class="line">        &#125;</div><div class="line">    &#125;;</div><div class="line"></div><div class="line">    $element.on(<span class="string">'mouseenter'</span>, <span class="function"><span class="keyword">function</span> (<span class="params">e</span>) </span>&#123;</div><div class="line">        <span class="keyword">var</span> r = calculate(<span class="keyword">this</span>, e);</div><div class="line">        opts.enter($element, dirs[r]);</div><div class="line">    &#125;).on(<span class="string">'mouseleave'</span>, <span class="function"><span class="keyword">function</span> (<span class="params">e</span>) </span>&#123;</div><div class="line">        <span class="keyword">var</span> r = calculate(<span class="keyword">this</span>, e);</div><div class="line">        opts.leave($element, dirs[r]);</div><div class="line">    &#125;);</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<p><strong>总结：我觉得第二种方法很简单更能理解，只是在实现起来代码量会更多点。</strong></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/javascript/" rel="tag"># javascript</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/05/05/archivers/100-days-of-css/" rel="next" title="100-days-of-css">
+                <i class="fa fa-chevron-left"></i> 100-days-of-css
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2017/05/08//archivers/mouse-direction/"
+           data-title="JavaScript 鼠标从不同方向移入移出判断" data-url="https://lucius0.github.io/2017/05/08//archivers/mouse-direction/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.jpg"
+               alt="Lucius" />
+          <p class="site-author-name" itemprop="name">Lucius</p>
+          <p class="site-description motion-element" itemprop="description">stay hungry, stay foolish...</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">44</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">3</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">14</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/Lucius0" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#解法一"><span class="nav-number">1.</span> <span class="nav-text">解法一</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#解法二"><span class="nav-number">2.</span> <span class="nav-text">解法二</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Lucius</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"lucius0"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    
+    <script src="/lib/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+
+
+  
+  
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length == 0) {
+      search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body").append('<div class="popoverlay">').css('overflow', 'hidden');
+      $('.popup').toggle();
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+      $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = $( "entry", xmlResponse ).map(function() {
+            return {
+              title: $( "title", this ).text(),
+              content: $("content",this).text(),
+              url: $( "url" , this).text()
+            };
+          }).get();
+          var $input = document.getElementById(search_id);
+          var $resultContent = document.getElementById(content_id);
+          $input.addEventListener('input', function(){
+            var matchcounts = 0;
+            var str='<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length > 1) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var content_index = [];
+                var data_title = data.title.trim().toLowerCase();
+                var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                var data_url = decodeURIComponent(data.url);
+                var index_title = -1;
+                var index_content = -1;
+                var first_occur = -1;
+                // only match artiles with not empty titles and contents
+                if(data_title != '') {
+                  keywords.forEach(function(keyword, i) {
+                    index_title = data_title.indexOf(keyword);
+                    index_content = data_content.indexOf(keyword);
+                    if( index_title >= 0 || index_content >= 0 ){
+                      isMatch = true;
+                      if (i == 0) {
+                        first_occur = index_content;
+                      }
+                    }
+
+                  });
+                }
+                // show search results
+                if (isMatch) {
+                  matchcounts += 1;
+                  str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                  var content = data.content.trim().replace(/<[^>]+>/g,"");
+                  if (first_occur >= 0) {
+                    // cut out 100 characters
+                    var start = first_occur - 20;
+                    var end = first_occur + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if(start == 0){
+                      end = 50;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    var match_content = content.substring(start, end);
+                    // highlight all keywords
+                    keywords.forEach(function(keyword){
+                      var regS = new RegExp(keyword, "gi");
+                      match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                    });
+
+                    str += "<p class=\"search-result\">" + match_content +"...</p>"
+                  }
+                  str += "</li>";
+                }
+              })};
+            str += "</ul>";
+            if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+            if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+            $resultContent.innerHTML = str;
+          });
+          proceedsearch();
+        }
+      });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".popoverlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+
+  
+
+  
+
+  
+
+  
+
+
+</body>
+</html>

@@ -92,7 +92,7 @@
 <meta property="og:image" content="https://lucius0.github.io/images/css/css-28.png">
 <meta property="og:image" content="https://lucius0.github.io/images/css/css-29.png">
 <meta property="og:image" content="https://lucius0.github.io/images/css/css-30.png">
-<meta property="og:updated_time" content="2017-05-16T16:11:02.000Z">
+<meta property="og:updated_time" content="2017-05-20T11:52:49.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="css的一些小记">
 <meta name="twitter:description" content=":before 和 :after伪类:before和:after默认是一个行内元素，所以这个元素设置width/height是无效的，就像给a元素设置width/height一样，但是可以通过设置position:absolute;，对这个元素的display属性计算为inline-block值，但是设置了width/height针对的是:before/:after生成的匿名替换元素，而不是其中的">
@@ -325,8 +325,8 @@
                 <i class="fa fa-calendar-check-o"></i>
               </span>
               <span class="post-meta-item-text">更新于</span>
-              <time title="更新于" itemprop="dateModified" datetime="2017-05-17T00:11:02+08:00">
-                2017-05-17
+              <time title="更新于" itemprop="dateModified" datetime="2017-05-20T19:52:49+08:00">
+                2017-05-20
               </time>
             
           </span>
@@ -412,6 +412,7 @@
 <h2 id="text-overflow-ellipsis"><a href="#text-overflow-ellipsis" class="headerlink" title="text-overflow: ellipsis"></a>text-overflow: ellipsis</h2><p><strong>多行文本</strong>在当前标准是不支持<code>text-overflow: ellipsis</code>。在草案中有一个不规范的属性<code>-webkit-line-clamp: &lt;number&gt;</code> <a href="http://developer.apple.com/safari/library/documentation/AppleApplications/Reference/SafariCSSRef/Articles/StandardCSSProperties.html#//apple_ref/doc/uid/TP30001266-UnsupportedProperties" target="_blank" rel="external">(unsupported WebKit property)</a>倒是可以支持这一需求，但是目前也只是在草案中。<code>text-overflow: ellipsis</code>需要<code>overflow: hidden</code>跟<code>white-space: nowrap</code>的支持，在IE 6还需要给元素设置<strong>宽度</strong>，至于多行文本，可以用<em>Jquery插件</em>的<em>Jquery-dotdotdot</em>，或者通过伪元素<code>:after</code>也可以很巧妙的解决这个问题。</p>
 <p>在此帖一下张老师的分析以及他的方案：<a href="http://www.zhangxinxu.com/wordpress/2009/09/%E5%85%B3%E4%BA%8E%E6%96%87%E5%AD%97%E5%86%85%E5%AE%B9%E6%BA%A2%E5%87%BA%E7%94%A8%E7%82%B9%E7%82%B9%E7%82%B9-%E7%9C%81%E7%95%A5%E5%8F%B7%E8%A1%A8%E7%A4%BA/" target="_blank" rel="external">关于文字内容溢出用点点点(…)省略号表示</a></p>
 <h2 id="letter-spacing-无法居中的问题"><a href="#letter-spacing-无法居中的问题" class="headerlink" title="letter-spacing 无法居中的问题"></a>letter-spacing 无法居中的问题</h2><figure class="highlight css"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="selector-tag">letter-spacing</span>: 20<span class="selector-tag">px</span>;</div><div class="line"><span class="selector-tag">text-indent</span>: 20<span class="selector-tag">px</span>;</div><div class="line"><span class="selector-tag">text-align</span><span class="selector-pseudo">:center</span>;</div></pre></td></tr></table></figure>
+<h2 id="blur"><a href="#blur" class="headerlink" title="blur"></a>blur</h2><figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">filter: blur(10px);</div><div class="line">-webkit-filter: blur(10px);</div><div class="line">-moz-filter: blur(10px);</div><div class="line">-o-filter: blur(10px);</div><div class="line">-ms-filter: blur(10px);</div><div class="line">filter: progid:DXImageTransform.Microsoft.Blur(PixelRadius="4");</div></pre></td></tr></table></figure>
       
     </div>
 
@@ -590,7 +591,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#before-和-after"><span class="nav-number">1.</span> <span class="nav-text">:before 和 :after</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#inline-block"><span class="nav-number">2.</span> <span class="nav-text">inline-block</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#元素间隔"><span class="nav-number">2.1.</span> <span class="nav-text">元素间隔</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#元素对齐问题"><span class="nav-number">2.2.</span> <span class="nav-text">元素对齐问题</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#盒模型"><span class="nav-number">3.</span> <span class="nav-text">盒模型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Chrome-小于12号字体"><span class="nav-number">4.</span> <span class="nav-text">Chrome 小于12号字体</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#text-overflow-ellipsis"><span class="nav-number">5.</span> <span class="nav-text">text-overflow: ellipsis</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#letter-spacing-无法居中的问题"><span class="nav-number">6.</span> <span class="nav-text">letter-spacing 无法居中的问题</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#before-和-after"><span class="nav-number">1.</span> <span class="nav-text">:before 和 :after</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#inline-block"><span class="nav-number">2.</span> <span class="nav-text">inline-block</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#元素间隔"><span class="nav-number">2.1.</span> <span class="nav-text">元素间隔</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#元素对齐问题"><span class="nav-number">2.2.</span> <span class="nav-text">元素对齐问题</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#盒模型"><span class="nav-number">3.</span> <span class="nav-text">盒模型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Chrome-小于12号字体"><span class="nav-number">4.</span> <span class="nav-text">Chrome 小于12号字体</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#text-overflow-ellipsis"><span class="nav-number">5.</span> <span class="nav-text">text-overflow: ellipsis</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#letter-spacing-无法居中的问题"><span class="nav-number">6.</span> <span class="nav-text">letter-spacing 无法居中的问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#blur"><span class="nav-number">7.</span> <span class="nav-text">blur</span></a></li></ol></div>
             
 
           </div>

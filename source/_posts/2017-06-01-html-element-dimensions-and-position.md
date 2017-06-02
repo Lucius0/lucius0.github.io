@@ -71,7 +71,7 @@ var X = this.getBoundingClientRect().left + document.documentElement.scrollLeft 
 var Y = this.getBoundingClientRect().top + document.documentElement.scrollTop || document.body.scrollTop;
 ```
 
-**注意：** 在文档使用了DTD时，document.body.scrollTop的值为0，此时需要使用document.documentElement.scrollTop来获取滚动条滚过的长度；在未使用DTD定义文档时，使用document.body.scrollTop获取值。
+**注意：** 在文档使用了DTD时，`document.body.scrollTop`的值为0，此时需要使用`document.documentElement.scrollTop`来获取滚动条滚过的长度；在未使用DTD定义文档时，使用`document.body.scrollTop`获取值。
 
 参考：
 

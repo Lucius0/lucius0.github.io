@@ -91,7 +91,7 @@ clientX/clientY事件发生时鼠标在浏览器内容区域的X/Y坐标（不�
 <meta property="og:description" content="Position (pageX/clientX/screenX/offsetX)pageX/pageY鼠标相对于整个页面的X/Y坐标。如页宽1000px，页高10000px，那么pageX最大值则为1000px，pageY则为10000px。
 clientX/clientY事件发生时鼠标在浏览器内容区域的X/Y坐标（不包含滚动条）。即可视区域。(放大缩小也会改变这个值，而且值得注意的是，IE的最小">
 <meta property="og:image" content="https://lucius0.github.io/images/javascript/js-29.png">
-<meta property="og:updated_time" content="2017-06-01T16:29:53.000Z">
+<meta property="og:updated_time" content="2017-06-02T03:22:06.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="关于html元素的尺寸以及位置的问题">
 <meta name="twitter:description" content="Position (pageX/clientX/screenX/offsetX)pageX/pageY鼠标相对于整个页面的X/Y坐标。如页宽1000px，页高10000px，那么pageX最大值则为1000px，pageY则为10000px。
@@ -325,7 +325,7 @@ clientX/clientY事件发生时鼠标在浏览器内容区域的X/Y坐标（不�
                 <i class="fa fa-calendar-check-o"></i>
               </span>
               <span class="post-meta-item-text">更新于</span>
-              <time title="更新于" itemprop="dateModified" datetime="2017-06-02T00:29:53+08:00">
+              <time title="更新于" itemprop="dateModified" datetime="2017-06-02T11:22:06+08:00">
                 2017-06-02
               </time>
             
@@ -408,7 +408,8 @@ clientX/clientY事件发生时鼠标在浏览器内容区域的X/Y坐标（不�
 <h2 id="获取页面元素的位置"><a href="#获取页面元素的位置" class="headerlink" title="获取页面元素的位置"></a>获取页面元素的位置</h2><p>相对位置：</p>
 <figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> X = <span class="keyword">this</span>.getBoundingClientRect().left;</div><div class="line"><span class="keyword">var</span> Y = <span class="keyword">this</span>.getBoundingClientRect().top;</div></pre></td></tr></table></figure>
 <p>绝对位置：</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> X = <span class="keyword">this</span>.getBoundingClientRect().left + <span class="built_in">document</span>.documentElement.scrollLeft;</div><div class="line"><span class="keyword">var</span> Y = <span class="keyword">this</span>.getBoundingClientRect().top + <span class="built_in">document</span>.documentElement.scrollTop;</div></pre></td></tr></table></figure>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> X = <span class="keyword">this</span>.getBoundingClientRect().left + <span class="built_in">document</span>.documentElement.scrollLeft || <span class="built_in">document</span>.body.scrollLeft;</div><div class="line"><span class="keyword">var</span> Y = <span class="keyword">this</span>.getBoundingClientRect().top + <span class="built_in">document</span>.documentElement.scrollTop || <span class="built_in">document</span>.body.scrollTop;</div></pre></td></tr></table></figure>
+<p><strong>注意：</strong> 在文档使用了DTD时，document.body.scrollTop的值为0，此时需要使用document.documentElement.scrollTop来获取滚动条滚过的长度；在未使用DTD定义文档时，使用document.body.scrollTop获取值。</p>
 <p>参考：</p>
 <ul>
 <li><p><a href="http://www.cnblogs.com/xesam/archive/2011/12/08/2280509.html" target="_blank" rel="external">http://www.cnblogs.com/xesam/archive/2011/12/08/2280509.html</a></p>

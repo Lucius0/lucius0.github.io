@@ -628,6 +628,48 @@
     </entry>
     
     <entry>
+      <title><![CDATA[css的一些小记]]></title>
+      <url>https://lucius0.github.io/2017/03/19//archivers/css-notes/</url>
+      <content type="html"><![CDATA[<h2 id="before-和-after"><a href="#before-和-after" class="headerlink" title=":before 和 :after"></a>:before 和 :after</h2><p>伪类<code>:before</code>和<code>:after</code>默认是一个行内元素，所以这个元素设置<code>width/height</code>是无效的，就像给<code>a</code>元素设置<code>width/height</code>一样，但是可以通过设置<code>position:absolute;</code>，对这个元素的<code>display</code>属性计算为<code>inline-block</code>值，但是设置了<code>width/height</code>针对的是<code>:before/:after</code>生成的匿名替换元素，而不是其中的<code>content</code>。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">// 无效</div><div class="line">span:before &#123;</div><div class="line">    content: url(xxx.png);</div><div class="line">    width: 800px;</div><div class="line">    height: 600px;</div><div class="line">&#125;</div><div class="line">// 可以</div><div class="line">span:before &#123;</div><div class="line">    content: '';</div><div class="line">    background-image:url(xxx.png);</div><div class="line">    background-size:800px 600px;</div><div class="line">    width: 800px;</div><div class="line">    height: 600px;</div><div class="line">    position: absolute; // 设置定位类型</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="inline-block"><a href="#inline-block" class="headerlink" title="inline-block"></a>inline-block</h2><h3 id="元素间隔"><a href="#元素间隔" class="headerlink" title="元素间隔"></a>元素间隔</h3><p><code>inline-block</code>使得元素水平排列，但如果两个<code>inline-block</code>元素之间存在<strong>空格</strong>或者<strong>换行</strong>就会出现奇怪的元素间隔，即使使用了<code>{padding: 0; margin: 0}</code>。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">#text p &#123; display: inline-block; padding: 10px; background-color: red; color: #fff;&#125;</div><div class="line"></div><div class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">"text"</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">p</span>&gt;</span>1<span class="tag">&lt;/<span class="name">p</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">p</span>&gt;</span>2<span class="tag">&lt;/<span class="name">p</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></div></pre></td></tr></table></figure>
+<p><img src="/images/css/css-27.png" alt=""></p>
+<p>常见的解决方法：</p>
+<p>1、元素之间不要存在<strong>空格</strong>或者<strong>换行符</strong>；</p>
+<p>2、父容器的<code>font-size:0</code>。</p>
+<p>去除<code>inline-block</code>之间的间隔有很多种方法，可以参考张鑫旭老师的<a href="http://www.zhangxinxu.com/wordpress/2012/04/inline-block-space-remove-%E5%8E%BB%E9%99%A4%E9%97%B4%E8%B7%9D/" target="_blank" rel="external">去除inline-block元素间间距的N种方法</a></p>
+<h3 id="元素对齐问题"><a href="#元素对齐问题" class="headerlink" title="元素对齐问题"></a>元素对齐问题</h3><p>两<code>inline-block</code>元素，不存在文本的情况下</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">#test p &#123;display: inline-block;&#125;</div><div class="line">.c1, .c2 &#123;width: 100px; height: 100px;&#125;</div><div class="line">.c1 &#123;border: 1px solid #f00;&#125;</div><div class="line">.c2 &#123;border: 1px solid #000;&#125;</div><div class="line"></div><div class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">"test"</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">p</span> <span class="attr">class</span>=<span class="string">"c1"</span>&gt;</span><span class="tag">&lt;/<span class="name">p</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">p</span> <span class="attr">class</span>=<span class="string">"c2"</span>&gt;</span><span class="tag">&lt;/<span class="name">p</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></div></pre></td></tr></table></figure>
+<p><img src="/images/css/css-28.png" alt=""></p>
+<p>两<code>inline-block</code>元素存在文本的情况下</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">#test p &#123;display: inline-block;&#125;</div><div class="line">.c1, .c2 &#123;width: 100px; height: 100px;&#125;</div><div class="line">.c1 &#123;border: 1px solid #f00;&#125;</div><div class="line">.c2 &#123;border: 1px solid #000;&#125;</div><div class="line"></div><div class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">"test"</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">p</span> <span class="attr">class</span>=<span class="string">"c1"</span>&gt;</span><span class="tag">&lt;/<span class="name">p</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">p</span> <span class="attr">class</span>=<span class="string">"c2"</span>&gt;</span>1<span class="tag">&lt;/<span class="name">p</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></div></pre></td></tr></table></figure>
+<p><img src="/images/css/css-29.png" alt=""></p>
+<p>常见的解决方法：</p>
+<p>给图片或者背景设置<code>vertical-align: top</code>即可，或者给有文本的元素设置<code>overflow:hidden</code></p>
+<p>出现这种的原因是因为<code>inline-block</code>的默认属性是<code>vertical-align: baseline</code>，即以父元素的基线对齐，但当出现文本的时候，则会影响了对齐的基线。</p>
+<p>来自官方的答案：<a href="https://link.zhihu.com/?target=http%3A//www.w3.org/TR/CSS21/visudet.html%23leading" target="_blank" rel="external">“Visual formatting model details”</a></p>
+<blockquote>
+<p>The baseline of an ‘inline-block’ is the baseline of its last line box in the normal flow, unless it has either no in-flow line boxes or if its ‘overflow’ property has a computed value other than ‘visible’, in which case the baseline is the bottom margin edge.</p>
+</blockquote>
+<h2 id="盒模型"><a href="#盒模型" class="headerlink" title="盒模型"></a>盒模型</h2><p>页面上的每一个元素都可以看成一个盒模型。</p>
+<p><img src="/images/css/css-30.png" alt=""></p>
+<p>可以知道盒模型由四部分组成<code>content + padding + border + margin</code>，因此一个元素的宽度应该是：<code>总宽度 = margin-left + border-left + padding-left + width + padding-right + border-right + margin-right</code>。</p>
+<p>但是以上有问题的是，在<strong>IE(低于IE 9)</strong>的宽度为：<code>总宽度 = width + margin-right + margin-left</code>。因此出现了<code>box-sizing: border-box</code>的属性，当设置<code>box-sizing: border-box</code>属性时，<code>border</code> 和 <code>padding</code> 就被包含在了宽高之内，和 IE 之前的标准是一样的。</p>
+<h2 id="Chrome-小于12号字体"><a href="#Chrome-小于12号字体" class="headerlink" title="Chrome 小于12号字体"></a>Chrome 小于12号字体</h2><p>相对于其他的浏览器，chrome的默认最小字体只能是<code>12px</code>，无论你设置再小也是只能是<code>12px</code>，那假如有一个需求是要你兼容其他平台，包括chrome的字体表现小于<code>12px</code>的呢？可以使用css3的一个属性<code>transform: scale(n)</code>。</p>
+<h2 id="text-overflow-ellipsis"><a href="#text-overflow-ellipsis" class="headerlink" title="text-overflow: ellipsis"></a>text-overflow: ellipsis</h2><p><strong>多行文本</strong>在当前标准是不支持<code>text-overflow: ellipsis</code>。在草案中有一个不规范的属性<code>-webkit-line-clamp: &lt;number&gt;</code> <a href="http://developer.apple.com/safari/library/documentation/AppleApplications/Reference/SafariCSSRef/Articles/StandardCSSProperties.html#//apple_ref/doc/uid/TP30001266-UnsupportedProperties" target="_blank" rel="external">(unsupported WebKit property)</a>倒是可以支持这一需求，但是目前也只是在草案中。<code>text-overflow: ellipsis</code>需要<code>overflow: hidden</code>跟<code>white-space: nowrap</code>的支持，在IE 6还需要给元素设置<strong>宽度</strong>，至于多行文本，可以用<em>Jquery插件</em>的<em>Jquery-dotdotdot</em>，或者通过伪元素<code>:after</code>也可以很巧妙的解决这个问题。</p>
+<p>在此帖一下张老师的分析以及他的方案：<a href="http://www.zhangxinxu.com/wordpress/2009/09/%E5%85%B3%E4%BA%8E%E6%96%87%E5%AD%97%E5%86%85%E5%AE%B9%E6%BA%A2%E5%87%BA%E7%94%A8%E7%82%B9%E7%82%B9%E7%82%B9-%E7%9C%81%E7%95%A5%E5%8F%B7%E8%A1%A8%E7%A4%BA/" target="_blank" rel="external">关于文字内容溢出用点点点(…)省略号表示</a></p>
+<h2 id="letter-spacing-无法居中的问题"><a href="#letter-spacing-无法居中的问题" class="headerlink" title="letter-spacing 无法居中的问题"></a>letter-spacing 无法居中的问题</h2><figure class="highlight css"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="selector-tag">letter-spacing</span>: 20<span class="selector-tag">px</span>;</div><div class="line"><span class="selector-tag">text-indent</span>: 20<span class="selector-tag">px</span>;</div><div class="line"><span class="selector-tag">text-align</span><span class="selector-pseudo">:center</span>;</div></pre></td></tr></table></figure>
+<h2 id="blur"><a href="#blur" class="headerlink" title="blur"></a>blur</h2><figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">filter: blur(10px);</div><div class="line">-webkit-filter: blur(10px);</div><div class="line">-moz-filter: blur(10px);</div><div class="line">-o-filter: blur(10px);</div><div class="line">-ms-filter: blur(10px);</div><div class="line">filter: progid:DXImageTransform.Microsoft.Blur(PixelRadius="4");</div></pre></td></tr></table></figure>
+<h2 id="work-wrap-amp-amp-work-break"><a href="#work-wrap-amp-amp-work-break" class="headerlink" title="work-wrap &amp;&amp; work-break"></a>work-wrap &amp;&amp; work-break</h2><figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">span</span>&gt;</span></div><div class="line">    666 asdjkhaksdhksdhkjahskajhsdasdasdaaskashdkasdhkad 872934729347</div><div class="line"><span class="tag">&lt;/<span class="name">span</span>&gt;</span></div><div class="line"></div><div class="line">span &#123;</div><div class="line">    word-wrap: break-word;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><img src="/images/css/css-31.png" alt=""></p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">span</span>&gt;</span></div><div class="line">    666 asdjkhaksdhksdhkjahskajhsdasdasdaaskashdkasdhkad 872934729347</div><div class="line"><span class="tag">&lt;/<span class="name">span</span>&gt;</span></div><div class="line"></div><div class="line">span &#123;</div><div class="line">    word-break: break-all;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><img src="/images/css/css-32.png" alt=""></p>
+<p><code>word-wrap: break-word</code> 会把过长的字符串换行再折断溢出部分，而<code>word-break: break-all</code> 会把过长的字符串在该行就将溢出的折断。</p>
+]]></content>
+    </entry>
+    
+    <entry>
       <title><![CDATA[七个你可能不了解的CSS单位]]></title>
       <url>https://lucius0.github.io/2017/03/19//archivers/7-css-units-you-might-not-know-about/</url>
       <content type="html"><![CDATA[<p>我们很容易无法摆脱的使用我们所熟悉的CSS技术，当新的问题出现，这样会使我们处于不利的地位。</p>
@@ -691,48 +733,6 @@
     </entry>
     
     <entry>
-      <title><![CDATA[css的一些小记]]></title>
-      <url>https://lucius0.github.io/2017/03/19//archivers/css-notes/</url>
-      <content type="html"><![CDATA[<h2 id="before-和-after"><a href="#before-和-after" class="headerlink" title=":before 和 :after"></a>:before 和 :after</h2><p>伪类<code>:before</code>和<code>:after</code>默认是一个行内元素，所以这个元素设置<code>width/height</code>是无效的，就像给<code>a</code>元素设置<code>width/height</code>一样，但是可以通过设置<code>position:absolute;</code>，对这个元素的<code>display</code>属性计算为<code>inline-block</code>值，但是设置了<code>width/height</code>针对的是<code>:before/:after</code>生成的匿名替换元素，而不是其中的<code>content</code>。</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">// 无效</div><div class="line">span:before &#123;</div><div class="line">    content: url(xxx.png);</div><div class="line">    width: 800px;</div><div class="line">    height: 600px;</div><div class="line">&#125;</div><div class="line">// 可以</div><div class="line">span:before &#123;</div><div class="line">    content: '';</div><div class="line">    background-image:url(xxx.png);</div><div class="line">    background-size:800px 600px;</div><div class="line">    width: 800px;</div><div class="line">    height: 600px;</div><div class="line">    position: absolute; // 设置定位类型</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h2 id="inline-block"><a href="#inline-block" class="headerlink" title="inline-block"></a>inline-block</h2><h3 id="元素间隔"><a href="#元素间隔" class="headerlink" title="元素间隔"></a>元素间隔</h3><p><code>inline-block</code>使得元素水平排列，但如果两个<code>inline-block</code>元素之间存在<strong>空格</strong>或者<strong>换行</strong>就会出现奇怪的元素间隔，即使使用了<code>{padding: 0; margin: 0}</code>。</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">#text p &#123; display: inline-block; padding: 10px; background-color: red; color: #fff;&#125;</div><div class="line"></div><div class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">"text"</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">p</span>&gt;</span>1<span class="tag">&lt;/<span class="name">p</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">p</span>&gt;</span>2<span class="tag">&lt;/<span class="name">p</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></div></pre></td></tr></table></figure>
-<p><img src="/images/css/css-27.png" alt=""></p>
-<p>常见的解决方法：</p>
-<p>1、元素之间不要存在<strong>空格</strong>或者<strong>换行符</strong>；</p>
-<p>2、父容器的<code>font-size:0</code>。</p>
-<p>去除<code>inline-block</code>之间的间隔有很多种方法，可以参考张鑫旭老师的<a href="http://www.zhangxinxu.com/wordpress/2012/04/inline-block-space-remove-%E5%8E%BB%E9%99%A4%E9%97%B4%E8%B7%9D/" target="_blank" rel="external">去除inline-block元素间间距的N种方法</a></p>
-<h3 id="元素对齐问题"><a href="#元素对齐问题" class="headerlink" title="元素对齐问题"></a>元素对齐问题</h3><p>两<code>inline-block</code>元素，不存在文本的情况下</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">#test p &#123;display: inline-block;&#125;</div><div class="line">.c1, .c2 &#123;width: 100px; height: 100px;&#125;</div><div class="line">.c1 &#123;border: 1px solid #f00;&#125;</div><div class="line">.c2 &#123;border: 1px solid #000;&#125;</div><div class="line"></div><div class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">"test"</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">p</span> <span class="attr">class</span>=<span class="string">"c1"</span>&gt;</span><span class="tag">&lt;/<span class="name">p</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">p</span> <span class="attr">class</span>=<span class="string">"c2"</span>&gt;</span><span class="tag">&lt;/<span class="name">p</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></div></pre></td></tr></table></figure>
-<p><img src="/images/css/css-28.png" alt=""></p>
-<p>两<code>inline-block</code>元素存在文本的情况下</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">#test p &#123;display: inline-block;&#125;</div><div class="line">.c1, .c2 &#123;width: 100px; height: 100px;&#125;</div><div class="line">.c1 &#123;border: 1px solid #f00;&#125;</div><div class="line">.c2 &#123;border: 1px solid #000;&#125;</div><div class="line"></div><div class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">"test"</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">p</span> <span class="attr">class</span>=<span class="string">"c1"</span>&gt;</span><span class="tag">&lt;/<span class="name">p</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">p</span> <span class="attr">class</span>=<span class="string">"c2"</span>&gt;</span>1<span class="tag">&lt;/<span class="name">p</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></div></pre></td></tr></table></figure>
-<p><img src="/images/css/css-29.png" alt=""></p>
-<p>常见的解决方法：</p>
-<p>给图片或者背景设置<code>vertical-align: top</code>即可，或者给有文本的元素设置<code>overflow:hidden</code></p>
-<p>出现这种的原因是因为<code>inline-block</code>的默认属性是<code>vertical-align: baseline</code>，即以父元素的基线对齐，但当出现文本的时候，则会影响了对齐的基线。</p>
-<p>来自官方的答案：<a href="https://link.zhihu.com/?target=http%3A//www.w3.org/TR/CSS21/visudet.html%23leading" target="_blank" rel="external">“Visual formatting model details”</a></p>
-<blockquote>
-<p>The baseline of an ‘inline-block’ is the baseline of its last line box in the normal flow, unless it has either no in-flow line boxes or if its ‘overflow’ property has a computed value other than ‘visible’, in which case the baseline is the bottom margin edge.</p>
-</blockquote>
-<h2 id="盒模型"><a href="#盒模型" class="headerlink" title="盒模型"></a>盒模型</h2><p>页面上的每一个元素都可以看成一个盒模型。</p>
-<p><img src="/images/css/css-30.png" alt=""></p>
-<p>可以知道盒模型由四部分组成<code>content + padding + border + margin</code>，因此一个元素的宽度应该是：<code>总宽度 = margin-left + border-left + padding-left + width + padding-right + border-right + margin-right</code>。</p>
-<p>但是以上有问题的是，在<strong>IE(低于IE 9)</strong>的宽度为：<code>总宽度 = width + margin-right + margin-left</code>。因此出现了<code>box-sizing: border-box</code>的属性，当设置<code>box-sizing: border-box</code>属性时，<code>border</code> 和 <code>padding</code> 就被包含在了宽高之内，和 IE 之前的标准是一样的。</p>
-<h2 id="Chrome-小于12号字体"><a href="#Chrome-小于12号字体" class="headerlink" title="Chrome 小于12号字体"></a>Chrome 小于12号字体</h2><p>相对于其他的浏览器，chrome的默认最小字体只能是<code>12px</code>，无论你设置再小也是只能是<code>12px</code>，那假如有一个需求是要你兼容其他平台，包括chrome的字体表现小于<code>12px</code>的呢？可以使用css3的一个属性<code>transform: scale(n)</code>。</p>
-<h2 id="text-overflow-ellipsis"><a href="#text-overflow-ellipsis" class="headerlink" title="text-overflow: ellipsis"></a>text-overflow: ellipsis</h2><p><strong>多行文本</strong>在当前标准是不支持<code>text-overflow: ellipsis</code>。在草案中有一个不规范的属性<code>-webkit-line-clamp: &lt;number&gt;</code> <a href="http://developer.apple.com/safari/library/documentation/AppleApplications/Reference/SafariCSSRef/Articles/StandardCSSProperties.html#//apple_ref/doc/uid/TP30001266-UnsupportedProperties" target="_blank" rel="external">(unsupported WebKit property)</a>倒是可以支持这一需求，但是目前也只是在草案中。<code>text-overflow: ellipsis</code>需要<code>overflow: hidden</code>跟<code>white-space: nowrap</code>的支持，在IE 6还需要给元素设置<strong>宽度</strong>，至于多行文本，可以用<em>Jquery插件</em>的<em>Jquery-dotdotdot</em>，或者通过伪元素<code>:after</code>也可以很巧妙的解决这个问题。</p>
-<p>在此帖一下张老师的分析以及他的方案：<a href="http://www.zhangxinxu.com/wordpress/2009/09/%E5%85%B3%E4%BA%8E%E6%96%87%E5%AD%97%E5%86%85%E5%AE%B9%E6%BA%A2%E5%87%BA%E7%94%A8%E7%82%B9%E7%82%B9%E7%82%B9-%E7%9C%81%E7%95%A5%E5%8F%B7%E8%A1%A8%E7%A4%BA/" target="_blank" rel="external">关于文字内容溢出用点点点(…)省略号表示</a></p>
-<h2 id="letter-spacing-无法居中的问题"><a href="#letter-spacing-无法居中的问题" class="headerlink" title="letter-spacing 无法居中的问题"></a>letter-spacing 无法居中的问题</h2><figure class="highlight css"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="selector-tag">letter-spacing</span>: 20<span class="selector-tag">px</span>;</div><div class="line"><span class="selector-tag">text-indent</span>: 20<span class="selector-tag">px</span>;</div><div class="line"><span class="selector-tag">text-align</span><span class="selector-pseudo">:center</span>;</div></pre></td></tr></table></figure>
-<h2 id="blur"><a href="#blur" class="headerlink" title="blur"></a>blur</h2><figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">filter: blur(10px);</div><div class="line">-webkit-filter: blur(10px);</div><div class="line">-moz-filter: blur(10px);</div><div class="line">-o-filter: blur(10px);</div><div class="line">-ms-filter: blur(10px);</div><div class="line">filter: progid:DXImageTransform.Microsoft.Blur(PixelRadius="4");</div></pre></td></tr></table></figure>
-<h2 id="work-wrap-amp-amp-work-break"><a href="#work-wrap-amp-amp-work-break" class="headerlink" title="work-wrap &amp;&amp; work-break"></a>work-wrap &amp;&amp; work-break</h2><figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">span</span>&gt;</span></div><div class="line">    666 asdjkhaksdhksdhkjahskajhsdasdasdaaskashdkasdhkad 872934729347</div><div class="line"><span class="tag">&lt;/<span class="name">span</span>&gt;</span></div><div class="line"></div><div class="line">span &#123;</div><div class="line">    word-wrap: break-word;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p><img src="/images/css/css-31.png" alt=""></p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">span</span>&gt;</span></div><div class="line">    666 asdjkhaksdhksdhkjahskajhsdasdasdaaskashdkasdhkad 872934729347</div><div class="line"><span class="tag">&lt;/<span class="name">span</span>&gt;</span></div><div class="line"></div><div class="line">span &#123;</div><div class="line">    word-break: break-all;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p><img src="/images/css/css-32.png" alt=""></p>
-<p><code>word-wrap: break-word</code> 会把过长的字符串换行再折断溢出部分，而<code>word-break: break-all</code> 会把过长的字符串在该行就将溢出的折断。</p>
-]]></content>
-    </entry>
-    
-    <entry>
       <title><![CDATA[CSS - relative 和 absolute 小记]]></title>
       <url>https://lucius0.github.io/2017/03/02//archivers/relative-absolute-note/</url>
       <content type="html"><![CDATA[<p>我在之前翻译过有关于css定位的文章 <a href="/2016/10/30//archivers/5-things-you-should-know-about-css/" title="《5件你需要知道的css定位》">《5件你需要知道的css定位》</a>。那么这次是看了张鑫旭老师的<a href="http://www.zhangxinxu.com/wordpress/2010/12/css-%E7%9B%B8%E5%AF%B9%E7%BB%9D%E5%AF%B9%E5%AE%9A%E4%BD%8D%E7%B3%BB%E5%88%97%EF%BC%88%E4%B8%80%EF%BC%89/" target="_blank" rel="external">相对定位和绝对定位</a>之后的小记，巩固下基础知识。</p>
@@ -775,99 +775,6 @@
 <p><a href="http://www.zhangxinxu.com/study/201108/css-relative-mini-effect-rule.html" target="_blank" rel="external">遵循最小化影响原则实现demo</a></p>
 <figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">.test &#123;width:25em; margin:2em auto;&#125;</div><div class="line">.box &#123; padding:2em; border:1px solid #beceeb; border-radius:2px; background-color:#f0f3f9; &#125;</div><div class="line">.rel &#123; position:relative; &#125;</div><div class="line">.ok &#123; color:green; font-size:6em; position:absolute; right:-10px; top:-1em; &#125;</div><div class="line"></div><div class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"test"</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"box"</span>&gt;</span>CSS relative相对定位的最小化影响原则<span class="tag">&lt;/<span class="name">div</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"rel"</span>&gt;</span><span class="tag">&lt;<span class="name">strong</span> <span class="attr">class</span>=<span class="string">"ok"</span>&gt;</span>√<span class="tag">&lt;/<span class="name">strong</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></div></pre></td></tr></table></figure>
 <h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p><code>absolute+margin</code>（左上角元素定位，作用于当前元素）、<code>float+relative</code>（右上角元素定位，作用于当前元素）和<code>relative+absolute</code>（右下角元素定位，直接父标签+当前定位元素）。而目前web届大肆使用的外层div层设置relative属性，里面一些absolute元素定位的方法是不推荐的。</p>
-]]></content>
-    </entry>
-    
-    <entry>
-      <title><![CDATA[JavaScript 启动性能瓶颈分析与解决方案]]></title>
-      <url>https://lucius0.github.io/2017/03/01//archivers/javascript-start-up-performance/</url>
-      <content type="html"><![CDATA[<p>在 Web 开发中，随着需求的增加与代码库的扩张，我们最终发布的 Web 页面也逐渐膨胀。不过这种膨胀远不止意味着占据更多的传输带宽，其还意味着用户浏览网页时可能更差劲的性能体验。浏览器在下载完某个页面依赖的脚本之后，其还需要经过语法分析、解释与运行这些步骤。而本文则会深入分析浏览器对于 JavaScript 的这些处理流程，挖掘出那些影响你应用启动时间的罪魁祸首，并且根据我个人的经验提出相对应的解决方案。回顾过去，我们还没有专门地考虑过如何去优化 JavaScript 解析/编译这些步骤；我们预想中的是解析器在发现<code>&lt;script&gt;</code>标签后会瞬时完成解析操作，不过这很明显是痴人说梦。下图是对于 V8 引擎工作原理的概述：</p>
-<p><img src="/images/javascript/js-03.png" alt=""></p>
-<h2 id="到底是什么拖慢了我们应用的启动时间？"><a href="#到底是什么拖慢了我们应用的启动时间？" class="headerlink" title="到底是什么拖慢了我们应用的启动时间？"></a>到底是什么拖慢了我们应用的启动时间？</h2><p>在启动阶段，语法分析，编译与脚本执行占据了 JavaScript 引擎运行的绝大部分时间。换言之，这些过程造成的延迟会真实地反应到用户可交互时延上；譬如用户已经看到了某个按钮，但是要好几秒之后才能真正地去点击操作，这一点会大大影响用户体验。</p>
-<p><img src="/images/javascript/js-04.png" alt=""></p>
-<p>上图是我们使用 Chrome Canary 内置的 V8 RunTime Call Stats 对于某个网站的分析结果；需要注意的是桌面浏览器中语法解析与编译占用的时间还是蛮长的，而在移动端中占用的时间则更长。实际上，对于 Facebook, Wikipedia, Reddit 这些大型网站中语法解析与编译所占的时间也不容忽视：</p>
-<p><img src="/images/javascript/js-05.png" alt=""></p>
-<p>上图中的粉色区域表示花费在 V8 与 Blink’s C++ 中的时间，而橙色和黄色分别表示语法解析与编译的时间占比。Facebook 的 Sebastian Markbage 与 Google 的 Rob Wormald 也都在 Twitter 发文表示过 JavaScript 的语法解析时间过长已经成为了不可忽视的问题，后者还表示这也是 Angular 启动时主要的消耗之一。</p>
-<p><img src="/images/javascript/js-06.jpg" alt=""></p>
-<p>随着移动端浪潮的涌来，我们不得不面对一个残酷的事实：移动端对于相同包体的解析与编译过程要花费相当于桌面浏览器2~5倍的时间。当然，对于高配的 iPhone 或者 Pixel 这样的手机相较于 Moto G4 这样的中配手机表现会好很多；这一点提醒我们在测试的时候不能仅用身边那些高配的手机，而应该中高低配兼顾：</p>
-<p><img src="/images/javascript/js-07.jpg" alt=""></p>
-<p>上图是部分桌面浏览器与移动端浏览器对于 1MB 的 JavaScript 包体进行解析的时间对比，显而易见的可以发现不同配置的移动端手机之间的巨大差异。当我们应用包体已经非常巨大的时候，使用一些现代的打包技巧，譬如代码分割，TreeShaking，Service Workder 缓存等等会对启动时间有很大的影响。另一个角度来看，即使是小模块，你代码写的很糟或者使用了很糟的依赖库都会导致你的主线程花费大量的时间在编译或者冗余的函数调用中。我们必须要清醒地认识到全面评测以挖掘出真正性能瓶颈的重要性。</p>
-<h2 id="JavaScript-语法解析与编译是否成为了大部分网站的瓶颈？"><a href="#JavaScript-语法解析与编译是否成为了大部分网站的瓶颈？" class="headerlink" title="JavaScript 语法解析与编译是否成为了大部分网站的瓶颈？"></a>JavaScript 语法解析与编译是否成为了大部分网站的瓶颈？</h2><p>我曾不止一次听到有人说，我又不是 Facebook，你说的 JavaScript 语法解析与编译到<br>底会对其他网站造成什么样的影响呢？对于这个问题我也很好奇，于是我花费了两个月的时间对于超过 6000 个网站进行分析；这些网站囊括了 React，Angular，Ember，Vue 这些流行的框架或者库。大部分的测试是基于 WebPageTest 进行的，因此你可以很方便地重现这些测试结果。<strong>光纤接入的桌面浏览器大概需要 8 秒的时间才能允许用户交互，而 3G 环境下的 Moto G4 大概需要 16 秒 才能允许用户交互。</strong></p>
-<p><img src="/images/javascript/js-08.png" alt=""></p>
-<p><strong>大部分应用在桌面浏览器中会耗费约 4 秒的时间进行 JavaScript 启动阶段（语法解析、编译、执行）：</strong></p>
-<p><img src="/images/javascript/js-09.jpg" alt=""></p>
-<p>而在移动端浏览器中，大概要花费额外 36% 的时间来进行语法解析：</p>
-<p>另外，统计显示并不是所有的网站都甩给用户一个庞大的 JS 包体，用户下载的经过 Gzip 压缩的平均包体大小是 410KB，这一点与 HTTPArchive 之前发布的 420KB 的数据基本一致。不过最差劲的网站则是直接甩了 10MB 的脚本给用户，简直可怕。</p>
-<p><img src="/images/javascript/js-10.png" alt=""></p>
-<p>通过上面的统计我们可以发现，包体体积固然重要，但是其并非唯一因素，语法解析与编译的耗时也不一定随着包体体积的增长而线性增长。总体而言小的 JavaScript 包体是会加载地更快（忽略浏览器、设备与网络连接的差异），但是同样 200KB 的大小，不同开发者的包体在语法解析、编译上的时间却是天差地别，不可同日而语。</p>
-<h2 id="现代-JavaScript-语法解析-amp-编译性能评测"><a href="#现代-JavaScript-语法解析-amp-编译性能评测" class="headerlink" title="现代 JavaScript 语法解析 &amp; 编译性能评测"></a>现代 JavaScript 语法解析 &amp; 编译性能评测</h2><h3 id="Chrome-DevTools"><a href="#Chrome-DevTools" class="headerlink" title="Chrome DevTools"></a>Chrome DevTools</h3><p>打开 Timeline( Performance panel ) &gt; Bottom-Up/Call Tree/Event Log 就会显示出当前网站在语法解析/编译上的时间占比。如果你希望得到更完整的信息，那么可以打开 V8 的 Runtime Call Stats。在 Canary 中，其位于 Timeline 的 Experims &gt; V8 Runtime Call Stats 下。</p>
-<p><img src="/images/javascript/js-11.jpg" alt=""></p>
-<h3 id="Chrome-Tracing"><a href="#Chrome-Tracing" class="headerlink" title="Chrome Tracing"></a>Chrome Tracing</h3><p>打开 about:tracing 页面，Chrome 提供的底层的追踪工具允许我们使用disabled-by-default-v8.runtime_stats来深度了解 V8 的时间消耗情况。V8 也提供了<a href="https://docs.google.com/presentation/d/1Lq2DD28CGa7bxawVH_2OcmyiTiBn74dvC6vn2essroY/edit#slide=id.g1a504e63c9_2_84" target="_blank" rel="external">详细的指南</a>来介绍如何使用这个功能。</p>
-<p><img src="/images/javascript/js-12.jpg" alt=""></p>
-<h3 id="WebPageTest"><a href="#WebPageTest" class="headerlink" title="WebPageTest"></a>WebPageTest</h3><p><img src="/images/javascript/js-13.png" alt=""></p>
-<p>WebPageTest 中 Processing Breakdown 页面在我们启用 Chrome &gt; Capture Dev Tools Timeline 时会自动记录 V8 编译、EvaluateScript 以及 FunctionCall 的时间。我们同样可以通过指明<code>disabled-by-default-v8.runtime_stats</code>的方式来启用 Runtime Call Stats。</p>
-<p><img src="/images/javascript/js-14.png" alt=""></p>
-<h3 id="User-Timing"><a href="#User-Timing" class="headerlink" title="User Timing"></a>User Timing</h3><p>我们还可以使用 Nolan Lawson 推荐的<a href="https://w3c.github.io/user-timing/#dom-performance-mark" target="_blank" rel="external">User Timing API</a>来评估语法解析的时间。不过这种方式可能会受 V8 预解析过程的影响，我们可以借鉴 Nolan 在 optimize-js 评测中的方式，在脚本的尾部添加随机字符串来解决这个问题。我基于 Google Analytics 使用相似的方式来评估真实用户与设备访问网站时候的解析时间：</p>
-<p><img src="/images/javascript/js-15.jpg" alt=""></p>
-<h3 id="DeviceTiming"><a href="#DeviceTiming" class="headerlink" title="DeviceTiming"></a>DeviceTiming</h3><p>Etsy 的 <a href="https://github.com/danielmendel/DeviceTiming" target="_blank" rel="external">DeviceTiming</a> 工具能够模拟某些受限环境来评估页面的语法解析与执行时间。其将本地脚本包裹在了某个仪表工具代码内从而使我们的页面能够模拟从不同的设备中访问。可以阅读 <a href="http://talks.desp.in/unpacking-the-black-box" target="_blank" rel="external">Daniel Espeset 的Benchmarking JS Parsing and Execution on Mobile Devices</a> 一文来了解更详细的使用方式。</p>
-<p><img src="/images/javascript/js-16.jpg" alt=""></p>
-<h2 id="我们可以做些什么以降低-JavaScript-的解析时间？"><a href="#我们可以做些什么以降低-JavaScript-的解析时间？" class="headerlink" title="我们可以做些什么以降低 JavaScript 的解析时间？"></a>我们可以做些什么以降低 JavaScript 的解析时间？</h2><ul>
-<li><p>减少 JavaScript 包体体积。我们在上文中也提及，更小的包体往往意味着更少的解析工作量，也就能降低浏览器在解析与编译阶段的时间消耗。</p>
-</li>
-<li><p>使用代码分割工具来按需传递代码与懒加载剩余模块。这可能是最佳的方式了，类似于<a href="https://developers.google.com/web/fundamentals/performance/prpl-pattern/" target="_blank" rel="external">PRPL</a>这样的模式鼓励基于路由的分组，目前被 Flipkart, Housing.com 与 Twitter 广泛使用。</p>
-</li>
-<li><p>Script streaming: 过去 V8 鼓励开发者使用<code>async/defer</code>来基于<a href="https://blog.chromium.org/2015/03/new-javascript-techniques-for-rapid.html" target="_blank" rel="external">script streaming</a>实现 10-20% 的性能提升。这个技术会允许 HTML 解析器将相应的脚本加载任务分配给专门的 script streaming 线程，从而避免阻塞文档解析。V8 推荐尽早加载较大的模块，毕竟我们只有一个 streamer 线程。</p>
-</li>
-<li><p>评估我们依赖的解析消耗。我们应该尽可能地选择具有相同功能但是加载地更快的依赖，譬如使用 Preact 或者 Inferno 来代替 React，二者相较于 React 体积更小具有更少的语法解析与编译时间。Paul Lewis 在最近的一篇文章中也讨论了框架启动的代价，与 Sebastian Markbage 的说法不谋而合：最好地评测某个框架启动消耗的方式就是先渲染一个界面，然后删除，最后进行重新渲染。第一次渲染的过程会包含了分析与编译，通过对比就能发现该框架的启动消耗。</p>
-</li>
-</ul>
-<p>如果你的 JavaScript 框架支持 AOT（ahead-of-time）编译模式，那么能够有效地减少解析与编译的时间。Angular 应用就受益于这种模式：</p>
-<p><img src="/images/javascript/js-17.png" alt=""></p>
-<h2 id="现代浏览器是如何提高解析与编译速度的？"><a href="#现代浏览器是如何提高解析与编译速度的？" class="headerlink" title="现代浏览器是如何提高解析与编译速度的？"></a>现代浏览器是如何提高解析与编译速度的？</h2><p>不用灰心，你并不是唯一纠结于如何提升启动时间的人，我们 V8 团队也一直在努力。我们发现之前的某个评测工具 Octane 是个不错的对于真实场景的模拟，它在微型框架与冷启动方面很符合真实的用户习惯。而基于这些工具，V8 团队在过去的工作中也实现了大约 25% 的启动性能提升：</p>
-<p><img src="/images/javascript/js-18.jpg" alt=""></p>
-<p>本部分我们就会对过去几年中我们使用的提升语法解析与编译时间的技巧进行阐述。</p>
-<h3 id="代码缓存"><a href="#代码缓存" class="headerlink" title="代码缓存"></a>代码缓存</h3><p><img src="/images/javascript/js-19.png" alt=""></p>
-<p>Chrome 42 开始引入了所谓的代码缓存的概念，为我们提供了一种存放编译后的代码副本的机制，从而当用户二次访问该页面时可以避免脚本抓取、解析与编译这些步骤。除以之外，我们还发现在重复访问的时候这种机制还能避免 40% 左右的编译时间，这里我会深入介绍一些内容：</p>
-<ul>
-<li><p>代码缓存会对于那些在 72 小时之内重复执行的脚本起作用。</p>
-</li>
-<li><p>对于 Service Worker 中的脚本，代码缓存同样对 72 小时之内的脚本起作用。</p>
-</li>
-<li><p>对于利用 Service Worker 缓存在 Cache Storage 中的脚本，代码缓存能在脚本首次执行的时候起作用。</p>
-</li>
-</ul>
-<p>总而言之，对于主动缓存的 JavaScript 代码，最多在第三次调用的时候其能够跳过语法分析与编译的步骤。我们可以通过<code>chrome://flags/#v8-cache-strategies-for-cache-storage</code>来查看其中的差异，也可以设置 <code>js-flags=profile-deserialization</code> 运行 Chrome 来查看代码是否加载自代码缓存。不过需要注意的是，代码缓存机制仅会缓存那些经过编译的代码，主要是指那些顶层的往往用于设置全局变量的代码。而对于类似于函数定义这样懒编译的代码并不会被缓存，不过 IIFE 同样被包含在了 V8 中，因此这些函数也是可以被缓存的。</p>
-<h3 id="Script-Streaming"><a href="#Script-Streaming" class="headerlink" title="Script Streaming"></a>Script Streaming</h3><p><a href="https://blog.chromium.org/2015/03/new-javascript-techniques-for-rapid.html" target="_blank" rel="external">Script Streaming</a>允许在后台线程中对异步脚本执行解析操作，可以对于页面加载时间有大概 10% 的提升。上文也提到过，这个机制同样会对同步脚本起作用。</p>
-<p><img src="/images/javascript/js-20.png" alt=""></p>
-<p>这个特性倒是第一次提及，因此 V8 会允许所有的脚本，即使阻塞型的<code>&lt;script src=&#39;&#39;&gt;</code>脚本也可以由后台线程进行解析。不过缺陷就是目前仅有一个 streaming 后台线程存在，<br>因此我们建议首先解析大的、关键性的脚本。在实践中，我们建议将<code>&lt;script defer&gt;</code>添加到<code>&lt;head&gt;</code>块内，这样浏览器引擎就能够尽早地发现需要解析的脚本，然后将其分配给后台线程进行处理。我们也可以查看 DevTools Timeline 来确定脚本是否被后台解析，特别是当你存在某个关键性脚本需要解析的时候，更需要确定该脚本是由 streaming 线程解析的。</p>
-<p><img src="/images/javascript/js-21.png" alt=""></p>
-<h3 id="语法解析-amp-编译优化"><a href="#语法解析-amp-编译优化" class="headerlink" title="语法解析 &amp; 编译优化"></a>语法解析 &amp; 编译优化</h3><p>我们同样致力于打造更轻量级、更快的解析器，目前 V8 主线程中最大的瓶颈在于所谓的非线性解析消耗。譬如我们有如下的代码片：</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">(<span class="function"><span class="keyword">function</span> (<span class="params">global, module</span>) </span>&#123; … &#125;)(<span class="keyword">this</span>, <span class="function"><span class="keyword">function</span> <span class="title">module</span>(<span class="params"></span>) </span>&#123; my functions &#125;)</div></pre></td></tr></table></figure>
-<p>V8 并不知道我们编译主脚本的时候是否需要module这个模块，因此我们会暂时放弃编译它。而当我们打算编译module时，我们需要重分析所有的内部函数。这也就是所谓的 V8 解析时间非线性的原因，任何一个处于 N 层深度的函数都有可能被重新分析 N 次。V8 已经能够在首次编译的时候搜集所有内部函数的信息，因此在未来的编译过程中 V8 会忽略所有的内部函数。对于上面这种module形式的函数会是很大的性能提升，建议阅读<a href="https://docs.google.com/presentation/d/1214p4CFjsF-NY4z9in0GEcJtjbyVQgU0A-UqEvovzCs/edit#slide=id.p" target="_blank" rel="external">The V8 Parser(s) — Design, Challenges, and Parsing JavaScript Better</a>来获取更多内容。V8 同样在寻找合适的分流机制以保证启动时能在后台线程中执行 JavaScript 编译过程。</p>
-<h3 id="预编译-JavaScript？"><a href="#预编译-JavaScript？" class="headerlink" title="预编译 JavaScript？"></a>预编译 JavaScript？</h3><p>每隔几年就有人提出引擎应该提供一些处理预编译脚本的机制，换言之，开发者可以使用构建工具或者其他服务端工具将脚本转化为字节码，然后浏览器直接运行这些字节码即可。从我个人观点来看，直接传送字节码意味着更大的包体，势必会增加加载时间；并且我们需要去对代码进行签名以保证能够安全运行。目前我们对于 V8 的定位是尽可能地避免上文所说的内部重分析以提高启动时间，而预编译则会带来额外的风险。不过我们欢迎大家一起来讨论这个问题，虽然 V8 目前专注于提升编译效率以及推广利用 Service Worker 缓存脚本代码来提升启动效率。我们在 BlinkOn7 上与 Facebook 以及 Akamai 也讨论过预编译相关内容点击预览。</p>
-<h3 id="Optimize-JS-优化"><a href="#Optimize-JS-优化" class="headerlink" title="Optimize JS 优化"></a>Optimize JS 优化</h3><p>类似于 V8 这样的 JavaScript 引擎在进行完整的解析之前会对脚本中的大部分函数进行预解析，这主要是考虑到大部分页面中包含的 JavaScript 函数并不会立刻被执行。</p>
-<p><img src="/images/javascript/js-22.png" alt=""></p>
-<p>预编译能够通过只处理那些浏览器运行所需要的最小函数集合来提升启动时间，不过这种机制在 IIFE 面前却反而降低了效率。尽管引擎希望避免对这些函数进行预处理，但是远不如optimize-js这样的库有作用。optimize-js 会在引擎之前对于脚本进行处理，对于那些立即执行的函数插入圆括号从而保证更快速地执行。这种预处理对于 Browserify, Webpack 生成包体这样包含了大量即刻执行的小模块起到了非常不错的优化效果。尽管这种小技巧并非 V8 所希望使用的，但是在当前阶段不得不引入相应的优化机制。</p>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>启动阶段的性能至关重要，缓慢的解析、编译与执行时间可能成为你网页性能的瓶颈所在。我们应该评估页面在这个阶段的时间占比并且选择合适的方式来优化。我们也会继续致力于提升 V8 的启动性能，尽我所能！</p>
-<h2 id="延伸阅读"><a href="#延伸阅读" class="headerlink" title="延伸阅读"></a>延伸阅读</h2><ul>
-<li><p><a href="https://www.youtube.com/watch?v=RWLzUnESylc" target="_blank" rel="external">Planning for Performance</a></p>
-</li>
-<li><p><a href="https://twitter.com/MSEdgeDev/status/819985530775404544" target="_blank" rel="external">Solving the Web Performance Crisis by Nolan Lawson</a></p>
-</li>
-<li><p><a href="https://timkadlec.com/2014/09/js-parse-and-execution-time/" target="_blank" rel="external">JS Parse and Execution Time</a></p>
-</li>
-<li><p><a href="http://carlos.bueno.org/2010/02/measuring-javascript-parse-and-load.html" target="_blank" rel="external">Measuring Javascript Parse and Load</a></p>
-</li>
-<li><p><a href="https://www.safaribooksonline.com/library/view/velocity-conference-new/9781491900406/part78.html" target="_blank" rel="external">Unpacking the Black Box: Benchmarking JS Parsing and Execution on Mobile Devices</a> (<a href="https://speakerdeck.com/desp/unpacking-the-black-box-benchmarking-js-parsing-and-execution-on-mobile-devices" target="_blank" rel="external">slides</a>)</p>
-</li>
-<li><p><a href="https://aerotwist.com/blog/when-everything-is-important-nothing-is/" target="_blank" rel="external">When everything’s important, nothing is!</a></p>
-</li>
-<li><p><a href="http://benediktmeurer.de/2016/12/16/the-truth-about-traditional-javascript-benchmarks/" target="_blank" rel="external">The truth about traditional JavaScript benchmarks</a></p>
-</li>
-<li><p><a href="http://stackoverflow.com/questions/1096907/do-browsers-parse-javascript-on-every-page-load/" target="_blank" rel="external">Do Browsers Parse JavaScript On Every Page Load</a></p>
-</li>
-</ul>
-<p>转自：<a href="https://segmentfault.com/a/1190000008340139#articleHeader10" target="_blank" rel="external">https://segmentfault.com/a/1190000008340139#articleHeader10</a></p>
 ]]></content>
     </entry>
     
@@ -2138,72 +2045,6 @@ $ npm install -D webpack webpack-dev-server</code></p>
 <p>详细的<code>calc</code>使用方法可以查看：<a href="http://thenewcode.com/953/Layout-Math-with-CSS-Understanding-calc" target="_blank" rel="external">Layout Math with CSS: Understanding calc</a></p>
 <p>这种解决方案跟<code>flexbox</code>一样有许多缺点：当代浏览器能很好的支持该方案，但是在早期的浏览器还是还是需要浏览器前缀，并且不支持IE 8</p>
 <figure class="highlight css"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="selector-class">.center</span> <span class="selector-tag">img</span> &#123;</div><div class="line">  <span class="attribute">width</span>: <span class="number">40%</span>;</div><div class="line">  <span class="attribute">height</span>: auto;</div><div class="line">  <span class="attribute">top</span>: <span class="built_in">calc</span>(50% - 20%);</div><div class="line">  <span class="attribute">left</span>: <span class="built_in">calc</span>(50% - 20%);</div><div class="line">&#125;</div></pre></td></tr></table></figure>]]></content>
-    </entry>
-    
-    <entry>
-      <title><![CDATA[ES6 - 入门]]></title>
-      <url>https://lucius0.github.io/2016/08/28//archivers/ecmascript6-introduction/</url>
-      <content type="html"><![CDATA[<h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><p>ES6系列文章是在拜读阮一峰老师的《ES6标准入门》所做下的笔记，其github地址<strong><a href="https://github.com/ruanyf/es6tutorial" target="_blank" rel="external">《es6tutorial》</a></strong>，之后会在该系列文章继续添加在工作上遇到的问题或者看到比较好的关于ES6的文章。</p>
-<p>ES6在ES5的基础上添加的新特性，在此<strong><a href="http://es6-features.org/" target="_blank" rel="external">es6-features</a></strong>可以参考，当做自己的一手API资料。</p>
-<p>ECMAScript 6是在2015年发布的，也叫ECMAScript 2015。ECMAScript 6的发布，使得javascript的开发，越来越规范，也越来越方便。当然，较大的修改以及新功能的加入会导致兼容性的问题产生，因此会保留一些目前来看不是很成熟的设想到下一个版本，也就是ES7。</p>
-<p>对于浏览器，支持ES6的情况可以查看<strong><a href="http://kangax.github.io/es5-compat-table/es6/" target="_blank" rel="external">http://kangax.github.io/es5-compat-table/es6/</a></strong>。NodeJs是Javascript的服务器运行环境，对ES6的支持比浏览器要高。阮一峰老师写了一个<strong><a href="https://github.com/ruanyf/es-checker" target="_blank" rel="external">ES-Checker</a></strong>，用来检查各种运行环境对ES6的支持情况。</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">$ npm install -g es-checker</div><div class="line">$ es-checker</div><div class="line"></div><div class="line">=========================================</div><div class="line">Passes <span class="number">29</span> feature Detections</div><div class="line">Your runtime supports <span class="number">69</span>% <span class="keyword">of</span> ECMAScript <span class="number">6</span></div><div class="line">=========================================</div></pre></td></tr></table></figure>
-<h2 id="转码器"><a href="#转码器" class="headerlink" title="转码器"></a>转码器</h2><p><strong><a href="https://babeljs.io/" target="_blank" rel="external">Babel</a></strong>是用于ES6转码器，可以将ES6转为ES5代码，从而兼容现有环境。在上文的<strong><a href="http://es6-features.org/" target="_blank" rel="external">es6-features</a></strong>，也有罗列出基本上的转换。</p>
-<ul>
-<li><p><strong>配置文件</strong><code>.babelrc</code></p>
-<p>  <code>.babelrc</code>是存放在项目的根目录下，使用Babel就是要配置该文件。该文件是用来设置转码规则和插件的，格式如下</p>
-</li>
-</ul>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">	"presets": [], // 设定转码规则</div><div class="line">	"plugins": []</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>官方规则集</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"># ES2015转码规则</div><div class="line">$ npm install --save-dev babel-preset-es2015</div><div class="line"></div><div class="line"># react转码规则</div><div class="line">$ npm install --save-dev babel-preset-react</div><div class="line"></div><div class="line"># ES7不同阶段语法提案的转码规则（共有4个阶段），选装一个</div><div class="line">$ npm install --save-dev babel-preset-stage-0</div><div class="line">$ npm install --save-dev babel-preset-stage-1</div><div class="line">$ npm install --save-dev babel-preset-stage-2</div><div class="line">$ npm install --save-dev babel-preset-stage-3</div></pre></td></tr></table></figure>
-<p>添加了规则之后的<code>.babelrc</code></p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">    <span class="attr">"presets"</span>: [</div><div class="line">      <span class="string">"es2015"</span>,</div><div class="line">      <span class="string">"react"</span>,</div><div class="line">      <span class="string">"stage-2"</span></div><div class="line">    ],</div><div class="line">    <span class="attr">"plugins"</span>: []</div><div class="line">  &#125;</div></pre></td></tr></table></figure>
-<p><strong>注意：</strong>Babel工具跟模块的使用，必须写好<code>.babelrc</code></p>
-<ul>
-<li><p><strong>命令行工具 babel-cli</strong></p>
-<p>  安装</p>
-</li>
-</ul>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ npm install --global babel-cli</div></pre></td></tr></table></figure>
-<p>  基本使用方法</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"># 转码结果输出到标准输出</div><div class="line">$ babel example.js</div><div class="line"></div><div class="line"># 转码结果写入一个文件</div><div class="line"># --out-file 或 -o 参数指定输出文件</div><div class="line">$ babel example.js --out-file compiled.js</div><div class="line"># 或者</div><div class="line">$ babel example.js -o compiled.js</div><div class="line"></div><div class="line"># 整个目录转码</div><div class="line"># --out-dir 或 -d 参数指定输出目录</div><div class="line">$ babel src --out-dir lib</div><div class="line"># 或者</div><div class="line">$ babel src -d lib</div><div class="line"></div><div class="line"># -s 参数生成source map文件</div><div class="line">$ babel src -d lib -s</div></pre></td></tr></table></figure>
-<p>但是上面是在全局环境下安装的，也就是说项目假如有需要转换的话则需要安装Babel，那我们也可以采取在项目内安装<code>babel-cli</code>。</p>
-<p>安装</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ npm install --save-dev babel-cli</div></pre></td></tr></table></figure>
-<p>然后改写<code>package.json</code></p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">  // ...</div><div class="line">  "devDependencies": &#123;</div><div class="line">    "babel-cli": "^6.14.0"</div><div class="line">  &#125;,</div><div class="line">  "scripts": &#123;</div><div class="line">    "babel-build": "babel src -d lib"</div><div class="line">  &#125;,</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>执行</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ npm run babel-build</div></pre></td></tr></table></figure>
-<ul>
-<li><p><strong>babel-node：</strong>babel-cli自带的命令，提供了支持ES6的RELP环境；</p>
-</li>
-<li><p><strong>babel-register：</strong>模块改写<code>require</code>命令，为它加上钩子，每当<code>require</code>加载<code>js</code>、<code>jsx</code>、<code>es</code>、<code>es6</code>后缀文件，就会先用babel转码；</p>
-</li>
-<li><p><strong>babel-core：</strong>如若需要进行对Babel的API进行转码，可以使用<code>babel-core</code></p>
-</li>
-<li><p><strong>babel-polyfill：</strong>Babel默认只转换新的JavaScript句法(syntax)，不转换新的API，比如Iterator、Generator、Set、Maps、Proxy、Reflect、Symbol、Promise等全局对象，以及一些定义在全局对象上的方法（比如Object.assign）都不会转码。举例来说，ES6在Array对象上新增了Array.from方法。Babel就不会转码这个方法。如果想让这个方法运行，必须使用babel-polyfill，为当前环境提供一个垫片。</p>
-</li>
-</ul>
-<p>安装</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ npm install --save babel-polyfill</div></pre></td></tr></table></figure>
-<p>使用，在脚本头部，加入如下一行代码。</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> <span class="string">'babel-polyfill'</span>;</div><div class="line"><span class="comment">// 或者</span></div><div class="line"><span class="built_in">require</span>(<span class="string">'babel-polyfill'</span>);</div></pre></td></tr></table></figure>
-<p>Babel默认不转码的API非常多，详细清单可以查看babel-plugin-transform-runtime模块的<strong><a href="https://github.com/babel/babel/blob/master/packages/babel-plugin-transform-runtime/src/definitions.js" target="_blank" rel="external">definitions.js</a></strong>文件。</p>
-<p>除了在用<code>Babel-cli</code>将ES6转码，还可以在<code>node_modules/babel-core/</code>找到<code>babel</code>版本的<code>browser.js</code>嵌入项目网页，或者也可以使用<strong><a href="https://github.com/Daniel15/babel-standalone" target="_blank" rel="external">babel-standalone</a></strong>、<strong><a href="https://github.com/google/traceur-compiler" target="_blank" rel="external">Traceur</a></strong>嵌入网页，也可以使用在线转码平台<strong><a href="https://babeljs.io/repl/" target="_blank" rel="external">REPL在线编译器</a></strong>、<strong><a href="http://google.github.io/traceur-compiler/demo/repl.html#" target="_blank" rel="external">Traceur</a></strong>。</p>
-<h2 id="gulp-babel"><a href="#gulp-babel" class="headerlink" title="gulp-babel"></a>gulp-babel</h2><p>gulp的入门方法可以查看。</p>
-<p>gulp-babel可以跳转到</p>
-<h2 id="运行"><a href="#运行" class="headerlink" title="运行"></a>运行</h2><p>我是Windows操作系统，使用sublime text3来运行es6.</p>
-<p>首先安装<a href="http://nodejs.org/" target="_blank" rel="external">nodejs</a></p>
-<p>sublime text3 中打开<strong>tools -&gt; build system -&gt; new build system…</strong>，粘贴以下代码保存</p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">    <span class="attr">"cmd"</span>: [<span class="string">"node"</span>, <span class="string">"--use-strict"</span>, <span class="string">"--harmony"</span>, <span class="string">"$file"</span>],</div><div class="line">    <span class="attr">"selector"</span>: <span class="string">"source.js"</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p><strong>解释：</strong><code>node</code>是执行命令，而<code>--use-strict</code>跟<code>--harmony</code>则是执行参数，<code>$file</code>则是当前文件，如果不想要有es6特性，则只需要将配置文件改为以下的代码</p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">    <span class="attr">"cmd"</span>: [<span class="string">"node"</span>, <span class="string">"$file"</span>],</div><div class="line">    <span class="attr">"selector"</span>: <span class="string">"source.js"</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>使用：在sublime新建一个测试文件</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">let</span> a = <span class="number">1</span>;</div><div class="line"><span class="built_in">console</span>.log(a);</div></pre></td></tr></table></figure>
-<p><code>ctrl + b</code>就可以得到结果<code>1</code></p>
-<p>最后：ECMAScript当前的所有提案，可以在TC39的官方网站<strong><a href="https://github.com/tc39/ecma262" target="_blank" rel="external">https://github.com/tc39/ecma262</a></strong>查看。</p>
-]]></content>
     </entry>
     
     <entry>

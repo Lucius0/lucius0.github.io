@@ -1724,122 +1724,6 @@
     </entry>
     
     <entry>
-      <title><![CDATA[Chrome渲染分析之Rendering工具使用(2)]]></title>
-      <url>https://lucius0.github.io/2016/11/16//archivers/chrome-rendering-tools-2/</url>
-      <content type="html"><![CDATA[<h2 id="2-show-composited-layer-borders"><a href="#2-show-composited-layer-borders" class="headerlink" title="2.show composited layer borders"></a>2.show composited layer borders</h2><p><img src="/images/tools/tools-05.png" alt=""></p>
-<p>中文可翻译为：显示层的组合边界。</p>
-<p>我们知道，在页面最终是由多个“图层”渲染而成。勾上这个选项，页面上的“layer(层)”会加上一个黄色的边框显示出来，如下图的天猫首页头部所示：</p>
-<p><img src="/images/tools/tools-06.png" alt=""></p>
-<p>其中：</p>
-<ul>
-<li><p>黄色边框：用于显示页面上的layer</p>
-</li>
-<li><p>蓝色栅格线：表示的是分块，这些分块可以看作是比层更低一级的单位</p>
-</li>
-</ul>
-<p>当然，还有其他颜色的边框线，比如图片如果单独有个layer的话，边框线是蓝色的。</p>
-<p><strong>使用这个工具，可以查看当前页面的layer情况，更好的发现页面不需要的layer将之清除。</strong></p>
-<h3 id="layer存在的意义"><a href="#layer存在的意义" class="headerlink" title="layer存在的意义"></a>layer存在的意义</h3><p>在弄明白这个问题之前，我们需要先了解一个dom元素最终是如何转变为我们屏幕上可视的图像。在概念上讲，可简单的分为四个步骤：</p>
-<p>获取 DOM 并将其分割为多个层<br>将每个层独立的绘制进位图中<br>将层作为纹理上传至 GPU<br>复合多个层来生成最终的屏幕图像。<br>可以将这个过程理解为设计师的Photoshop文件。在ps源文件里，一个图像是由若干个图层相互叠加而展示出来的。分成多个图层的好处就是每个图层相对独立，修改方便，对单个图层的修改不会影响到页面上的其他图层。</p>
-<p>基于photoshop的图层理念来理解web端的层，那么就很容易理解了。layer存在的意义在于：<strong>用最小的代价来改变某个页面元素。</strong></p>
-<p>我们可以将某个css动画或某个js交互效果把它抽离到一个单独的渲染层，这样可以加快渲染的效率。</p>
-<h3 id="如何创建layer"><a href="#如何创建layer" class="headerlink" title="如何创建layer"></a>如何创建layer</h3><ul>
-<li><p>3D 或透视变换(perspective transform) CSS 属性</p>
-</li>
-<li><p>使用加速视频解码的<code>&lt;video&gt;</code>元素</p>
-</li>
-<li><p>拥有 3D (WebGL) 上下文或加速的 2D 上下文的<code>&lt;canvas&gt;</code>元素</p>
-</li>
-<li><p>混合插件(如 Flash)</p>
-</li>
-<li><p>对自己的 opacity 做 CSS 动画或使用一个动画 webkit 变换的元素</p>
-</li>
-<li><p>拥有加速 CSS 过滤器的元素</p>
-</li>
-<li><p>元素有一个包含复合层的后代节点(换句话说，就是一个元素拥有一个子元素，该子元素在自己的层里)</p>
-</li>
-<li><p>元素有一个 z-index 较低且包含一个复合层的兄弟元素(换句话说就是该元素在复合层上面渲染)，关于这点，更详细的实践可查看该<a href="http://mp.weixin.qq.com/s?__biz=MzA5NTM2MTEzNw==&amp;mid=379618526&amp;idx=1&amp;sn=bd7bc6f95f3344c3154a0e6868e7c100&amp;scene=1&amp;srcid=0922ACIoEGRX8TGvMlXLXi3I&amp;from=groupmessage&amp;isappinstalled=0#rd" target="_blank" rel="external">文章</a></p>
-</li>
-</ul>
-<p>在webkit内核的浏览器中，如果有上述情况，则会创建一个独立的layer。</p>
-<p>其中第一点是最常用的手段，比如我们有时候给一个css效果加上<code>transform: translateZ(0);</code>，目的就是为了创建一个独立的layer。</p>
-<p>另外还有另外一个css属性：<code>will-change</code>也能实现同样的效果。</p>
-<h3 id="layer-过多带来的问题"><a href="#layer-过多带来的问题" class="headerlink" title="layer 过多带来的问题"></a>layer 过多带来的问题</h3><p>还是拿photoshop来做比喻，一个ps文件如果有非常多的图层，那么这个文件肯定是非常大的。那对于web端也是一样，创建一个新的渲染层，它得消耗额外的内存和管理资源。当在内存资源有限的设备，比如手机上，由于过多的渲染层来带的开销而对页面渲染性能产生的影响，甚至远远超过了它在性能改善上带来的好处。</p>
-<p>举个栗子，我们在天猫首页上加入css：<code>* {-webkit-transform: translateZ(0);}</code>。 然后使用timeline可以看到，天猫的渲染耗时非常严重。</p>
-<p><img src="/images/tools/tools-07.png" alt=""></p>
-<p>其影响的是页面渲染的最后一个环节：<code>Composite Layers</code>。</p>
-<p>那么，一个合理的策略是：<strong>当且仅当需要的时候才为元素创建渲染层。</strong></p>
-<h3 id="更直观的查看页面layer"><a href="#更直观的查看页面layer" class="headerlink" title="更直观的查看页面layer"></a>更直观的查看页面layer</h3><p>除了rendering 里提供的<code>show composited layer borders</code>选项外，还有一个更为直观的3d图像展示：</p>
-<p>先选中<code>timeline</code>的某一帧，然后选择下面的<code>layer</code>标签tab，在右侧的区域就可以看到整个页面的3d图层了。</p>
-<p><img src="/images/tools/tools-08.png" alt=""></p>
-<p>在这个视图中，你可以对这一帧中的所有渲染层进行扫描、缩放等操作，同时还能看到每个渲染层被创建的原因。</p>
-<h3 id="扩展阅读"><a href="#扩展阅读" class="headerlink" title="扩展阅读"></a>扩展阅读</h3><ul>
-<li><p><a href="https://developers.google.com/web/fundamentals/performance/rendering/stick-to-compositor-only-properties-and-manage-layer-count" target="_blank" rel="external">https://developers.google.com/web/fundamentals/performance/rendering/stick-to-compositor-only-properties-and-manage-layer-count</a></p>
-</li>
-<li><p><a href="http://www.html5rocks.com/en/tutorials/speed/layers/" target="_blank" rel="external">http://www.html5rocks.com/en/tutorials/speed/layers/</a></p>
-</li>
-<li><p><a href="https://developer.chrome.com/devtools/docs/rendering-settings" target="_blank" rel="external">https://developer.chrome.com/devtools/docs/rendering-settings</a></p>
-</li>
-</ul>
-<h2 id="show-FPS-meter"><a href="#show-FPS-meter" class="headerlink" title="show FPS meter"></a>show FPS meter</h2><p><strong>show fps meter</strong>可以理解为显示FPS帧频/帧数。开启这个选项后，右上角会实时显示当前页面的FPS。</p>
-<p>先简单科普一下啥是FPS。FPS全称叫 Frames Per Second (每秒帧数)。帧数越高，动画显示的越流畅。一般的液晶显示器的刷新频率也就是 60HZ。也就是说，<strong>要想页面上的交互效果及动画流畅。那么FPS稳定在60左右，是最佳的体验</strong>。。据悉 ios上的交互效果都是60FPS呢。</p>
-<p>记得以前做Flash游戏的时候，FPS帧数是游戏流畅度的一个重要指标。在web端，道理也是一样。</p>
-<p>还记得我之前的文章提到<a href="http://www.ghugo.com/gone-in-60-frames-per-second/" target="_blank" rel="external">《web移动端性能调优及16ms优化》</a> 这里的16毫秒，实际就是 1000ms/60FPS = 16.6ms。 也就是一帧所花费的时间约是16毫秒。</p>
-<p>科普完毕，回到正题。chrome提供的<strong>show FPS meter</strong>选项，在我们制作测试页面交互及动画性能时非常有用。同时它也提供了当前页面的GPU占有率给我们。</p>
-<p><img src="/images/tools/tools-09.jpg" alt=""></p>
-<p><a href="http://www.ghugo.com/chrome-rendering-tools-2/" target="_blank" rel="external">原文链接</a></p>
-]]></content>
-    </entry>
-    
-    <entry>
-      <title><![CDATA[Chrome渲染分析之Rendering工具使用(1)]]></title>
-      <url>https://lucius0.github.io/2016/11/16//archivers/chrome-rendering-tools-1/</url>
-      <content type="html"><![CDATA[<p>页面的绘制时间（paint time）是每一个前端开发都需要关注的的重要指标，它决定了你的页面流畅程度。而如何去观察页面的绘制时间，找到性能瓶颈，可以借助Chrome的开发者工具。</p>
-<p>本文主要介绍Chrome渲染分析工具 Rendering。</p>
-<p><img src="/images/tools/tools-01.png" alt=""></p>
-<p>如上图，按F12调出开发者工具，然后按“ESC”调出Rendering界面。</p>
-<p>以上5个选项的意思如下：</p>
-<p>1、Show paint rectangles 显示绘制矩形</p>
-<p>2、Show composited layer borders 显示层的组合边界（注：蓝色的栅格表示的是分块）</p>
-<p>3、Show FPS meter 显示FPS帧频</p>
-<p>4、Enable continuous page repainting 开启持续绘制模式 并 检测页面绘制时间</p>
-<p>5、Show potential scroll bottlenecks 显示潜在的滚动瓶颈。</p>
-<p>OK，简单的翻译了下，估计这样看也不清楚是啥意思。下面来逐个讲解：</p>
-<p>由于时间及篇幅关系，本文分为几篇文章进行讲解。</p>
-<h2 id="1、Show-paint-rectangles"><a href="#1、Show-paint-rectangles" class="headerlink" title="1、Show paint rectangles"></a>1、Show paint rectangles</h2><p>开启 显示绘制矩形 这个选项，可以看到绿色的框（之前的版本都是红色的框，现在改绿色了，呵呵），这个绿色的框，表示页面正在绘制的区域，即是页面正在渲染，发生绘制操作的区域。 这是用来了解滚动时页面表现的第一个指示器。</p>
-<p>鼠标移到图片上，可以发现css3动画的位移，而css3动画的位移导致页面重绘，重绘的区域即是绿色框住的部分。细心的朋友可能会发现，这个绿色框住的部分，并不仅仅就是刚好那个div所在的区域，而涉及到周边的位置。发生这种情况的原因，是页面的重绘是个连带反应，会影响周边元素。</p>
-<p><img src="/images/tools/tools-02.png" alt=""></p>
-<p>开启这个选项之后，可以做一些常规的页面交互操作，如Slider切换，拍拍网左侧导航mouse over时效果，可以看到页面效果所影响的范围。</p>
-<p>再比如滚动页面，拍拍首页会出现一个返回顶部的按钮，<strong>滚动的时候，会发现返回顶部这个区域在不停的进行重绘，而返回顶部是<code>position:fixed</code>定位的。这也解释了为什么fixed定位是最耗性能的属性之一。</strong></p>
-<p><img src="/images/tools/tools-03.png" alt=""></p>
-<p>如果这个时候，我们给头部的再加个<code>position:fixed</code>，然后滚动页面时，会发现整个页面都几乎是绿色框住了，<strong>这主要是所有具有fixed定位的元素，在页面绘制时会处于同一个渲染层级上</strong>，一头一尾的fixed无疑会导致整个页面进行重绘，性能非常差。</p>
-<p><img src="/images/tools/tools-04.png" alt=""></p>
-<p>这里提到一个<strong>渲染层级</strong>的概念，webkit内核的浏览器在进行页面绘制、渲染并最终展示在浏览器窗口上，实际上就像是Photoshop上的图层，不同的图层进行叠加最后生成一个图片的过程。</p>
-<p>这个层的详细介绍，我下一篇文章会详细介绍，这里先卖个关子。</p>
-<p>回到之前的话题，既然绿色框住的部分表示页面重绘，那哪些操作会导致重绘呢？</p>
-<h3 id="影响页面重绘的因素"><a href="#影响页面重绘的因素" class="headerlink" title="影响页面重绘的因素"></a>影响页面重绘的因素</h3><p>主要有2大类：</p>
-<p>1、页面滚动</p>
-<p>2、互动操作</p>
-<p>  1).Dom节点被Javascript改变，导致Chrome重新计算页面的layout。</p>
-<p>  2).动画不定期更新。</p>
-<p>  3).用户交互，如hover导致页面某些元素页面样式的变化。</p>
-<p>  4).调整窗口大小 和 改变字体</p>
-<p>  5).内容变化，比如用户在input框中输入文字</p>
-<p>  6).激活 CSS 伪类，比如 :hover</p>
-<p>  7).计算 offsetWidth 和 offsetHeight 属性</p>
-<p>  8).增加或者移除样式表</p>
-<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>影响重绘的因素很多，这里列举了部分常见的操作，在前端开发的过程中。</p>
-<p><strong>1、应该尽量避免重绘，并且尽可能的使绘制区域最小，以提升页面性能。</strong></p>
-<p>就上面拍拍网的例子，一头一尾加上fixed定位导致整个页面重绘，是不可取的。也许你分析完后以后都不敢用fixed，但是可能在实际工作中这种情况无法避免（设计师或产品经理要求）。何东西都有它适用的地方，<strong>重要的是作为前端人员，你应该能够测量并知道你写的代码所带来的性能损耗及所造成的影响。</strong></p>
-<p><strong>2、同时避免组合触发</strong></p>
-<p>如滚动的时候同时执行hover效果操作，一个例子(<a href="https://dl.dropboxusercontent.com/u/2272348/codez/expensivescroll/demo.html" target="_blank" rel="external">Expensive Scrolls</a>)，在滚动的时候同时也有可能触发页面模块的hover效果，而hover效果用了<code>box-shadow</code>、<code>border-radius</code>等耗性能大的样式。从而可能导致丢帧现象。</p>
-<p>如何去优化：技巧在于滚动时，关闭模块的hover效果，然后设定一个计时器，时间到了再把hover打开。意思是我们保证在滚动时不去执行昂贵的互动事件重绘。当你停止动作一段时间后，我们再将动画开启。</p>
-<p>具体可参看这篇文章<a href="http://www.html5rocks.com/en/tutorials/speed/unnecessary-paints/" target="_blank" rel="external">《Avoiding Unnecessary Paints》</a></p>
-<p><a href="http://www.ghugo.com/chrome-rendering-tools-1/" target="_blank" rel="external">原文链接：Chrome渲染分析之Rendering工具使用(1)</a></p>
-]]></content>
-    </entry>
-    
-    <entry>
       <title><![CDATA[Flexbox与z-index]]></title>
       <url>https://lucius0.github.io/2016/11/13//archivers/flexbox-and-z-index/</url>
       <content type="html"><![CDATA[<p>原文链接： <a href="https://www.sitepoint.com/quick-tip-how-z-index-and-auto-margins-work-in-flexbox/" target="_blank" rel="external">https://www.sitepoint.com/quick-tip-how-z-index-and-auto-margins-work-in-flexbox/</a></p>
@@ -2521,8 +2405,8 @@ $ npm install -D webpack webpack-dev-server</code></p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> <span class="string">'babel-polyfill'</span>;</div><div class="line"><span class="comment">// 或者</span></div><div class="line"><span class="built_in">require</span>(<span class="string">'babel-polyfill'</span>);</div></pre></td></tr></table></figure>
 <p>Babel默认不转码的API非常多，详细清单可以查看babel-plugin-transform-runtime模块的<strong><a href="https://github.com/babel/babel/blob/master/packages/babel-plugin-transform-runtime/src/definitions.js" target="_blank" rel="external">definitions.js</a></strong>文件。</p>
 <p>除了在用<code>Babel-cli</code>将ES6转码，还可以在<code>node_modules/babel-core/</code>找到<code>babel</code>版本的<code>browser.js</code>嵌入项目网页，或者也可以使用<strong><a href="https://github.com/Daniel15/babel-standalone" target="_blank" rel="external">babel-standalone</a></strong>、<strong><a href="https://github.com/google/traceur-compiler" target="_blank" rel="external">Traceur</a></strong>嵌入网页，也可以使用在线转码平台<strong><a href="https://babeljs.io/repl/" target="_blank" rel="external">REPL在线编译器</a></strong>、<strong><a href="http://google.github.io/traceur-compiler/demo/repl.html#" target="_blank" rel="external">Traceur</a></strong>。</p>
-<h2 id="gulp-babel"><a href="#gulp-babel" class="headerlink" title="gulp-babel"></a>gulp-babel</h2><p>gulp的入门方法可以查看<a href="/2016/08/21//archivers/gulp-introduction/" title="《gulp之一 - 入门教程[转]》">《gulp之一 - 入门教程[转]》</a>。</p>
-<p>gulp-babel可以跳转到<a href="/2016/08/22//archivers/npm-and-gulp-collection_1/" title="《gulp-babel》">《gulp-babel》</a></p>
+<h2 id="gulp-babel"><a href="#gulp-babel" class="headerlink" title="gulp-babel"></a>gulp-babel</h2><p>gulp的入门方法可以查看。</p>
+<p>gulp-babel可以跳转到</p>
 <h2 id="运行"><a href="#运行" class="headerlink" title="运行"></a>运行</h2><p>我是Windows操作系统，使用sublime text3来运行es6.</p>
 <p>首先安装<a href="http://nodejs.org/" target="_blank" rel="external">nodejs</a></p>
 <p>sublime text3 中打开<strong>tools -&gt; build system -&gt; new build system…</strong>，粘贴以下代码保存</p>
@@ -2533,209 +2417,6 @@ $ npm install -D webpack webpack-dev-server</code></p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">let</span> a = <span class="number">1</span>;</div><div class="line"><span class="built_in">console</span>.log(a);</div></pre></td></tr></table></figure>
 <p><code>ctrl + b</code>就可以得到结果<code>1</code></p>
 <p>最后：ECMAScript当前的所有提案，可以在TC39的官方网站<strong><a href="https://github.com/tc39/ecma262" target="_blank" rel="external">https://github.com/tc39/ecma262</a></strong>查看。</p>
-]]></content>
-    </entry>
-    
-    <entry>
-      <title><![CDATA[npm&gulp常用插件(1)]]></title>
-      <url>https://lucius0.github.io/2016/08/22//archivers/npm-and-gulp-collection_1/</url>
-      <content type="html"><![CDATA[<p>这里收集了一些npm&amp;gulp常用的插件，以方便查找。</p>
-<ul>
-<li><p>gulp：<a href="http://gulpjs.com/" target="_blank" rel="external">http://gulpjs.com/</a></p>
-</li>
-<li><p>npm：<a href="https://www.npmjs.com" target="_blank" rel="external">https://www.npmjs.com</a></p>
-</li>
-</ul>
-<h2 id="rimraf"><a href="#rimraf" class="headerlink" title="rimraf"></a>rimraf</h2><p>这一款实际上不是gulp的插件，是npm的插件，只是因为在windows下生成的node_module路径名太长了导致无法正常删除，因此可以用npm安装这个插件</p>
-<blockquote>
-<p>官方描述：A deep deletion module for node (like rm -rf) </p>
-<p>简单点说，就是模拟unix或者linux下的rm -rf（强制删除命令）</p>
-</blockquote>
-<p>安装：<code>npm install -g rimraf</code></p>
-<p>使用：<code>rimraf node_modules</code></p>
-<h2 id="Browsersync"><a href="#Browsersync" class="headerlink" title="Browsersync"></a>Browsersync</h2><p>Browsersync能让浏览器实时、快速响应您的文件更改（html、js、css、sass、less等）并自动刷新页面。更重要的是 Browsersync可以同时在PC、平板、手机等设备下进项调试。您可以想象一下：“假设您的桌子上有pc、ipad、iphone、android等设备，同时打开了您需要调试的页面，当您使用browsersync后，您的任何一次代码保存，以上的设备都会同时显示您的改动”。无论您是前端还是后端工程师，使用它将提高您30%的工作效率。</p>
-<p>Browsersync中文网：<a href="http://www.browsersync.cn/" target="_blank" rel="external">http://www.browsersync.cn/</a></p>
-<p>安装：<code>npm install -g browser-sync</code> 或结合gulp <code>npm install --save-dev browser-sync</code></p>
-<p>使用：</p>
-<ul>
-<li>静态网站：<a href="http://www.browsersync.cn/example/packages/BrowsersyncExample.zip" target="_blank" rel="external">《事例包》</a>跟<a href="http://www.browsersync.cn/example/video/browsersync1.mp4" target="_blank" rel="external">《示例视频》</a></li>
-</ul>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// --files 路径是相对于运行该命令的项目（目录） </span></div><div class="line">browser-sync start --server --files <span class="string">"css/*.css"</span></div><div class="line"><span class="comment">// --files 路径是相对于运行该命令的项目（目录） </span></div><div class="line">browser-sync start --server --files <span class="string">"css/*.css, *.html"</span></div><div class="line"><span class="comment">// 如果你的文件层级比较深，您可以考虑使用 **（表示任意目录）匹配，任意目录下任意.css 或 .html文件。 </span></div><div class="line">browser-sync start --server --files <span class="string">"**/*.css, **/*.html"</span></div><div class="line"><span class="comment">// 监听css文件 </span></div><div class="line">browser-sync start --server --files <span class="string">"css/*.css"</span></div><div class="line"><span class="comment">// 监听css和html文件 </span></div><div class="line">browser-sync start --server --files <span class="string">"css/*.css, *.html"</span></div></pre></td></tr></table></figure>
-<ul>
-<li>动态网站：</li>
-</ul>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 主机名可以是ip或域名</span></div><div class="line">browser-sync start --proxy <span class="string">"主机名"</span> <span class="string">"css/*.css"</span></div></pre></td></tr></table></figure>
-<h2 id="JSHint-amp-amp-JSLint"><a href="#JSHint-amp-amp-JSLint" class="headerlink" title="JSHint &amp;&amp; JSLint"></a>JSHint &amp;&amp; JSLint</h2><p><strong>简介：</strong>无论是JSHint，还是JSLint，都是通过检查和分析JavaScript代码，将不符合编码规则的代码警告开发者。JSHint是在JSLint进行二次开发，实际上，两种插件一样都拥有成熟的社区，就算是用途以及原理，都是相同的。但我们要选哪一种呢？</p>
-<p><strong>区别：</strong></p>
-<ul>
-<li><p>JSLint检查规则较JSHint严格；</p>
-</li>
-<li><p>JSLint配置选项上比JSHint少；</p>
-</li>
-</ul>
-<ol>
-<li><p>JSLint：<a href="https://github.com/douglascrockford/JSLint" target="_blank" rel="external">JSLint</a>;</p>
-</li>
-<li><p>JSHint：<a href="https://github.com/spalger/gulp-jshint" target="_blank" rel="external">JSHint</a>;</p>
-</li>
-</ol>
-<p>这里介绍JSHint</p>
-<p>安装：<code>npm install jshint gulp-jshint --save-dev</code></p>
-<p>使用：</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">gulp.task(<span class="string">'lint'</span>, <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">  <span class="keyword">return</span> gulp.src(<span class="string">'./lib/*.js'</span>)</div><div class="line">    .pipe(jshint(&#123; <span class="attr">linter</span>: <span class="string">'some-jshint-module'</span> &#125;))</div><div class="line">    .pipe(...);</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
-<h2 id="gulp-babel"><a href="#gulp-babel" class="headerlink" title="gulp-babel"></a>gulp-babel</h2><ul>
-<li><p>git：<a href="https://github.com/babel/gulp-babel" target="_blank" rel="external">gulp-babel</a></p>
-</li>
-<li><p>npmjs:<a href="https://www.npmjs.com/package/gulp-babel" target="_blank" rel="external">gulp-babel</a></p>
-</li>
-</ul>
-<p>安装：<code>npm install --save-dev gulp-babel</code></p>
-<p>在使用<code>gulp-babel</code>之前，需要安装<code>babel-preset-es2015</code></p>
-<p>使用：</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">gulp.task(<span class="string">'babel'</span>, <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">	gulp.src(<span class="string">"./src/*.js"</span>)</div><div class="line">	    .pipe(babel(&#123;</div><div class="line">            <span class="attr">presets</span>: [<span class="string">'es2015'</span>]</div><div class="line">        &#125;))</div><div class="line">	    .pipe(gulp.dest(<span class="string">"./dist/"</span>));</div><div class="line">&#125;);</div></pre></td></tr></table></figure>]]></content>
-    </entry>
-    
-    <entry>
-      <title><![CDATA[gulp之一 - 入门教程[转]]]></title>
-      <url>https://lucius0.github.io/2016/08/21//archivers/gulp-introduction/</url>
-      <content type="html"><![CDATA[<h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>gulp是前端开发过程中对代码进行构建的工具，是自动化项目的构建利器；她不仅能对网站资源进行优化，而且在开发过程中很多重复的任务能够使用正确的工具自动完成；使用她，我们不仅可以很愉快的编写代码，而且大大提高我们的工作效率。</p>
-<p>gulp是基于Nodejs的自动任务运行器， 她能自动化地完成 javascript/coffee/sass/less/html/image/css 等文件的的测试、检查、合并、压缩、格式化、浏览器自动刷新、部署文件生成，并监听文件在改动后重复指定的这些步骤。在实现上，她借鉴了Unix操作系统的管道（pipe）思想，前一级的输出，直接变成后一级的输入，使得在操作上非常简单。通过本文，我们将学习如何使用Gulp来改变开发流程，从而使开发更加快速高效。</p>
-<p>gulp 和 grunt 非常类似，但相比于 grunt 的频繁 IO 操作，gulp 的流操作，能更快地更便捷地完成构建工作。</p>
-<p>本示例以gulp-less为例（将less编译成css的gulp插件）展示gulp的常规用法，只要我们学会使用一个gulp插件后，其他插件就差看看其帮助文档了。让我们一起来学习gulp吧！ ^_^</p>
-<p>gulp常用地址：</p>
-<ul>
-<li>gulp官方网址：<a href="http://gulpjs.com" target="_blank" rel="external">http://gulpjs.com</a></li>
-<li>gulp插件地址：<a href="http://gulpjs.com/plugins" target="_blank" rel="external">http://gulpjs.com/plugins</a></li>
-<li>gulp 官方API：<a href="https://github.com/gulpjs/gulp/blob/master/docs/API.md" target="_blank" rel="external">https://github.com/gulpjs/gulp/blob/master/docs/API.md</a></li>
-<li>gulp 中文API：<a href="http://www.ydcss.com/archives/424" target="_blank" rel="external">http://www.ydcss.com/archives/424</a></li>
-</ul>
-<p>在学习前，先谈谈大致使用gulp的步骤，给读者以初步的认识。首先当然是安装nodejs，通过nodejs的npm全局安装和项目安装gulp，其次在项目里安装所需要的gulp插件，然后新建gulp的配置文件gulpfile.js并写好配置信息（定义gulp任务），最后通过命令提示符运行gulp任务即可。</p>
-<p><strong>安装nodejs -&gt; 全局安装gulp -&gt; 项目安装gulp以及gulp插件 -&gt; 配置gulpfile.js -&gt; 运行任务</strong></p>
-<h2 id="安装nodejs"><a href="#安装nodejs" class="headerlink" title="安装nodejs"></a>安装nodejs</h2><ol>
-<li><p>说明：gulp是基于nodejs，理所当然需要安装nodejs；</p>
-</li>
-<li><p>安装：打开<a href="http://nodejs.org/" target="_blank" rel="external">nodejs官网</a>，点击硕大的绿色Download按钮，它会根据系统信息选择对应版本（.msi文件）。然后像安装QQ一样安装它就可以了（安装路径随意）。</p>
-</li>
-</ol>
-<h2 id="使用命令行"><a href="#使用命令行" class="headerlink" title="使用命令行"></a>使用命令行</h2><ol>
-<li><p>说明：什么是命令行？命令行在OSX是终端（Terminal），在windows是命令提示符（Command Prompt）；</p>
-</li>
-<li><p>注：之后操作都是在windows系统下；</p>
-</li>
-<li><p>简单介绍gulp在使用过程中常用命令，打开命令提示符执行下列命令（打开方式：window + r 输入cmd回车）：</p>
-</li>
-</ol>
-<ul>
-<li><p><strong>node -v</strong> 查看安装的nodejs版本，出现版本号，说明刚刚已正确安装nodejs。PS：未能出现版本号，请尝试注销电脑重试；</p>
-</li>
-<li><p><strong>npm -v</strong> 查看npm的版本号，npm是在安装nodejs时一同安装的nodejs包管理器，那它有什么用呢？稍后解释；</p>
-</li>
-<li><p><strong>cd</strong> 定位到目录，用法：cd + 路径 ；</p>
-</li>
-<li><p><strong>dir</strong> 列出文件列表；</p>
-</li>
-<li><p><strong>cls</strong> 清空命令提示符窗口内容。</p>
-</li>
-</ul>
-<p><img src="/images/gulp/gulp-01.png" alt=""></p>
-<h2 id="npm介绍"><a href="#npm介绍" class="headerlink" title="npm介绍"></a>npm介绍</h2><ol>
-<li><p>说明：npm（node package manager）nodejs的包管理器，用于node插件管理（包括安装、卸载、管理依赖等）；</p>
-</li>
-<li><p>使用npm安装插件：命令提示符执行<code>npm install &lt;name&gt; [-g] [--save-dev]</code>；</p>
-</li>
-</ol>
-<ul>
-<li><p><strong><name></name></strong>：node插件名称。例：<code>npm install gulp-less --save-dev</code></p>
-</li>
-<li><p><strong>-g</strong>：全局安装。将会安装在C:\Users\Administrator\AppData\Roaming\npm，并且写入系统环境变量；  非全局安装：将会安装在当前定位目录；  全局安装可以通过命令行在任何地方调用它，本地安装将安装在定位目录的node_modules文件夹下，通过require()调用；</p>
-</li>
-<li><p><strong>–save</strong>：将保存配置信息至package.json（package.json是nodejs项目配置文件）；</p>
-</li>
-<li><p><strong>-dev</strong>：保存至package.json的devDependencies节点，不指定-dev将保存至dependencies节点；一般保存在dependencies的像这些express/ejs/body-parser等等。</p>
-</li>
-<li><p>为什么要保存至package.json？因为node插件包相对来说非常庞大，所以不加入版本管理，将配置信息写入package.json并将其加入版本管理，其他开发者对应下载即可（命令提示符执行npm install，则会根据package.json下载所有需要的包，npm install –production只下载dependencies节点的包）。</p>
-</li>
-</ul>
-<ol>
-<li>使用npm卸载插件：<code>npm uninstall &lt;name&gt; [-g] [--save-dev]</code>  PS：不要直接删除本地插件包</li>
-</ol>
-<ul>
-<li><p>删除全部插件：<code>npm uninstall gulp-less gulp-uglify gulp-concat ……</code></p>
-</li>
-<li><p>借助rimraf：<code>npm install rimraf -g</code>  用法：<code>rimraf node_modules</code></p>
-</li>
-</ul>
-<ol>
-<li>使用npm更新插件：<code>npm update &lt;name&gt; [-g] [--save-dev]</code></li>
-</ol>
-<ul>
-<li>更新全部插件：<code>npm update [--save-dev]</code></li>
-</ul>
-<ol>
-<li><p>查看npm帮助：npm help</p>
-</li>
-<li><p>当前目录已安装插件：npm list</p>
-</li>
-</ol>
-<h2 id="选装cnpm"><a href="#选装cnpm" class="headerlink" title="选装cnpm"></a>选装cnpm</h2><ol>
-<li><p>说明：因为npm安装插件是从国外服务器下载，受网络影响大，可能出现异常，如果npm的服务器在中国就好了，所以我们乐于分享的淘宝团队干了这事。来自官网：“<strong>这是一个完整 npmjs.org 镜像，你可以用此代替官方版本(只读)，同步频率目前为 10分钟 一次以保证尽量与官方服务同步。</strong>”；</p>
-</li>
-<li><p>官方网址：<a href="http://npm.taobao.org/" target="_blank" rel="external">http://npm.taobao.org/</a></p>
-</li>
-<li><p>安装：命令提示符执行<code>npm install cnpm -g --registry=https://registry.npm.taobao.org；</code>注意：安装完后最好查看其版本号cnpm -v或关闭命令提示符重新打开，安装完直接使用有可能会出现错误；</p>
-</li>
-</ol>
-<p>注：cnpm跟npm用法完全一致，只是在执行命令时将npm改为cnpm（以下操作将以cnpm代替npm）。</p>
-<h2 id="全局安装gulp"><a href="#全局安装gulp" class="headerlink" title="全局安装gulp"></a>全局安装gulp</h2><ol>
-<li><p>说明：全局安装gulp目的是为了通过她执行gulp任务；</p>
-</li>
-<li><p>安装：命令提示符执行<code>cnpm install gulp -g</code>；</p>
-</li>
-<li><p>查看是否正确安装：命令提示符执行<code>gulp -v</code>，出现版本号即为正确安装。</p>
-</li>
-</ol>
-<h2 id="新建package-json文件"><a href="#新建package-json文件" class="headerlink" title="新建package.json文件"></a>新建package.json文件</h2><p>1.说明：package.json是基于nodejs项目必不可少的配置文件，它是存放在项目根目录的普通json文件；</p>
-<p>2.它是这样一个json文件<strong><font color="red">（注意：json文件内是不能写注释的，复制下列内容请删除注释）</font></strong>：</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">  "name": "test",   //项目名称（必须）</div><div class="line">  "version": "1.0.0",   //项目版本（必须）</div><div class="line">  "description": "This is for study gulp project !",   //项目描述（必须）</div><div class="line">  "homepage": "",   //项目主页</div><div class="line">  "repository": &#123;    //项目资源库</div><div class="line">    "type": "git",</div><div class="line">    "url": "https://git.oschina.net/xxxx"</div><div class="line">  &#125;,</div><div class="line">  "author": &#123;    //项目作者信息</div><div class="line">    "name": "name",</div><div class="line">    "email": "email"</div><div class="line">  &#125;,</div><div class="line">  "license": "ISC",    //项目许可协议</div><div class="line">  "devDependencies": &#123;    //项目依赖的插件</div><div class="line">    "gulp": "^3.8.11",</div><div class="line">    "gulp-less": "^3.0.0"</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>3.当然我们可以手动新建这个配置文件，但是作为一名有志青年，我们应该使用更为效率的方法：命令提示符执行<code>cnpm init</code></p>
-<p><img src="/images/gulp/gulp-02.png" alt=""></p>
-<p>4.查看package.json帮助文档，命令提示符执行<code>cnpm help package.json</code></p>
-<p>特别注意：参看<a href="http://www.zhihu.com/question/23004511" target="_blank" rel="external">http://www.zhihu.com/question/23004511</a> - package.json是一个普通json文件，所以不能添加任何注释。</p>
-<p>5.但当package.json里面有依赖了，我们可以使用命令行<code>cnpm install</code>安装依赖包的插件。</p>
-<h2 id="本地安装gulp插件"><a href="#本地安装gulp插件" class="headerlink" title="本地安装gulp插件"></a>本地安装gulp插件</h2><p>1.安装：定位目录命令后提示符执行<code>cnpm install --save-dev</code>；</p>
-<p>2.本示例以gulp-less为例（编译less文件），命令提示符执行<code>cnpm install gulp-less --save-dev</code>；</p>
-<p><img src="/images/gulp/gulp-03.png" alt=""></p>
-<p>3.将会安装在node_modules的gulp-less目录下，该目录下有一个gulp-less的使用帮助文档README.md；</p>
-<p>4.为了能正常使用，我们还得本地安装gulp：<code>cnpm install gulp --save-dev</code>；</p>
-<p>PS：细心的你可能会发现，我们全局安装了gulp，项目也安装了gulp，全局安装gulp是为了执行gulp任务，本地安装gulp则是为了调用gulp插件的功能。</p>
-<h2 id="新建gulpfile-js文件（重要）"><a href="#新建gulpfile-js文件（重要）" class="headerlink" title="新建gulpfile.js文件（重要）"></a>新建gulpfile.js文件（重要）</h2><p>1.说明：gulpfile.js是gulp项目的配置文件，是位于项目根目录的普通js文件（其实将gulpfile.js放入其他文件夹下亦可）。</p>
-<p>2.它大概是这样一个js文件（更多插件配置请<a href="http://www.ydcss.com/archives/tag/gulp" target="_blank" rel="external">查看这里</a>）：</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//导入工具包 require('node_modules里对应模块')</span></div><div class="line"><span class="keyword">var</span> gulp = <span class="built_in">require</span>(<span class="string">'gulp'</span>), <span class="comment">//本地安装gulp所用到的地方</span></div><div class="line">    less = <span class="built_in">require</span>(<span class="string">'gulp-less'</span>);</div><div class="line"> </div><div class="line"><span class="comment">//定义一个testLess任务（自定义任务名称）</span></div><div class="line">gulp.task(<span class="string">'testLess'</span>, <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</div><div class="line">    gulp.src(<span class="string">'src/less/index.less'</span>) <span class="comment">//该任务针对的文件</span></div><div class="line">        .pipe(less()) <span class="comment">//该任务调用的模块</span></div><div class="line">        .pipe(gulp.dest(<span class="string">'src/css'</span>)); <span class="comment">//将会在src/css下生成index.css</span></div><div class="line">&#125;);</div><div class="line"></div><div class="line"><span class="comment">//定义默认任务elseTask为其他任务，该示例没有定义elseTask任务</span></div><div class="line">gulp.task(<span class="string">'default'</span>,[<span class="string">'testLess'</span>, <span class="string">'elseTask'</span>]); </div><div class="line"> </div><div class="line"><span class="comment">//gulp.task(name[, deps], fn) 定义任务  name：任务名称 deps：依赖任务名称 fn：回调函数</span></div><div class="line"><span class="comment">//gulp.src(globs[, options]) 执行任务处理的文件  globs：处理的文件路径(字符串或者字符串数组)</span></div><div class="line"><span class="comment">//gulp.dest(path[, options]) 处理完后文件生成路径</span></div></pre></td></tr></table></figure>
-<h2 id="运行gulp"><a href="#运行gulp" class="headerlink" title="运行gulp"></a>运行gulp</h2><ol>
-<li><p>说明：命令提示符执行<code>gulp 任务名称</code>；</p>
-</li>
-<li><p>编译less：命令提示符执行<code>gulp testLess</code>；</p>
-</li>
-<li><p>当执行<code>gulp default</code>或<code>gulp</code>将会调用default任务里的所有任务[‘testLess’,’elseTask’]。</p>
-</li>
-</ol>
-<h2 id="使用webstorm运行gulp任务"><a href="#使用webstorm运行gulp任务" class="headerlink" title="使用webstorm运行gulp任务"></a>使用webstorm运行gulp任务</h2><ol>
-<li><p>说明：使用webstorm可视化运行gulp任务；</p>
-</li>
-<li><p>使用方法：将项目导入webstorm，右键gulpfile.js 选择”Show Gulp Tasks”打开Gulp窗口，若出现”No task found”，选择右键”Reload tasks”，双击运行即可。</p>
-</li>
-</ol>
-<p><img src="/images/gulp/gulp-04.png" alt=""></p>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><ol>
-<li>安装nodejs；</li>
-<li>新建package.json文件；</li>
-<li>全局和本地安装gulp；</li>
-<li>安装gulp插件；</li>
-<li>新建gulpfile.js文件；</li>
-<li>通过命令提示符运行gulp任务。</li>
-</ol>
-<p>转自：<strong><a href="http://www.ydcss.com/archives/18" target="_blank" rel="external">《gulp详细入门教程》</a></strong></p>
-<p>可参考文档：<strong><a href="https://markpop.github.io/2014/09/17/Gulp%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B/" target="_blank" rel="external">Gulp入门教程</a></strong></p>
 ]]></content>
     </entry>
     
@@ -3375,17 +3056,6 @@ $ npm install -D webpack webpack-dev-server</code></p>
     </entry>
     
     <entry>
-      <title><![CDATA[JavaScript之二 - 表达式]]></title>
-      <url>https://lucius0.github.io/2016/08/07//archivers/javascript-expression/</url>
-      <content type="html"><![CDATA[<h2 id="1-delete"><a href="#1-delete" class="headerlink" title="1. delete"></a>1. <strong>delete</strong></h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> obj = &#123;<span class="attr">x</span>:<span class="number">1</span>&#125;;</div><div class="line">obj.x; <span class="comment">// 1</span></div><div class="line"><span class="keyword">delete</span> obj.x;</div><div class="line">obj.x; <span class="comment">// undefined</span></div><div class="line"></div><div class="line"><span class="keyword">var</span> obj1 = &#123;&#125;;</div><div class="line"><span class="built_in">Object</span>.defineProperty(obj1, <span class="string">"x"</span>, &#123;</div><div class="line">	<span class="attr">configurable</span>: <span class="literal">false</span>, <span class="comment">// configurable为false表示该值无法删除</span></div><div class="line">	value: <span class="number">1</span></div><div class="line">&#125;);</div><div class="line"><span class="keyword">delete</span> obj1.x; <span class="comment">// false</span></div><div class="line">obj1.x; <span class="comment">// 1</span></div></pre></td></tr></table></figure>
-<h2 id="2-in"><a href="#2-in" class="headerlink" title="2. in"></a>2. <strong>in</strong></h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">window</span>.x = <span class="number">1</span>; <span class="comment">//全局变量</span></div><div class="line"><span class="string">"x"</span> <span class="keyword">in</span> <span class="built_in">window</span>; <span class="comment">// true</span></div></pre></td></tr></table></figure>
-<h2 id="3-new"><a href="#3-new" class="headerlink" title="3. new"></a>3. <strong>new</strong></h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">Foo</span>(<span class="params"></span>)</span>&#123;&#125;</div><div class="line">Foo.prototype.x = <span class="number">1</span>;</div><div class="line"><span class="keyword">var</span> obj = <span class="keyword">new</span> Foo();</div><div class="line">obj.x; <span class="comment">// 1</span></div><div class="line">obj.hasOwnProperty(<span class="string">"x"</span>); <span class="comment">// false</span></div><div class="line">obj.__proto__.hasOwnProperty(<span class="string">"x"</span>); <span class="comment">// true</span></div></pre></td></tr></table></figure>
-<h2 id="4-this"><a href="#4-this" class="headerlink" title="4. this"></a>4. <strong>this</strong></h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">this</span>; <span class="comment">// window</span></div><div class="line"><span class="keyword">var</span> obj = &#123;<span class="attr">fun</span>:<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123; <span class="keyword">return</span> <span class="keyword">this</span>; &#125;&#125;;</div><div class="line">obj.func(); <span class="comment">// obj</span></div></pre></td></tr></table></figure>
-<h2 id="5-void"><a href="#5-void" class="headerlink" title="5. void"></a>5. <strong>void</strong></h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">void</span> <span class="number">0</span>; <span class="comment">// undefined</span></div><div class="line"><span class="keyword">void</span> (<span class="number">0</span>); <span class="comment">// undefined</span></div></pre></td></tr></table></figure>
-]]></content>
-    </entry>
-    
-    <entry>
       <title><![CDATA[JavaScript之一 - 数据类型]]></title>
       <url>https://lucius0.github.io/2016/08/07//archivers/javascript-data-types/</url>
       <content type="html"><![CDATA[<p>以下笔记是观看<a href="http://www.imooc.com/view/277" target="_blank" rel="external">《深入浅出javascript》</a>所记下的。</p>
@@ -3423,6 +3093,17 @@ $ npm install -D webpack webpack-dev-server</code></p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">Object</span>.prototype.toString.apply([]); <span class="comment">// [object Array]</span></div><div class="line"><span class="built_in">Object</span>.prototype.toString.apply(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;&#125;); <span class="comment">// [object Function]</span></div><div class="line"><span class="built_in">Object</span>.prototype.toString.apply(<span class="literal">null</span>); <span class="comment">// [object Null]</span></div><div class="line"><span class="built_in">Object</span>.prototype.toString.apply(<span class="literal">undefined</span>); <span class="comment">// [object Undefined]</span></div></pre></td></tr></table></figure>
 <p> <strong>注意</strong>：IE/6/7/8 <code>Object.prototype.toString.apply(null); // [object Object]</code></p>
 <p> <strong>总结：</strong> typeof 适合基本类型及function检测，遇到null失效；Class通过{}.toString拿到，适合内置对象和基本类型，遇到null和undefined失效(IE 6/7/8返回[object Object])；instanceof适用自定义对象，也可以用来检测原生对象，在不同iframe和window间检测时失效。<br> <!-- ![](/images/javascript/JavaScript-data-types-01.png) --></p>
+]]></content>
+    </entry>
+    
+    <entry>
+      <title><![CDATA[JavaScript之二 - 表达式]]></title>
+      <url>https://lucius0.github.io/2016/08/07//archivers/javascript-expression/</url>
+      <content type="html"><![CDATA[<h2 id="1-delete"><a href="#1-delete" class="headerlink" title="1. delete"></a>1. <strong>delete</strong></h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> obj = &#123;<span class="attr">x</span>:<span class="number">1</span>&#125;;</div><div class="line">obj.x; <span class="comment">// 1</span></div><div class="line"><span class="keyword">delete</span> obj.x;</div><div class="line">obj.x; <span class="comment">// undefined</span></div><div class="line"></div><div class="line"><span class="keyword">var</span> obj1 = &#123;&#125;;</div><div class="line"><span class="built_in">Object</span>.defineProperty(obj1, <span class="string">"x"</span>, &#123;</div><div class="line">	<span class="attr">configurable</span>: <span class="literal">false</span>, <span class="comment">// configurable为false表示该值无法删除</span></div><div class="line">	value: <span class="number">1</span></div><div class="line">&#125;);</div><div class="line"><span class="keyword">delete</span> obj1.x; <span class="comment">// false</span></div><div class="line">obj1.x; <span class="comment">// 1</span></div></pre></td></tr></table></figure>
+<h2 id="2-in"><a href="#2-in" class="headerlink" title="2. in"></a>2. <strong>in</strong></h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">window</span>.x = <span class="number">1</span>; <span class="comment">//全局变量</span></div><div class="line"><span class="string">"x"</span> <span class="keyword">in</span> <span class="built_in">window</span>; <span class="comment">// true</span></div></pre></td></tr></table></figure>
+<h2 id="3-new"><a href="#3-new" class="headerlink" title="3. new"></a>3. <strong>new</strong></h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">Foo</span>(<span class="params"></span>)</span>&#123;&#125;</div><div class="line">Foo.prototype.x = <span class="number">1</span>;</div><div class="line"><span class="keyword">var</span> obj = <span class="keyword">new</span> Foo();</div><div class="line">obj.x; <span class="comment">// 1</span></div><div class="line">obj.hasOwnProperty(<span class="string">"x"</span>); <span class="comment">// false</span></div><div class="line">obj.__proto__.hasOwnProperty(<span class="string">"x"</span>); <span class="comment">// true</span></div></pre></td></tr></table></figure>
+<h2 id="4-this"><a href="#4-this" class="headerlink" title="4. this"></a>4. <strong>this</strong></h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">this</span>; <span class="comment">// window</span></div><div class="line"><span class="keyword">var</span> obj = &#123;<span class="attr">fun</span>:<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123; <span class="keyword">return</span> <span class="keyword">this</span>; &#125;&#125;;</div><div class="line">obj.func(); <span class="comment">// obj</span></div></pre></td></tr></table></figure>
+<h2 id="5-void"><a href="#5-void" class="headerlink" title="5. void"></a>5. <strong>void</strong></h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">void</span> <span class="number">0</span>; <span class="comment">// undefined</span></div><div class="line"><span class="keyword">void</span> (<span class="number">0</span>); <span class="comment">// undefined</span></div></pre></td></tr></table></figure>
 ]]></content>
     </entry>
     

@@ -1,5 +1,5 @@
 ---
-layout: post
+layout: false
 title:  "gulp之一 - 入门教程[转]"
 date:   2016-08-21
 categories: tools

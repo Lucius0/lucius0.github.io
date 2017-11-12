@@ -1,5 +1,5 @@
 ---
-layout: post
+layout: false
 title:  "npm&gulp常用插件(1)"
 date:   2016-08-22
 categories: tools

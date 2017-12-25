@@ -2191,7 +2191,11 @@ $ npm install -D webpack webpack-dev-server</code></p>
 <p>跟踪远程分支</p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ git checkout --track origin/test</div></pre></td></tr></table></figure>
 <p>推送远程分支</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ git push origin localBranch:remoteBranch</div></pre></td></tr></table></figure>]]></content>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ git push origin localBranch:remoteBranch</div></pre></td></tr></table></figure>
+<h2 id="15、Permission-denied-publickey"><a href="#15、Permission-denied-publickey" class="headerlink" title="15、Permission denied (publickey)"></a>15、Permission denied (publickey)</h2><p>今天要拉取一个新项目，发现了老是拉不成功，在<strong>gitlab</strong>成员权限检查了完全没问题，只能先试试重新生成key。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ ssh-keygen -t rsa -C <span class="string">"xxx@xxx.com"</span> -f ~<span class="regexp">/.ssh/</span>MyXXX</div></pre></td></tr></table></figure>
+<p>发现还是不行。后来查到了是因为新添加的key不能加入ssh，于是就试试下面的命令就发现好了。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ ssh-agent</div><div class="line">$ ssh-add ~<span class="regexp">/.ssh/</span>MyXXX</div></pre></td></tr></table></figure>]]></content>
     </entry>
     
     <entry>

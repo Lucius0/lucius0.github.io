@@ -4,6 +4,108 @@
   
     
     <entry>
+      <title><![CDATA[音视频学习-flv初认识]]></title>
+      <url>https://lucius0.github.io/2017/12/25//archivers/media-study-01/</url>
+      <content type="html"><![CDATA[<p>初次学习有关音视频这一块的开发，主要是基于 <strong><a href="https://github.com/Bilibili/flv.js" target="_blank" rel="external">flv.js</a></strong> 的学习。这一块的知识概念实在是太多太深了，所以本人是先在本地做记录，后面会整理慢慢地上传与各位分享，假如有地方说错，请勘误。谢谢指点。</p>
+<h2 id="什么是FLV？"><a href="#什么是FLV？" class="headerlink" title="什么是FLV？"></a>什么是FLV？</h2><blockquote>
+<p>Flash Video（简称FLV），是一种网络视频格式，用作串流媒体格式，它的出现有效地解决了视频文件导入Flash后，使导出的SWF文件体积庞大，不能在网络上有效使用等缺点。<br>一般FLV文件包在SWF PLAYER的壳里，并且FLV可以很好的保护原始地址，不容易被下载到，从而起到保护版权的作用。但还是有些视频格式转换软件将FLV转成一般的视频格式，如中国的软件格式工厂。随着视频网站的丰富，在2008年时这个格式已经非常普及，包括YouTube、NICONICO动画、Google Video、Yahoo! Video、MySpace，以及中国的优酷、酷6等大部分视频分享网站均采用这个格式。——- wiki百科</p>
+</blockquote>
+<h2 id="FLV的分类"><a href="#FLV的分类" class="headerlink" title="FLV的分类"></a>FLV的分类</h2><p>除了 flv（H264视频格式、AAC音频格式），还有 f4v，主要是为了突破 flv 的限制。 f4v 支持 H.264 视频格式之外，还支持 GIF、PNG 以及 JPEG；音频格式则有 AAC 以及 MP3 。<br><strong>PS：</strong> Adobe的规范中，UB 表示Unsigned Bit，UB(2)表示2个bit，UI 表示Unsigned Integer，UI24 表示24位整数，也就是3个Byte。</p>
+<h2 id="FLV的结构"><a href="#FLV的结构" class="headerlink" title="FLV的结构"></a>FLV的结构</h2><p>先看一下flv的一小片段，这是一份二进制文件。<br><figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="number">464</span>c <span class="number">5601</span> <span class="number">0500</span> <span class="number">0000</span> <span class="number">0900</span> <span class="number">0000</span> <span class="number">0012</span> <span class="number">0000</span></div><div class="line"><span class="number">3</span>f00 <span class="number">0000</span> <span class="number">0000</span> <span class="number">0000</span> <span class="number">0200</span> <span class="number">0</span>a6f <span class="number">6e4</span>d <span class="number">6574</span></div><div class="line"><span class="number">6144</span> <span class="number">6174</span> <span class="number">6108</span> <span class="number">0000</span> <span class="number">0002</span> <span class="number">0008</span> <span class="number">6475</span> <span class="number">7261</span></div><div class="line"><span class="number">7469</span> <span class="number">6</span>f6e <span class="number">0040</span> <span class="number">27</span>c8 b439 <span class="number">5810</span> <span class="number">6200</span> <span class="number">0</span>c76</div><div class="line"><span class="number">6964</span> <span class="number">656</span>f <span class="number">636</span>f <span class="number">6465</span> <span class="number">6369</span> <span class="number">6400</span> <span class="number">4000</span> <span class="number">0000</span></div><div class="line"><span class="number">0000</span> <span class="number">0000</span> <span class="number">0000</span> <span class="number">0900</span> <span class="number">0000</span> <span class="number">4</span>a08 <span class="number">0000</span> <span class="number">0400</span></div><div class="line"><span class="number">0000</span> <span class="number">0000</span> <span class="number">0000</span> af00 <span class="number">1208</span> <span class="number">0000</span> <span class="number">000</span>f <span class="number">0900</span></div><div class="line"><span class="number">0043</span> <span class="number">0000</span> <span class="number">0000</span> <span class="number">0000</span> <span class="number">0017</span> <span class="number">0000</span> <span class="number">0000</span> <span class="number">0142</span></div><div class="line"><span class="number">001</span>f <span class="number">0301</span> <span class="number">002</span>f <span class="number">6742</span> <span class="number">801</span>f <span class="number">9652</span> <span class="number">0283</span> f602</div><div class="line">a100 <span class="number">0003</span> <span class="number">0001</span> <span class="number">0000</span> <span class="number">0300</span> <span class="number">32e0</span> <span class="number">6003</span> <span class="number">0</span>d40</div><div class="line"><span class="number">0046</span> <span class="number">30</span>ff <span class="number">18e3</span> <span class="number">0300</span> <span class="number">186</span>a <span class="number">0002</span> <span class="number">3187</span> f8c7</div><div class="line"><span class="number">0</span>ed0 a152 <span class="number">4001</span> <span class="number">0004</span> <span class="number">68</span>cb <span class="number">8</span>d48 <span class="number">0000</span> <span class="number">004</span>e</div><div class="line"><span class="number">0900</span> <span class="number">0</span>d1c <span class="number">0000</span> <span class="number">0000</span> <span class="number">0000</span> <span class="number">0017</span> <span class="number">0100</span> <span class="number">029</span>d</div><div class="line"><span class="number">0000</span> <span class="number">0</span>d13 <span class="number">6588</span> <span class="number">8040</span> <span class="number">0</span>db1 <span class="number">185</span>c <span class="number">0008</span> <span class="number">2</span>d1f</div><div class="line"><span class="number">7893</span> de24 f789 f785 c2c4 f8a6 d3e2 <span class="number">43</span>fa</div><div class="line">f177 <span class="number">85</span>ea f377 a930 f991 ea7c <span class="number">4</span>f2a f0b9</div></pre></td></tr></table></figure></p>
+<p>它的结构图是这样的。<br><img src="http://ouazw12mz.bkt.clouddn.com/171225224159.png?imageslim" alt=""></p>
+<p>FLV Header自然时不用多说，上面的结构图都一目了然。重点讲下Flv Body下的Tag的三种类型。</p>
+<h3 id="Script-Tag"><a href="#Script-Tag" class="headerlink" title="Script Tag"></a>Script Tag</h3><p><strong>KEY</strong><br>1、第1个字节为AMF类型，一般有以下的类型：</p>
+<ul>
+<li>0 = Number</li>
+<li>1 = Boolean</li>
+<li>2 = String</li>
+<li>3 = Object</li>
+<li>4 = MovieClip (reserved, not supported)</li>
+<li>5 = Null</li>
+<li>6 = Undefined</li>
+<li>7 = Reference</li>
+<li>8 = ECMA array</li>
+<li>9 = Object end marker</li>
+<li>10 = Strict array</li>
+<li>11 = Date</li>
+<li>12 = Long string</li>
+</ul>
+<p>因此第一个Tag Data <code>onMetaData</code> 的类型为0x02。</p>
+<p>2、第2-3个字节表示标识字符串的长度，所以第一个为0x0000A。</p>
+<p>3、接着是为key的具体字符串，因此第一个为<code>onMetaData</code>。</p>
+<p><strong>Value</strong><br>1、紧接着后面则为ScriptTag的value值，第1个字节同样也是AMF类型，一般为0x08，表示ECMA Array。</p>
+<p>2、第2-5个字节表示数组元素的个数。</p>
+<p>3、后面即为各元素的封装，为一一对应的键值对，常见的MetaData如下：</p>
+<ul>
+<li>duration：时长</li>
+<li>width：视频宽度</li>
+<li>height：视频高度</li>
+<li>videodatarate：视频码率</li>
+<li>framerate：视频帧率</li>
+<li>videocodecid：视频编码方式</li>
+<li>audiosamplerate：音频采样率</li>
+<li>audiosamplesize：音频采样精度</li>
+<li>stereo：是否为立体声</li>
+<li>audiocodecid：音频编码方式</li>
+<li>filesize：文件大小</li>
+</ul>
+<p>4、最后用3个字节的固定值0000 09表示value值结束。</p>
+<h3 id="Audio-Tag"><a href="#Audio-Tag" class="headerlink" title="Audio Tag"></a>Audio Tag</h3><p>Audio Tag Data开始的第一个字节包含了音频数据的参数信息，第二个字节开始为音频流数据。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">--------------------------------------------------------------</div><div class="line">|                    音频参数(8bit)                 | 音频数据 |</div><div class="line">--------------------------------------------------------------</div><div class="line">|音频编码类型(4bit)| 采样率(2bit)|精度(1bit)|类型(1bit)|   数据  |</div><div class="line">--------------------------------------------------------------</div></pre></td></tr></table></figure>
+<p><strong>第1字节：</strong><br>1、前4位标识音频数据的格式，如：0x2表示的是MP3数据，当前合法的数值为0，1，2，3，4，5，6，7，8，9，10，11，14，15（7，8，14，15保留为内部使用）</p>
+<ul>
+<li>0：Linear PCM，platform endian</li>
+<li>1：ADPCM</li>
+<li>2：MP3</li>
+<li>3：Linear PCM，little endian</li>
+<li>4：Nellymoser 16-kHz mono</li>
+<li>5：Nellymoser 8-kHz mono</li>
+<li>6：Nellymoser</li>
+<li>7：G.711 A-law logarithmic PCM</li>
+<li>8：G.711 mu-law logarithmic PCM</li>
+<li>9：reserved</li>
+<li>10：AAC</li>
+<li>14：MP3 8-Khz</li>
+<li>15：Device-specific sound</li>
+</ul>
+<p>2、第5，6位bit表示采样率（AAC，总是3）</p>
+<ul>
+<li>0：5.5kHz</li>
+<li>1：11KHz</li>
+<li>2：22 kHz</li>
+<li>3：44 kHz</li>
+</ul>
+<p>3、第7位，采样精度， 0为8bits， 1为16bits</p>
+<p>4、第8位，音频类型，mono=0， stereo=1</p>
+<h3 id="Video-Tag"><a href="#Video-Tag" class="headerlink" title="Video Tag"></a>Video Tag</h3><p>和音频一样，其第一个字节包含的是视频参数信息，第二字节开始为视频流数据。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">--------------------------------------------------------------</div><div class="line">|                    视频参数(8bit)                 | 视频数据 |</div><div class="line">--------------------------------------------------------------</div><div class="line">|     标识帧类型(4bit)     |    标识视频编码(4bit)     |   数据  |</div><div class="line">--------------------------------------------------------------</div></pre></td></tr></table></figure></p>
+<p><strong>第1字节：</strong></p>
+<ul>
+<li>前4位标识帧类型。<ul>
+<li>1：keyframe (for AVC, a seekable frame)； </li>
+<li>2：inter frame (for AVC, a nonseekable frame)； </li>
+<li>3：disposable inter frame (H.263 only)； </li>
+<li>4：generated keyframe (reserved for server use only)； </li>
+<li>5：video info/command frame</li>
+</ul>
+</li>
+<li>后4位标识视频编码。<ul>
+<li>1：JPEG (currently unused) ；</li>
+<li>2：Sorenson H.263； </li>
+<li>3：Screen video； </li>
+<li>4：On2 VP6； </li>
+<li>5：On2 VP6 with alpha channel；</li>
+<li>6：Screen video version 2； </li>
+<li>7：AVC</li>
+</ul>
+</li>
+</ul>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><ul>
+<li><a href="https://www.adobe.com/content/dam/acom/en/devnet/flv/video_file_format_spec_v10.pdf" target="_blank" rel="external">video_file_format_spec</a></li>
+</ul>
+]]></content>
+    </entry>
+    
+    <entry>
       <title><![CDATA[关于html元素的尺寸以及位置的问题]]></title>
       <url>https://lucius0.github.io/2017/06/01//archivers/html-element-dimensions-and-position/</url>
       <content type="html"><![CDATA[<h2 id="Position-pageX-clientX-screenX-offsetX"><a href="#Position-pageX-clientX-screenX-offsetX" class="headerlink" title="Position (pageX/clientX/screenX/offsetX)"></a>Position (pageX/clientX/screenX/offsetX)</h2><h3 id="pageX-pageY"><a href="#pageX-pageY" class="headerlink" title="pageX/pageY"></a>pageX/pageY</h3><p>鼠标相对于整个页面的X/Y坐标。如页宽1000px，页高10000px，那么pageX最大值则为1000px，pageY则为10000px。</p>
@@ -2655,17 +2757,6 @@ $ npm install -D webpack webpack-dev-server</code></p>
     </entry>
     
     <entry>
-      <title><![CDATA[JavaScript之二 - 表达式]]></title>
-      <url>https://lucius0.github.io/2016/08/07//archivers/javascript-expression/</url>
-      <content type="html"><![CDATA[<h2 id="1-delete"><a href="#1-delete" class="headerlink" title="1. delete"></a>1. <strong>delete</strong></h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> obj = &#123;<span class="attr">x</span>:<span class="number">1</span>&#125;;</div><div class="line">obj.x; <span class="comment">// 1</span></div><div class="line"><span class="keyword">delete</span> obj.x;</div><div class="line">obj.x; <span class="comment">// undefined</span></div><div class="line"></div><div class="line"><span class="keyword">var</span> obj1 = &#123;&#125;;</div><div class="line"><span class="built_in">Object</span>.defineProperty(obj1, <span class="string">"x"</span>, &#123;</div><div class="line">	<span class="attr">configurable</span>: <span class="literal">false</span>, <span class="comment">// configurable为false表示该值无法删除</span></div><div class="line">	value: <span class="number">1</span></div><div class="line">&#125;);</div><div class="line"><span class="keyword">delete</span> obj1.x; <span class="comment">// false</span></div><div class="line">obj1.x; <span class="comment">// 1</span></div></pre></td></tr></table></figure>
-<h2 id="2-in"><a href="#2-in" class="headerlink" title="2. in"></a>2. <strong>in</strong></h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">window</span>.x = <span class="number">1</span>; <span class="comment">//全局变量</span></div><div class="line"><span class="string">"x"</span> <span class="keyword">in</span> <span class="built_in">window</span>; <span class="comment">// true</span></div></pre></td></tr></table></figure>
-<h2 id="3-new"><a href="#3-new" class="headerlink" title="3. new"></a>3. <strong>new</strong></h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">Foo</span>(<span class="params"></span>)</span>&#123;&#125;</div><div class="line">Foo.prototype.x = <span class="number">1</span>;</div><div class="line"><span class="keyword">var</span> obj = <span class="keyword">new</span> Foo();</div><div class="line">obj.x; <span class="comment">// 1</span></div><div class="line">obj.hasOwnProperty(<span class="string">"x"</span>); <span class="comment">// false</span></div><div class="line">obj.__proto__.hasOwnProperty(<span class="string">"x"</span>); <span class="comment">// true</span></div></pre></td></tr></table></figure>
-<h2 id="4-this"><a href="#4-this" class="headerlink" title="4. this"></a>4. <strong>this</strong></h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">this</span>; <span class="comment">// window</span></div><div class="line"><span class="keyword">var</span> obj = &#123;<span class="attr">fun</span>:<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123; <span class="keyword">return</span> <span class="keyword">this</span>; &#125;&#125;;</div><div class="line">obj.func(); <span class="comment">// obj</span></div></pre></td></tr></table></figure>
-<h2 id="5-void"><a href="#5-void" class="headerlink" title="5. void"></a>5. <strong>void</strong></h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">void</span> <span class="number">0</span>; <span class="comment">// undefined</span></div><div class="line"><span class="keyword">void</span> (<span class="number">0</span>); <span class="comment">// undefined</span></div></pre></td></tr></table></figure>
-]]></content>
-    </entry>
-    
-    <entry>
       <title><![CDATA[JavaScript之一 - 数据类型]]></title>
       <url>https://lucius0.github.io/2016/08/07//archivers/javascript-data-types/</url>
       <content type="html"><![CDATA[<p>以下笔记是观看<a href="http://www.imooc.com/view/277" target="_blank" rel="external">《深入浅出javascript》</a>所记下的。</p>
@@ -2703,6 +2794,17 @@ $ npm install -D webpack webpack-dev-server</code></p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">Object</span>.prototype.toString.apply([]); <span class="comment">// [object Array]</span></div><div class="line"><span class="built_in">Object</span>.prototype.toString.apply(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;&#125;); <span class="comment">// [object Function]</span></div><div class="line"><span class="built_in">Object</span>.prototype.toString.apply(<span class="literal">null</span>); <span class="comment">// [object Null]</span></div><div class="line"><span class="built_in">Object</span>.prototype.toString.apply(<span class="literal">undefined</span>); <span class="comment">// [object Undefined]</span></div></pre></td></tr></table></figure>
 <p> <strong>注意</strong>：IE/6/7/8 <code>Object.prototype.toString.apply(null); // [object Object]</code></p>
 <p> <strong>总结：</strong> typeof 适合基本类型及function检测，遇到null失效；Class通过{}.toString拿到，适合内置对象和基本类型，遇到null和undefined失效(IE 6/7/8返回[object Object])；instanceof适用自定义对象，也可以用来检测原生对象，在不同iframe和window间检测时失效。<br> <!-- ![](/images/javascript/JavaScript-data-types-01.png) --></p>
+]]></content>
+    </entry>
+    
+    <entry>
+      <title><![CDATA[JavaScript之二 - 表达式]]></title>
+      <url>https://lucius0.github.io/2016/08/07//archivers/javascript-expression/</url>
+      <content type="html"><![CDATA[<h2 id="1-delete"><a href="#1-delete" class="headerlink" title="1. delete"></a>1. <strong>delete</strong></h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> obj = &#123;<span class="attr">x</span>:<span class="number">1</span>&#125;;</div><div class="line">obj.x; <span class="comment">// 1</span></div><div class="line"><span class="keyword">delete</span> obj.x;</div><div class="line">obj.x; <span class="comment">// undefined</span></div><div class="line"></div><div class="line"><span class="keyword">var</span> obj1 = &#123;&#125;;</div><div class="line"><span class="built_in">Object</span>.defineProperty(obj1, <span class="string">"x"</span>, &#123;</div><div class="line">	<span class="attr">configurable</span>: <span class="literal">false</span>, <span class="comment">// configurable为false表示该值无法删除</span></div><div class="line">	value: <span class="number">1</span></div><div class="line">&#125;);</div><div class="line"><span class="keyword">delete</span> obj1.x; <span class="comment">// false</span></div><div class="line">obj1.x; <span class="comment">// 1</span></div></pre></td></tr></table></figure>
+<h2 id="2-in"><a href="#2-in" class="headerlink" title="2. in"></a>2. <strong>in</strong></h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">window</span>.x = <span class="number">1</span>; <span class="comment">//全局变量</span></div><div class="line"><span class="string">"x"</span> <span class="keyword">in</span> <span class="built_in">window</span>; <span class="comment">// true</span></div></pre></td></tr></table></figure>
+<h2 id="3-new"><a href="#3-new" class="headerlink" title="3. new"></a>3. <strong>new</strong></h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">Foo</span>(<span class="params"></span>)</span>&#123;&#125;</div><div class="line">Foo.prototype.x = <span class="number">1</span>;</div><div class="line"><span class="keyword">var</span> obj = <span class="keyword">new</span> Foo();</div><div class="line">obj.x; <span class="comment">// 1</span></div><div class="line">obj.hasOwnProperty(<span class="string">"x"</span>); <span class="comment">// false</span></div><div class="line">obj.__proto__.hasOwnProperty(<span class="string">"x"</span>); <span class="comment">// true</span></div></pre></td></tr></table></figure>
+<h2 id="4-this"><a href="#4-this" class="headerlink" title="4. this"></a>4. <strong>this</strong></h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">this</span>; <span class="comment">// window</span></div><div class="line"><span class="keyword">var</span> obj = &#123;<span class="attr">fun</span>:<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123; <span class="keyword">return</span> <span class="keyword">this</span>; &#125;&#125;;</div><div class="line">obj.func(); <span class="comment">// obj</span></div></pre></td></tr></table></figure>
+<h2 id="5-void"><a href="#5-void" class="headerlink" title="5. void"></a>5. <strong>void</strong></h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">void</span> <span class="number">0</span>; <span class="comment">// undefined</span></div><div class="line"><span class="keyword">void</span> (<span class="number">0</span>); <span class="comment">// undefined</span></div></pre></td></tr></table></figure>
 ]]></content>
     </entry>
     

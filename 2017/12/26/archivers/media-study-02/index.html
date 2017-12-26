@@ -66,7 +66,7 @@
 <link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="javascript," />
+  <meta name="keywords" content="media," />
 
 
 
@@ -82,21 +82,19 @@
 
 
 
-<meta name="description" content="Position (pageX/clientX/screenX/offsetX)pageX/pageY鼠标相对于整个页面的X/Y坐标。如页宽1000px，页高10000px，那么pageX最大值则为1000px，pageY则为10000px。
-clientX/clientY事件发生时鼠标在浏览器内容区域的X/Y坐标（不包含滚动条）。即可视区域。(放大缩小也会改变这个值，而且值得注意的是，IE的最小">
+<meta name="description" content="初次学习有关音视频这一块的开发，主要是基于 flv.js 的学习。这一块的知识概念实在是太多太深了，所以本人是先在本地做记录，后面会整理慢慢地上传与各位分享，假如有地方说错，请勘误。谢谢指点。
+解析FLV-Header(9bytes)在上一篇中我们得知，FLV-Header其实很好解析，无非就是读出前面的9个字节。123456789101112const data = new Uint8Array">
 <meta property="og:type" content="article">
-<meta property="og:title" content="关于html元素的尺寸以及位置的问题">
-<meta property="og:url" content="https://lucius0.github.io/2017/06/01//archivers/html-element-dimensions-and-position/index.html">
+<meta property="og:title" content="音视频学习-flv之ScriptTag">
+<meta property="og:url" content="https://lucius0.github.io/2017/12/26//archivers/media-study-02/index.html">
 <meta property="og:site_name" content="Lucius's Blog">
-<meta property="og:description" content="Position (pageX/clientX/screenX/offsetX)pageX/pageY鼠标相对于整个页面的X/Y坐标。如页宽1000px，页高10000px，那么pageX最大值则为1000px，pageY则为10000px。
-clientX/clientY事件发生时鼠标在浏览器内容区域的X/Y坐标（不包含滚动条）。即可视区域。(放大缩小也会改变这个值，而且值得注意的是，IE的最小">
-<meta property="og:image" content="https://lucius0.github.io/images/javascript/js-29.png">
-<meta property="og:updated_time" content="2017-06-02T03:25:36.000Z">
+<meta property="og:description" content="初次学习有关音视频这一块的开发，主要是基于 flv.js 的学习。这一块的知识概念实在是太多太深了，所以本人是先在本地做记录，后面会整理慢慢地上传与各位分享，假如有地方说错，请勘误。谢谢指点。
+解析FLV-Header(9bytes)在上一篇中我们得知，FLV-Header其实很好解析，无非就是读出前面的9个字节。123456789101112const data = new Uint8Array">
+<meta property="og:updated_time" content="2017-12-26T14:18:35.720Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="关于html元素的尺寸以及位置的问题">
-<meta name="twitter:description" content="Position (pageX/clientX/screenX/offsetX)pageX/pageY鼠标相对于整个页面的X/Y坐标。如页宽1000px，页高10000px，那么pageX最大值则为1000px，pageY则为10000px。
-clientX/clientY事件发生时鼠标在浏览器内容区域的X/Y坐标（不包含滚动条）。即可视区域。(放大缩小也会改变这个值，而且值得注意的是，IE的最小">
-<meta name="twitter:image" content="https://lucius0.github.io/images/javascript/js-29.png">
+<meta name="twitter:title" content="音视频学习-flv之ScriptTag">
+<meta name="twitter:description" content="初次学习有关音视频这一块的开发，主要是基于 flv.js 的学习。这一块的知识概念实在是太多太深了，所以本人是先在本地做记录，后面会整理慢慢地上传与各位分享，假如有地方说错，请勘误。谢谢指点。
+解析FLV-Header(9bytes)在上一篇中我们得知，FLV-Header其实很好解析，无非就是读出前面的9个字节。123456789101112const data = new Uint8Array">
 
 
 
@@ -124,13 +122,13 @@ clientX/clientY事件发生时鼠标在浏览器内容区域的X/Y坐标（不�
 
 
 
-  <link rel="canonical" href="https://lucius0.github.io/2017/06/01//archivers/html-element-dimensions-and-position/"/>
+  <link rel="canonical" href="https://lucius0.github.io/2017/12/26//archivers/media-study-02/"/>
 
 
 
 
 
-  <title> 关于html元素的尺寸以及位置的问题 | Lucius's Blog </title>
+  <title> 音视频学习-flv之ScriptTag | Lucius's Blog </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -284,7 +282,7 @@ clientX/clientY事件发生时鼠标在浏览器内容区域的X/Y坐标（不�
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="https://lucius0.github.io/2017/06/01/archivers/html-element-dimensions-and-position/">
+  <link itemprop="mainEntityOfPage" href="https://lucius0.github.io/2017/12/26/archivers/media-study-02/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="Lucius">
@@ -308,7 +306,7 @@ clientX/clientY事件发生时鼠标在浏览器内容区域的X/Y坐标（不�
             
             
               
-                关于html元素的尺寸以及位置的问题
+                音视频学习-flv之ScriptTag
               
             
           </h1>
@@ -325,8 +323,8 @@ clientX/clientY事件发生时鼠标在浏览器内容区域的X/Y坐标（不�
                 <i class="fa fa-calendar-check-o"></i>
               </span>
               <span class="post-meta-item-text">更新于</span>
-              <time title="更新于" itemprop="dateModified" datetime="2017-06-02T11:25:36+08:00">
-                2017-06-02
+              <time title="更新于" itemprop="dateModified" datetime="2017-12-26T22:18:35+08:00">
+                2017-12-26
               </time>
             
           </span>
@@ -340,8 +338,8 @@ clientX/clientY事件发生时鼠标在浏览器内容区域的X/Y坐标（不�
               <span class="post-meta-item-text">分类于</span>
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/front-end/" itemprop="url" rel="index">
-                    <span itemprop="name">front-end</span>
+                  <a href="/categories/media/" itemprop="url" rel="index">
+                    <span itemprop="name">media</span>
                   </a>
                 </span>
 
@@ -355,8 +353,8 @@ clientX/clientY事件发生时鼠标在浏览器内容区域的X/Y坐标（不�
             
               <span class="post-comments-count">
                 <span class="post-meta-divider">|</span>
-                <a href="/2017/06/01/archivers/html-element-dimensions-and-position/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/06/01//archivers/html-element-dimensions-and-position/" itemprop="commentCount"></span>
+                <a href="/2017/12/26/archivers/media-study-02/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/12/26//archivers/media-study-02/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -382,43 +380,28 @@ clientX/clientY事件发生时鼠标在浏览器内容区域的X/Y坐标（不�
       
 
       
-        <h2 id="Position-pageX-clientX-screenX-offsetX"><a href="#Position-pageX-clientX-screenX-offsetX" class="headerlink" title="Position (pageX/clientX/screenX/offsetX)"></a>Position (pageX/clientX/screenX/offsetX)</h2><h3 id="pageX-pageY"><a href="#pageX-pageY" class="headerlink" title="pageX/pageY"></a>pageX/pageY</h3><p>鼠标相对于整个页面的X/Y坐标。如页宽1000px，页高10000px，那么pageX最大值则为1000px，pageY则为10000px。</p>
-<h3 id="clientX-clientY"><a href="#clientX-clientY" class="headerlink" title="clientX/clientY"></a>clientX/clientY</h3><p>事件发生时鼠标在浏览器内容区域的X/Y坐标（不包含滚动条）。即可视区域。(放大缩小也会改变这个值，而且值得注意的是，IE的最小值不是0而是2）</p>
-<h3 id="screenX-screenY"><a href="#screenX-screenY" class="headerlink" title="screenX/screenY"></a>screenX/screenY</h3><p>鼠标在屏幕上的坐标。screenX,screenY的最大值不会超过屏幕分辨率。</p>
-<h3 id="offsetX-offsetY"><a href="#offsetX-offsetY" class="headerlink" title="offsetX/offsetY"></a>offsetX/offsetY</h3><p>鼠标相对于事件源元素（srcElement）的X,Y坐标，只有IE事件有这2个属性，标准事件没有对应的属性。</p>
-<h2 id="Dimensions-offsetWidth-clientWidth-scrollWidth"><a href="#Dimensions-offsetWidth-clientWidth-scrollWidth" class="headerlink" title="Dimensions(offsetWidth/clientWidth/scrollWidth)"></a>Dimensions(offsetWidth/clientWidth/scrollWidth)</h2><p>CSS 盒模型是相当复杂的，特别是在滚动内容的时候。当浏览器使用你给的css样式来绘制盒模型时，那如果你只有css，用js来确定所有的尺寸则不是那么的直截了当。</p>
-<p>这就是为什么为了你的使用方便，每个元素都拥有6种DOM属性：<code>offsetWidth</code>，<code>offsetHeight</code>，<code>clientWidth</code>，<code>clientHeight</code>，<code>scrollWidth</code>，<code>scrollHeight</code>。这些表示当前视图布局的属性是不能修改的，即只读，并且还全都是整数（因此    很有可能会受到四舍五入的误差影响）</p>
-<p>让我们来详细的了解一下：</p>
+        <p>初次学习有关音视频这一块的开发，主要是基于 <strong><a href="https://github.com/Bilibili/flv.js" target="_blank" rel="external">flv.js</a></strong> 的学习。这一块的知识概念实在是太多太深了，所以本人是先在本地做记录，后面会整理慢慢地上传与各位分享，假如有地方说错，请勘误。谢谢指点。</p>
+<h2 id="解析FLV-Header-9bytes"><a href="#解析FLV-Header-9bytes" class="headerlink" title="解析FLV-Header(9bytes)"></a>解析FLV-Header(9bytes)</h2><p>在<a href="https://lucius0.github.io/2017/12/25/archivers/media-study-01/">上一篇</a>中我们得知，FLV-Header其实很好解析，无非就是读出前面的9个字节。<br><figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">const</span> data = <span class="keyword">new</span> <span class="built_in">Uint8Array</span>(buffer);<span class="comment">// buffer为读取的二进制缓冲区</span></div><div class="line">data[<span class="number">0</span>]; <span class="comment">// 0x46</span></div><div class="line">data[<span class="number">1</span>]; <span class="comment">// 0x4C</span></div><div class="line">data[<span class="number">2</span>]; <span class="comment">// 0x56</span></div><div class="line">data[<span class="number">3</span>]; <span class="comment">// 0x01</span></div><div class="line"><span class="comment">// 以上四个字节就是前文提到的，分别代表类型标志符'F','L','V'及版本号0x01</span></div><div class="line"></div><div class="line">data[<span class="number">4</span>]; <span class="comment">// 0x05表示音视频tag都有，0x04表示只有音频tag，0x01表示只有视频tag</span></div><div class="line"><span class="comment">// hasAudio = (data[4] &amp; 0x04 === 4)</span></div><div class="line"><span class="comment">// hasVideo = (data[4] &amp; 0x01 === 1)</span></div><div class="line"></div><div class="line">data.slice(<span class="number">5</span>, <span class="number">5</span> + <span class="number">4</span>); <span class="comment">// 0x09，四个字节，HeaderSize</span></div></pre></td></tr></table></figure></p>
+<h2 id="解析FLV-Body"><a href="#解析FLV-Body" class="headerlink" title="解析FLV-Body"></a>解析FLV-Body</h2><h3 id="Previous-Tag-Size-0"><a href="#Previous-Tag-Size-0" class="headerlink" title="Previous Tag Size #0"></a>Previous Tag Size #0</h3><p>因为第一个<code>Previous Tag Size</code>基本上都是固定的，占用4个字节，可以略过的了。关于大端小端：<a href="http://imweb.io/topic/57fe263b2a25000c315a3d8a" target="_blank" rel="external">网络序？本地序？傻傻分不清楚</a>，而flv是采取大端序的。<br><figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">let</span> v = <span class="keyword">new</span> <span class="built_in">DataView</span>(chunk, offset);</div><div class="line"><span class="keyword">let</span> prevTagSize0 = v.getUint32(<span class="number">0</span>, !le); <span class="comment">// 4个字节，并且以大端读取</span></div><div class="line"><span class="comment">// v.getUint32(0, false); // 也是表示以大端读取</span></div></pre></td></tr></table></figure></p>
+<h3 id="Tag-1-ScriptTag"><a href="#Tag-1-ScriptTag" class="headerlink" title="Tag # 1( ScriptTag )"></a>Tag # 1( ScriptTag )</h3><p><strong>Tag Header(11bytes)</strong><br><figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 11bytes</span></div><div class="line"><span class="keyword">let</span> tagType = v.getUint8(<span class="number">0</span>); <span class="comment">// 从第1个字节读取一个8位无符号整数</span></div><div class="line"><span class="keyword">let</span> dataSize = v.getUint32(<span class="number">0</span>, !le) &amp; <span class="number">0x00FFFFFF</span>; <span class="comment">// 大端读取，截取3个字节</span></div><div class="line"><span class="comment">// 获取 timestamp</span></div><div class="line"><span class="keyword">let</span> ts2 = v.getUint8(<span class="number">4</span>);</div><div class="line"><span class="keyword">let</span> ts1 = v.getUint8(<span class="number">5</span>);</div><div class="line"><span class="keyword">let</span> ts0 = v.getUint8(<span class="number">6</span>);</div><div class="line"><span class="keyword">let</span> ts3 = v.getUint8(<span class="number">7</span>);</div><div class="line"><span class="keyword">let</span> timestamp = ts0 | (ts1 &lt;&lt; <span class="number">8</span>) | (ts2 &lt;&lt; <span class="number">16</span>) | (ts3 &lt;&lt; <span class="number">24</span>);</div><div class="line"><span class="comment">// 获取streamId</span></div><div class="line"><span class="keyword">let</span> streamId = v.getUint32(<span class="number">7</span>, !le) &amp; <span class="number">0x00FFFFFF</span>;</div></pre></td></tr></table></figure></p>
+<p><strong>Tag Body</strong><br><figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 上面的字节总共为11个字节，所以offset + 11，应该为24</span></div><div class="line"><span class="keyword">let</span> dataOffset = offset + <span class="number">11</span>;</div></pre></td></tr></table></figure></p>
+<p>根据上一篇的结构图，这里就是ScriptTag的Tag Data中的key，关于<a href="https://en.wikipedia.org/wiki/Action_Message_Format" target="_blank" rel="external">AMF</a><br><figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// AMFParser</span></div><div class="line"><span class="keyword">let</span> name = AMF.parseValue(arrayBuffer, dataOffset, dataSize);</div><div class="line">------------------------ parseValue ------------------------</div><div class="line"><span class="comment">// 由上一篇知道，第1个字节type为AMF String类型，0x02</span></div><div class="line"><span class="keyword">let</span> offset = <span class="number">1</span>; </div><div class="line"><span class="keyword">let</span> type = v.getUint8(<span class="number">0</span>);</div><div class="line"><span class="keyword">let</span> value;</div><div class="line"><span class="keyword">let</span> amfstr = AMF.parseString(arrayBuffer, dataOffset + <span class="number">1</span>, dataSize - <span class="number">1</span>); <span class="comment">// 除去type长度</span></div><div class="line">value = amfstr.data;</div><div class="line">offset += amfstr.size;</div><div class="line">------------------------ parseString ------------------------</div><div class="line"><span class="keyword">let</span> v = <span class="keyword">new</span> <span class="built_in">DataView</span>(arrayBuffer, dataOffset, dataSize);</div><div class="line"><span class="comment">// 长度占据2个字节，0x0000A</span></div><div class="line"><span class="comment">// 大于且包括两个字节一般都需要指定存储方式</span></div><div class="line"><span class="keyword">let</span> length = v.getUint16(<span class="number">0</span>, !le); </div><div class="line"><span class="comment">// 读取key值，第一个为onMetaData。</span></div><div class="line">str = decodeUTF8(<span class="keyword">new</span> <span class="built_in">Uint8Array</span>(arrayBuffer, dataOffset + <span class="number">2</span>, length));</div></pre></td></tr></table></figure></p>
+<p>ScriptTag的Tag Data中的value。<br><figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">let</span> value = AMF.parseValue(arrayBuffer, dataOffset + name.size, dataSize - name.size);</div><div class="line">------------------------ parseValue ------------------------</div><div class="line"><span class="keyword">let</span> offset = <span class="number">1</span>; </div><div class="line"><span class="keyword">let</span> value = &#123;&#125;;</div><div class="line"><span class="keyword">let</span> type = v.getUint8(<span class="number">0</span>); <span class="comment">// 0x08，ECMA array</span></div><div class="line">offset += <span class="number">4</span>;  <span class="comment">// ECMAArrayLength(UI32)</span></div><div class="line"><span class="keyword">let</span> terminal = <span class="number">0</span>;  <span class="comment">// workaround for malformed MixedArrays which has missing ScriptDataObjectEnd（作者已经说明了，这一块是为了解决有些混合数组缺失ScriptDataObjectEnd数据，因此在下面对terminal以及offset作了兼容处理)</span></div><div class="line"><span class="comment">// 上一篇已经说了，最后的3个字节固定值0x000009表示value值结束</span></div><div class="line"><span class="keyword">if</span> ((v.getUint32(dataSize - <span class="number">4</span>, !le) &amp; <span class="number">0x00FFFFFF</span>) === <span class="number">9</span>) &#123;</div><div class="line">    terminal = <span class="number">3</span>;</div><div class="line">&#125;</div><div class="line"><span class="comment">// 8 === type(UI8) + ECMAArrayLength(UI32) + ScriptDataVariableEnd(UI24)</span></div><div class="line"><span class="keyword">while</span> (offset &lt; dataSize - <span class="number">8</span>) &#123;  </div><div class="line">    <span class="keyword">let</span> amfvar = AMF.parseVariable(arrayBuffer, dataOffset + offset, dataSize - offset - terminal);</div><div class="line">    <span class="keyword">if</span> (amfvar.objectEnd) <span class="keyword">break</span>;</div><div class="line">    value[amfvar.data.name] = amfvar.data.value;</div><div class="line">    offset += amfvar.size;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>后面即为各元素的封装，为一一对应的键值对，常见的MetaData如下：</p>
 <ul>
-<li><p><code>offsetWidth</code>，<code>offsetHeight</code>：该视图盒子包含了所有的边界大小(border)。假如该元素为<code>display: block</code>，我们还可以通过<code>width/height</code> + <code>paddings</code> + <code>borders</code>来计算出该元素的<code>offsetWidth/offsetHeight</code>。</p>
-</li>
-<li><p><code>clientWidth</code>，<code>clientHeight</code>：该盒子的视觉部分，不仅不包括边界(border)，同时也不包括滚动条(scroll)，但是包括内边距(padding)。不能直接的通过CSS来计算，依赖于系统滚动条的尺寸。</p>
-</li>
-<li><p><code>scrollWidth</code>，<code>scrollHeight</code>：所有盒子的内容尺寸，包括溢出滚动区域的隐藏部分。同样也是不能直接通过CSS计算，依赖于内容部分。</p>
-</li>
+<li>duration：时长</li>
+<li>width：视频宽度</li>
+<li>height：视频高度</li>
+<li>videodatarate：视频码率</li>
+<li>framerate：视频帧率</li>
+<li>videocodecid：视频编码方式</li>
+<li>audiosamplerate：音频采样率</li>
+<li>audiosamplesize：音频采样精度</li>
+<li>stereo：是否为立体声</li>
+<li>audiocodecid：音频编码方式</li>
+<li>filesize：文件大小</li>
 </ul>
-<p><img src="/images/javascript/js-29.png" alt=""></p>
-<p>尝试一下：<a href="http://jsfiddle.net/y8Y32/25/" target="_blank" rel="external">jsFiddle</a></p>
-<p>由于<code>clientWidht</code>把 scroll bar 的宽度也计算在哪，我们可以通过以下公式计算出滚动条的宽度</p>
-<p><code>scrollbarWidth = offsetWidth - clientWidth - getComputedStyle().borderLeftWidth - getComputedStyle().borderRightWidth</code></p>
-<p>不幸的是，我们可能会受到四舍五入的误差影响，因为<code>offsetWidth</code>和<code>clientWidth</code>总是整数，而实际的大小可能是小数，缩放级别不是1。</p>
-<p>注意这个：</p>
-<p><code>scrollbarWidth = getComputedStyle().width + getComputedStyle().paddingLeft + getComputedStyle().paddingRight - clientWidth</code></p>
-<p>这个在chrome中无法可靠的运行，因为chrome返回来的<code>width</code>已经减去了scrollbar的部分（此外，chrome还会将paddingBottom填充到滚动内容的底部，但是其他的浏览器则不会这样）。    </p>
-<h2 id="获取页面元素的位置"><a href="#获取页面元素的位置" class="headerlink" title="获取页面元素的位置"></a>获取页面元素的位置</h2><p>相对位置：</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> X = <span class="keyword">this</span>.getBoundingClientRect().left;</div><div class="line"><span class="keyword">var</span> Y = <span class="keyword">this</span>.getBoundingClientRect().top;</div></pre></td></tr></table></figure>
-<p>绝对位置：</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> X = <span class="keyword">this</span>.getBoundingClientRect().left + <span class="built_in">document</span>.documentElement.scrollLeft || <span class="built_in">document</span>.body.scrollLeft;</div><div class="line"><span class="keyword">var</span> Y = <span class="keyword">this</span>.getBoundingClientRect().top + <span class="built_in">document</span>.documentElement.scrollTop || <span class="built_in">document</span>.body.scrollTop;</div></pre></td></tr></table></figure>
-<p><strong>注意：</strong> 在文档使用了DTD时，<code>document.body.scrollTop</code>的值为0，此时需要使用<code>document.documentElement.scrollTop</code>来获取滚动条滚过的长度；在未使用DTD定义文档时，使用<code>document.body.scrollTop</code>获取值。</p>
-<p>参考：</p>
-<ul>
-<li><p><a href="http://www.cnblogs.com/xesam/archive/2011/12/08/2280509.html" target="_blank" rel="external">http://www.cnblogs.com/xesam/archive/2011/12/08/2280509.html</a></p>
-</li>
-<li><p><a href="https://stackoverflow.com/questions/21064101/understanding-offsetwidth-clientwidth-scrollwidth-and-height-respectively" target="_blank" rel="external">Understanding offsetWidth, clientWidth, scrollWidth and -Height, respectively</a></p>
-</li>
-<li><p><a href="http://www.ruanyifeng.com/blog/2009/09/find_element_s_position_using_javascript.html" target="_blank" rel="external">http://www.ruanyifeng.com/blog/2009/09/find_element_s_position_using_javascript.html</a></p>
-</li>
-</ul>
+<p>最后用3个字节的固定值0000 09表示value值结束。</p>
 
       
     </div>
@@ -442,7 +425,7 @@ clientX/clientY事件发生时鼠标在浏览器内容区域的X/Y坐标（不�
       
         <div class="post-tags">
           
-            <a href="/tags/javascript/" rel="tag"># javascript</a>
+            <a href="/tags/media/" rel="tag"># media</a>
           
         </div>
       
@@ -451,8 +434,8 @@ clientX/clientY事件发生时鼠标在浏览器内容区域的X/Y坐标（不�
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/05/21/archivers/streaming-media/" rel="next" title="streaming media">
-                <i class="fa fa-chevron-left"></i> streaming media
+              <a href="/2017/12/25/archivers/media-study-01/" rel="next" title="音视频学习-flv初认识">
+                <i class="fa fa-chevron-left"></i> 音视频学习-flv初认识
               </a>
             
           </div>
@@ -460,10 +443,6 @@ clientX/clientY事件发生时鼠标在浏览器内容区域的X/Y坐标（不�
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2017/12/25/archivers/media-study-01/" rel="prev" title="音视频学习-flv初认识">
-                音视频学习-flv初认识 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -489,8 +468,8 @@ clientX/clientY事件发生时鼠标在浏览器内容区域的X/Y坐标（不�
           
   <div class="comments" id="comments">
     
-      <div class="ds-thread" data-thread-key="2017/06/01//archivers/html-element-dimensions-and-position/"
-           data-title="关于html元素的尺寸以及位置的问题" data-url="https://lucius0.github.io/2017/06/01//archivers/html-element-dimensions-and-position/">
+      <div class="ds-thread" data-thread-key="2017/12/26//archivers/media-study-02/"
+           data-title="音视频学习-flv之ScriptTag" data-url="https://lucius0.github.io/2017/12/26//archivers/media-study-02/">
       </div>
     
   </div>
@@ -598,7 +577,7 @@ clientX/clientY事件发生时鼠标在浏览器内容区域的X/Y坐标（不�
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Position-pageX-clientX-screenX-offsetX"><span class="nav-number">1.</span> <span class="nav-text">Position (pageX/clientX/screenX/offsetX)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#pageX-pageY"><span class="nav-number">1.1.</span> <span class="nav-text">pageX/pageY</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#clientX-clientY"><span class="nav-number">1.2.</span> <span class="nav-text">clientX/clientY</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#screenX-screenY"><span class="nav-number">1.3.</span> <span class="nav-text">screenX/screenY</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#offsetX-offsetY"><span class="nav-number">1.4.</span> <span class="nav-text">offsetX/offsetY</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Dimensions-offsetWidth-clientWidth-scrollWidth"><span class="nav-number">2.</span> <span class="nav-text">Dimensions(offsetWidth/clientWidth/scrollWidth)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#获取页面元素的位置"><span class="nav-number">3.</span> <span class="nav-text">获取页面元素的位置</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#解析FLV-Header-9bytes"><span class="nav-number">1.</span> <span class="nav-text">解析FLV-Header(9bytes)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#解析FLV-Body"><span class="nav-number">2.</span> <span class="nav-text">解析FLV-Body</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Previous-Tag-Size-0"><span class="nav-number">2.1.</span> <span class="nav-text">Previous Tag Size #0</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Tag-1-ScriptTag"><span class="nav-number">2.2.</span> <span class="nav-text">Tag # 1( ScriptTag )</span></a></li></ol></li></ol></div>
             
 
           </div>

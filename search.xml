@@ -4,6 +4,76 @@
   
     
     <entry>
+      <title><![CDATA[音视频学习-flv之AudioTag(1)]]></title>
+      <url>https://lucius0.github.io/2017/12/27//archivers/media-study-03/</url>
+      <content type="html"><![CDATA[<p>初次学习有关音视频这一块的开发，主要是基于 <strong><a href="https://github.com/Bilibili/flv.js" target="_blank" rel="external">flv.js</a></strong> 的学习。这一块的知识概念实在是太多太深了，所以本人是先在本地做记录，后面会整理慢慢地上传与各位分享，假如有地方说错，请勘误。谢谢指点。</p>
+<p>在第一篇<a href="https://lucius0.github.io/2017/12/25/archivers/media-study-01/">flv初认识</a>，我们可以知道，解析<strong>Tag Header</strong>的其实无论是ScriptTag，AudioTag，还是VideoTag，实际上的规范都是一样的，都是11个字节的<strong>Tag Header</strong>，唯一区分类型的就是。<br><figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">let</span> tagType = v.getUint8(<span class="number">0</span>); <span class="comment">// 0x08表示音频Tag</span></div></pre></td></tr></table></figure></p>
+<p><strong>Audio Tag Body</strong><br><figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">let</span> soundSpec = v.getUint8(<span class="number">0</span>); <span class="comment">// 第1个字节，音频参数格式</span></div><div class="line"><span class="keyword">let</span> soundFormat = soundSpec &gt;&gt;&gt; <span class="number">4</span>; <span class="comment">// 前4位，标识音频数据的格式，这里只对AAC跟MP3做处理。</span></div><div class="line"><span class="keyword">let</span> soundRateIndex = (soundSpec &amp; <span class="number">12</span>) &gt;&gt;&gt; <span class="number">2</span>; <span class="comment">// 5、6位，音频采样率，flv</span></div><div class="line"><span class="keyword">if</span> (soundRateIndex &gt;= <span class="number">0</span> &amp;&amp; soundRateIndex &lt;= <span class="number">4</span>) &#123;</div><div class="line">    soundRate = [<span class="number">5500</span>, <span class="number">11025</span>, <span class="number">22050</span>, <span class="number">44100</span>, <span class="number">48000</span>][soundRateIndex];</div><div class="line">&#125;</div><div class="line"><span class="keyword">let</span> soundSize = (soundSpec &amp; <span class="number">2</span>) &gt;&gt;&gt; <span class="number">1</span>; <span class="comment">// 第7位，采样精度</span></div><div class="line"><span class="keyword">let</span> soundType = (soundSpec &amp; <span class="number">1</span>); <span class="comment">// 第8位，音频类型</span></div></pre></td></tr></table></figure></p>
+<p>这里我产生疑问了。flv不是只支持5500, 11025, 22050, 44100的采样率吗？为什么作者还多加了一个48000？ 这里可以查到采样率的信息<a href="https://www.adobe.com/content/dam/acom/en/devnet/flv/video_file_format_spec_v10.pdf" target="_blank" rel="external">video_file_format_spec_v10</a>，@1。有知道的胖友麻烦告知一下，谢谢。<br><img src="http://ouazw12mz.bkt.clouddn.com/171227220536.png?imageslim" alt=""></p>
+<h2 id="AAC"><a href="#AAC" class="headerlink" title="AAC"></a>AAC</h2><blockquote>
+<p>AAC是高级音频编码（Advanced Audio Coding）的缩写，出现于1997年，最初是基于MPEG-2的音频编码技术。由Fraunhofer IIS、Dolby Laboratories、AT&amp;T、Sony等公司共同开发，目的是取代MP3格式。2000年，MPEG-4标准出台，AAC重新集成了其它技术（PS,SBR），为区别于传统的MPEG-2 AAC(MPEG-2 Part7)，故含有SBR或PS特性的AAC又称为MPEG-4 AAC(MPEG-4 Part3)。<br>AAC是新一代的音频有损压缩技术，它通过一些附加的编码技术（比如PS,SBR等），衍生出了LC-AAC,HE-AAC,HE-AACv2三种主要的编码，LC-AAC就是比较传统的AAC。</p>
+</blockquote>
+<p>AAC即为上文提到的<code>soundFormat</code>为0xA的音频格式，而AACAudioData是在Flash Player 9以上支持的。<br><img src="http://ouazw12mz.bkt.clouddn.com/171227220925.png?imageslim" alt=""><br>代码如下：<br><figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 减去 soundSpec</span></div><div class="line">parseAACAudioData(arrayBuffer, dataOffset + <span class="number">1</span>, dataSize - <span class="number">1</span>); </div><div class="line"><span class="comment">// 0: AAC sequence header</span></div><div class="line"><span class="comment">// 1: AAC raw</span></div><div class="line"><span class="comment">// 一般Sequence Header为第一个Audio Tag，并且全文件只出现一次</span></div><div class="line">result.packetType = array[<span class="number">0</span>];</div><div class="line"><span class="comment">// 这里只针对了AAC sequence header作了处理，而AAC raw则就是Audio payload。dataOffset+1，跳过了上文提到的AACPacketType，1个字节</span></div><div class="line"><span class="comment">// ADTS</span></div><div class="line">parseAACAudioSpecificConfig(arrayBuffer, dataOffset + <span class="number">1</span>, dataSize - <span class="number">1</span>);</div></pre></td></tr></table></figure></p>
+<p><strong>AAC sequence header</strong>包含了AudioSpecificConfig，有更详细音频的信息，但这种包只出现一次，而且是第一个Audio Tag，因为后面的音频ES流需要该header的ADST(Audio Data Transport Stream)头。<strong>AAC raw</strong>则包含音频ES流了，也就是audio payload，也就是说ADTS头可以看成AAC的frameheader。<a href="http://blog.csdn.net/tx3344/article/details/7414543" target="_blank" rel="external">【多媒体封装格式详解】— AAC ADTS格式分析</a><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">--------------------------------------------------------------</div><div class="line">|                         ADTS AAC                           |</div><div class="line">--------------------------------------------------------------</div><div class="line">| ADTS_header	| AAC ES |     ...    | ADTS_header | AAC ES |</div><div class="line">--------------------------------------------------------------</div></pre></td></tr></table></figure></p>
+<p>关于Audio Specific Config，可以看<a href="http://read.pudn.com/downloads98/doc/comm/401153/14496/ISO_IEC_14496-3%20Part%203%20Audio/C036083E_SUB1.PDF" target="_blank" rel="external">ISO 14496-3</a>，也可以在ffmpeg中找到对应的解析函数，<code>ff_mpeg4audio_get_config()</code><br><img src="http://ouazw12mz.bkt.clouddn.com/171227221451.png?imageslim" alt=""><br>Audio Object Types和Sampling Frequency Index在<a href="https://wiki.multimedia.cx/index.php?title=MPEG-4_Audio" target="_blank" rel="external">MPEG-4_Audio</a>文章中有详细描述。</p>
+<h3 id="Audio-Object-Types"><a href="#Audio-Object-Types" class="headerlink" title="Audio Object Types"></a>Audio Object Types</h3><ul>
+<li>0: Null</li>
+<li>1: AAC Main</li>
+<li>2: AAC LC (Low Complexity)</li>
+<li>3: AAC SSR (Scalable Sample Rate)</li>
+<li>4: AAC LTP (Long Term Prediction)</li>
+<li>5: HE-AAC / AAC SBR (Spectral Band Replication)</li>
+<li>6: AAC Scalable</li>
+<li>7: TwinVQ</li>
+<li>…</li>
+</ul>
+<h3 id="Sampling-Frequency-Index"><a href="#Sampling-Frequency-Index" class="headerlink" title="Sampling Frequency Index"></a>Sampling Frequency Index</h3><ul>
+<li>0: 96000 Hz</li>
+<li>1: 88200 Hz</li>
+<li>2: 64000 Hz</li>
+<li>3: 48000 Hz</li>
+<li>4: 44100 Hz</li>
+<li>5: 32000 Hz</li>
+<li>6: 24000 Hz</li>
+<li>7: 22050 Hz</li>
+<li>8: 16000 Hz</li>
+<li>9: 12000 Hz</li>
+<li>10: 11025 Hz</li>
+<li>11: 8000 Hz</li>
+<li>12: 7350 Hz</li>
+<li>13: Reserved</li>
+<li>14: Reserved</li>
+<li>15: frequency is written explicitly</li>
+</ul>
+<h3 id="Channel-Configurations"><a href="#Channel-Configurations" class="headerlink" title="Channel Configurations"></a>Channel Configurations</h3><ul>
+<li>0: Defined in AOT Specifc Config    </li>
+<li>1: 1 channel: front-center</li>
+<li>2: 2 channels: front-left, front-right</li>
+<li>3: 3 channels: front-center, front-left, front-right</li>
+<li>4: 4 channels: front-center, front-left, front-right, back-center</li>
+<li>5: 5 channels: front-center, front-left, front-right, back-left, back-right</li>
+<li>6: 6 channels: front-center, front-left, front-right, back-left, back-right, LFE-channel</li>
+<li>7: 8 channels: front-center, front-left, front-right, side-left, side-right, back-left, back-right, LFE-channel</li>
+<li>8-15: Reserved</li>
+</ul>
+<p>伪代码为：<br><figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"><span class="number">5</span> bits: object type</div><div class="line"><span class="number">4</span> bits: frequency index</div><div class="line"><span class="keyword">if</span> (frequency index == <span class="number">15</span>)</div><div class="line">    <span class="number">24</span> bits: frequency</div><div class="line"><span class="number">4</span> bits: channel configuration</div><div class="line"><span class="number">1</span> bit: frame length flag</div><div class="line"><span class="number">1</span> bit: dependsOnCoreCoder</div><div class="line"><span class="number">1</span> bit: extensionFlag</div><div class="line"></div><div class="line"><span class="number">5</span> bits: <span class="number">2</span> (<span class="number">00010</span>) <span class="comment">// Audio Object Type - AAC LC</span></div><div class="line"><span class="number">4</span> bits: <span class="number">4</span> (<span class="number">0100</span>)  <span class="comment">// Sampling Frequency Index - 44kHz</span></div><div class="line"><span class="number">4</span> bits: <span class="number">2</span> (<span class="number">0010</span>)  <span class="comment">// Channel - left，right</span></div><div class="line"><span class="number">3</span> bits: <span class="number">0</span> (<span class="number">000</span>)   <span class="comment">// Reserved</span></div><div class="line"></div><div class="line">Byte <span class="number">1</span>: <span class="number">00010010</span></div><div class="line">Byte <span class="number">2</span>: <span class="number">00010000</span></div><div class="line"></div><div class="line"><span class="comment">// 2 bytes</span></div><div class="line"><span class="number">00010</span>|<span class="number">010</span> <span class="number">0</span>|<span class="number">0010</span>|<span class="number">000</span></div><div class="line"> [<span class="number">2</span>]   [<span class="number">4</span>]   [<span class="number">2</span>] [<span class="number">0</span>]</div></pre></td></tr></table></figure></p>
+<p>现在我们再来看看flv.js对于这一块的处理。<br><figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 5 bits Audio Object Type</span></div><div class="line">audioObjectType = originalAudioObjectType = array[<span class="number">0</span>] &gt;&gt;&gt; <span class="number">3</span>;</div><div class="line"><span class="comment">// 4 bits Sampling Frequency Index</span></div><div class="line">samplingIndex = ((array[<span class="number">0</span>] &amp; <span class="number">0x07</span>) &lt;&lt; <span class="number">1</span>) | (array[<span class="number">1</span>] &gt;&gt;&gt; <span class="number">7</span>);</div><div class="line"><span class="comment">// 4 bits Channel Config</span></div><div class="line">channelConfig = (array[<span class="number">1</span>] &amp; <span class="number">0x78</span>) &gt;&gt;&gt; <span class="number">3</span>;</div></pre></td></tr></table></figure></p>
+<p>针对各设备的兼容性处理，<code>audioObjectType</code>的处理可以参考这里<a href="https://cconcolato.github.io/media-mime-support/" target="_blank" rel="external">Media MIME Support</a>。<br><figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// firefox - firefox: freq less than 24kHz = AAC SBR (HE-AAC)</span></div><div class="line"><span class="comment">// Android: always use AAC</span></div><div class="line"><span class="comment">// for other browsers (Chrome/Vivaldi/Opera ...): always force audio type to be HE-AAC SBR, as some browsers do not support audio codec switch properly (like Chrome ...)</span></div></pre></td></tr></table></figure></p>
+<p>而<code>extensionSamplingIndex</code>，这里其实我也很迷糊为什么要这么处理，精力有限也没有深入去找资料了，有知道的朋友请教一下。谢谢了。唯一清楚找到的是在hlsjs中也有相关的代码，作者这一块是参考hlsjs的。 @2</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 音频帧采样时间要跟采样率有关的值一致。否则，浏览器将强制调整播放时间戳以使音频无缝播放，这可能导致A / V异步。</span></div><div class="line">meta.refSampleDuration = <span class="number">1024</span> / meta.audioSampleRate * meta.timescale</div></pre></td></tr></table></figure>
+<p>可以参考下图：<br><img src="http://ouazw12mz.bkt.clouddn.com/171227222007.png?imageslim" alt=""></p>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><ul>
+<li><a href="https://www.adobe.com/content/dam/acom/en/devnet/flv/video_file_format_spec_v10.pdf" target="_blank" rel="external">video_file_format_spec_v10</a></li>
+<li><a href="https://xiaozhuanlan.com/topic/6253091478" target="_blank" rel="external">AAC Audio Data</a></li>
+<li><a href="https://wiki.multimedia.cx/index.php/Understanding_AAC" target="_blank" rel="external">Understanding_AAC</a></li>
+<li><a href="https://wiki.multimedia.cx/index.php?title=MPEG-4_Audio" target="_blank" rel="external">MPEG-4_Audio</a></li>
+<li><a href="https://zh.wikipedia.org/wiki/%E9%80%B2%E9%9A%8E%E9%9F%B3%E8%A8%8A%E7%B7%A8%E7%A2%BC" target="_blank" rel="external">高级音频编码 - 维基百科，自由的百科全书</a></li>
+<li><a href="https://stackoverflow.com/questions/18603605/what-are-the-limitations-of-html5-audio-on-android-and-ios" target="_blank" rel="external">html - What are the limitations of HTML5 audio on Android and iOS? - Stack Overflow</a></li>
+</ul>
+]]></content>
+    </entry>
+    
+    <entry>
       <title><![CDATA[音视频学习-flv之ScriptTag]]></title>
       <url>https://lucius0.github.io/2017/12/26//archivers/media-study-02/</url>
       <content type="html"><![CDATA[<p>初次学习有关音视频这一块的开发，主要是基于 <strong><a href="https://github.com/Bilibili/flv.js" target="_blank" rel="external">flv.js</a></strong> 的学习。这一块的知识概念实在是太多太深了，所以本人是先在本地做记录，后面会整理慢慢地上传与各位分享，假如有地方说错，请勘误。谢谢指点。</p>

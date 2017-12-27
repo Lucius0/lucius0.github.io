@@ -1,0 +1,904 @@
+<!doctype html>
+
+
+
+
+<html class="theme-next mist" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="media," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="初次学习有关音视频这一块的开发，主要是基于 flv.js 的学习。这一块的知识概念实在是太多太深了，所以本人是先在本地做记录，后面会整理慢慢地上传与各位分享，假如有地方说错，请勘误。谢谢指点。
+在第一篇flv初认识，我们可以知道，解析Tag Header的其实无论是ScriptTag，AudioTag，还是VideoTag，实际上的规范都是一样的，都是11个字节的Tag Header，唯一区分类型">
+<meta property="og:type" content="article">
+<meta property="og:title" content="音视频学习-flv之AudioTag(1)">
+<meta property="og:url" content="https://lucius0.github.io/2017/12/27//archivers/media-study-03/index.html">
+<meta property="og:site_name" content="Lucius's Blog">
+<meta property="og:description" content="初次学习有关音视频这一块的开发，主要是基于 flv.js 的学习。这一块的知识概念实在是太多太深了，所以本人是先在本地做记录，后面会整理慢慢地上传与各位分享，假如有地方说错，请勘误。谢谢指点。
+在第一篇flv初认识，我们可以知道，解析Tag Header的其实无论是ScriptTag，AudioTag，还是VideoTag，实际上的规范都是一样的，都是11个字节的Tag Header，唯一区分类型">
+<meta property="og:image" content="http://ouazw12mz.bkt.clouddn.com/171227220536.png?imageslim">
+<meta property="og:image" content="http://ouazw12mz.bkt.clouddn.com/171227220925.png?imageslim">
+<meta property="og:image" content="http://ouazw12mz.bkt.clouddn.com/171227221451.png?imageslim">
+<meta property="og:image" content="http://ouazw12mz.bkt.clouddn.com/171227222007.png?imageslim">
+<meta property="og:updated_time" content="2017-12-27T14:21:34.319Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="音视频学习-flv之AudioTag(1)">
+<meta name="twitter:description" content="初次学习有关音视频这一块的开发，主要是基于 flv.js 的学习。这一块的知识概念实在是太多太深了，所以本人是先在本地做记录，后面会整理慢慢地上传与各位分享，假如有地方说错，请勘误。谢谢指点。
+在第一篇flv初认识，我们可以知道，解析Tag Header的其实无论是ScriptTag，AudioTag，还是VideoTag，实际上的规范都是一样的，都是11个字节的Tag Header，唯一区分类型">
+<meta name="twitter:image" content="http://ouazw12mz.bkt.clouddn.com/171227220536.png?imageslim">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: false,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://lucius0.github.io/2017/12/27//archivers/media-study-03/"/>
+
+
+
+
+
+  <title> 音视频学习-flv之AudioTag(1) | Lucius's Blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Lucius's Blog</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            日志
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup">
+ <span class="search-icon fa fa-search"></span>
+ <input type="text" id="local-search-input">
+ <div id="local-search-result"></div>
+ <span class="popup-btn-close">close</span>
+</div>
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="https://lucius0.github.io/2017/12/27/archivers/media-study-03/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="Lucius">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.jpg">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="Lucius's Blog">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="Lucius's Blog" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                音视频学习-flv之AudioTag(1)
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              <span class="post-meta-item-text">更新于</span>
+              <time title="更新于" itemprop="dateModified" datetime="2017-12-27T22:21:34+08:00">
+                2017-12-27
+              </time>
+            
+          </span>
+
+          
+            <span class="post-category" >
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/media/" itemprop="url" rel="index">
+                    <span itemprop="name">media</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>初次学习有关音视频这一块的开发，主要是基于 <strong><a href="https://github.com/Bilibili/flv.js" target="_blank" rel="external">flv.js</a></strong> 的学习。这一块的知识概念实在是太多太深了，所以本人是先在本地做记录，后面会整理慢慢地上传与各位分享，假如有地方说错，请勘误。谢谢指点。</p>
+<p>在第一篇<a href="https://lucius0.github.io/2017/12/25/archivers/media-study-01/">flv初认识</a>，我们可以知道，解析<strong>Tag Header</strong>的其实无论是ScriptTag，AudioTag，还是VideoTag，实际上的规范都是一样的，都是11个字节的<strong>Tag Header</strong>，唯一区分类型的就是。<br><figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">let</span> tagType = v.getUint8(<span class="number">0</span>); <span class="comment">// 0x08表示音频Tag</span></div></pre></td></tr></table></figure></p>
+<p><strong>Audio Tag Body</strong><br><figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">let</span> soundSpec = v.getUint8(<span class="number">0</span>); <span class="comment">// 第1个字节，音频参数格式</span></div><div class="line"><span class="keyword">let</span> soundFormat = soundSpec &gt;&gt;&gt; <span class="number">4</span>; <span class="comment">// 前4位，标识音频数据的格式，这里只对AAC跟MP3做处理。</span></div><div class="line"><span class="keyword">let</span> soundRateIndex = (soundSpec &amp; <span class="number">12</span>) &gt;&gt;&gt; <span class="number">2</span>; <span class="comment">// 5、6位，音频采样率，flv</span></div><div class="line"><span class="keyword">if</span> (soundRateIndex &gt;= <span class="number">0</span> &amp;&amp; soundRateIndex &lt;= <span class="number">4</span>) &#123;</div><div class="line">    soundRate = [<span class="number">5500</span>, <span class="number">11025</span>, <span class="number">22050</span>, <span class="number">44100</span>, <span class="number">48000</span>][soundRateIndex];</div><div class="line">&#125;</div><div class="line"><span class="keyword">let</span> soundSize = (soundSpec &amp; <span class="number">2</span>) &gt;&gt;&gt; <span class="number">1</span>; <span class="comment">// 第7位，采样精度</span></div><div class="line"><span class="keyword">let</span> soundType = (soundSpec &amp; <span class="number">1</span>); <span class="comment">// 第8位，音频类型</span></div></pre></td></tr></table></figure></p>
+<p>这里我产生疑问了。flv不是只支持5500, 11025, 22050, 44100的采样率吗？为什么作者还多加了一个48000？ 这里可以查到采样率的信息<a href="https://www.adobe.com/content/dam/acom/en/devnet/flv/video_file_format_spec_v10.pdf" target="_blank" rel="external">video_file_format_spec_v10</a>，@1。有知道的胖友麻烦告知一下，谢谢。<br><img src="http://ouazw12mz.bkt.clouddn.com/171227220536.png?imageslim" alt=""></p>
+<h2 id="AAC"><a href="#AAC" class="headerlink" title="AAC"></a>AAC</h2><blockquote>
+<p>AAC是高级音频编码（Advanced Audio Coding）的缩写，出现于1997年，最初是基于MPEG-2的音频编码技术。由Fraunhofer IIS、Dolby Laboratories、AT&amp;T、Sony等公司共同开发，目的是取代MP3格式。2000年，MPEG-4标准出台，AAC重新集成了其它技术（PS,SBR），为区别于传统的MPEG-2 AAC(MPEG-2 Part7)，故含有SBR或PS特性的AAC又称为MPEG-4 AAC(MPEG-4 Part3)。<br>AAC是新一代的音频有损压缩技术，它通过一些附加的编码技术（比如PS,SBR等），衍生出了LC-AAC,HE-AAC,HE-AACv2三种主要的编码，LC-AAC就是比较传统的AAC。</p>
+</blockquote>
+<p>AAC即为上文提到的<code>soundFormat</code>为0xA的音频格式，而AACAudioData是在Flash Player 9以上支持的。<br><img src="http://ouazw12mz.bkt.clouddn.com/171227220925.png?imageslim" alt=""><br>代码如下：<br><figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 减去 soundSpec</span></div><div class="line">parseAACAudioData(arrayBuffer, dataOffset + <span class="number">1</span>, dataSize - <span class="number">1</span>); </div><div class="line"><span class="comment">// 0: AAC sequence header</span></div><div class="line"><span class="comment">// 1: AAC raw</span></div><div class="line"><span class="comment">// 一般Sequence Header为第一个Audio Tag，并且全文件只出现一次</span></div><div class="line">result.packetType = array[<span class="number">0</span>];</div><div class="line"><span class="comment">// 这里只针对了AAC sequence header作了处理，而AAC raw则就是Audio payload。dataOffset+1，跳过了上文提到的AACPacketType，1个字节</span></div><div class="line"><span class="comment">// ADTS</span></div><div class="line">parseAACAudioSpecificConfig(arrayBuffer, dataOffset + <span class="number">1</span>, dataSize - <span class="number">1</span>);</div></pre></td></tr></table></figure></p>
+<p><strong>AAC sequence header</strong>包含了AudioSpecificConfig，有更详细音频的信息，但这种包只出现一次，而且是第一个Audio Tag，因为后面的音频ES流需要该header的ADST(Audio Data Transport Stream)头。<strong>AAC raw</strong>则包含音频ES流了，也就是audio payload，也就是说ADTS头可以看成AAC的frameheader。<a href="http://blog.csdn.net/tx3344/article/details/7414543" target="_blank" rel="external">【多媒体封装格式详解】— AAC ADTS格式分析</a><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">--------------------------------------------------------------</div><div class="line">|                         ADTS AAC                           |</div><div class="line">--------------------------------------------------------------</div><div class="line">| ADTS_header	| AAC ES |     ...    | ADTS_header | AAC ES |</div><div class="line">--------------------------------------------------------------</div></pre></td></tr></table></figure></p>
+<p>关于Audio Specific Config，可以看<a href="http://read.pudn.com/downloads98/doc/comm/401153/14496/ISO_IEC_14496-3%20Part%203%20Audio/C036083E_SUB1.PDF" target="_blank" rel="external">ISO 14496-3</a>，也可以在ffmpeg中找到对应的解析函数，<code>ff_mpeg4audio_get_config()</code><br><img src="http://ouazw12mz.bkt.clouddn.com/171227221451.png?imageslim" alt=""><br>Audio Object Types和Sampling Frequency Index在<a href="https://wiki.multimedia.cx/index.php?title=MPEG-4_Audio" target="_blank" rel="external">MPEG-4_Audio</a>文章中有详细描述。</p>
+<h3 id="Audio-Object-Types"><a href="#Audio-Object-Types" class="headerlink" title="Audio Object Types"></a>Audio Object Types</h3><ul>
+<li>0: Null</li>
+<li>1: AAC Main</li>
+<li>2: AAC LC (Low Complexity)</li>
+<li>3: AAC SSR (Scalable Sample Rate)</li>
+<li>4: AAC LTP (Long Term Prediction)</li>
+<li>5: HE-AAC / AAC SBR (Spectral Band Replication)</li>
+<li>6: AAC Scalable</li>
+<li>7: TwinVQ</li>
+<li>…</li>
+</ul>
+<h3 id="Sampling-Frequency-Index"><a href="#Sampling-Frequency-Index" class="headerlink" title="Sampling Frequency Index"></a>Sampling Frequency Index</h3><ul>
+<li>0: 96000 Hz</li>
+<li>1: 88200 Hz</li>
+<li>2: 64000 Hz</li>
+<li>3: 48000 Hz</li>
+<li>4: 44100 Hz</li>
+<li>5: 32000 Hz</li>
+<li>6: 24000 Hz</li>
+<li>7: 22050 Hz</li>
+<li>8: 16000 Hz</li>
+<li>9: 12000 Hz</li>
+<li>10: 11025 Hz</li>
+<li>11: 8000 Hz</li>
+<li>12: 7350 Hz</li>
+<li>13: Reserved</li>
+<li>14: Reserved</li>
+<li>15: frequency is written explicitly</li>
+</ul>
+<h3 id="Channel-Configurations"><a href="#Channel-Configurations" class="headerlink" title="Channel Configurations"></a>Channel Configurations</h3><ul>
+<li>0: Defined in AOT Specifc Config    </li>
+<li>1: 1 channel: front-center</li>
+<li>2: 2 channels: front-left, front-right</li>
+<li>3: 3 channels: front-center, front-left, front-right</li>
+<li>4: 4 channels: front-center, front-left, front-right, back-center</li>
+<li>5: 5 channels: front-center, front-left, front-right, back-left, back-right</li>
+<li>6: 6 channels: front-center, front-left, front-right, back-left, back-right, LFE-channel</li>
+<li>7: 8 channels: front-center, front-left, front-right, side-left, side-right, back-left, back-right, LFE-channel</li>
+<li>8-15: Reserved</li>
+</ul>
+<p>伪代码为：<br><figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"><span class="number">5</span> bits: object type</div><div class="line"><span class="number">4</span> bits: frequency index</div><div class="line"><span class="keyword">if</span> (frequency index == <span class="number">15</span>)</div><div class="line">    <span class="number">24</span> bits: frequency</div><div class="line"><span class="number">4</span> bits: channel configuration</div><div class="line"><span class="number">1</span> bit: frame length flag</div><div class="line"><span class="number">1</span> bit: dependsOnCoreCoder</div><div class="line"><span class="number">1</span> bit: extensionFlag</div><div class="line"></div><div class="line"><span class="number">5</span> bits: <span class="number">2</span> (<span class="number">00010</span>) <span class="comment">// Audio Object Type - AAC LC</span></div><div class="line"><span class="number">4</span> bits: <span class="number">4</span> (<span class="number">0100</span>)  <span class="comment">// Sampling Frequency Index - 44kHz</span></div><div class="line"><span class="number">4</span> bits: <span class="number">2</span> (<span class="number">0010</span>)  <span class="comment">// Channel - left，right</span></div><div class="line"><span class="number">3</span> bits: <span class="number">0</span> (<span class="number">000</span>)   <span class="comment">// Reserved</span></div><div class="line"></div><div class="line">Byte <span class="number">1</span>: <span class="number">00010010</span></div><div class="line">Byte <span class="number">2</span>: <span class="number">00010000</span></div><div class="line"></div><div class="line"><span class="comment">// 2 bytes</span></div><div class="line"><span class="number">00010</span>|<span class="number">010</span> <span class="number">0</span>|<span class="number">0010</span>|<span class="number">000</span></div><div class="line"> [<span class="number">2</span>]   [<span class="number">4</span>]   [<span class="number">2</span>] [<span class="number">0</span>]</div></pre></td></tr></table></figure></p>
+<p>现在我们再来看看flv.js对于这一块的处理。<br><figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 5 bits Audio Object Type</span></div><div class="line">audioObjectType = originalAudioObjectType = array[<span class="number">0</span>] &gt;&gt;&gt; <span class="number">3</span>;</div><div class="line"><span class="comment">// 4 bits Sampling Frequency Index</span></div><div class="line">samplingIndex = ((array[<span class="number">0</span>] &amp; <span class="number">0x07</span>) &lt;&lt; <span class="number">1</span>) | (array[<span class="number">1</span>] &gt;&gt;&gt; <span class="number">7</span>);</div><div class="line"><span class="comment">// 4 bits Channel Config</span></div><div class="line">channelConfig = (array[<span class="number">1</span>] &amp; <span class="number">0x78</span>) &gt;&gt;&gt; <span class="number">3</span>;</div></pre></td></tr></table></figure></p>
+<p>针对各设备的兼容性处理，<code>audioObjectType</code>的处理可以参考这里<a href="https://cconcolato.github.io/media-mime-support/" target="_blank" rel="external">Media MIME Support</a>。<br><figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// firefox - firefox: freq less than 24kHz = AAC SBR (HE-AAC)</span></div><div class="line"><span class="comment">// Android: always use AAC</span></div><div class="line"><span class="comment">// for other browsers (Chrome/Vivaldi/Opera ...): always force audio type to be HE-AAC SBR, as some browsers do not support audio codec switch properly (like Chrome ...)</span></div></pre></td></tr></table></figure></p>
+<p>而<code>extensionSamplingIndex</code>，这里其实我也很迷糊为什么要这么处理，精力有限也没有深入去找资料了，有知道的朋友请教一下。谢谢了。唯一清楚找到的是在hlsjs中也有相关的代码，作者这一块是参考hlsjs的。 @2</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 音频帧采样时间要跟采样率有关的值一致。否则，浏览器将强制调整播放时间戳以使音频无缝播放，这可能导致A / V异步。</span></div><div class="line">meta.refSampleDuration = <span class="number">1024</span> / meta.audioSampleRate * meta.timescale</div></pre></td></tr></table></figure>
+<p>可以参考下图：<br><img src="http://ouazw12mz.bkt.clouddn.com/171227222007.png?imageslim" alt=""></p>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><ul>
+<li><a href="https://www.adobe.com/content/dam/acom/en/devnet/flv/video_file_format_spec_v10.pdf" target="_blank" rel="external">video_file_format_spec_v10</a></li>
+<li><a href="https://xiaozhuanlan.com/topic/6253091478" target="_blank" rel="external">AAC Audio Data</a></li>
+<li><a href="https://wiki.multimedia.cx/index.php/Understanding_AAC" target="_blank" rel="external">Understanding_AAC</a></li>
+<li><a href="https://wiki.multimedia.cx/index.php?title=MPEG-4_Audio" target="_blank" rel="external">MPEG-4_Audio</a></li>
+<li><a href="https://zh.wikipedia.org/wiki/%E9%80%B2%E9%9A%8E%E9%9F%B3%E8%A8%8A%E7%B7%A8%E7%A2%BC" target="_blank" rel="external">高级音频编码 - 维基百科，自由的百科全书</a></li>
+<li><a href="https://stackoverflow.com/questions/18603605/what-are-the-limitations-of-html5-audio-on-android-and-ios" target="_blank" rel="external">html - What are the limitations of HTML5 audio on Android and iOS? - Stack Overflow</a></li>
+</ul>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+  <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+    <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
+    <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+      <span>赏</span>
+    </button>
+    <div id="QR" style="display: none;">
+      
+        <div id="wechat" style="display: inline-block">
+          <img id="wechat_qr" src="http://ouazw12mz.bkt.clouddn.com/IMG_4838.jpg" alt="Lucius WeChat Pay"/>
+          <p>微信打赏</p>
+        </div>
+      
+      
+        <div id="alipay" style="display: inline-block">
+          <img id="alipay_qr" src="http://ouazw12mz.bkt.clouddn.com/171226222918.png?imageslim" alt="Lucius Alipay"/>
+          <p>支付宝打赏</p>
+        </div>
+      
+    </div>
+  </div>
+
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/media/" rel="tag"># media</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/12/26/archivers/media-study-02/" rel="next" title="音视频学习-flv之ScriptTag">
+                <i class="fa fa-chevron-left"></i> 音视频学习-flv之ScriptTag
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.jpg"
+               alt="Lucius" />
+          <p class="site-author-name" itemprop="name">Lucius</p>
+          <p class="site-description motion-element" itemprop="description">stay hungry, stay foolish...</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">41</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">4</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">9</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/Lucius0" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#AAC"><span class="nav-number">1.</span> <span class="nav-text">AAC</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Audio-Object-Types"><span class="nav-number">1.1.</span> <span class="nav-text">Audio Object Types</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Sampling-Frequency-Index"><span class="nav-number">1.2.</span> <span class="nav-text">Sampling Frequency Index</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Channel-Configurations"><span class="nav-number">1.3.</span> <span class="nav-text">Channel Configurations</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考资料"><span class="nav-number">2.</span> <span class="nav-text">参考资料</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Lucius</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+	
+
+
+
+
+  
+  
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length == 0) {
+      search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body").append('<div class="popoverlay">').css('overflow', 'hidden');
+      $('.popup').toggle();
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+      $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = $( "entry", xmlResponse ).map(function() {
+            return {
+              title: $( "title", this ).text(),
+              content: $("content",this).text(),
+              url: $( "url" , this).text()
+            };
+          }).get();
+          var $input = document.getElementById(search_id);
+          var $resultContent = document.getElementById(content_id);
+          $input.addEventListener('input', function(){
+            var matchcounts = 0;
+            var str='<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length > 1) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var content_index = [];
+                var data_title = data.title.trim().toLowerCase();
+                var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                var data_url = decodeURIComponent(data.url);
+                var index_title = -1;
+                var index_content = -1;
+                var first_occur = -1;
+                // only match artiles with not empty titles and contents
+                if(data_title != '') {
+                  keywords.forEach(function(keyword, i) {
+                    index_title = data_title.indexOf(keyword);
+                    index_content = data_content.indexOf(keyword);
+                    if( index_title >= 0 || index_content >= 0 ){
+                      isMatch = true;
+                      if (i == 0) {
+                        first_occur = index_content;
+                      }
+                    }
+
+                  });
+                }
+                // show search results
+                if (isMatch) {
+                  matchcounts += 1;
+                  str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                  var content = data.content.trim().replace(/<[^>]+>/g,"");
+                  if (first_occur >= 0) {
+                    // cut out 100 characters
+                    var start = first_occur - 20;
+                    var end = first_occur + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if(start == 0){
+                      end = 50;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    var match_content = content.substring(start, end);
+                    // highlight all keywords
+                    keywords.forEach(function(keyword){
+                      var regS = new RegExp(keyword, "gi");
+                      match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                    });
+
+                    str += "<p class=\"search-result\">" + match_content +"...</p>"
+                  }
+                  str += "</li>";
+                }
+              })};
+            str += "</ul>";
+            if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+            if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+            $resultContent.innerHTML = str;
+          });
+          proceedsearch();
+        }
+      });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".popoverlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+
+  
+
+  
+
+  
+
+  
+
+
+</body>
+</html>

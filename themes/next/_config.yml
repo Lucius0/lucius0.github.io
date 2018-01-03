@@ -263,9 +263,10 @@ mathjax:
 # duoshuo_shortname: lucius0
 
 # Disqus
-enable: true
-shortname: lucius0
-count: true
+disqus_shortname: lucius0
+# enable: true
+# shortname: lucius0
+# count: true
 
 
 # Hypercomments

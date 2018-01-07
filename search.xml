@@ -2710,24 +2710,6 @@ $ npm install -D webpack webpack-dev-server</code></p>
     </entry>
     
     <entry>
-      <title><![CDATA[JavaScript之五 - 数组]]></title>
-      <url>https://lucius0.github.io/2016/08/11//archivers/javascript-array/</url>
-      <content type="html"><![CDATA[<p>有序，弱类型(多类型)集合。数组是有长度限制的，即0~2^23 - 1</p>
-<p>数组的原型链：<code>[] -&gt; Array.prototype</code>; 对象的原型链：<code>{} -&gt; Object.prototype</code></p>
-<p><strong>常用方法</strong></p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">Array</span>.prototype.join</div><div class="line"><span class="built_in">Array</span>.prototype.reverse</div><div class="line"><span class="built_in">Array</span>.prototype.sort</div><div class="line"><span class="built_in">Array</span>.prototype.concat</div><div class="line"><span class="built_in">Array</span>.prototype.slice</div><div class="line"><span class="built_in">Array</span>.prototype.splice</div><div class="line"><span class="built_in">Array</span>.prototype.foreach(ES5)</div><div class="line"><span class="built_in">Array</span>.prototype.map(ES5)</div><div class="line"><span class="built_in">Array</span>.prototype.filter(ES5)</div><div class="line"><span class="built_in">Array</span>.prototype.every(ES5)</div><div class="line"><span class="built_in">Array</span>.prototype.some(ES5)</div><div class="line"><span class="built_in">Array</span>.prototype.reduce/reduceRight(ES5)</div><div class="line"><span class="built_in">Array</span>.prototype.indexOf/<span class="built_in">Array</span>.prototype.lastIndexOf(ES5)</div><div class="line"><span class="built_in">Array</span>.isArray(ES5)</div></pre></td></tr></table></figure>
-<ul>
-<li>reduce</li>
-</ul>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> arr = [<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>];</div><div class="line"><span class="keyword">var</span> sum = arr.reduce(<span class="function"><span class="keyword">function</span>(<span class="params">x,y</span>) </span>&#123; <span class="keyword">return</span> x + y&#125;, <span class="number">0</span>); <span class="comment">// 6</span></div></pre></td></tr></table></figure>
-<p><em>解析：</em> reduce接受两个参数，第一个参数则是逻辑函数，第二个参数表明是否要跟首次传入逻辑函数的参数进行逻辑处理，例如上文例子，会先进行 0 + 1 = 1，1 + 2 = 3，3 + 3 = 6</p>
-<ul>
-<li>isArray</li>
-</ul>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">Array</span>.isArray([]); <span class="comment">// true</span></div><div class="line">[] <span class="keyword">instanceof</span> <span class="built_in">Array</span>; <span class="comment">// true</span></div><div class="line">(&#123;&#125;).toString.apply([]) === [<span class="string">"object Array"</span>]; <span class="comment">// true</span></div><div class="line">[].constructor === <span class="built_in">Array</span>; <span class="comment">// true</span></div></pre></td></tr></table></figure>]]></content>
-    </entry>
-    
-    <entry>
       <title><![CDATA[JavaScript之六 - 函数与作用域(1)]]></title>
       <url>https://lucius0.github.io/2016/08/11//archivers/javascript-function-01/</url>
       <content type="html"><![CDATA[<h2 id="1、调用方式"><a href="#1、调用方式" class="headerlink" title="1、调用方式"></a>1、调用方式</h2><ul>
@@ -2833,6 +2815,24 @@ $ npm install -D webpack webpack-dev-server</code></p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">foo</span>(<span class="params"></span>) </span>&#123;</div><div class="line">	<span class="keyword">this</span>.b = <span class="number">100</span>;</div><div class="line">	<span class="keyword">return</span> <span class="keyword">this</span>.a;</div><div class="line">&#125;</div><div class="line"><span class="keyword">var</span> func = foo.bind(&#123;<span class="attr">a</span>: <span class="number">1</span>&#125;);</div><div class="line">func(); <span class="comment">// 1</span></div><div class="line"><span class="keyword">new</span> func(); <span class="comment">// &#123;b: 100&#125;</span></div></pre></td></tr></table></figure>
 <p><em>解析：</em> foo函数中返回值除非是<strong>对象</strong>，否则就将<strong>this</strong>作为返回值返回，<strong>this</strong>会被初始化为默认的一个空对象，并且<strong>this</strong>的原型是<em>foo.prototype</em>，该空对象的b属性会赋值为100，然后整个对象会被作为返回值返回并且忽略return的返回值。</p>
 ]]></content>
+    </entry>
+    
+    <entry>
+      <title><![CDATA[JavaScript之五 - 数组]]></title>
+      <url>https://lucius0.github.io/2016/08/11//archivers/javascript-array/</url>
+      <content type="html"><![CDATA[<p>有序，弱类型(多类型)集合。数组是有长度限制的，即0~2^23 - 1</p>
+<p>数组的原型链：<code>[] -&gt; Array.prototype</code>; 对象的原型链：<code>{} -&gt; Object.prototype</code></p>
+<p><strong>常用方法</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">Array</span>.prototype.join</div><div class="line"><span class="built_in">Array</span>.prototype.reverse</div><div class="line"><span class="built_in">Array</span>.prototype.sort</div><div class="line"><span class="built_in">Array</span>.prototype.concat</div><div class="line"><span class="built_in">Array</span>.prototype.slice</div><div class="line"><span class="built_in">Array</span>.prototype.splice</div><div class="line"><span class="built_in">Array</span>.prototype.foreach(ES5)</div><div class="line"><span class="built_in">Array</span>.prototype.map(ES5)</div><div class="line"><span class="built_in">Array</span>.prototype.filter(ES5)</div><div class="line"><span class="built_in">Array</span>.prototype.every(ES5)</div><div class="line"><span class="built_in">Array</span>.prototype.some(ES5)</div><div class="line"><span class="built_in">Array</span>.prototype.reduce/reduceRight(ES5)</div><div class="line"><span class="built_in">Array</span>.prototype.indexOf/<span class="built_in">Array</span>.prototype.lastIndexOf(ES5)</div><div class="line"><span class="built_in">Array</span>.isArray(ES5)</div></pre></td></tr></table></figure>
+<ul>
+<li>reduce</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> arr = [<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>];</div><div class="line"><span class="keyword">var</span> sum = arr.reduce(<span class="function"><span class="keyword">function</span>(<span class="params">x,y</span>) </span>&#123; <span class="keyword">return</span> x + y&#125;, <span class="number">0</span>); <span class="comment">// 6</span></div></pre></td></tr></table></figure>
+<p><em>解析：</em> reduce接受两个参数，第一个参数则是逻辑函数，第二个参数表明是否要跟首次传入逻辑函数的参数进行逻辑处理，例如上文例子，会先进行 0 + 1 = 1，1 + 2 = 3，3 + 3 = 6</p>
+<ul>
+<li>isArray</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">Array</span>.isArray([]); <span class="comment">// true</span></div><div class="line">[] <span class="keyword">instanceof</span> <span class="built_in">Array</span>; <span class="comment">// true</span></div><div class="line">(&#123;&#125;).toString.apply([]) === [<span class="string">"object Array"</span>]; <span class="comment">// true</span></div><div class="line">[].constructor === <span class="built_in">Array</span>; <span class="comment">// true</span></div></pre></td></tr></table></figure>]]></content>
     </entry>
     
     <entry>
@@ -3072,17 +3072,6 @@ $ npm install -D webpack webpack-dev-server</code></p>
     </entry>
     
     <entry>
-      <title><![CDATA[JavaScript之二 - 表达式]]></title>
-      <url>https://lucius0.github.io/2016/08/07//archivers/javascript-expression/</url>
-      <content type="html"><![CDATA[<h2 id="1-delete"><a href="#1-delete" class="headerlink" title="1. delete"></a>1. <strong>delete</strong></h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> obj = &#123;<span class="attr">x</span>:<span class="number">1</span>&#125;;</div><div class="line">obj.x; <span class="comment">// 1</span></div><div class="line"><span class="keyword">delete</span> obj.x;</div><div class="line">obj.x; <span class="comment">// undefined</span></div><div class="line"></div><div class="line"><span class="keyword">var</span> obj1 = &#123;&#125;;</div><div class="line"><span class="built_in">Object</span>.defineProperty(obj1, <span class="string">"x"</span>, &#123;</div><div class="line">	<span class="attr">configurable</span>: <span class="literal">false</span>, <span class="comment">// configurable为false表示该值无法删除</span></div><div class="line">	value: <span class="number">1</span></div><div class="line">&#125;);</div><div class="line"><span class="keyword">delete</span> obj1.x; <span class="comment">// false</span></div><div class="line">obj1.x; <span class="comment">// 1</span></div></pre></td></tr></table></figure>
-<h2 id="2-in"><a href="#2-in" class="headerlink" title="2. in"></a>2. <strong>in</strong></h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">window</span>.x = <span class="number">1</span>; <span class="comment">//全局变量</span></div><div class="line"><span class="string">"x"</span> <span class="keyword">in</span> <span class="built_in">window</span>; <span class="comment">// true</span></div></pre></td></tr></table></figure>
-<h2 id="3-new"><a href="#3-new" class="headerlink" title="3. new"></a>3. <strong>new</strong></h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">Foo</span>(<span class="params"></span>)</span>&#123;&#125;</div><div class="line">Foo.prototype.x = <span class="number">1</span>;</div><div class="line"><span class="keyword">var</span> obj = <span class="keyword">new</span> Foo();</div><div class="line">obj.x; <span class="comment">// 1</span></div><div class="line">obj.hasOwnProperty(<span class="string">"x"</span>); <span class="comment">// false</span></div><div class="line">obj.__proto__.hasOwnProperty(<span class="string">"x"</span>); <span class="comment">// true</span></div></pre></td></tr></table></figure>
-<h2 id="4-this"><a href="#4-this" class="headerlink" title="4. this"></a>4. <strong>this</strong></h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">this</span>; <span class="comment">// window</span></div><div class="line"><span class="keyword">var</span> obj = &#123;<span class="attr">fun</span>:<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123; <span class="keyword">return</span> <span class="keyword">this</span>; &#125;&#125;;</div><div class="line">obj.func(); <span class="comment">// obj</span></div></pre></td></tr></table></figure>
-<h2 id="5-void"><a href="#5-void" class="headerlink" title="5. void"></a>5. <strong>void</strong></h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">void</span> <span class="number">0</span>; <span class="comment">// undefined</span></div><div class="line"><span class="keyword">void</span> (<span class="number">0</span>); <span class="comment">// undefined</span></div></pre></td></tr></table></figure>
-]]></content>
-    </entry>
-    
-    <entry>
       <title><![CDATA[JavaScript之一 - 数据类型]]></title>
       <url>https://lucius0.github.io/2016/08/07//archivers/javascript-data-types/</url>
       <content type="html"><![CDATA[<p>以下笔记是观看<a href="http://www.imooc.com/view/277" target="_blank" rel="external">《深入浅出javascript》</a>所记下的。</p>
@@ -3120,6 +3109,17 @@ $ npm install -D webpack webpack-dev-server</code></p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">Object</span>.prototype.toString.apply([]); <span class="comment">// [object Array]</span></div><div class="line"><span class="built_in">Object</span>.prototype.toString.apply(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;&#125;); <span class="comment">// [object Function]</span></div><div class="line"><span class="built_in">Object</span>.prototype.toString.apply(<span class="literal">null</span>); <span class="comment">// [object Null]</span></div><div class="line"><span class="built_in">Object</span>.prototype.toString.apply(<span class="literal">undefined</span>); <span class="comment">// [object Undefined]</span></div></pre></td></tr></table></figure>
 <p> <strong>注意</strong>：IE/6/7/8 <code>Object.prototype.toString.apply(null); // [object Object]</code></p>
 <p> <strong>总结：</strong> typeof 适合基本类型及function检测，遇到null失效；Class通过{}.toString拿到，适合内置对象和基本类型，遇到null和undefined失效(IE 6/7/8返回[object Object])；instanceof适用自定义对象，也可以用来检测原生对象，在不同iframe和window间检测时失效。<br> <!-- ![](/images/javascript/JavaScript-data-types-01.png) --></p>
+]]></content>
+    </entry>
+    
+    <entry>
+      <title><![CDATA[JavaScript之二 - 表达式]]></title>
+      <url>https://lucius0.github.io/2016/08/07//archivers/javascript-expression/</url>
+      <content type="html"><![CDATA[<h2 id="1-delete"><a href="#1-delete" class="headerlink" title="1. delete"></a>1. <strong>delete</strong></h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> obj = &#123;<span class="attr">x</span>:<span class="number">1</span>&#125;;</div><div class="line">obj.x; <span class="comment">// 1</span></div><div class="line"><span class="keyword">delete</span> obj.x;</div><div class="line">obj.x; <span class="comment">// undefined</span></div><div class="line"></div><div class="line"><span class="keyword">var</span> obj1 = &#123;&#125;;</div><div class="line"><span class="built_in">Object</span>.defineProperty(obj1, <span class="string">"x"</span>, &#123;</div><div class="line">	<span class="attr">configurable</span>: <span class="literal">false</span>, <span class="comment">// configurable为false表示该值无法删除</span></div><div class="line">	value: <span class="number">1</span></div><div class="line">&#125;);</div><div class="line"><span class="keyword">delete</span> obj1.x; <span class="comment">// false</span></div><div class="line">obj1.x; <span class="comment">// 1</span></div></pre></td></tr></table></figure>
+<h2 id="2-in"><a href="#2-in" class="headerlink" title="2. in"></a>2. <strong>in</strong></h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">window</span>.x = <span class="number">1</span>; <span class="comment">//全局变量</span></div><div class="line"><span class="string">"x"</span> <span class="keyword">in</span> <span class="built_in">window</span>; <span class="comment">// true</span></div></pre></td></tr></table></figure>
+<h2 id="3-new"><a href="#3-new" class="headerlink" title="3. new"></a>3. <strong>new</strong></h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">Foo</span>(<span class="params"></span>)</span>&#123;&#125;</div><div class="line">Foo.prototype.x = <span class="number">1</span>;</div><div class="line"><span class="keyword">var</span> obj = <span class="keyword">new</span> Foo();</div><div class="line">obj.x; <span class="comment">// 1</span></div><div class="line">obj.hasOwnProperty(<span class="string">"x"</span>); <span class="comment">// false</span></div><div class="line">obj.__proto__.hasOwnProperty(<span class="string">"x"</span>); <span class="comment">// true</span></div></pre></td></tr></table></figure>
+<h2 id="4-this"><a href="#4-this" class="headerlink" title="4. this"></a>4. <strong>this</strong></h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">this</span>; <span class="comment">// window</span></div><div class="line"><span class="keyword">var</span> obj = &#123;<span class="attr">fun</span>:<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123; <span class="keyword">return</span> <span class="keyword">this</span>; &#125;&#125;;</div><div class="line">obj.func(); <span class="comment">// obj</span></div></pre></td></tr></table></figure>
+<h2 id="5-void"><a href="#5-void" class="headerlink" title="5. void"></a>5. <strong>void</strong></h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">void</span> <span class="number">0</span>; <span class="comment">// undefined</span></div><div class="line"><span class="keyword">void</span> (<span class="number">0</span>); <span class="comment">// undefined</span></div></pre></td></tr></table></figure>
 ]]></content>
     </entry>
     
@@ -3168,15 +3168,15 @@ $ npm install -D webpack webpack-dev-server</code></p>
     </entry>
     
     <entry>
-      <title><![CDATA[about]]></title>
-      <url>https://lucius0.github.io/about/index.html</url>
-      <content type="html"><![CDATA[<h1>WElCOME</h1>]]></content>
-    </entry>
-    
-    <entry>
       <title><![CDATA[categories]]></title>
       <url>https://lucius0.github.io/categories/index.html</url>
       <content type="html"></content>
+    </entry>
+    
+    <entry>
+      <title><![CDATA[about]]></title>
+      <url>https://lucius0.github.io/about/index.html</url>
+      <content type="html"><![CDATA[<h1>WElCOME</h1>]]></content>
     </entry>
     
     <entry>

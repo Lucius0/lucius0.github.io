@@ -4,6 +4,110 @@
   
     
     <entry>
+      <title><![CDATA[音视频学习-flv之VideoTag(1)[转]]]></title>
+      <url>https://lucius0.github.io/2018/01/08//archivers/media-study-05/</url>
+      <content type="html"><![CDATA[<p>初次学习有关音视频这一块的开发，主要是基于 <strong><a href="https://github.com/Bilibili/flv.js" target="_blank" rel="external">flv.js</a></strong> 的学习。这一块的知识概念实在是太多太深了，所以本人是先在本地做记录，后面会整理慢慢地上传与各位分享，假如有地方说错，请勘误。谢谢指点。</p>
+<p>这里主要讲的是FLV的视频格式H.264，而H.264跟MPEG-4 Part 10、ISO/IEC 14496-10、MPEG-4 AVC其实都是同一个视频格式，也就是我们常说的H.264或AVC。那么我们常说的MPEG-4其实是指MPEG-4 Part 2(注意跟MPEG-2是两个概念)。更多的细节可以查看<a href="https://zh.wikipedia.org/wiki/MPEG-4" target="_blank" rel="external">MPEG-4 - 维基百科，自由的百科全书</a>、<a href="https://zh.wikipedia.org/wiki/H.264/MPEG-4_AVC" target="_blank" rel="external">H.264/MPEG-4 AVC - 维基百科，自由的百科全书</a>。总的来讲，H.264具有高压缩比，同时也对网络的兼容性好。</p>
+<p>以下内容转自<a href="https://maxwellqi.github.io/ios-h264-summ/" target="_blank" rel="external">H.264码流以及H.264编解码的基本概念</a>。</p>
+<h2 id="软编码和硬编码的概念"><a href="#软编码和硬编码的概念" class="headerlink" title="软编码和硬编码的概念"></a>软编码和硬编码的概念</h2><p>软编码：使用CPU进行编码。</p>
+<p>硬编码：不使用CPU进行编码，使用显卡GPU,专用的DSP、FPGA、ASIC芯片等硬件进行编码。</p>
+<h2 id="软编码和硬编码的比较"><a href="#软编码和硬编码的比较" class="headerlink" title="软编码和硬编码的比较"></a>软编码和硬编码的比较</h2><p>软编码：实现直接、简单，参数调整方便，升级易，但CPU负载重，性能较硬编码低，低码率下质量通常比硬编码要好一点。</p>
+<p>硬编码：性能高，低码率下通常质量低于硬编码器，但部分产品在GPU硬件平台移植了优秀的软编码算法（如X264）的，质量基本等同于软编码。</p>
+<h2 id="H-264编码原理以及I帧B帧P帧"><a href="#H-264编码原理以及I帧B帧P帧" class="headerlink" title="H.264编码原理以及I帧B帧P帧"></a>H.264编码原理以及I帧B帧P帧</h2><h3 id="H-264编码原理"><a href="#H-264编码原理" class="headerlink" title="H.264编码原理"></a>H.264编码原理</h3><p>H264是新一代的编码标准，以高压缩高质量和支持多种网络的流媒体传输著称，在编码方面，我理解的他的理论依据是：参照一段时间内图像的统计结果表明，在相邻几幅图像画面中，一般有差别的像素只有10%以内的点,亮度差值变化不超过2%，而色度差值的变化只有1%以内。所以对于一段变化不大图像画面，我们可以先编码出一个完整的图像帧A，随后的B帧就不编码全部图像，只写入与A帧的差别，这样B帧的大小就只有完整帧的1/10或更小！B帧之后的C帧如果变化不大，我们可以继续以参考B的方式编码C帧，这样循环下去。这段图像我们称为一个序列（序列就是有相同特点的一段数据），当某个图像与之前的图像变化很大，无法参考前面的帧来生成，那我们就结束上一个序列，开始下一段序列，也就是对这个图像生成一个完整帧A1，随后的图像就参考A1生成，只写入与A1的差别内容。</p>
+<p>在H264协议里定义了三种帧，完整编码的帧叫I帧，参考之前的I帧生成的只包含差异部分编码的帧叫P帧，还有一种参考前后的帧编码的帧叫B帧。</p>
+<p>H264采用的核心算法是帧内压缩和帧间压缩，帧内压缩是生成I帧的算法，帧间压缩是生成B帧和P帧的算法。</p>
+<h3 id="对序列的说明"><a href="#对序列的说明" class="headerlink" title="对序列的说明"></a>对序列的说明</h3><p>在H264中图像以序列为单位进行组织，一个序列是一段图像编码后的数据流，以I帧开始，到下一个I帧结束。<br>一个序列的第一个图像叫做 IDR 图像（立即刷新图像），IDR 图像都是 I 帧图像。H.264 引入 IDR 图像是为了解码的重同步，当解码器解码到 IDR 图像时，立即将参考帧队列清空，将已解码的数据全部输出或抛弃，重新查找参数集，开始一个新的序列。这样，如果前一个序列出现重大错误，在这里可以获得重新同步的机会。IDR图像之后的图像永远不会使用IDR之前的图像的数据来解码。<br>一个序列就是一段内容差异不太大的图像编码后生成的一串数据流。当运动变化比较少时，一个序列可以很长，因为运动变化少就代表图像画面的内容变动很小，所以就可以编一个I帧，然后一直P帧、B帧了。当运动变化多时，可能一个序列就比较短了，比如就包含一个I帧和3、4个P帧。</p>
+<h3 id="对三种帧的介绍"><a href="#对三种帧的介绍" class="headerlink" title="对三种帧的介绍"></a>对三种帧的介绍</h3><ul>
+<li><p><strong>I帧</strong><br>为了更好地理解I帧的概念，我罗列了两种解释：</p>
+<ul>
+<li>帧内编码帧 ，I帧表示关键帧，你可以理解为这一帧画面的完整保留；解码时只需要本帧数据就可以完成（因为包含完整画面）。</li>
+<li><p>帧内编码帧 又称intra picture，I 帧通常是每个 GOP（MPEG 所使用的一种视频压缩技术）的第一个帧，经过适度地压缩，做为随机访问的参考点，可以当成图象。I帧可以看成是一个图像经过压缩后的产物。</p>
+<p><strong>I帧的特点：</strong></p>
+<ul>
+<li>它是一个全帧压缩编码帧。它将全帧图像信息进行JPEG压缩编码及传输</li>
+<li>解码时仅用I帧的数据就可重构完整图像</li>
+<li>I帧描述了图像背景和运动主体的详情</li>
+<li>I帧不需要参考其他画面而生成</li>
+<li>I帧是P帧和B帧的参考帧(其质量直接影响到同组中以后各帧的质量)</li>
+<li>I帧是帧组GOP的基础帧(第一帧),在一组中只有一个I帧</li>
+<li>I帧不需要考虑运动矢量</li>
+<li>I帧所占数据的信息量比较大</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li><p><strong>P帧</strong><br>为了更好地理解P帧的概念，我也罗列了两种解释：</p>
+<ul>
+<li>前向预测编码帧。P帧表示的是这一帧跟之前的一个关键帧（或P帧）的差别，解码时需要用之前缓存的画面叠加上本帧定义的差别，生成最终画面。（也就是差别帧，P帧没有完整画面数据，只有与前一帧的画面差别的数据）</li>
+<li><p>前向预测编码帧 又称predictive-frame，通过充分将低于图像序列中前面已编码帧的时间冗余信息来压缩传输数据量的编码图像，也叫预测帧</p>
+<p><strong>P帧的预测与重构：</strong>P帧是以I帧为参考帧,在I帧中找出P帧“某点”的预测值和运动矢量,取预测差值和运动矢量一起传送。在接收端根据运动矢量从I帧中找出P帧“某点”的预测值并与差值相加以得到P帧“某点”样值,从而可得到完整的P帧。</p>
+<p><strong>P帧特点:</strong></p>
+<ul>
+<li>P帧是I帧后面相隔1~2帧的编码帧</li>
+<li>P帧采用运动补偿的方法传送它与前面的I或P帧的差值及运动矢量(预测误差)</li>
+<li>解码时必须将I帧中的预测值与预测误差求和后才能重构完整的P帧图像</li>
+<li>P帧属于前向预测的帧间编码。它只参考前面最靠近它的I帧或P帧</li>
+<li>P帧可以是其后面P帧的参考帧,也可以是其前后的B帧的参考帧</li>
+<li>由于P帧是参考帧,它可能造成解码错误的扩散</li>
+<li>由于是差值传送,P帧的压缩比较高</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li><p><strong>B帧</strong><br>为了更好地理解P帧的概念，我依然罗列了两种解释：</p>
+<ul>
+<li>双向预测内插编码帧。B帧是双向差别帧，也就是B帧记录的是本帧与前后帧的差别（具体比较复杂，有4种情况，但我这样说简单些），换言之，要解码B帧，不仅要取得之前的缓存画面，还要解码之后的画面，通过前后画面的与本帧数据的叠加取得最终的画面。B帧压缩率高，但是解码时CPU会比较累。</li>
+<li><p>双向预测内插编码帧 又称bi-directional interpolated prediction frame，既考虑与源图像序列前面已编码帧，也顾及源图像序列后面已编码帧之间的时间冗余信息来压缩传输数据量的编码图像，也叫双向预测帧；</p>
+<p><strong>B帧的预测与重构：</strong>B帧以前面的I或P帧和后面的P帧为参考帧,“找出”B帧“某点”的预测值和两个运动矢量,并取预测差值和运动矢量传送。接收端根据运动矢量在两个参考帧中“找出(算出)”预测值并与差值求和,得到B帧“某点”样值,从而可得到完整的B帧。</p>
+<p><strong>B帧的特点：</strong></p>
+<ul>
+<li>B帧是由前面的I或P帧和后面的P帧来进行预测的</li>
+<li>B帧传送的是它与前面的I或P帧和后面的P帧之间的预测误差及运动矢量</li>
+<li>B帧是双向预测编码帧</li>
+<li>B帧压缩比最高,因为它只反映丙参考帧间运动主体的变化情况,预测比较准确</li>
+<li>B帧不是参考帧,不会造成解码错误的扩散</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>I、B、P各帧是根据压缩算法的需要，是人为定义的,它们都是实实在在的物理帧。一般来说，I帧的压缩率是7（跟JPG差不多），P帧是20，B帧可以达到50。可见使用B帧能节省大量空间，节省出来的空间可以用来保存多一些I帧，这样在相同码率下，可以提供更好的画质。</p>
+<h3 id="对压缩算法的说明"><a href="#对压缩算法的说明" class="headerlink" title="对压缩算法的说明"></a>对压缩算法的说明</h3><p>h264的压缩方法:</p>
+<ol>
+<li>分组:把几帧图像分为一组(GOP，也就是一个序列),为防止运动变化,帧数不宜取多。</li>
+<li>定义帧:将每组内各帧图像定义为三种类型,即I帧、B帧和P帧;</li>
+<li>预测帧:以I帧做为基础帧,以I帧预测P帧,再由I帧和P帧预测B帧;</li>
+<li>数据传输:最后将I帧数据与预测的差值信息进行存储和传输。</li>
+</ol>
+<p>帧内（Intraframe）压缩也称为空间压缩（Spatial compression）。当压缩一帧图像时，仅考虑本帧的数据而不考虑相邻帧之间的冗余信息，这实际上与静态图像压缩类似。帧内一般采用有损压缩算法，由于帧内压缩是编码一个完整的图像，所以可以独立的解码、显示。帧内压缩一般达不到很高的压缩，跟编码jpeg差不多。</p>
+<p>帧间（Interframe）压缩的原理是：相邻几帧的数据有很大的相关性，或者说前后两帧信息变化很小的特点。也即连续的视频其相邻帧之间具有冗余信息,根据这一特性，压缩相邻帧之间的冗余量就可以进一步提高压缩量，减小压缩比。帧间压缩也称为时间压缩（Temporal compression），它通过比较时间轴上不同帧之间的数据进行压缩。帧间压缩一般是无损的。帧差值（Frame differencing）算法是一种典型的时间压缩法，它通过比较本帧与相邻帧之间的差异，仅记录本帧与其相邻帧的差值，这样可以大大减少数据量。</p>
+<p>顺便说下有损（Lossy ）压缩和无损（Lossy less）压缩。无损压缩也即压缩前和解压缩后的数据完全一致。多数的无损压缩都采用RLE行程编码算法。有损压缩意味着解压缩后的数据与压缩前的数据不一致。在压缩的过程中要丢失一些人眼和人耳所不敏感的图像或音频信息,而且丢失的信息不可恢复。几乎所有高压缩的算法都采用有损压缩,这样才能达到低数据率的目标。丢失的数据率与压缩比有关,压缩比越小，丢失的数据越多,解压缩后的效果一般越差。此外,某些有损压缩算法采用多次重复压缩的方式,这样还会引起额外的数据丢失。</p>
+<h3 id="三种帧的不同"><a href="#三种帧的不同" class="headerlink" title="三种帧的不同"></a>三种帧的不同</h3><ul>
+<li>I frame:自身可以通过视频解压算法解压成一张单独的完整的图片。</li>
+<li>P frame：需要参考其前面的一个I frame 或者P frame来生成一张完整的图片。</li>
+<li>B frame:则要参考其前一个I或者P帧及其后面的一个P帧来生成一张完整的图片。</li>
+<li>两个I frame之间形成一个GOP，在x264中同时可以通过参数来设定bf的大小，即：I和P或者两个P之间B的数量。</li>
+<li>通过上述基本可以说明如果有B frame 存在的情况下一个GOP的最后一个frame一定是P.</li>
+</ul>
+<h3 id="DTS和PTS的不同"><a href="#DTS和PTS的不同" class="headerlink" title="DTS和PTS的不同"></a>DTS和PTS的不同</h3><p>DTS主要用于视频的解码,在解码阶段使用.PTS主要用于视频的同步和输出.在display的时候使用.在没有B frame的情况下.DTS和PTS的输出顺序是一样的。</p>
+<p>例子:<br>下面给出一个GOP为15的例子,其解码的参照frame及其解码的顺序都在里面:<br><img src="http://ouazw12mz.bkt.clouddn.com/180108004838.png?imageslim" alt=""><br>如上图：I frame 的解码不依赖于任何的其它的帧.而p frame的解码则依赖于其前面的I frame或者P frame.B frame的解码则依赖于其前的最近的一个I frame或者P frame 及其后的最近的一个P frame.</p>
+<h2 id="H-264流数据"><a href="#H-264流数据" class="headerlink" title="H.264流数据"></a>H.264流数据</h2><p>在H.264的语法中，有一个最基础的层，叫做Network Abstraction Layer, 简称为NAL。H.264流数据正是由一系列的NAL单元(NAL Unit, 简称NAUL)组成的。<br><img src="http://ouazw12mz.bkt.clouddn.com/180108004954.png?imageslim" alt=""><br>H264的码流由NALU单元组成,一个NALU可能包含有：</p>
+<ul>
+<li><p><strong>视频帧</strong><br>视频帧也就是视频片段，具体有 P帧, I帧，B帧<br><img src="http://ouazw12mz.bkt.clouddn.com/180108005022.png?imageslim" alt=""></p>
+</li>
+<li><p><strong>H.264属性合集-FormatDesc(包含 SPS和PPS)</strong><br>流数据中，属性集合可能是这样的：<br><img src="http://ouazw12mz.bkt.clouddn.com/180108005131.png?imageslim" alt=""></p>
+</li>
+</ul>
+<h3 id="NALU-header"><a href="#NALU-header" class="headerlink" title="NALU header"></a>NALU header</h3><p>对于流数据来说，一个NAUL的Header中，可能是<code>0x00 00 01</code>或者是<code>0x00 00 00 01</code>作为开头(两者都有可能，下面以0x00 00 01作为例子)。0x00 00 01因此被称为开始码(Start code).<br><img src="http://ouazw12mz.bkt.clouddn.com/180108005156.png?imageslim" alt=""></p>
+<p>总结以上知识，我们知道H264的码流由NALU单元组成，NALU单元包含视频图像数据和H264的参数信息。具体来说参数信息包含SPS（Sequence Parameter Set）和PPS（Picture Parameter Set）.如下图显示了一个H.264码流结构：<br><img src="http://ouazw12mz.bkt.clouddn.com/180108005317.png?imageslim" alt=""></p>
+]]></content>
+    </entry>
+    
+    <entry>
       <title><![CDATA[音视频学习-flv之AudioTag(2)]]></title>
       <url>https://lucius0.github.io/2018/01/03//archivers/media-study-04/</url>
       <content type="html"><![CDATA[<p>初次学习有关音视频这一块的开发，主要是基于 <strong><a href="https://github.com/Bilibili/flv.js" target="_blank" rel="external">flv.js</a></strong> 的学习。这一块的知识概念实在是太多太深了，所以本人是先在本地做记录，后面会整理慢慢地上传与各位分享，假如有地方说错，请勘误。谢谢指点。</p>
@@ -2968,17 +3072,6 @@ $ npm install -D webpack webpack-dev-server</code></p>
     </entry>
     
     <entry>
-      <title><![CDATA[JavaScript之二 - 表达式]]></title>
-      <url>https://lucius0.github.io/2016/08/07//archivers/javascript-expression/</url>
-      <content type="html"><![CDATA[<h2 id="1-delete"><a href="#1-delete" class="headerlink" title="1. delete"></a>1. <strong>delete</strong></h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> obj = &#123;<span class="attr">x</span>:<span class="number">1</span>&#125;;</div><div class="line">obj.x; <span class="comment">// 1</span></div><div class="line"><span class="keyword">delete</span> obj.x;</div><div class="line">obj.x; <span class="comment">// undefined</span></div><div class="line"></div><div class="line"><span class="keyword">var</span> obj1 = &#123;&#125;;</div><div class="line"><span class="built_in">Object</span>.defineProperty(obj1, <span class="string">"x"</span>, &#123;</div><div class="line">	<span class="attr">configurable</span>: <span class="literal">false</span>, <span class="comment">// configurable为false表示该值无法删除</span></div><div class="line">	value: <span class="number">1</span></div><div class="line">&#125;);</div><div class="line"><span class="keyword">delete</span> obj1.x; <span class="comment">// false</span></div><div class="line">obj1.x; <span class="comment">// 1</span></div></pre></td></tr></table></figure>
-<h2 id="2-in"><a href="#2-in" class="headerlink" title="2. in"></a>2. <strong>in</strong></h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">window</span>.x = <span class="number">1</span>; <span class="comment">//全局变量</span></div><div class="line"><span class="string">"x"</span> <span class="keyword">in</span> <span class="built_in">window</span>; <span class="comment">// true</span></div></pre></td></tr></table></figure>
-<h2 id="3-new"><a href="#3-new" class="headerlink" title="3. new"></a>3. <strong>new</strong></h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">Foo</span>(<span class="params"></span>)</span>&#123;&#125;</div><div class="line">Foo.prototype.x = <span class="number">1</span>;</div><div class="line"><span class="keyword">var</span> obj = <span class="keyword">new</span> Foo();</div><div class="line">obj.x; <span class="comment">// 1</span></div><div class="line">obj.hasOwnProperty(<span class="string">"x"</span>); <span class="comment">// false</span></div><div class="line">obj.__proto__.hasOwnProperty(<span class="string">"x"</span>); <span class="comment">// true</span></div></pre></td></tr></table></figure>
-<h2 id="4-this"><a href="#4-this" class="headerlink" title="4. this"></a>4. <strong>this</strong></h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">this</span>; <span class="comment">// window</span></div><div class="line"><span class="keyword">var</span> obj = &#123;<span class="attr">fun</span>:<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123; <span class="keyword">return</span> <span class="keyword">this</span>; &#125;&#125;;</div><div class="line">obj.func(); <span class="comment">// obj</span></div></pre></td></tr></table></figure>
-<h2 id="5-void"><a href="#5-void" class="headerlink" title="5. void"></a>5. <strong>void</strong></h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">void</span> <span class="number">0</span>; <span class="comment">// undefined</span></div><div class="line"><span class="keyword">void</span> (<span class="number">0</span>); <span class="comment">// undefined</span></div></pre></td></tr></table></figure>
-]]></content>
-    </entry>
-    
-    <entry>
       <title><![CDATA[JavaScript之一 - 数据类型]]></title>
       <url>https://lucius0.github.io/2016/08/07//archivers/javascript-data-types/</url>
       <content type="html"><![CDATA[<p>以下笔记是观看<a href="http://www.imooc.com/view/277" target="_blank" rel="external">《深入浅出javascript》</a>所记下的。</p>
@@ -3016,6 +3109,17 @@ $ npm install -D webpack webpack-dev-server</code></p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">Object</span>.prototype.toString.apply([]); <span class="comment">// [object Array]</span></div><div class="line"><span class="built_in">Object</span>.prototype.toString.apply(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;&#125;); <span class="comment">// [object Function]</span></div><div class="line"><span class="built_in">Object</span>.prototype.toString.apply(<span class="literal">null</span>); <span class="comment">// [object Null]</span></div><div class="line"><span class="built_in">Object</span>.prototype.toString.apply(<span class="literal">undefined</span>); <span class="comment">// [object Undefined]</span></div></pre></td></tr></table></figure>
 <p> <strong>注意</strong>：IE/6/7/8 <code>Object.prototype.toString.apply(null); // [object Object]</code></p>
 <p> <strong>总结：</strong> typeof 适合基本类型及function检测，遇到null失效；Class通过{}.toString拿到，适合内置对象和基本类型，遇到null和undefined失效(IE 6/7/8返回[object Object])；instanceof适用自定义对象，也可以用来检测原生对象，在不同iframe和window间检测时失效。<br> <!-- ![](/images/javascript/JavaScript-data-types-01.png) --></p>
+]]></content>
+    </entry>
+    
+    <entry>
+      <title><![CDATA[JavaScript之二 - 表达式]]></title>
+      <url>https://lucius0.github.io/2016/08/07//archivers/javascript-expression/</url>
+      <content type="html"><![CDATA[<h2 id="1-delete"><a href="#1-delete" class="headerlink" title="1. delete"></a>1. <strong>delete</strong></h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> obj = &#123;<span class="attr">x</span>:<span class="number">1</span>&#125;;</div><div class="line">obj.x; <span class="comment">// 1</span></div><div class="line"><span class="keyword">delete</span> obj.x;</div><div class="line">obj.x; <span class="comment">// undefined</span></div><div class="line"></div><div class="line"><span class="keyword">var</span> obj1 = &#123;&#125;;</div><div class="line"><span class="built_in">Object</span>.defineProperty(obj1, <span class="string">"x"</span>, &#123;</div><div class="line">	<span class="attr">configurable</span>: <span class="literal">false</span>, <span class="comment">// configurable为false表示该值无法删除</span></div><div class="line">	value: <span class="number">1</span></div><div class="line">&#125;);</div><div class="line"><span class="keyword">delete</span> obj1.x; <span class="comment">// false</span></div><div class="line">obj1.x; <span class="comment">// 1</span></div></pre></td></tr></table></figure>
+<h2 id="2-in"><a href="#2-in" class="headerlink" title="2. in"></a>2. <strong>in</strong></h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">window</span>.x = <span class="number">1</span>; <span class="comment">//全局变量</span></div><div class="line"><span class="string">"x"</span> <span class="keyword">in</span> <span class="built_in">window</span>; <span class="comment">// true</span></div></pre></td></tr></table></figure>
+<h2 id="3-new"><a href="#3-new" class="headerlink" title="3. new"></a>3. <strong>new</strong></h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">Foo</span>(<span class="params"></span>)</span>&#123;&#125;</div><div class="line">Foo.prototype.x = <span class="number">1</span>;</div><div class="line"><span class="keyword">var</span> obj = <span class="keyword">new</span> Foo();</div><div class="line">obj.x; <span class="comment">// 1</span></div><div class="line">obj.hasOwnProperty(<span class="string">"x"</span>); <span class="comment">// false</span></div><div class="line">obj.__proto__.hasOwnProperty(<span class="string">"x"</span>); <span class="comment">// true</span></div></pre></td></tr></table></figure>
+<h2 id="4-this"><a href="#4-this" class="headerlink" title="4. this"></a>4. <strong>this</strong></h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">this</span>; <span class="comment">// window</span></div><div class="line"><span class="keyword">var</span> obj = &#123;<span class="attr">fun</span>:<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123; <span class="keyword">return</span> <span class="keyword">this</span>; &#125;&#125;;</div><div class="line">obj.func(); <span class="comment">// obj</span></div></pre></td></tr></table></figure>
+<h2 id="5-void"><a href="#5-void" class="headerlink" title="5. void"></a>5. <strong>void</strong></h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">void</span> <span class="number">0</span>; <span class="comment">// undefined</span></div><div class="line"><span class="keyword">void</span> (<span class="number">0</span>); <span class="comment">// undefined</span></div></pre></td></tr></table></figure>
 ]]></content>
     </entry>
     

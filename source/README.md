@@ -87,6 +87,8 @@
 
 - [音视频学习-flv之AudioTag(2)](https://lucius0.github.io/2018/01/03/archivers/media-study-04/)
 
+- [音视频学习-flv之VideoTag(1)[转]](https://lucius0.github.io/2018/01/08/archivers/media-study-05/)
+
 ## tools
 
 ### git

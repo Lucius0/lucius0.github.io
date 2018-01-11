@@ -492,7 +492,7 @@
       
         
   <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
-    <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
+    <div>我只是试下能不能被赞赏😳</div>
     <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
       <span>赏</span>
     </button>
@@ -635,7 +635,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">43</span>
+              <span class="site-state-item-count">44</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -1004,6 +1004,34 @@
 
   
 
+
+  <script type="text/javascript">
+    (function() {
+      try {
+        var document = window.document;
+        document.oncontextmenu = function() {
+          return false;
+        }
+        document.onkeydown = function() {
+          if (window.event.ctrlKey && window.event.keyCode == 67) {
+            return false;
+          }
+          return false;
+        }
+        document.body.oncopy = function() {
+          return false;
+        }
+        document.onselectstart = function() {
+          return false;
+        }
+            
+        document.onselectstart=function(){return false};
+        // document.style.MozUserSelect && document.style.MozUserSelect="none";
+        document.onmousedown=function(){return false};
+        document.style.cursor = "default"; 
+      } catch(e) {}
+    })();
+  </script>
 
 </body>
 </html>

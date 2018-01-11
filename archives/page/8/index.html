@@ -276,7 +276,7 @@
       
        
       
-      OK! 目前共计 43 篇日志。 继续努力。
+      OK! 目前共计 44 篇日志。 继续努力。
     </span>
 
     
@@ -300,9 +300,9 @@
 
       <h1 class="post-title">
         
-            <a class="post-title-link" href="/2016/08/13/archivers/javascript-function-02/" itemprop="url">
+            <a class="post-title-link" href="/2016/08/13/archivers/javascript-execution-context/" itemprop="url">
               
-                <span itemprop="name">JavaScript之七 - 函数与作用域(2)</span>
+                <span itemprop="name">JavaScript之八 - 执行上下文</span>
               
             </a>
         
@@ -310,7 +310,7 @@
 
       <div class="post-meta">
         <time class="post-time" itemprop="dateCreated"
-              datetime="2016-08-13T00:00:00+08:00"
+              datetime="2016-08-13T08:00:00+08:00"
               content="2016-08-13" >
           08-13
         </time>
@@ -337,9 +337,9 @@
 
       <h1 class="post-title">
         
-            <a class="post-title-link" href="/2016/08/11/archivers/javascript-array/" itemprop="url">
+            <a class="post-title-link" href="/2016/08/13/archivers/javascript-function-02/" itemprop="url">
               
-                <span itemprop="name">JavaScript之五 - 数组</span>
+                <span itemprop="name">JavaScript之七 - 函数与作用域(2)</span>
               
             </a>
         
@@ -347,9 +347,9 @@
 
       <div class="post-meta">
         <time class="post-time" itemprop="dateCreated"
-              datetime="2016-08-11T00:00:00+08:00"
-              content="2016-08-11" >
-          08-11
+              datetime="2016-08-13T00:00:00+08:00"
+              content="2016-08-13" >
+          08-13
         </time>
       </div>
 
@@ -411,9 +411,9 @@
 
       <h1 class="post-title">
         
-            <a class="post-title-link" href="/2016/08/09/archivers/javascript-object/" itemprop="url">
+            <a class="post-title-link" href="/2016/08/11/archivers/javascript-array/" itemprop="url">
               
-                <span itemprop="name">JavaScript之四 - 对象</span>
+                <span itemprop="name">JavaScript之五 - 数组</span>
               
             </a>
         
@@ -421,9 +421,9 @@
 
       <div class="post-meta">
         <time class="post-time" itemprop="dateCreated"
-              datetime="2016-08-09T00:00:00+08:00"
-              content="2016-08-09" >
-          08-09
+              datetime="2016-08-11T00:00:00+08:00"
+              content="2016-08-11" >
+          08-11
         </time>
       </div>
 
@@ -448,9 +448,9 @@
 
       <h1 class="post-title">
         
-            <a class="post-title-link" href="/2016/08/08/archivers/javascript-statement/" itemprop="url">
+            <a class="post-title-link" href="/2016/08/09/archivers/javascript-object/" itemprop="url">
               
-                <span itemprop="name">JavaScript之三 - 语法</span>
+                <span itemprop="name">JavaScript之四 - 对象</span>
               
             </a>
         
@@ -458,9 +458,9 @@
 
       <div class="post-meta">
         <time class="post-time" itemprop="dateCreated"
-              datetime="2016-08-08T00:00:00+08:00"
-              content="2016-08-08" >
-          08-08
+              datetime="2016-08-09T00:00:00+08:00"
+              content="2016-08-09" >
+          08-09
         </time>
       </div>
 
@@ -517,7 +517,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">43</span>
+              <span class="site-state-item-count">44</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -861,6 +861,34 @@
 
   
 
+
+  <script type="text/javascript">
+    (function() {
+      try {
+        var document = window.document;
+        document.oncontextmenu = function() {
+          return false;
+        }
+        document.onkeydown = function() {
+          if (window.event.ctrlKey && window.event.keyCode == 67) {
+            return false;
+          }
+          return false;
+        }
+        document.body.oncopy = function() {
+          return false;
+        }
+        document.onselectstart = function() {
+          return false;
+        }
+            
+        document.onselectstart=function(){return false};
+        // document.style.MozUserSelect && document.style.MozUserSelect="none";
+        document.onmousedown=function(){return false};
+        document.style.cursor = "default"; 
+      } catch(e) {}
+    })();
+  </script>
 
 </body>
 </html>

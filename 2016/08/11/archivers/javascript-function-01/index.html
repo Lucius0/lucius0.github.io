@@ -550,7 +550,7 @@ call/apply/bind：func.call(o);
       
         
   <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
-    <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
+    <div>我只是试下能不能被赞赏😳</div>
     <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
       <span>赏</span>
     </button>
@@ -606,8 +606,8 @@ call/apply/bind：func.call(o);
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2016/08/09/archivers/javascript-object/" rel="next" title="JavaScript之四 - 对象">
-                <i class="fa fa-chevron-left"></i> JavaScript之四 - 对象
+              <a href="/2016/08/11/archivers/javascript-array/" rel="next" title="JavaScript之五 - 数组">
+                <i class="fa fa-chevron-left"></i> JavaScript之五 - 数组
               </a>
             
           </div>
@@ -616,8 +616,8 @@ call/apply/bind：func.call(o);
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2016/08/11/archivers/javascript-array/" rel="prev" title="JavaScript之五 - 数组">
-                JavaScript之五 - 数组 <i class="fa fa-chevron-right"></i>
+              <a href="/2016/08/13/archivers/javascript-function-02/" rel="prev" title="JavaScript之七 - 函数与作用域(2)">
+                JavaScript之七 - 函数与作用域(2) <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -693,7 +693,7 @@ call/apply/bind：func.call(o);
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">43</span>
+              <span class="site-state-item-count">44</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -1062,6 +1062,34 @@ call/apply/bind：func.call(o);
 
   
 
+
+  <script type="text/javascript">
+    (function() {
+      try {
+        var document = window.document;
+        document.oncontextmenu = function() {
+          return false;
+        }
+        document.onkeydown = function() {
+          if (window.event.ctrlKey && window.event.keyCode == 67) {
+            return false;
+          }
+          return false;
+        }
+        document.body.oncopy = function() {
+          return false;
+        }
+        document.onselectstart = function() {
+          return false;
+        }
+            
+        document.onselectstart=function(){return false};
+        // document.style.MozUserSelect && document.style.MozUserSelect="none";
+        document.onmousedown=function(){return false};
+        document.style.cursor = "default"; 
+      } catch(e) {}
+    })();
+  </script>
 
 </body>
 </html>

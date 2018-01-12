@@ -75,29 +75,29 @@
 
   <script type="text/javascript">
     (function() {
-      try {
-        var document = window.document;
-        document.oncontextmenu = function() {
-          return false;
-        }
-        document.onkeydown = function() {
-          if (window.event.ctrlKey && window.event.keyCode == 67) {
-            return false;
-          }
-          return false;
-        }
-        document.body.oncopy = function() {
-          return false;
-        }
-        document.onselectstart = function() {
-          return false;
-        }
+      // try {
+      //   var document = window.document;
+      //   document.oncontextmenu = function() {
+      //     return false;
+      //   }
+      //   document.onkeydown = function() {
+      //     if (window.event.ctrlKey && window.event.keyCode == 67) {
+      //       return false;
+      //     }
+      //     return false;
+      //   }
+      //   document.body.oncopy = function() {
+      //     return false;
+      //   }
+      //   document.onselectstart = function() {
+      //     return false;
+      //   }
             
-        document.onselectstart=function(){return false};
-        // document.style.MozUserSelect && document.style.MozUserSelect="none";
-        document.onmousedown=function(){return false};
-        document.style.cursor = "default"; 
-      } catch(e) {}
+      //   document.onselectstart=function(){return false};
+      //   // document.style.MozUserSelect && document.style.MozUserSelect="none";
+      //   document.onmousedown=function(){return false};
+      //   document.style.cursor = "default"; 
+      // } catch(e) {}
     })();
   </script>
 

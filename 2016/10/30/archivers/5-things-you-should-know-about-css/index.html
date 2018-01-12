@@ -1,1 +1,1048 @@
-<!doctype html><html class="theme-next mist" lang="zh-Hans"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1"><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css"><link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css"><link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css"><link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css"><meta name="keywords" content="CSS,"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0"><meta name="description" content="原文链接5-things-you-might-not-know-about-the-css-positioning-types。 这些年来前端开发工程师可以利用不同的css方案来搭建出复杂的页面布局。其中有一部分的解决方案已经有些历史了(比如：float)，当然也有些是最近才逐渐流行起来的(比如：flexbox)。 在这篇文章，我们将会深入一步去探讨一些鲜为人知的关于CSS POSITION定位的"><meta name="keywords" content="CSS"><meta property="og:type" content="article"><meta property="og:title" content="CSS - 5件你需要知道的css定位"><meta property="og:url" content="https://lucius0.github.io/2016/10/30//archivers/5-things-you-should-know-about-css/index.html"><meta property="og:site_name" content="Lucius&#39;s Blog"><meta property="og:description" content="原文链接5-things-you-might-not-know-about-the-css-positioning-types。 这些年来前端开发工程师可以利用不同的css方案来搭建出复杂的页面布局。其中有一部分的解决方案已经有些历史了(比如：float)，当然也有些是最近才逐渐流行起来的(比如：flexbox)。 在这篇文章，我们将会深入一步去探讨一些鲜为人知的关于CSS POSITION定位的"><meta property="og:locale" content="zh-Hans"><meta property="og:image" content="https://lucius0.github.io/images/css/css-07.png"><meta property="og:updated_time" content="2018-01-12T05:23:46.705Z"><meta name="twitter:card" content="summary"><meta name="twitter:title" content="CSS - 5件你需要知道的css定位"><meta name="twitter:description" content="原文链接5-things-you-might-not-know-about-the-css-positioning-types。 这些年来前端开发工程师可以利用不同的css方案来搭建出复杂的页面布局。其中有一部分的解决方案已经有些历史了(比如：float)，当然也有些是最近才逐渐流行起来的(比如：flexbox)。 在这篇文章，我们将会深入一步去探讨一些鲜为人知的关于CSS POSITION定位的"><meta name="twitter:image" content="https://lucius0.github.io/images/css/css-07.png"><script type="text/javascript" id="hexo.configurations">var NexT=window.NexT||{},CONFIG={root:"/",scheme:"Mist",sidebar:{position:"left",display:"post"},fancybox:!0,motion:!1,duoshuo:{userId:"0",author:"博主"},algolia:{applicationID:"",apiKey:"",indexName:"",hits:{per_page:10},labels:{input_placeholder:"Search for Posts",hits_empty:"We didn't find any results for the search: ${query}",hits_stats:"${hits} results found in ${time} ms"}}}</script><link rel="canonical" href="https://lucius0.github.io/2016/10/30//archivers/5-things-you-should-know-about-css/"><title> CSS - 5件你需要知道的css定位 | Lucius's Blog</title></head><body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans"><div class="container one-collumn sidebar-position-left page-post-detail"><div class="headband"></div><header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="header-inner"><div class="site-meta"><div class="custom-logo-site-title"><a href="/" class="brand" rel="start"><span class="logo-line-before"><i></i></span> <span class="site-title">Lucius's Blog</span><span class="logo-line-after"><i></i></span></a></div><p class="site-subtitle"></p></div><div class="site-nav-toggle"> <button><span class="btn-bar"></span><span class="btn-bar"></span><span class="btn-bar"></span></button></div><nav class="site-nav"><ul id="menu" class="menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i><br> 首页</a></li><li class="menu-item menu-item-archives"><a href="/archives" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i><br> 日志</a></li><li class="menu-item menu-item-categories"><a href="/categories" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i><br> 分类</a></li><li class="menu-item menu-item-tags"><a href="/tags" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i><br> 标签</a></li><li class="menu-item menu-item-about"><a href="/about" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i><br> 关于</a></li><li class="menu-item menu-item-search"><a href="javascript:;" class="popup-trigger"><i class="menu-item-icon fa fa-search fa-fw"></i><br> 搜索</a></li></ul><div class="site-search"><div class="popup"><span class="search-icon fa fa-search"></span> <input type="text" id="local-search-input"><div id="local-search-result"></div> <span class="popup-btn-close">close</span></div></div></nav></div></header><main id="main" class="main"><div class="main-inner"><div class="content-wrap"><div id="content" class="content"><div id="posts" class="posts-expand"><article class="post post-type-normal" itemscope itemtype="http://schema.org/Article"><link itemprop="mainEntityOfPage" href="https://lucius0.github.io/2016/10/30/archivers/5-things-you-should-know-about-css/"><span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person"><meta itemprop="name" content="Lucius"><meta itemprop="description" content=""><meta itemprop="image" content="/images/avatar.jpg"></span><span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization"><meta itemprop="name" content="Lucius's Blog"> <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject"><img style="display:none" itemprop="url image" alt="Lucius's Blog" src=""></span></span><header class="post-header"><h1 class="post-title" itemprop="name headline"> CSS - 5件你需要知道的css定位</h1><div class="post-meta"><span class="post-time"><span class="post-meta-item-icon"><i class="fa fa-calendar-o"></i></span> <span class="post-meta-item-text">发表于</span> <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-10-30T00:00:00+08:00">2016-10-30</time></span> <span class="post-category"><span class="post-meta-divider">|</span><span class="post-meta-item-icon"><i class="fa fa-folder-o"></i></span> <span class="post-meta-item-text">分类于</span> <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/front-end/" itemprop="url" rel="index"><span itemprop="name">front-end</span></a></span></span> <span class="post-comments-count"><span class="post-meta-divider">|</span><a href="/2016/10/30/archivers/5-things-you-should-know-about-css/#comments" itemprop="discussionUrl"><span class="post-comments-count disqus-comment-count" data-disqus-identifier="2016/10/30//archivers/5-things-you-should-know-about-css/" itemprop="commentCount"></span></a></span> <span class="post-meta-divider">|</span><span class="page-pv"><i class="fa fa-file-o"></i> 浏览<span class="busuanzi-value" id="busuanzi_value_page_pv"></span> 次</span></div></header><div class="post-body" itemprop="articleBody"><p>原文链接<a href="https://scotch.io/bar-talk/5-things-you-might-not-know-about-the-css-positioning-types" target="_blank" rel="noopener">5-things-you-might-not-know-about-the-css-positioning-types</a>。</p><p>这些年来前端开发工程师可以利用不同的css方案来搭建出复杂的页面布局。其中有一部分的解决方案已经有些历史了(比如：<code>float</code>)，当然也有些是最近才逐渐流行起来的(比如：<code>flexbox</code>)。</p><p>在这篇文章，我们将会深入一步去探讨一些鲜为人知的关于<code>CSS POSITION</code>定位的事情。</p><p>在我们开始学习这些事之前，让我们先快速的浏览下可用的定位类型。</p><h2 id="回顾可用的CSS定位类型"><a href="#回顾可用的CSS定位类型" class="headerlink" title="回顾可用的CSS定位类型"></a>回顾可用的CSS定位类型</h2><p><code>position</code>这个css属性允许我们指定元素的定位类型。</p><h3 id="CSS定位选项"><a href="#CSS定位选项" class="headerlink" title="CSS定位选项"></a>CSS定位选项</h3><p><code>static</code>是该属性的默认值。在这一点上，我们可以称该元素并没有被定位。为了可以定位该元素，我们需要改变它的预设类型。</p><p>为了改变预设类型，我们需要将<code>position</code>设置为如下其中一个：</p><ul><li><p><code>relative</code></p></li><li><p><code>absolute</code></p></li><li><p><code>fixed</code></p></li><li><p><code>sticky</code></p></li></ul><p>只有设置之后，我们才可以使用<code>offset</code>去指定我们元素的位置：</p><ul><li><p><code>top</code></p></li><li><p><code>bottom</code></p></li><li><p><code>left</code></p></li><li><p><code>right</code></p></li><li><p>默认初始值<code>auto</code></p></li></ul><p>需要注意一点的是，把元素<code>position</code>设置为<code>absolute</code>或者<code>fixed</code>我们都称之为绝对定位元素。同样，注意一个被定位的元素可以用<code>z-index</code>来指定他们的层叠关系。</p><h3 id="CSS定位属性的主要差别"><a href="#CSS定位属性的主要差别" class="headerlink" title="CSS定位属性的主要差别"></a>CSS定位属性的主要差别</h3><p>现在，让我们来简单的讨论下这些定位类型的主要差别：</p><ul><li><p>一个<em>绝对</em>定位的元素是会完全脱离正常的流。邻近的兄弟节点会占据它的位置。</p></li><li><p>一个<em>相对</em>或者<em>粘性</em>定位元素保留他们的空间。邻近的元素不会重定位占据该元素保留的空间。然而，这个元素的偏移量不会占据空间。他们已经完全忽略了其他的元素，因此会造成元素之间发生重叠。</p></li><li><p>一个<em>固定(fixed)</em>定位元素(记住：<code>fixed</code>定位类型元素是<code>absolute</code>定位类型元素的子类)经常相对于<code>relative</code>定位类型的视图(除了有<code>transform</code>属性的父元素，新版本的桌面浏览器均支持这种行为)。</p></li><li><p>一个<em>粘性(sticky)</em>定位元素是相对与最近可滑动的父元素(比如：<code>overflow: auto</code>)。假如没有这种父元素，则相对于视图定位。</p></li></ul><p>接下来这些类型会在下面的例子中演示：</p><p data-height="499" data-theme-id="0" data-slug-hash="qOqNgm" data-user="georgemarts" data-default-tab="result" class="codepen">See the Pen <a href="http://codepen.io/georgemarts/pen/qOqNgm" target="_blank" rel="noopener">Timer</a> forked by Georgemarts (<a href="http://codepen.io" target="_blank" rel="noopener">@georgemarts</a>) on <a href="http://codepen.io" target="_blank" rel="noopener">CodePen</a></p><p><em>注意：粘性定位类型还是处于实验性的技术，并且浏览器的支持有限。当然，假如你想要尝试这个效果，可以用polyfill(例如：<a href="https://github.com/wilddeer/stickyfill" target="_blank" rel="noopener">stickyfill</a>)加到不支持此类型的浏览器。鉴于支持有限，因此我们在以下的文章将不会对它进行讲解</em></p><h2 id="绝对定位元素"><a href="#绝对定位元素" class="headerlink" title="绝对定位元素"></a>绝对定位元素</h2><p>我确定很多人已经知道绝对定位是如何实现的。然而，绝对定位不仅仅需要技巧，更是经常能混淆新手。</p><p>基于这个原因，我决定将其列入鲜为人知的列表中(包括相对应的例子)，并在此文章一一讲解。</p><p>因此，一个被设置为绝对定位类型的元素是相对于最近的父元素。当然，这仅仅在父元素的定位类型不是<code>static</code>时有效。考虑到这一点，假如父元素没有声明任何类型，那么它是相对于视图定位。</p><p data-height="499" data-theme-id="0" data-slug-hash="dYOpMm" data-user="georgemarts" data-default-tab="result" class="codepen">See the Pen <a href="http://codepen.io/georgemarts/pen/dYOpMm" target="_blank" rel="noopener">Timer</a> forked by Georgemarts (<a href="http://codepen.io" target="_blank" rel="noopener">@georgemarts</a>) on <a href="http://codepen.io" target="_blank" rel="noopener">CodePen</a></p><p>在这个例子中，我们给绿盒子初始<code>absolute</code>定位并且将<code>offset</code>值设置为<code>bottom: 0</code>和<code>left: 0</code>。此外，我们并没有指定其上一级父元素的定位类型。</p><p>然而，我们使外包围盒相对定位(例如：<code>jumbotron</code>元素)。注意一下只要我们修改了绿盒子的父元素的定位类型就会使得绿盒子的位置发生改变。</p><h2 id="绝对定位元素无视float属性的存在"><a href="#绝对定位元素无视float属性的存在" class="headerlink" title="绝对定位元素无视float属性的存在"></a>绝对定位元素无视<code>float</code>属性的存在</h2><p>假如一个元素是左浮动或者右浮动并且我们设置它的定位类型为<code>absolute</code>或者<code>fixed</code>，属性<code>float</code>的值则会变成<code>none</code>。另一方面，假如我们将该元素的定位类型设置为<code>relative</code>，则会保留其浮动属性。</p><p>看一下以下的相关例子</p><p data-height="499" data-theme-id="0" data-slug-hash="WQovLM" data-user="georgemarts" data-default-tab="result" class="codepen">See the Pen <a href="http://codepen.io/georgemarts/pen/WQovLM" target="_blank" rel="noopener">Timer</a> forked by Georgemarts (<a href="http://codepen.io" target="_blank" rel="noopener">@georgemarts</a>) on <a href="http://codepen.io" target="_blank" rel="noopener">CodePen</a></p><p>在这个例子里面，我们定义了两个向右浮动的不同元素。值得注意的是，当我们将红盒子改变为<strong>绝对</strong>定位元素，它会忽略<code>float</code>属性，而<strong>相对</strong>定位的绿盒子则保留其属性值。</p><h2 id="绝对定位的内联元素跟块级元素的表现一样"><a href="#绝对定位的内联元素跟块级元素的表现一样" class="headerlink" title="绝对定位的内联元素跟块级元素的表现一样"></a>绝对定位的内联元素跟块级元素的表现一样</h2><p><code>absolute</code>定位或者<code>fixed</code>定位的内联元素，跟块级元素具有同样的能力。<a href="https://drafts.csswg.org/css-position-3/#dis-pos-flo" target="_blank" rel="noopener">这份列表</a>总结了什么类型的元素可以转换为块级元素。</p><p>这里同样也是一个例子</p><p data-height="499" data-theme-id="0" data-slug-hash="xwEymK" data-user="georgemarts" data-default-tab="result" class="codepen">See the Pen <a href="http://codepen.io/georgemarts/pen/xwEymK" target="_blank" rel="noopener">Timer</a> forked by Georgemarts (<a href="http://codepen.io" target="_blank" rel="noopener">@georgemarts</a>) on <a href="http://codepen.io" target="_blank" rel="noopener">CodePen</a></p><p>在这个案例里，我们定义了两个不同的元素。第一个就是块级元素(绿盒子，例如:<code>div</code>)，第二个就是内联元素(红盒子，例如：<code>span</code>)。值得注意的是虽然只有绿盒子显示出来。</p><p>红色盒子之所以现在不可见是因为我们赋予它的<code>width</code>跟<code>height</code>只能作用域块级元素跟内联块级元素。再加上，它是一个空的元素(即：它不包含任何的子元素例如文本节点)。</p><p>记住一点的是，假如我们将它的定位类型设置为<code>absolute</code>或者<code>fixed</code>，则该元素会出现是因为这时候它的表现已经跟块级元素一样了。</p><h2 id="外边距-margins-无法合并绝对定位元素"><a href="#外边距-margins-无法合并绝对定位元素" class="headerlink" title="外边距(margins)无法合并绝对定位元素"></a>外边距(margins)无法合并绝对定位元素</h2><p>默认情况下，当两个垂直外边距互相接触，它们会合并成一个，并且<code>margin</code>值指定为较大的那一个。这种表现称之为<a href="https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Box_Model/Mastering_margin_collapsing" target="_blank" rel="noopener">外边距合并</a>。</p><p>就像在一个浮动的元素上的外边距一样，绝对定位的外边距不会跟其他元素合并。</p><p>思考一下以下的例子：</p><p data-height="499" data-theme-id="0" data-slug-hash="jbVrGd" data-user="georgemarts" data-default-tab="result" class="codepen">See the Pen <a href="http://codepen.io/georgemarts/pen/jbVrGd" target="_blank" rel="noopener">Timer</a> forked by Georgemarts (<a href="http://codepen.io" target="_blank" rel="noopener">@georgemarts</a>) on <a href="http://codepen.io" target="_blank" rel="noopener">CodePen</a></p><p>在这个例子，初始化该元素的外边距为<code>20px</code>。另外，该元素的<code>top</code>外边距跟父元素的<code>top</code>外边距合并，同样也是<code>20px</code>。正如你所见，只有当我们绝对定位其元素，<code>top</code>外边距才不会跟父元素相关外边距合并。</p><p>但是，如何防止我们的外边距发生合并呢？当然，我们需要放一些东西来分割它们。</p><p>也就是说，例如有些许的内边距或者边框(我们应该将这条规则应用在父元素或者子元素)。另外一个选择就是在父元素添加<code>clearfix</code>类。</p><h2 id="通过像素和百分比来定位元素"><a href="#通过像素和百分比来定位元素" class="headerlink" title="通过像素和百分比来定位元素"></a>通过像素和百分比来定位元素</h2><p>你是否通过百分比取代像素的方法定义<code>offset</code>来定位元素？假如你的回答是有的话，你可能已经注意到计算<code>offset</code>的值跟你选择的CSS单位(例如：像素或者百分比)不一样。</p><p>这看起来有点让人迷惑，对吧？所以，让我们一起来看一下<a href="https://drafts.csswg.org/css-position-3/#valdef-top-percentage" target="_blank" rel="noopener">规范</a>对于用百分比来声明元素的<code>offset</code>值是怎么描述的。</p><blockquote><p>The offset is a percentage of the containing block’s width (for left or right) or height (for top and bottom). For stickily positioned elements, the offset is a percentage of the flow root’s width (for left or right) or height (for top or bottom). Negative values are allowed.</p></blockquote><p>也就是说，只要我们通过百分比来定义<code>offset</code>的值，那么目标元素的位置依赖于父元素的宽(对于左右偏移)和高(对于上下偏移)。</p><p>下面的例子演示了这种差异</p><p data-height="499" data-theme-id="0" data-slug-hash="PPbGbL" data-user="georgemarts" data-default-tab="result" class="codepen">See the Pen <a href="http://codepen.io/georgemarts/pen/PPbGbL" target="_blank" rel="noopener">Timer</a> forked by Georgemarts (<a href="http://codepen.io" target="_blank" rel="noopener">@georgemarts</a>) on <a href="http://codepen.io" target="_blank" rel="noopener">CodePen</a></p><p>在这个例子，我们通过了像素跟百分比来移动这个元素。果然，当我们用像素来声明<code>offset</code>的值，元素会在按照我们所期望的位置。</p><p>相反，当我们选择百分比来设计CSS偏移单位时，其元素的位移依赖于父元素的尺寸。这里有个有用的可视化图展示了新位置是如何计算的(通过百分比)：</p><p><img src="/images/css/css-07.png" alt=""></p><p><em>注意：估计你已经知道了，<code>transform</code>属性(伴随着不同的<code>translate</code>方法)同样也可以改变一个元素的位置。但是，请注意假如我们使用百分比来作为CSS的单位，那么该元素是相对于它的尺寸位移而不是相对于父元素的尺寸位移。</em></p><h2 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h2><p>我希望这篇文章能帮你牢固的理解CSS的位置布局方法和突出CSS概念的疑惑点。同样我也很乐意在以下的评论你能分享你的想法，问题或者建议。感谢你的阅读！</p><script src="http://codepen.io/assets/embed/ei.js"></script></div><div></div><div><div style="padding:10px 0;margin:20px auto;width:90%;text-align:center"><div>我只是试下能不能被赞赏😳</div> <button id="rewardButton" disable="enable" onclick='var qr=document.getElementById("QR");"none"===qr.style.display?qr.style.display="block":qr.style.display="none"'> <span>赏</span></button><div id="QR" style="display:none"><div id="wechat" style="display:inline-block"> <img id="wechat_qr" src="http://ouazw12mz.bkt.clouddn.com/IMG_4838.jpg" alt="Lucius WeChat Pay"><p>微信打赏</p></div><div id="alipay" style="display:inline-block"> <img id="alipay_qr" src="http://ouazw12mz.bkt.clouddn.com/171226222918.png?imageslim" alt="Lucius Alipay"><p>支付宝打赏</p></div></div></div></div><div><ul class="post-copyright"><li class="post-copyright-author"> <strong>本文作者：</strong>Lucius</li><li class="post-copyright-link"> <strong>本文链接：</strong> <a href="/2016/10/30/archivers/5-things-you-should-know-about-css/" title="CSS - 5件你需要知道的css定位">2016/10/30//archivers/5-things-you-should-know-about-css/</a></li><li class="post-copyright-license"> <strong>版权声明：</strong> 本博客所有文章除特别声明外，均采用 <a href="http://creativecommons.org/licenses/by-nc-sa/3.0/cn/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0 CN</a> 许可协议。转载请注明出处！</li></ul></div><footer class="post-footer"><div class="post-tags"> <a href="/tags/CSS/" rel="tag"># CSS</a></div><div class="post-nav"><div class="post-nav-next post-nav-item"><a href="/2016/10/28/archivers/seven_ways_of_centering_with_css/" rel="next" title="CSS - 七种元素居中的方法"><i class="fa fa-chevron-left"></i> CSS - 七种元素居中的方法</a></div><span class="post-nav-divider"></span><div class="post-nav-prev post-nav-item"> <a href="/2016/11/02/archivers/brief-history-of-js-modules/" rel="prev" title="JavaScript的模块简史">JavaScript的模块简史<i class="fa fa-chevron-right"></i></a></div></div></footer></article><div class="post-spread"></div></div></div><div class="comments" id="comments"><div id="disqus_thread"><noscript> Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript></div></div></div><div class="sidebar-toggle"><div class="sidebar-toggle-line-wrap"><span class="sidebar-toggle-line sidebar-toggle-line-first"></span><span class="sidebar-toggle-line sidebar-toggle-line-middle"></span><span class="sidebar-toggle-line sidebar-toggle-line-last"></span></div></div><aside id="sidebar" class="sidebar"><div class="sidebar-inner"><ul class="sidebar-nav motion-element"><li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap"> 文章目录</li><li class="sidebar-nav-overview" data-target="site-overview"> 站点概览</li></ul><section class="site-overview sidebar-panel"><div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person"> <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="Lucius"><p class="site-author-name" itemprop="name">Lucius</p><p class="site-description motion-element" itemprop="description">stay hungry, stay foolish...</p></div><nav class="site-state motion-element"><div class="site-state-item site-state-posts"> <a href="/archives"><span class="site-state-item-count">44</span> <span class="site-state-item-name">日志</span></a></div><div class="site-state-item site-state-categories"> <a href="/categories"><span class="site-state-item-count">4</span> <span class="site-state-item-name">分类</span></a></div><div class="site-state-item site-state-tags"> <a href="/tags"><span class="site-state-item-count">9</span> <span class="site-state-item-name">标签</span></a></div></nav><div class="links-of-author motion-element"><span class="links-of-author-item"><a href="https://github.com/Lucius0" target="_blank" title="GitHub"><i class="fa fa-fw fa-github"></i> GitHub</a></span></div></section><section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active"><div class="post-toc"><div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#回顾可用的CSS定位类型"><span class="nav-number">1.</span> <span class="nav-text">回顾可用的CSS定位类型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#CSS定位选项"><span class="nav-number">1.1.</span> <span class="nav-text">CSS定位选项</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#CSS定位属性的主要差别"><span class="nav-number">1.2.</span> <span class="nav-text">CSS定位属性的主要差别</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#绝对定位元素"><span class="nav-number">2.</span> <span class="nav-text">绝对定位元素</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#绝对定位元素无视float属性的存在"><span class="nav-number">3.</span> <span class="nav-text">绝对定位元素无视float属性的存在</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#绝对定位的内联元素跟块级元素的表现一样"><span class="nav-number">4.</span> <span class="nav-text">绝对定位的内联元素跟块级元素的表现一样</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#外边距-margins-无法合并绝对定位元素"><span class="nav-number">5.</span> <span class="nav-text">外边距(margins)无法合并绝对定位元素</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#通过像素和百分比来定位元素"><span class="nav-number">6.</span> <span class="nav-text">通过像素和百分比来定位元素</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#结论"><span class="nav-number">7.</span> <span class="nav-text">结论</span></a></li></ol></div></div></section></div></aside></div></main><footer id="footer" class="footer"><div class="footer-inner"><div class="copyright"> &copy; <span itemprop="copyrightYear">2018</span><span class="with-love"><i class="fa fa-heart"></i></span> <span class="author" itemprop="copyrightHolder">Lucius</span></div><div class="powered-by"> 由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动</div><div class="theme-info"> 主题 - <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a></div><div class="busuanzi-count"><script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script><span class="site-uv"><i class="fa fa-user"></i> 访问人数<span class="busuanzi-value" id="busuanzi_value_site_uv"></span></span><span class="site-pv"><i class="fa fa-eye"></i> 总访问量<span class="busuanzi-value" id="busuanzi_value_site_pv"></span>次</span></div></div></footer><div class="back-to-top"><i class="fa fa-arrow-up"></i></div></div><script type="text/javascript">"[object Function]"!==Object.prototype.toString.call(window.Promise)&&(window.Promise=null)</script><script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script><script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script><script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script><script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script><script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script><script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script><script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script><script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script><script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script><script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script><script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script><script type="text/javascript">var disqus_shortname="lucius0",disqus_identifier="2016/10/30//archivers/5-things-you-should-know-about-css/",disqus_title="CSS - 5件你需要知道的css定位";function run_disqus_script(s){var i=document.createElement("script");i.type="text/javascript",i.async=!0,i.src="//"+disqus_shortname+".disqus.com/"+s,(document.getElementsByTagName("head")[0]||document.getElementsByTagName("body")[0]).appendChild(i)}run_disqus_script("count.js");var disqus_config=function(){this.page.url=disqus_url,this.page.identifier=disqus_identifier,this.page.title=disqus_title};run_disqus_script("embed.js")</script><script type="text/javascript">var isfetched=!1,search_path="search.xml";0==search_path.length&&(search_path="search.xml");var path="/"+search_path;function proceedsearch(){$("body").append('<div class="popoverlay">').css("overflow","hidden"),$(".popup").toggle()}var searchFunc=function(e,t,a){"use strict";$.ajax({url:e,dataType:"xml",async:!0,success:function(e){isfetched=!0,$(".popup").detach().appendTo(".header-inner");var r=$("entry",e).map(function(){return{title:$("title",this).text(),content:$("content",this).text(),url:$("url",this).text()}}).get(),c=document.getElementById(t),n=document.getElementById(a);c.addEventListener("input",function(){var e=0,t='<ul class="search-result-list">',a=this.value.trim().toLowerCase().split(/[\s\-]+/);n.innerHTML="",this.value.trim().length>1&&r.forEach(function(r){var c=!1,n=r.title.trim().toLowerCase(),s=r.content.trim().replace(/<[^>]+>/g,"").toLowerCase(),o=decodeURIComponent(r.url),i=-1,l=-1,p=-1;if(""!=n&&a.forEach(function(e,t){i=n.indexOf(e),l=s.indexOf(e),(i>=0||l>=0)&&(c=!0,0==t&&(p=l))}),c){e+=1,t+="<li><a href='"+o+"' class='search-result-title'>"+n+"</a>";var h=r.content.trim().replace(/<[^>]+>/g,"");if(p>=0){var u=p-20,d=p+80;u<0&&(u=0),0==u&&(d=50),d>h.length&&(d=h.length);var f=h.substring(u,d);a.forEach(function(e){var t=new RegExp(e,"gi");f=f.replace(t,'<b class="search-keyword">'+e+"</b>")}),t+='<p class="search-result">'+f+"...</p>"}t+="</li>"}}),t+="</ul>",0==e&&(t='<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'),""==a&&(t='<div id="no-result"><i class="fa fa-search fa-5x" /></div>'),n.innerHTML=t}),proceedsearch()}})};$(".popup-trigger").click(function(e){e.stopPropagation(),0==isfetched?searchFunc(path,"local-search-input","local-search-result"):proceedsearch()}),$(".popup-btn-close").click(function(e){$(".popup").hide(),$(".popoverlay").remove(),$("body").css("overflow","")}),$(".popup").click(function(e){e.stopPropagation()})</script><script>!function(){var t=document.createElement("script"),e=window.location.protocol.split(":")[0];t.src="https"===e?"https://zz.bdstatic.com/linksubmit/push.js":"http://push.zhanzhang.baidu.com/push.js";var s=document.getElementsByTagName("script")[0];s.parentNode.insertBefore(t,s)}()</script><script type="text/javascript"></script></body></html>
+<!doctype html>
+
+
+
+
+<html class="theme-next mist" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="CSS," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="原文链接5-things-you-might-not-know-about-the-css-positioning-types。 这些年来前端开发工程师可以利用不同的css方案来搭建出复杂的页面布局。其中有一部分的解决方案已经有些历史了(比如：float)，当然也有些是最近才逐渐流行起来的(比如：flexbox)。 在这篇文章，我们将会深入一步去探讨一些鲜为人知的关于CSS POSITION定位的">
+<meta name="keywords" content="CSS">
+<meta property="og:type" content="article">
+<meta property="og:title" content="CSS - 5件你需要知道的css定位">
+<meta property="og:url" content="https://lucius0.github.io/2016/10/30//archivers/5-things-you-should-know-about-css/index.html">
+<meta property="og:site_name" content="Lucius&#39;s Blog">
+<meta property="og:description" content="原文链接5-things-you-might-not-know-about-the-css-positioning-types。 这些年来前端开发工程师可以利用不同的css方案来搭建出复杂的页面布局。其中有一部分的解决方案已经有些历史了(比如：float)，当然也有些是最近才逐渐流行起来的(比如：flexbox)。 在这篇文章，我们将会深入一步去探讨一些鲜为人知的关于CSS POSITION定位的">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://lucius0.github.io/images/css/css-07.png">
+<meta property="og:updated_time" content="2018-01-12T05:23:46.705Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="CSS - 5件你需要知道的css定位">
+<meta name="twitter:description" content="原文链接5-things-you-might-not-know-about-the-css-positioning-types。 这些年来前端开发工程师可以利用不同的css方案来搭建出复杂的页面布局。其中有一部分的解决方案已经有些历史了(比如：float)，当然也有些是最近才逐渐流行起来的(比如：flexbox)。 在这篇文章，我们将会深入一步去探讨一些鲜为人知的关于CSS POSITION定位的">
+<meta name="twitter:image" content="https://lucius0.github.io/images/css/css-07.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: false,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://lucius0.github.io/2016/10/30//archivers/5-things-you-should-know-about-css/"/>
+
+
+
+
+
+  <title> CSS - 5件你需要知道的css定位 | Lucius's Blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Lucius's Blog</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            日志
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup">
+ <span class="search-icon fa fa-search"></span>
+ <input type="text" id="local-search-input">
+ <div id="local-search-result"></div>
+ <span class="popup-btn-close">close</span>
+</div>
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="https://lucius0.github.io/2016/10/30/archivers/5-things-you-should-know-about-css/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="Lucius">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.jpg">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="Lucius's Blog">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="Lucius's Blog" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                CSS - 5件你需要知道的css定位
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-10-30T00:00:00+08:00">
+                2016-10-30
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/front-end/" itemprop="url" rel="index">
+                    <span itemprop="name">front-end</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <a href="/2016/10/30/archivers/5-things-you-should-know-about-css/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2016/10/30//archivers/5-things-you-should-know-about-css/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i> 浏览
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>次
+            </span>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>原文链接<a href="https://scotch.io/bar-talk/5-things-you-might-not-know-about-the-css-positioning-types" target="_blank" rel="noopener">5-things-you-might-not-know-about-the-css-positioning-types</a>。</p>
+<p>这些年来前端开发工程师可以利用不同的css方案来搭建出复杂的页面布局。其中有一部分的解决方案已经有些历史了(比如：<code>float</code>)，当然也有些是最近才逐渐流行起来的(比如：<code>flexbox</code>)。</p>
+<p>在这篇文章，我们将会深入一步去探讨一些鲜为人知的关于<code>CSS POSITION</code>定位的事情。</p>
+<p>在我们开始学习这些事之前，让我们先快速的浏览下可用的定位类型。</p>
+<h2 id="回顾可用的CSS定位类型"><a href="#回顾可用的CSS定位类型" class="headerlink" title="回顾可用的CSS定位类型"></a>回顾可用的CSS定位类型</h2><p><code>position</code>这个css属性允许我们指定元素的定位类型。</p>
+<h3 id="CSS定位选项"><a href="#CSS定位选项" class="headerlink" title="CSS定位选项"></a>CSS定位选项</h3><p><code>static</code>是该属性的默认值。在这一点上，我们可以称该元素并没有被定位。为了可以定位该元素，我们需要改变它的预设类型。</p>
+<p>为了改变预设类型，我们需要将<code>position</code>设置为如下其中一个：</p>
+<ul>
+<li><p><code>relative</code></p>
+</li>
+<li><p><code>absolute</code></p>
+</li>
+<li><p><code>fixed</code></p>
+</li>
+<li><p><code>sticky</code></p>
+</li>
+</ul>
+<p>只有设置之后，我们才可以使用<code>offset</code>去指定我们元素的位置：</p>
+<ul>
+<li><p><code>top</code></p>
+</li>
+<li><p><code>bottom</code></p>
+</li>
+<li><p><code>left</code></p>
+</li>
+<li><p><code>right</code></p>
+</li>
+<li><p>默认初始值<code>auto</code></p>
+</li>
+</ul>
+<p>需要注意一点的是，把元素<code>position</code>设置为<code>absolute</code>或者<code>fixed</code>我们都称之为绝对定位元素。同样，注意一个被定位的元素可以用<code>z-index</code>来指定他们的层叠关系。</p>
+<h3 id="CSS定位属性的主要差别"><a href="#CSS定位属性的主要差别" class="headerlink" title="CSS定位属性的主要差别"></a>CSS定位属性的主要差别</h3><p>现在，让我们来简单的讨论下这些定位类型的主要差别：</p>
+<ul>
+<li><p>一个<em>绝对</em>定位的元素是会完全脱离正常的流。邻近的兄弟节点会占据它的位置。</p>
+</li>
+<li><p>一个<em>相对</em>或者<em>粘性</em>定位元素保留他们的空间。邻近的元素不会重定位占据该元素保留的空间。然而，这个元素的偏移量不会占据空间。他们已经完全忽略了其他的元素，因此会造成元素之间发生重叠。</p>
+</li>
+<li><p>一个<em>固定(fixed)</em>定位元素(记住：<code>fixed</code>定位类型元素是<code>absolute</code>定位类型元素的子类)经常相对于<code>relative</code>定位类型的视图(除了有<code>transform</code>属性的父元素，新版本的桌面浏览器均支持这种行为)。</p>
+</li>
+<li><p>一个<em>粘性(sticky)</em>定位元素是相对与最近可滑动的父元素(比如：<code>overflow: auto</code>)。假如没有这种父元素，则相对于视图定位。</p>
+</li>
+</ul>
+<p>接下来这些类型会在下面的例子中演示：</p>
+<p data-height="499" data-theme-id="0" data-slug-hash="qOqNgm" data-user="georgemarts" data-default-tab="result" class="codepen">See the Pen <a href="http://codepen.io/georgemarts/pen/qOqNgm" target="_blank" rel="noopener">Timer</a> forked by Georgemarts (<a href="http://codepen.io" target="_blank" rel="noopener">@georgemarts</a>) on <a href="http://codepen.io" target="_blank" rel="noopener">CodePen</a></p>
+
+<p><em>注意：粘性定位类型还是处于实验性的技术，并且浏览器的支持有限。当然，假如你想要尝试这个效果，可以用polyfill(例如：<a href="https://github.com/wilddeer/stickyfill" target="_blank" rel="noopener">stickyfill</a>)加到不支持此类型的浏览器。鉴于支持有限，因此我们在以下的文章将不会对它进行讲解</em></p>
+<h2 id="绝对定位元素"><a href="#绝对定位元素" class="headerlink" title="绝对定位元素"></a>绝对定位元素</h2><p>我确定很多人已经知道绝对定位是如何实现的。然而，绝对定位不仅仅需要技巧，更是经常能混淆新手。</p>
+<p>基于这个原因，我决定将其列入鲜为人知的列表中(包括相对应的例子)，并在此文章一一讲解。</p>
+<p>因此，一个被设置为绝对定位类型的元素是相对于最近的父元素。当然，这仅仅在父元素的定位类型不是<code>static</code>时有效。考虑到这一点，假如父元素没有声明任何类型，那么它是相对于视图定位。</p>
+<p data-height="499" data-theme-id="0" data-slug-hash="dYOpMm" data-user="georgemarts" data-default-tab="result" class="codepen">See the Pen <a href="http://codepen.io/georgemarts/pen/dYOpMm" target="_blank" rel="noopener">Timer</a> forked by Georgemarts (<a href="http://codepen.io" target="_blank" rel="noopener">@georgemarts</a>) on <a href="http://codepen.io" target="_blank" rel="noopener">CodePen</a></p>
+
+<p>在这个例子中，我们给绿盒子初始<code>absolute</code>定位并且将<code>offset</code>值设置为<code>bottom: 0</code>和<code>left: 0</code>。此外，我们并没有指定其上一级父元素的定位类型。</p>
+<p>然而，我们使外包围盒相对定位(例如：<code>jumbotron</code>元素)。注意一下只要我们修改了绿盒子的父元素的定位类型就会使得绿盒子的位置发生改变。</p>
+<h2 id="绝对定位元素无视float属性的存在"><a href="#绝对定位元素无视float属性的存在" class="headerlink" title="绝对定位元素无视float属性的存在"></a>绝对定位元素无视<code>float</code>属性的存在</h2><p>假如一个元素是左浮动或者右浮动并且我们设置它的定位类型为<code>absolute</code>或者<code>fixed</code>，属性<code>float</code>的值则会变成<code>none</code>。另一方面，假如我们将该元素的定位类型设置为<code>relative</code>，则会保留其浮动属性。</p>
+<p>看一下以下的相关例子</p>
+<p data-height="499" data-theme-id="0" data-slug-hash="WQovLM" data-user="georgemarts" data-default-tab="result" class="codepen">See the Pen <a href="http://codepen.io/georgemarts/pen/WQovLM" target="_blank" rel="noopener">Timer</a> forked by Georgemarts (<a href="http://codepen.io" target="_blank" rel="noopener">@georgemarts</a>) on <a href="http://codepen.io" target="_blank" rel="noopener">CodePen</a></p>
+
+<p>在这个例子里面，我们定义了两个向右浮动的不同元素。值得注意的是，当我们将红盒子改变为<strong>绝对</strong>定位元素，它会忽略<code>float</code>属性，而<strong>相对</strong>定位的绿盒子则保留其属性值。</p>
+<h2 id="绝对定位的内联元素跟块级元素的表现一样"><a href="#绝对定位的内联元素跟块级元素的表现一样" class="headerlink" title="绝对定位的内联元素跟块级元素的表现一样"></a>绝对定位的内联元素跟块级元素的表现一样</h2><p><code>absolute</code>定位或者<code>fixed</code>定位的内联元素，跟块级元素具有同样的能力。<a href="https://drafts.csswg.org/css-position-3/#dis-pos-flo" target="_blank" rel="noopener">这份列表</a>总结了什么类型的元素可以转换为块级元素。</p>
+<p>这里同样也是一个例子</p>
+<p data-height="499" data-theme-id="0" data-slug-hash="xwEymK" data-user="georgemarts" data-default-tab="result" class="codepen">See the Pen <a href="http://codepen.io/georgemarts/pen/xwEymK" target="_blank" rel="noopener">Timer</a> forked by Georgemarts (<a href="http://codepen.io" target="_blank" rel="noopener">@georgemarts</a>) on <a href="http://codepen.io" target="_blank" rel="noopener">CodePen</a></p>
+
+<p>在这个案例里，我们定义了两个不同的元素。第一个就是块级元素(绿盒子，例如:<code>div</code>)，第二个就是内联元素(红盒子，例如：<code>span</code>)。值得注意的是虽然只有绿盒子显示出来。</p>
+<p>红色盒子之所以现在不可见是因为我们赋予它的<code>width</code>跟<code>height</code>只能作用域块级元素跟内联块级元素。再加上，它是一个空的元素(即：它不包含任何的子元素例如文本节点)。</p>
+<p>记住一点的是，假如我们将它的定位类型设置为<code>absolute</code>或者<code>fixed</code>，则该元素会出现是因为这时候它的表现已经跟块级元素一样了。</p>
+<h2 id="外边距-margins-无法合并绝对定位元素"><a href="#外边距-margins-无法合并绝对定位元素" class="headerlink" title="外边距(margins)无法合并绝对定位元素"></a>外边距(margins)无法合并绝对定位元素</h2><p>默认情况下，当两个垂直外边距互相接触，它们会合并成一个，并且<code>margin</code>值指定为较大的那一个。这种表现称之为<a href="https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Box_Model/Mastering_margin_collapsing" target="_blank" rel="noopener">外边距合并</a>。</p>
+<p>就像在一个浮动的元素上的外边距一样，绝对定位的外边距不会跟其他元素合并。</p>
+<p>思考一下以下的例子：</p>
+<p data-height="499" data-theme-id="0" data-slug-hash="jbVrGd" data-user="georgemarts" data-default-tab="result" class="codepen">See the Pen <a href="http://codepen.io/georgemarts/pen/jbVrGd" target="_blank" rel="noopener">Timer</a> forked by Georgemarts (<a href="http://codepen.io" target="_blank" rel="noopener">@georgemarts</a>) on <a href="http://codepen.io" target="_blank" rel="noopener">CodePen</a></p>
+
+<p>在这个例子，初始化该元素的外边距为<code>20px</code>。另外，该元素的<code>top</code>外边距跟父元素的<code>top</code>外边距合并，同样也是<code>20px</code>。正如你所见，只有当我们绝对定位其元素，<code>top</code>外边距才不会跟父元素相关外边距合并。</p>
+<p>但是，如何防止我们的外边距发生合并呢？当然，我们需要放一些东西来分割它们。</p>
+<p>也就是说，例如有些许的内边距或者边框(我们应该将这条规则应用在父元素或者子元素)。另外一个选择就是在父元素添加<code>clearfix</code>类。</p>
+<h2 id="通过像素和百分比来定位元素"><a href="#通过像素和百分比来定位元素" class="headerlink" title="通过像素和百分比来定位元素"></a>通过像素和百分比来定位元素</h2><p>你是否通过百分比取代像素的方法定义<code>offset</code>来定位元素？假如你的回答是有的话，你可能已经注意到计算<code>offset</code>的值跟你选择的CSS单位(例如：像素或者百分比)不一样。</p>
+<p>这看起来有点让人迷惑，对吧？所以，让我们一起来看一下<a href="https://drafts.csswg.org/css-position-3/#valdef-top-percentage" target="_blank" rel="noopener">规范</a>对于用百分比来声明元素的<code>offset</code>值是怎么描述的。</p>
+<blockquote>
+<p>The offset is a percentage of the containing block’s width (for left or right) or height (for top and bottom). For stickily positioned elements, the offset is a percentage of the flow root’s width (for left or right) or height (for top or bottom). Negative values are allowed.</p>
+</blockquote>
+<p>也就是说，只要我们通过百分比来定义<code>offset</code>的值，那么目标元素的位置依赖于父元素的宽(对于左右偏移)和高(对于上下偏移)。</p>
+<p>下面的例子演示了这种差异</p>
+<p data-height="499" data-theme-id="0" data-slug-hash="PPbGbL" data-user="georgemarts" data-default-tab="result" class="codepen">See the Pen <a href="http://codepen.io/georgemarts/pen/PPbGbL" target="_blank" rel="noopener">Timer</a> forked by Georgemarts (<a href="http://codepen.io" target="_blank" rel="noopener">@georgemarts</a>) on <a href="http://codepen.io" target="_blank" rel="noopener">CodePen</a></p>
+
+<p>在这个例子，我们通过了像素跟百分比来移动这个元素。果然，当我们用像素来声明<code>offset</code>的值，元素会在按照我们所期望的位置。</p>
+<p>相反，当我们选择百分比来设计CSS偏移单位时，其元素的位移依赖于父元素的尺寸。这里有个有用的可视化图展示了新位置是如何计算的(通过百分比)：</p>
+<p><img src="/images/css/css-07.png" alt=""></p>
+<p><em>注意：估计你已经知道了，<code>transform</code>属性(伴随着不同的<code>translate</code>方法)同样也可以改变一个元素的位置。但是，请注意假如我们使用百分比来作为CSS的单位，那么该元素是相对于它的尺寸位移而不是相对于父元素的尺寸位移。</em></p>
+<h2 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h2><p>我希望这篇文章能帮你牢固的理解CSS的位置布局方法和突出CSS概念的疑惑点。同样我也很乐意在以下的评论你能分享你的想法，问题或者建议。感谢你的阅读！</p>
+<script src="http://codepen.io/assets/embed/ei.js"> </script>
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+  <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+    <div>我只是试下能不能被赞赏😳</div>
+    <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+      <span>赏</span>
+    </button>
+    <div id="QR" style="display: none;">
+      
+        <div id="wechat" style="display: inline-block">
+          <img id="wechat_qr" src="http://ouazw12mz.bkt.clouddn.com/IMG_4838.jpg" alt="Lucius WeChat Pay"/>
+          <p>微信打赏</p>
+        </div>
+      
+      
+        <div id="alipay" style="display: inline-block">
+          <img id="alipay_qr" src="http://ouazw12mz.bkt.clouddn.com/171226222918.png?imageslim" alt="Lucius Alipay"/>
+          <p>支付宝打赏</p>
+        </div>
+      
+    </div>
+  </div>
+
+
+      
+    </div>
+
+    <div>    
+     
+     
+        <ul class="post-copyright">
+          <li class="post-copyright-author">
+              <strong>本文作者：</strong>Lucius
+          </li>
+          <li class="post-copyright-link">
+            <strong>本文链接：</strong>
+            <a href="/2016/10/30/archivers/5-things-you-should-know-about-css/" title="CSS - 5件你需要知道的css定位">2016/10/30//archivers/5-things-you-should-know-about-css/</a>
+          </li>
+          <li class="post-copyright-license">
+            <strong>版权声明： </strong>
+            本博客所有文章除特别声明外，均采用 <a href="http://creativecommons.org/licenses/by-nc-sa/3.0/cn/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0 CN</a> 许可协议。转载请注明出处！
+          </li>
+        </ul>
+      
+    </div>
+    
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/CSS/" rel="tag"># CSS</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/10/28/archivers/seven_ways_of_centering_with_css/" rel="next" title="CSS - 七种元素居中的方法">
+                <i class="fa fa-chevron-left"></i> CSS - 七种元素居中的方法
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/11/02/archivers/brief-history-of-js-modules/" rel="prev" title="JavaScript的模块简史">
+                JavaScript的模块简史 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.jpg"
+               alt="Lucius" />
+          <p class="site-author-name" itemprop="name">Lucius</p>
+          <p class="site-description motion-element" itemprop="description">stay hungry, stay foolish...</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">44</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">4</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">9</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/Lucius0" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#回顾可用的CSS定位类型"><span class="nav-number">1.</span> <span class="nav-text">回顾可用的CSS定位类型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#CSS定位选项"><span class="nav-number">1.1.</span> <span class="nav-text">CSS定位选项</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#CSS定位属性的主要差别"><span class="nav-number">1.2.</span> <span class="nav-text">CSS定位属性的主要差别</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#绝对定位元素"><span class="nav-number">2.</span> <span class="nav-text">绝对定位元素</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#绝对定位元素无视float属性的存在"><span class="nav-number">3.</span> <span class="nav-text">绝对定位元素无视float属性的存在</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#绝对定位的内联元素跟块级元素的表现一样"><span class="nav-number">4.</span> <span class="nav-text">绝对定位的内联元素跟块级元素的表现一样</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#外边距-margins-无法合并绝对定位元素"><span class="nav-number">5.</span> <span class="nav-text">外边距(margins)无法合并绝对定位元素</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#通过像素和百分比来定位元素"><span class="nav-number">6.</span> <span class="nav-text">通过像素和百分比来定位元素</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#结论"><span class="nav-number">7.</span> <span class="nav-text">结论</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Lucius</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+
+<div class="busuanzi-count">
+
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv"><i class="fa fa-user"></i> 访问人数<span class="busuanzi-value" id="busuanzi_value_site_uv"></span></span>
+  
+
+  
+    <span class="site-pv"><i class="fa fa-eye"></i> 总访问量<span class="busuanzi-value" id="busuanzi_value_site_pv"></span>次</span>
+  
+  
+</div>
+
+
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+
+  
+
+    <script type="text/javascript">
+      var disqus_shortname = 'lucius0';
+      var disqus_identifier = '2016/10/30//archivers/5-things-you-should-know-about-css/';
+
+      var disqus_title = "CSS - 5件你需要知道的css定位";
+
+
+      function run_disqus_script(disqus_script) {
+        var dsq = document.createElement('script');
+        dsq.type = 'text/javascript';
+        dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      }
+
+      run_disqus_script('count.js');
+
+      
+        var disqus_config = function () {
+            this.page.url = disqus_url;
+            this.page.identifier = disqus_identifier;
+            this.page.title = disqus_title;
+        };
+        run_disqus_script('embed.js');
+      
+
+    </script>
+  
+
+
+
+
+
+  
+  
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length == 0) {
+      search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body").append('<div class="popoverlay">').css('overflow', 'hidden');
+      $('.popup').toggle();
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+      $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = $( "entry", xmlResponse ).map(function() {
+            return {
+              title: $( "title", this ).text(),
+              content: $("content",this).text(),
+              url: $( "url" , this).text()
+            };
+          }).get();
+          var $input = document.getElementById(search_id);
+          var $resultContent = document.getElementById(content_id);
+          $input.addEventListener('input', function(){
+            var matchcounts = 0;
+            var str='<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length > 1) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var content_index = [];
+                var data_title = data.title.trim().toLowerCase();
+                var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                var data_url = decodeURIComponent(data.url);
+                var index_title = -1;
+                var index_content = -1;
+                var first_occur = -1;
+                // only match artiles with not empty titles and contents
+                if(data_title != '') {
+                  keywords.forEach(function(keyword, i) {
+                    index_title = data_title.indexOf(keyword);
+                    index_content = data_content.indexOf(keyword);
+                    if( index_title >= 0 || index_content >= 0 ){
+                      isMatch = true;
+                      if (i == 0) {
+                        first_occur = index_content;
+                      }
+                    }
+
+                  });
+                }
+                // show search results
+                if (isMatch) {
+                  matchcounts += 1;
+                  str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                  var content = data.content.trim().replace(/<[^>]+>/g,"");
+                  if (first_occur >= 0) {
+                    // cut out 100 characters
+                    var start = first_occur - 20;
+                    var end = first_occur + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if(start == 0){
+                      end = 50;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    var match_content = content.substring(start, end);
+                    // highlight all keywords
+                    keywords.forEach(function(keyword){
+                      var regS = new RegExp(keyword, "gi");
+                      match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                    });
+
+                    str += "<p class=\"search-result\">" + match_content +"...</p>"
+                  }
+                  str += "</li>";
+                }
+              })};
+            str += "</ul>";
+            if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+            if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+            $resultContent.innerHTML = str;
+          });
+          proceedsearch();
+        }
+      });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".popoverlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+
+  
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+
+  <script type="text/javascript">
+    (function() {
+      // try {
+      //   var document = window.document;
+      //   document.oncontextmenu = function() {
+      //     return false;
+      //   }
+      //   document.onkeydown = function() {
+      //     if (window.event.ctrlKey && window.event.keyCode == 67) {
+      //       return false;
+      //     }
+      //     return false;
+      //   }
+      //   document.body.oncopy = function() {
+      //     return false;
+      //   }
+      //   document.onselectstart = function() {
+      //     return false;
+      //   }
+            
+      //   document.onselectstart=function(){return false};
+      //   // document.style.MozUserSelect && document.style.MozUserSelect="none";
+      //   document.onmousedown=function(){return false};
+      //   document.style.cursor = "default"; 
+      // } catch(e) {}
+    })();
+  </script>
+
+</body>
+</html>

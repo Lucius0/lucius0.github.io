@@ -1,1 +1,1039 @@
-<!doctype html><html class="theme-next mist" lang="zh-Hans"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1"><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css"><link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css"><link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css"><link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css"><meta name="keywords" content="git,"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0"><meta name="description" content="这里记录的是git最为常见的操作，然而这种帖子博客到处可见，我只是记下来方便我查阅而不需要到处去查找。在这里我推荐一位博主的网站《廖雪峰》，相信很多人都已经见过他的文章了，我也是拜读他的文章得以技术成长。还有《git 常用清单》。  工作区和暂存区  工作区：就是本地目录，即在git add之前  暂存区：在文件夹.git这个版本库下有一个暂存区跟很多分支，即在git add之后  当执行git"><meta name="keywords" content="git"><meta property="og:type" content="article"><meta property="og:title" content="git常用技巧"><meta property="og:url" content="https://lucius0.github.io/2016/08/15//archivers/git-tips/index.html"><meta property="og:site_name" content="Lucius&#39;s Blog"><meta property="og:description" content="这里记录的是git最为常见的操作，然而这种帖子博客到处可见，我只是记下来方便我查阅而不需要到处去查找。在这里我推荐一位博主的网站《廖雪峰》，相信很多人都已经见过他的文章了，我也是拜读他的文章得以技术成长。还有《git 常用清单》。  工作区和暂存区  工作区：就是本地目录，即在git add之前  暂存区：在文件夹.git这个版本库下有一个暂存区跟很多分支，即在git add之后  当执行git"><meta property="og:locale" content="zh-Hans"><meta property="og:updated_time" content="2018-01-12T05:23:46.710Z"><meta name="twitter:card" content="summary"><meta name="twitter:title" content="git常用技巧"><meta name="twitter:description" content="这里记录的是git最为常见的操作，然而这种帖子博客到处可见，我只是记下来方便我查阅而不需要到处去查找。在这里我推荐一位博主的网站《廖雪峰》，相信很多人都已经见过他的文章了，我也是拜读他的文章得以技术成长。还有《git 常用清单》。  工作区和暂存区  工作区：就是本地目录，即在git add之前  暂存区：在文件夹.git这个版本库下有一个暂存区跟很多分支，即在git add之后  当执行git"><script type="text/javascript" id="hexo.configurations">var NexT=window.NexT||{},CONFIG={root:"/",scheme:"Mist",sidebar:{position:"left",display:"post"},fancybox:!0,motion:!1,duoshuo:{userId:"0",author:"博主"},algolia:{applicationID:"",apiKey:"",indexName:"",hits:{per_page:10},labels:{input_placeholder:"Search for Posts",hits_empty:"We didn't find any results for the search: ${query}",hits_stats:"${hits} results found in ${time} ms"}}}</script><link rel="canonical" href="https://lucius0.github.io/2016/08/15//archivers/git-tips/"><title> git常用技巧 | Lucius's Blog</title></head><body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans"><div class="container one-collumn sidebar-position-left page-post-detail"><div class="headband"></div><header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="header-inner"><div class="site-meta"><div class="custom-logo-site-title"><a href="/" class="brand" rel="start"><span class="logo-line-before"><i></i></span> <span class="site-title">Lucius's Blog</span><span class="logo-line-after"><i></i></span></a></div><p class="site-subtitle"></p></div><div class="site-nav-toggle"> <button><span class="btn-bar"></span><span class="btn-bar"></span><span class="btn-bar"></span></button></div><nav class="site-nav"><ul id="menu" class="menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i><br> 首页</a></li><li class="menu-item menu-item-archives"><a href="/archives" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i><br> 日志</a></li><li class="menu-item menu-item-categories"><a href="/categories" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i><br> 分类</a></li><li class="menu-item menu-item-tags"><a href="/tags" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i><br> 标签</a></li><li class="menu-item menu-item-about"><a href="/about" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i><br> 关于</a></li><li class="menu-item menu-item-search"><a href="javascript:;" class="popup-trigger"><i class="menu-item-icon fa fa-search fa-fw"></i><br> 搜索</a></li></ul><div class="site-search"><div class="popup"><span class="search-icon fa fa-search"></span> <input type="text" id="local-search-input"><div id="local-search-result"></div> <span class="popup-btn-close">close</span></div></div></nav></div></header><main id="main" class="main"><div class="main-inner"><div class="content-wrap"><div id="content" class="content"><div id="posts" class="posts-expand"><article class="post post-type-normal" itemscope itemtype="http://schema.org/Article"><link itemprop="mainEntityOfPage" href="https://lucius0.github.io/2016/08/15/archivers/git-tips/"><span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person"><meta itemprop="name" content="Lucius"><meta itemprop="description" content=""><meta itemprop="image" content="/images/avatar.jpg"></span><span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization"><meta itemprop="name" content="Lucius's Blog"> <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject"><img style="display:none" itemprop="url image" alt="Lucius's Blog" src=""></span></span><header class="post-header"><h1 class="post-title" itemprop="name headline"> git常用技巧</h1><div class="post-meta"><span class="post-time"><span class="post-meta-item-icon"><i class="fa fa-calendar-o"></i></span> <span class="post-meta-item-text">发表于</span> <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-08-15T04:06:00+08:00">2016-08-15</time></span> <span class="post-category"><span class="post-meta-divider">|</span><span class="post-meta-item-icon"><i class="fa fa-folder-o"></i></span> <span class="post-meta-item-text">分类于</span> <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/tools/" itemprop="url" rel="index"><span itemprop="name">tools</span></a></span></span> <span class="post-comments-count"><span class="post-meta-divider">|</span><a href="/2016/08/15/archivers/git-tips/#comments" itemprop="discussionUrl"><span class="post-comments-count disqus-comment-count" data-disqus-identifier="2016/08/15//archivers/git-tips/" itemprop="commentCount"></span></a></span> <span class="post-meta-divider">|</span><span class="page-pv"><i class="fa fa-file-o"></i> 浏览<span class="busuanzi-value" id="busuanzi_value_page_pv"></span> 次</span></div></header><div class="post-body" itemprop="articleBody"><p>这里记录的是git最为常见的操作，然而这种帖子博客到处可见，我只是记下来方便我查阅而不需要到处去查找。在这里我推荐一位博主的网站<a href="http://www.liaoxuefeng.com/" target="_blank" rel="noopener">《廖雪峰》</a>，相信很多人都已经见过他的文章了，我也是拜读他的文章得以技术成长。还有<a href="https://github.com/jaywcjlove/handbook/blob/master/other/Git%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4%E6%B8%85%E5%8D%95.md" target="_blank" rel="noopener">《git 常用清单》</a>。</p><ol><li><p>工作区和暂存区</p><p> 工作区：就是本地目录，即在<code>git add</code>之前</p><p> 暂存区：在文件夹.git这个<strong>版本库</strong>下有一个暂存区跟很多分支，即在<code>git add</code>之后</p><p> 当执行<code>git add</code>命令时，工作区的内容便会到stage暂存区，<code>git commit</code>之后暂存区的内容就会提交到相对应的分支上。</p></li><li><p>git管理的是修改</p><p> 比如第一次修改<strong>readme</strong>，然后执行<code>git add</code>到暂存区，然后再修改readme，最后执行<code>git commit</code>提交到分支。</p><p> 结果调用<code>git status</code>时发现现在仍有一个<strong>modified</strong>文件，这是因为我们没有把新修改的文件提交到暂存区，所以导致分支中的文件和工作区的原文不匹配。所以我们需要重新<strong>add</strong>跟<strong>commit</strong>。这就是所说的，git管理的是<strong>“修改”</strong>，而不是<strong>“文件”</strong>本身。</p></li></ol><h2 id="1、丢弃工作区的文件"><a href="#1、丢弃工作区的文件" class="headerlink" title="1、丢弃工作区的文件"></a>1、丢弃工作区的文件</h2><p><strong>modified</strong></p><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git checkout -- file</span><br></pre></td></tr></table></figure><h2 id="2、暂存区回滚"><a href="#2、暂存区回滚" class="headerlink" title="2、暂存区回滚"></a>2、暂存区回滚</h2><p><strong>add</strong></p><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ git reset HEAD file</span><br><span class="line">$ git checkout -- file</span><br><span class="line"><span class="comment">// 也可以</span></span><br><span class="line">$ git checkout HEAD -- file</span><br></pre></td></tr></table></figure><h2 id="3、版本回滚"><a href="#3、版本回滚" class="headerlink" title="3、版本回滚"></a>3、版本回滚</h2><p><strong>commit</strong></p><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ git reset --hard commit_id</span><br><span class="line"><span class="comment">// 查看历史版本</span></span><br><span class="line">$ git log</span><br><span class="line"><span class="comment">// 查看未来版本</span></span><br><span class="line">$ git relog</span><br></pre></td></tr></table></figure><h2 id="4、回滚已提交到远程仓库的提交"><a href="#4、回滚已提交到远程仓库的提交" class="headerlink" title="4、回滚已提交到远程仓库的提交"></a>4、回滚已提交到远程仓库的提交</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git revert commit_id</span><br></pre></td></tr></table></figure><h2 id="5、filename-too-long错误"><a href="#5、filename-too-long错误" class="headerlink" title="5、filename too long错误"></a>5、filename too long错误</h2><p>我在windows提交node_module时，发现node_module的路径太长了，导致我没法提交，找到了网上的解决方法。</p><p>详细查看这里 <a href="http://stackoverflow.com/questions/21123415/git-pull-aborted-with-error-filename-too-long" target="_blank" rel="noopener">Filename too long</a></p><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git config --system core.longpaths <span class="literal">true</span></span><br></pre></td></tr></table></figure><h2 id="6、查看修改历史"><a href="#6、查看修改历史" class="headerlink" title="6、查看修改历史"></a>6、查看修改历史</h2><ul><li><strong>git log –pretty</strong>：可列出文件的所有改动历史，注意，这里着眼于具体的一个文件，而不是git库，如果是库，那就有很多改动了</li></ul><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git log --pretty=oneline filename</span><br></pre></td></tr></table></figure><ul><li><strong>git show</strong>：打印出文件的详细改动历史，行前的数字就是每次提交的commit_id，常常配合<code>git log</code>查看某个文件的commit_id</li></ul><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git show commit_id</span><br></pre></td></tr></table></figure><ul><li><strong>git reflog</strong>：查看每一次的操作命令</li></ul><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git reflog</span><br></pre></td></tr></table></figure><h2 id="7、创建分支"><a href="#7、创建分支" class="headerlink" title="7、创建分支"></a>7、创建分支</h2><ul><li>创建并切换分支</li></ul><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git checkout -b dev_name</span><br></pre></td></tr></table></figure><ul><li>推送分支</li></ul><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git push -u origin dev:dev <span class="comment">// -u 关联本地分支与远程分支</span></span><br></pre></td></tr></table></figure><p>如果pull的时候提示<strong>“no tracking information”</strong>，则说明本地分支没有跟踪远程分支</p><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git branch --set-upstream branch-name origin/branch-name</span><br></pre></td></tr></table></figure><h2 id="8、删除分支"><a href="#8、删除分支" class="headerlink" title="8、删除分支"></a>8、删除分支</h2><ul><li>删除本地分支</li></ul><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git branch -d dev_name</span><br></pre></td></tr></table></figure><ul><li>删除远程分支</li></ul><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git push origin :dev_name <span class="comment">//注意冒号跟分支名没有空格</span></span><br></pre></td></tr></table></figure><h2 id="9、暂存修改"><a href="#9、暂存修改" class="headerlink" title="9、暂存修改"></a>9、暂存修改</h2><p>若遇到工作的分支上还没做完同时又不想提交，并且这时候另外一分支出现bug急需修复，这个时候我们可以将本地修改做暂时储存</p><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git stash [save <span class="string">"description"</span>] <span class="comment">// 暂时存储是否添加描述为选填</span></span><br></pre></td></tr></table></figure><p>查看暂存列表</p><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git stash list</span><br></pre></td></tr></table></figure><p>取出stash列表内容</p><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ git stash apply <span class="comment">// 全部取出</span></span><br><span class="line"></span><br><span class="line">$ git stash apply stash@&#123;index&#125; <span class="comment">// 取index下的储存</span></span><br></pre></td></tr></table></figure><p>取消stash储存</p><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git stash drop stash@&#123;index&#125;</span><br></pre></td></tr></table></figure><h2 id="10、强制覆盖远程内容"><a href="#10、强制覆盖远程内容" class="headerlink" title="10、强制覆盖远程内容"></a>10、强制覆盖远程内容</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git push origin master --force</span><br></pre></td></tr></table></figure><h2 id="11、修改commit备注"><a href="#11、修改commit备注" class="headerlink" title="11、修改commit备注"></a>11、修改commit备注</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git commit --amend</span><br></pre></td></tr></table></figure><h2 id="12、重命名分支"><a href="#12、重命名分支" class="headerlink" title="12、重命名分支"></a>12、重命名分支</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git branch -m ordinary-dev-name <span class="keyword">new</span>-dev-name</span><br></pre></td></tr></table></figure><h2 id="13、标签"><a href="#13、标签" class="headerlink" title="13、标签"></a>13、标签</h2><p>显示标签(可以参考<a href="http://www.liaoxuefeng.com/wiki/0013739516305929606dd18361248578c67b8067c8c017b000/0013762144381812a168659b3dd4610b4229d81de5056cc000" target="_blank" rel="noopener">廖雪峰大大的博客</a>)</p><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 所有标签</span></span><br><span class="line">$ git tag</span><br><span class="line"></span><br><span class="line"><span class="comment">// 系列标签(显示1.9.*的所有标签)</span></span><br><span class="line">$ git tag -l <span class="string">'v1.9.*'</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 查看相应标签的版本信息</span></span><br><span class="line">$ git show v1<span class="number">.9</span><span class="number">.0</span></span><br></pre></td></tr></table></figure><p>新建标签</p><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git tag -a v1<span class="number">.9</span><span class="number">.9</span> -m <span class="string">"version tag description"</span> <span class="comment">// -a(annotated)</span></span><br></pre></td></tr></table></figure><p>删除标签</p><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 删除本地标签</span></span><br><span class="line">$ git tag -d v1<span class="number">.9</span><span class="number">.9</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 删除远程标签</span></span><br><span class="line">$ git tag -d v1<span class="number">.9</span><span class="number">.9</span></span><br><span class="line">$ git push origin :refs/tags/v1<span class="number">.9</span><span class="number">.9</span></span><br></pre></td></tr></table></figure><p>推送标签</p><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 推送指定标签</span></span><br><span class="line">$ git push origin v1<span class="number">.9</span><span class="number">.9</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 推送所有标签</span></span><br><span class="line">$ git push origin --tags</span><br></pre></td></tr></table></figure><h2 id="14、远程分支"><a href="#14、远程分支" class="headerlink" title="14、远程分支"></a>14、远程分支</h2><p>拉取远程分支</p><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// git checkout -b [分支名] [远程名]/[分支名]</span></span><br><span class="line">$ git checkout -b test origin/test</span><br></pre></td></tr></table></figure><p>跟踪远程分支</p><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git checkout --track origin/test</span><br></pre></td></tr></table></figure><p>推送远程分支</p><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git push origin localBranch:remoteBranch</span><br></pre></td></tr></table></figure><h2 id="15、Permission-denied-publickey"><a href="#15、Permission-denied-publickey" class="headerlink" title="15、Permission denied (publickey)"></a>15、Permission denied (publickey)</h2><p>今天要拉取一个新项目，发现了老是拉不成功，在<strong>gitlab</strong>成员权限检查了完全没问题，只能先试试重新生成key。</p><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ ssh-keygen -t rsa -C <span class="string">"xxx@xxx.com"</span> -f ~<span class="regexp">/.ssh/</span>MyXXX</span><br></pre></td></tr></table></figure><p>发现还是不行。后来查到了是因为新添加的key不能加入ssh，于是就试试下面的命令就发现好了。</p><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ ssh-agent</span><br><span class="line">$ ssh-add ~<span class="regexp">/.ssh/</span>MyXXX</span><br></pre></td></tr></table></figure></div><div></div><div><div style="padding:10px 0;margin:20px auto;width:90%;text-align:center"><div>我只是试下能不能被赞赏😳</div> <button id="rewardButton" disable="enable" onclick='var qr=document.getElementById("QR");"none"===qr.style.display?qr.style.display="block":qr.style.display="none"'> <span>赏</span></button><div id="QR" style="display:none"><div id="wechat" style="display:inline-block"> <img id="wechat_qr" src="http://ouazw12mz.bkt.clouddn.com/IMG_4838.jpg" alt="Lucius WeChat Pay"><p>微信打赏</p></div><div id="alipay" style="display:inline-block"> <img id="alipay_qr" src="http://ouazw12mz.bkt.clouddn.com/171226222918.png?imageslim" alt="Lucius Alipay"><p>支付宝打赏</p></div></div></div></div><div><ul class="post-copyright"><li class="post-copyright-author"> <strong>本文作者：</strong>Lucius</li><li class="post-copyright-link"> <strong>本文链接：</strong> <a href="/2016/08/15/archivers/git-tips/" title="git常用技巧">2016/08/15//archivers/git-tips/</a></li><li class="post-copyright-license"> <strong>版权声明：</strong> 本博客所有文章除特别声明外，均采用 <a href="http://creativecommons.org/licenses/by-nc-sa/3.0/cn/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0 CN</a> 许可协议。转载请注明出处！</li></ul></div><footer class="post-footer"><div class="post-tags"> <a href="/tags/git/" rel="tag"># git</a></div><div class="post-nav"><div class="post-nav-next post-nav-item"><a href="/2016/08/15/archivers/git-local-merge-github/" rel="next" title="将github的合并到本地(含提交日志)"><i class="fa fa-chevron-left"></i> 将github的合并到本地(含提交日志)</a></div><span class="post-nav-divider"></span><div class="post-nav-prev post-nav-item"> <a href="/2016/08/18/archivers/javascript-prototype/" rel="prev" title="JavaScript之十 - prototype">JavaScript之十 - prototype<i class="fa fa-chevron-right"></i></a></div></div></footer></article><div class="post-spread"></div></div></div><div class="comments" id="comments"><div id="disqus_thread"><noscript> Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript></div></div></div><div class="sidebar-toggle"><div class="sidebar-toggle-line-wrap"><span class="sidebar-toggle-line sidebar-toggle-line-first"></span><span class="sidebar-toggle-line sidebar-toggle-line-middle"></span><span class="sidebar-toggle-line sidebar-toggle-line-last"></span></div></div><aside id="sidebar" class="sidebar"><div class="sidebar-inner"><ul class="sidebar-nav motion-element"><li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap"> 文章目录</li><li class="sidebar-nav-overview" data-target="site-overview"> 站点概览</li></ul><section class="site-overview sidebar-panel"><div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person"> <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="Lucius"><p class="site-author-name" itemprop="name">Lucius</p><p class="site-description motion-element" itemprop="description">stay hungry, stay foolish...</p></div><nav class="site-state motion-element"><div class="site-state-item site-state-posts"> <a href="/archives"><span class="site-state-item-count">44</span> <span class="site-state-item-name">日志</span></a></div><div class="site-state-item site-state-categories"> <a href="/categories"><span class="site-state-item-count">4</span> <span class="site-state-item-name">分类</span></a></div><div class="site-state-item site-state-tags"> <a href="/tags"><span class="site-state-item-count">9</span> <span class="site-state-item-name">标签</span></a></div></nav><div class="links-of-author motion-element"><span class="links-of-author-item"><a href="https://github.com/Lucius0" target="_blank" title="GitHub"><i class="fa fa-fw fa-github"></i> GitHub</a></span></div></section><section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active"><div class="post-toc"><div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1、丢弃工作区的文件"><span class="nav-number">1.</span> <span class="nav-text">1、丢弃工作区的文件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2、暂存区回滚"><span class="nav-number">2.</span> <span class="nav-text">2、暂存区回滚</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3、版本回滚"><span class="nav-number">3.</span> <span class="nav-text">3、版本回滚</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4、回滚已提交到远程仓库的提交"><span class="nav-number">4.</span> <span class="nav-text">4、回滚已提交到远程仓库的提交</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5、filename-too-long错误"><span class="nav-number">5.</span> <span class="nav-text">5、filename too long错误</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6、查看修改历史"><span class="nav-number">6.</span> <span class="nav-text">6、查看修改历史</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7、创建分支"><span class="nav-number">7.</span> <span class="nav-text">7、创建分支</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#8、删除分支"><span class="nav-number">8.</span> <span class="nav-text">8、删除分支</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#9、暂存修改"><span class="nav-number">9.</span> <span class="nav-text">9、暂存修改</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#10、强制覆盖远程内容"><span class="nav-number">10.</span> <span class="nav-text">10、强制覆盖远程内容</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#11、修改commit备注"><span class="nav-number">11.</span> <span class="nav-text">11、修改commit备注</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#12、重命名分支"><span class="nav-number">12.</span> <span class="nav-text">12、重命名分支</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#13、标签"><span class="nav-number">13.</span> <span class="nav-text">13、标签</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#14、远程分支"><span class="nav-number">14.</span> <span class="nav-text">14、远程分支</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#15、Permission-denied-publickey"><span class="nav-number">15.</span> <span class="nav-text">15、Permission denied (publickey)</span></a></li></ol></div></div></section></div></aside></div></main><footer id="footer" class="footer"><div class="footer-inner"><div class="copyright"> &copy; <span itemprop="copyrightYear">2018</span><span class="with-love"><i class="fa fa-heart"></i></span> <span class="author" itemprop="copyrightHolder">Lucius</span></div><div class="powered-by"> 由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动</div><div class="theme-info"> 主题 - <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a></div><div class="busuanzi-count"><script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script><span class="site-uv"><i class="fa fa-user"></i> 访问人数<span class="busuanzi-value" id="busuanzi_value_site_uv"></span></span><span class="site-pv"><i class="fa fa-eye"></i> 总访问量<span class="busuanzi-value" id="busuanzi_value_site_pv"></span>次</span></div></div></footer><div class="back-to-top"><i class="fa fa-arrow-up"></i></div></div><script type="text/javascript">"[object Function]"!==Object.prototype.toString.call(window.Promise)&&(window.Promise=null)</script><script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script><script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script><script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script><script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script><script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script><script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script><script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script><script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script><script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script><script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script><script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script><script type="text/javascript">var disqus_shortname="lucius0",disqus_identifier="2016/08/15//archivers/git-tips/",disqus_title="git常用技巧";function run_disqus_script(s){var i=document.createElement("script");i.type="text/javascript",i.async=!0,i.src="//"+disqus_shortname+".disqus.com/"+s,(document.getElementsByTagName("head")[0]||document.getElementsByTagName("body")[0]).appendChild(i)}run_disqus_script("count.js");var disqus_config=function(){this.page.url=disqus_url,this.page.identifier=disqus_identifier,this.page.title=disqus_title};run_disqus_script("embed.js")</script><script type="text/javascript">var isfetched=!1,search_path="search.xml";0==search_path.length&&(search_path="search.xml");var path="/"+search_path;function proceedsearch(){$("body").append('<div class="popoverlay">').css("overflow","hidden"),$(".popup").toggle()}var searchFunc=function(e,t,a){"use strict";$.ajax({url:e,dataType:"xml",async:!0,success:function(e){isfetched=!0,$(".popup").detach().appendTo(".header-inner");var r=$("entry",e).map(function(){return{title:$("title",this).text(),content:$("content",this).text(),url:$("url",this).text()}}).get(),c=document.getElementById(t),n=document.getElementById(a);c.addEventListener("input",function(){var e=0,t='<ul class="search-result-list">',a=this.value.trim().toLowerCase().split(/[\s\-]+/);n.innerHTML="",this.value.trim().length>1&&r.forEach(function(r){var c=!1,n=r.title.trim().toLowerCase(),s=r.content.trim().replace(/<[^>]+>/g,"").toLowerCase(),o=decodeURIComponent(r.url),i=-1,l=-1,p=-1;if(""!=n&&a.forEach(function(e,t){i=n.indexOf(e),l=s.indexOf(e),(i>=0||l>=0)&&(c=!0,0==t&&(p=l))}),c){e+=1,t+="<li><a href='"+o+"' class='search-result-title'>"+n+"</a>";var h=r.content.trim().replace(/<[^>]+>/g,"");if(p>=0){var u=p-20,d=p+80;u<0&&(u=0),0==u&&(d=50),d>h.length&&(d=h.length);var f=h.substring(u,d);a.forEach(function(e){var t=new RegExp(e,"gi");f=f.replace(t,'<b class="search-keyword">'+e+"</b>")}),t+='<p class="search-result">'+f+"...</p>"}t+="</li>"}}),t+="</ul>",0==e&&(t='<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'),""==a&&(t='<div id="no-result"><i class="fa fa-search fa-5x" /></div>'),n.innerHTML=t}),proceedsearch()}})};$(".popup-trigger").click(function(e){e.stopPropagation(),0==isfetched?searchFunc(path,"local-search-input","local-search-result"):proceedsearch()}),$(".popup-btn-close").click(function(e){$(".popup").hide(),$(".popoverlay").remove(),$("body").css("overflow","")}),$(".popup").click(function(e){e.stopPropagation()})</script><script>!function(){var t=document.createElement("script"),e=window.location.protocol.split(":")[0];t.src="https"===e?"https://zz.bdstatic.com/linksubmit/push.js":"http://push.zhanzhang.baidu.com/push.js";var s=document.getElementsByTagName("script")[0];s.parentNode.insertBefore(t,s)}()</script><script type="text/javascript"></script></body></html>
+<!doctype html>
+
+
+
+
+<html class="theme-next mist" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="git," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="这里记录的是git最为常见的操作，然而这种帖子博客到处可见，我只是记下来方便我查阅而不需要到处去查找。在这里我推荐一位博主的网站《廖雪峰》，相信很多人都已经见过他的文章了，我也是拜读他的文章得以技术成长。还有《git 常用清单》。  工作区和暂存区  工作区：就是本地目录，即在git add之前  暂存区：在文件夹.git这个版本库下有一个暂存区跟很多分支，即在git add之后  当执行git">
+<meta name="keywords" content="git">
+<meta property="og:type" content="article">
+<meta property="og:title" content="git常用技巧">
+<meta property="og:url" content="https://lucius0.github.io/2016/08/15//archivers/git-tips/index.html">
+<meta property="og:site_name" content="Lucius&#39;s Blog">
+<meta property="og:description" content="这里记录的是git最为常见的操作，然而这种帖子博客到处可见，我只是记下来方便我查阅而不需要到处去查找。在这里我推荐一位博主的网站《廖雪峰》，相信很多人都已经见过他的文章了，我也是拜读他的文章得以技术成长。还有《git 常用清单》。  工作区和暂存区  工作区：就是本地目录，即在git add之前  暂存区：在文件夹.git这个版本库下有一个暂存区跟很多分支，即在git add之后  当执行git">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-01-12T05:23:46.710Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="git常用技巧">
+<meta name="twitter:description" content="这里记录的是git最为常见的操作，然而这种帖子博客到处可见，我只是记下来方便我查阅而不需要到处去查找。在这里我推荐一位博主的网站《廖雪峰》，相信很多人都已经见过他的文章了，我也是拜读他的文章得以技术成长。还有《git 常用清单》。  工作区和暂存区  工作区：就是本地目录，即在git add之前  暂存区：在文件夹.git这个版本库下有一个暂存区跟很多分支，即在git add之后  当执行git">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: false,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://lucius0.github.io/2016/08/15//archivers/git-tips/"/>
+
+
+
+
+
+  <title> git常用技巧 | Lucius's Blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Lucius's Blog</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            日志
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup">
+ <span class="search-icon fa fa-search"></span>
+ <input type="text" id="local-search-input">
+ <div id="local-search-result"></div>
+ <span class="popup-btn-close">close</span>
+</div>
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="https://lucius0.github.io/2016/08/15/archivers/git-tips/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="Lucius">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.jpg">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="Lucius's Blog">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="Lucius's Blog" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                git常用技巧
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-08-15T04:06:00+08:00">
+                2016-08-15
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/tools/" itemprop="url" rel="index">
+                    <span itemprop="name">tools</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <a href="/2016/08/15/archivers/git-tips/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2016/08/15//archivers/git-tips/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i> 浏览
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>次
+            </span>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>这里记录的是git最为常见的操作，然而这种帖子博客到处可见，我只是记下来方便我查阅而不需要到处去查找。在这里我推荐一位博主的网站<a href="http://www.liaoxuefeng.com/" target="_blank" rel="noopener">《廖雪峰》</a>，相信很多人都已经见过他的文章了，我也是拜读他的文章得以技术成长。还有<a href="https://github.com/jaywcjlove/handbook/blob/master/other/Git%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4%E6%B8%85%E5%8D%95.md" target="_blank" rel="noopener">《git 常用清单》</a>。</p>
+<ol>
+<li><p>工作区和暂存区</p>
+<p> 工作区：就是本地目录，即在<code>git add</code>之前</p>
+<p> 暂存区：在文件夹.git这个<strong>版本库</strong>下有一个暂存区跟很多分支，即在<code>git add</code>之后</p>
+<p> 当执行<code>git add</code>命令时，工作区的内容便会到stage暂存区，<code>git commit</code>之后暂存区的内容就会提交到相对应的分支上。</p>
+</li>
+<li><p>git管理的是修改</p>
+<p> 比如第一次修改<strong>readme</strong>，然后执行<code>git add</code>到暂存区，然后再修改readme，最后执行<code>git commit</code>提交到分支。</p>
+<p> 结果调用<code>git status</code>时发现现在仍有一个<strong>modified</strong>文件，这是因为我们没有把新修改的文件提交到暂存区，所以导致分支中的文件和工作区的原文不匹配。所以我们需要重新<strong>add</strong>跟<strong>commit</strong>。这就是所说的，git管理的是<strong>“修改”</strong>，而不是<strong>“文件”</strong>本身。</p>
+</li>
+</ol>
+<h2 id="1、丢弃工作区的文件"><a href="#1、丢弃工作区的文件" class="headerlink" title="1、丢弃工作区的文件"></a>1、丢弃工作区的文件</h2><p><strong>modified</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git checkout -- file</span><br></pre></td></tr></table></figure>
+<h2 id="2、暂存区回滚"><a href="#2、暂存区回滚" class="headerlink" title="2、暂存区回滚"></a>2、暂存区回滚</h2><p><strong>add</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ git reset HEAD file</span><br><span class="line">$ git checkout -- file</span><br><span class="line"><span class="comment">// 也可以</span></span><br><span class="line">$ git checkout HEAD -- file</span><br></pre></td></tr></table></figure>
+<h2 id="3、版本回滚"><a href="#3、版本回滚" class="headerlink" title="3、版本回滚"></a>3、版本回滚</h2><p><strong>commit</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ git reset --hard commit_id</span><br><span class="line"><span class="comment">// 查看历史版本</span></span><br><span class="line">$ git log</span><br><span class="line"><span class="comment">// 查看未来版本</span></span><br><span class="line">$ git relog</span><br></pre></td></tr></table></figure>
+<h2 id="4、回滚已提交到远程仓库的提交"><a href="#4、回滚已提交到远程仓库的提交" class="headerlink" title="4、回滚已提交到远程仓库的提交"></a>4、回滚已提交到远程仓库的提交</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git revert commit_id</span><br></pre></td></tr></table></figure>
+<h2 id="5、filename-too-long错误"><a href="#5、filename-too-long错误" class="headerlink" title="5、filename too long错误"></a>5、filename too long错误</h2><p>我在windows提交node_module时，发现node_module的路径太长了，导致我没法提交，找到了网上的解决方法。</p>
+<p>详细查看这里 <a href="http://stackoverflow.com/questions/21123415/git-pull-aborted-with-error-filename-too-long" target="_blank" rel="noopener">Filename too long</a></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git config --system core.longpaths <span class="literal">true</span></span><br></pre></td></tr></table></figure>
+<h2 id="6、查看修改历史"><a href="#6、查看修改历史" class="headerlink" title="6、查看修改历史"></a>6、查看修改历史</h2><ul>
+<li><strong>git log –pretty</strong>：可列出文件的所有改动历史，注意，这里着眼于具体的一个文件，而不是git库，如果是库，那就有很多改动了</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git log --pretty=oneline filename</span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>git show</strong>：打印出文件的详细改动历史，行前的数字就是每次提交的commit_id，常常配合<code>git log</code>查看某个文件的commit_id</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git show commit_id</span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>git reflog</strong>：查看每一次的操作命令</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git reflog</span><br></pre></td></tr></table></figure>
+<h2 id="7、创建分支"><a href="#7、创建分支" class="headerlink" title="7、创建分支"></a>7、创建分支</h2><ul>
+<li>创建并切换分支</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git checkout -b dev_name</span><br></pre></td></tr></table></figure>
+<ul>
+<li>推送分支</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git push -u origin dev:dev <span class="comment">// -u 关联本地分支与远程分支</span></span><br></pre></td></tr></table></figure>
+<p>如果pull的时候提示<strong>“no tracking information”</strong>，则说明本地分支没有跟踪远程分支</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git branch --set-upstream branch-name origin/branch-name</span><br></pre></td></tr></table></figure>
+<h2 id="8、删除分支"><a href="#8、删除分支" class="headerlink" title="8、删除分支"></a>8、删除分支</h2><ul>
+<li>删除本地分支</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git branch -d dev_name</span><br></pre></td></tr></table></figure>
+<ul>
+<li>删除远程分支</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git push origin :dev_name <span class="comment">//注意冒号跟分支名没有空格</span></span><br></pre></td></tr></table></figure>
+<h2 id="9、暂存修改"><a href="#9、暂存修改" class="headerlink" title="9、暂存修改"></a>9、暂存修改</h2><p>若遇到工作的分支上还没做完同时又不想提交，并且这时候另外一分支出现bug急需修复，这个时候我们可以将本地修改做暂时储存</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git stash [save <span class="string">"description"</span>] <span class="comment">// 暂时存储是否添加描述为选填</span></span><br></pre></td></tr></table></figure>
+<p>查看暂存列表</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git stash list</span><br></pre></td></tr></table></figure>
+<p>取出stash列表内容</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ git stash apply <span class="comment">// 全部取出</span></span><br><span class="line"></span><br><span class="line">$ git stash apply stash@&#123;index&#125; <span class="comment">// 取index下的储存</span></span><br></pre></td></tr></table></figure>
+<p>取消stash储存</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git stash drop stash@&#123;index&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="10、强制覆盖远程内容"><a href="#10、强制覆盖远程内容" class="headerlink" title="10、强制覆盖远程内容"></a>10、强制覆盖远程内容</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git push origin master --force</span><br></pre></td></tr></table></figure>
+<h2 id="11、修改commit备注"><a href="#11、修改commit备注" class="headerlink" title="11、修改commit备注"></a>11、修改commit备注</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git commit --amend</span><br></pre></td></tr></table></figure>
+<h2 id="12、重命名分支"><a href="#12、重命名分支" class="headerlink" title="12、重命名分支"></a>12、重命名分支</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git branch -m ordinary-dev-name <span class="keyword">new</span>-dev-name</span><br></pre></td></tr></table></figure>
+<h2 id="13、标签"><a href="#13、标签" class="headerlink" title="13、标签"></a>13、标签</h2><p>显示标签(可以参考<a href="http://www.liaoxuefeng.com/wiki/0013739516305929606dd18361248578c67b8067c8c017b000/0013762144381812a168659b3dd4610b4229d81de5056cc000" target="_blank" rel="noopener">廖雪峰大大的博客</a>)</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 所有标签</span></span><br><span class="line">$ git tag</span><br><span class="line"></span><br><span class="line"><span class="comment">// 系列标签(显示1.9.*的所有标签)</span></span><br><span class="line">$ git tag -l <span class="string">'v1.9.*'</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 查看相应标签的版本信息</span></span><br><span class="line">$ git show v1<span class="number">.9</span><span class="number">.0</span></span><br></pre></td></tr></table></figure>
+<p>新建标签</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git tag -a v1<span class="number">.9</span><span class="number">.9</span> -m <span class="string">"version tag description"</span> <span class="comment">// -a(annotated)</span></span><br></pre></td></tr></table></figure>
+<p>删除标签</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 删除本地标签</span></span><br><span class="line">$ git tag -d v1<span class="number">.9</span><span class="number">.9</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 删除远程标签</span></span><br><span class="line">$ git tag -d v1<span class="number">.9</span><span class="number">.9</span></span><br><span class="line">$ git push origin :refs/tags/v1<span class="number">.9</span><span class="number">.9</span></span><br></pre></td></tr></table></figure>
+<p>推送标签</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 推送指定标签</span></span><br><span class="line">$ git push origin v1<span class="number">.9</span><span class="number">.9</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 推送所有标签</span></span><br><span class="line">$ git push origin --tags</span><br></pre></td></tr></table></figure>
+<h2 id="14、远程分支"><a href="#14、远程分支" class="headerlink" title="14、远程分支"></a>14、远程分支</h2><p>拉取远程分支</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// git checkout -b [分支名] [远程名]/[分支名]</span></span><br><span class="line">$ git checkout -b test origin/test</span><br></pre></td></tr></table></figure>
+<p>跟踪远程分支</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git checkout --track origin/test</span><br></pre></td></tr></table></figure>
+<p>推送远程分支</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git push origin localBranch:remoteBranch</span><br></pre></td></tr></table></figure>
+<h2 id="15、Permission-denied-publickey"><a href="#15、Permission-denied-publickey" class="headerlink" title="15、Permission denied (publickey)"></a>15、Permission denied (publickey)</h2><p>今天要拉取一个新项目，发现了老是拉不成功，在<strong>gitlab</strong>成员权限检查了完全没问题，只能先试试重新生成key。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ ssh-keygen -t rsa -C <span class="string">"xxx@xxx.com"</span> -f ~<span class="regexp">/.ssh/</span>MyXXX</span><br></pre></td></tr></table></figure>
+<p>发现还是不行。后来查到了是因为新添加的key不能加入ssh，于是就试试下面的命令就发现好了。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ ssh-agent</span><br><span class="line">$ ssh-add ~<span class="regexp">/.ssh/</span>MyXXX</span><br></pre></td></tr></table></figure>
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+  <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+    <div>我只是试下能不能被赞赏😳</div>
+    <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+      <span>赏</span>
+    </button>
+    <div id="QR" style="display: none;">
+      
+        <div id="wechat" style="display: inline-block">
+          <img id="wechat_qr" src="http://ouazw12mz.bkt.clouddn.com/IMG_4838.jpg" alt="Lucius WeChat Pay"/>
+          <p>微信打赏</p>
+        </div>
+      
+      
+        <div id="alipay" style="display: inline-block">
+          <img id="alipay_qr" src="http://ouazw12mz.bkt.clouddn.com/171226222918.png?imageslim" alt="Lucius Alipay"/>
+          <p>支付宝打赏</p>
+        </div>
+      
+    </div>
+  </div>
+
+
+      
+    </div>
+
+    <div>    
+     
+     
+        <ul class="post-copyright">
+          <li class="post-copyright-author">
+              <strong>本文作者：</strong>Lucius
+          </li>
+          <li class="post-copyright-link">
+            <strong>本文链接：</strong>
+            <a href="/2016/08/15/archivers/git-tips/" title="git常用技巧">2016/08/15//archivers/git-tips/</a>
+          </li>
+          <li class="post-copyright-license">
+            <strong>版权声明： </strong>
+            本博客所有文章除特别声明外，均采用 <a href="http://creativecommons.org/licenses/by-nc-sa/3.0/cn/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0 CN</a> 许可协议。转载请注明出处！
+          </li>
+        </ul>
+      
+    </div>
+    
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/git/" rel="tag"># git</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/08/15/archivers/git-local-merge-github/" rel="next" title="将github的合并到本地(含提交日志)">
+                <i class="fa fa-chevron-left"></i> 将github的合并到本地(含提交日志)
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/08/18/archivers/javascript-prototype/" rel="prev" title="JavaScript之十 - prototype">
+                JavaScript之十 - prototype <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.jpg"
+               alt="Lucius" />
+          <p class="site-author-name" itemprop="name">Lucius</p>
+          <p class="site-description motion-element" itemprop="description">stay hungry, stay foolish...</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">44</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">4</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">9</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/Lucius0" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1、丢弃工作区的文件"><span class="nav-number">1.</span> <span class="nav-text">1、丢弃工作区的文件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2、暂存区回滚"><span class="nav-number">2.</span> <span class="nav-text">2、暂存区回滚</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3、版本回滚"><span class="nav-number">3.</span> <span class="nav-text">3、版本回滚</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4、回滚已提交到远程仓库的提交"><span class="nav-number">4.</span> <span class="nav-text">4、回滚已提交到远程仓库的提交</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5、filename-too-long错误"><span class="nav-number">5.</span> <span class="nav-text">5、filename too long错误</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6、查看修改历史"><span class="nav-number">6.</span> <span class="nav-text">6、查看修改历史</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7、创建分支"><span class="nav-number">7.</span> <span class="nav-text">7、创建分支</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#8、删除分支"><span class="nav-number">8.</span> <span class="nav-text">8、删除分支</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#9、暂存修改"><span class="nav-number">9.</span> <span class="nav-text">9、暂存修改</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#10、强制覆盖远程内容"><span class="nav-number">10.</span> <span class="nav-text">10、强制覆盖远程内容</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#11、修改commit备注"><span class="nav-number">11.</span> <span class="nav-text">11、修改commit备注</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#12、重命名分支"><span class="nav-number">12.</span> <span class="nav-text">12、重命名分支</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#13、标签"><span class="nav-number">13.</span> <span class="nav-text">13、标签</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#14、远程分支"><span class="nav-number">14.</span> <span class="nav-text">14、远程分支</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#15、Permission-denied-publickey"><span class="nav-number">15.</span> <span class="nav-text">15、Permission denied (publickey)</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Lucius</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+
+<div class="busuanzi-count">
+
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv"><i class="fa fa-user"></i> 访问人数<span class="busuanzi-value" id="busuanzi_value_site_uv"></span></span>
+  
+
+  
+    <span class="site-pv"><i class="fa fa-eye"></i> 总访问量<span class="busuanzi-value" id="busuanzi_value_site_pv"></span>次</span>
+  
+  
+</div>
+
+
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+
+  
+
+    <script type="text/javascript">
+      var disqus_shortname = 'lucius0';
+      var disqus_identifier = '2016/08/15//archivers/git-tips/';
+
+      var disqus_title = "git常用技巧";
+
+
+      function run_disqus_script(disqus_script) {
+        var dsq = document.createElement('script');
+        dsq.type = 'text/javascript';
+        dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      }
+
+      run_disqus_script('count.js');
+
+      
+        var disqus_config = function () {
+            this.page.url = disqus_url;
+            this.page.identifier = disqus_identifier;
+            this.page.title = disqus_title;
+        };
+        run_disqus_script('embed.js');
+      
+
+    </script>
+  
+
+
+
+
+
+  
+  
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length == 0) {
+      search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body").append('<div class="popoverlay">').css('overflow', 'hidden');
+      $('.popup').toggle();
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+      $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = $( "entry", xmlResponse ).map(function() {
+            return {
+              title: $( "title", this ).text(),
+              content: $("content",this).text(),
+              url: $( "url" , this).text()
+            };
+          }).get();
+          var $input = document.getElementById(search_id);
+          var $resultContent = document.getElementById(content_id);
+          $input.addEventListener('input', function(){
+            var matchcounts = 0;
+            var str='<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length > 1) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var content_index = [];
+                var data_title = data.title.trim().toLowerCase();
+                var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                var data_url = decodeURIComponent(data.url);
+                var index_title = -1;
+                var index_content = -1;
+                var first_occur = -1;
+                // only match artiles with not empty titles and contents
+                if(data_title != '') {
+                  keywords.forEach(function(keyword, i) {
+                    index_title = data_title.indexOf(keyword);
+                    index_content = data_content.indexOf(keyword);
+                    if( index_title >= 0 || index_content >= 0 ){
+                      isMatch = true;
+                      if (i == 0) {
+                        first_occur = index_content;
+                      }
+                    }
+
+                  });
+                }
+                // show search results
+                if (isMatch) {
+                  matchcounts += 1;
+                  str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                  var content = data.content.trim().replace(/<[^>]+>/g,"");
+                  if (first_occur >= 0) {
+                    // cut out 100 characters
+                    var start = first_occur - 20;
+                    var end = first_occur + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if(start == 0){
+                      end = 50;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    var match_content = content.substring(start, end);
+                    // highlight all keywords
+                    keywords.forEach(function(keyword){
+                      var regS = new RegExp(keyword, "gi");
+                      match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                    });
+
+                    str += "<p class=\"search-result\">" + match_content +"...</p>"
+                  }
+                  str += "</li>";
+                }
+              })};
+            str += "</ul>";
+            if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+            if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+            $resultContent.innerHTML = str;
+          });
+          proceedsearch();
+        }
+      });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".popoverlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+
+  
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+
+  <script type="text/javascript">
+    (function() {
+      // try {
+      //   var document = window.document;
+      //   document.oncontextmenu = function() {
+      //     return false;
+      //   }
+      //   document.onkeydown = function() {
+      //     if (window.event.ctrlKey && window.event.keyCode == 67) {
+      //       return false;
+      //     }
+      //     return false;
+      //   }
+      //   document.body.oncopy = function() {
+      //     return false;
+      //   }
+      //   document.onselectstart = function() {
+      //     return false;
+      //   }
+            
+      //   document.onselectstart=function(){return false};
+      //   // document.style.MozUserSelect && document.style.MozUserSelect="none";
+      //   document.onmousedown=function(){return false};
+      //   document.style.cursor = "default"; 
+      // } catch(e) {}
+    })();
+  </script>
+
+</body>
+</html>

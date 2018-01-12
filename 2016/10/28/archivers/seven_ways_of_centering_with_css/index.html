@@ -1,1 +1,1016 @@
-<!doctype html><html class="theme-next mist" lang="zh-Hans"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1"><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css"><link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css"><link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css"><link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css"><meta name="keywords" content="CSS,"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0"><meta name="description" content="由于工作时间太忙加上大长假很久没有更新了。 接下来更新一下如何用css居中元素，原文链接《Seven-Ways-of-Centering-With-CSS》。 七种元素居中的方法居中html元素在网页开发似乎看起来挺简单的。但是在某些案例中，复杂的布局会经常消除一些解决方法，使得网页开发人员特别的头痛。 相对垂直居中，水平居中就略显得简单些，但同时要解决两者就有难度了。在这响应式设计的时代，我们很"><meta name="keywords" content="CSS"><meta property="og:type" content="article"><meta property="og:title" content="CSS - 七种元素居中的方法"><meta property="og:url" content="https://lucius0.github.io/2016/10/28//archivers/seven_ways_of_centering_with_css/index.html"><meta property="og:site_name" content="Lucius&#39;s Blog"><meta property="og:description" content="由于工作时间太忙加上大长假很久没有更新了。 接下来更新一下如何用css居中元素，原文链接《Seven-Ways-of-Centering-With-CSS》。 七种元素居中的方法居中html元素在网页开发似乎看起来挺简单的。但是在某些案例中，复杂的布局会经常消除一些解决方法，使得网页开发人员特别的头痛。 相对垂直居中，水平居中就略显得简单些，但同时要解决两者就有难度了。在这响应式设计的时代，我们很"><meta property="og:locale" content="zh-Hans"><meta property="og:image" content="https://lucius0.github.io/images/css/css-01.png"><meta property="og:image" content="https://lucius0.github.io/images/css/css-02.png"><meta property="og:image" content="https://lucius0.github.io/images/css/css-03.png"><meta property="og:image" content="https://lucius0.github.io/images/css/css-04.png"><meta property="og:image" content="https://lucius0.github.io/images/css/css-05.png"><meta property="og:image" content="https://lucius0.github.io/images/css/css-06.png"><meta property="og:updated_time" content="2018-01-12T05:23:46.704Z"><meta name="twitter:card" content="summary"><meta name="twitter:title" content="CSS - 七种元素居中的方法"><meta name="twitter:description" content="由于工作时间太忙加上大长假很久没有更新了。 接下来更新一下如何用css居中元素，原文链接《Seven-Ways-of-Centering-With-CSS》。 七种元素居中的方法居中html元素在网页开发似乎看起来挺简单的。但是在某些案例中，复杂的布局会经常消除一些解决方法，使得网页开发人员特别的头痛。 相对垂直居中，水平居中就略显得简单些，但同时要解决两者就有难度了。在这响应式设计的时代，我们很"><meta name="twitter:image" content="https://lucius0.github.io/images/css/css-01.png"><script type="text/javascript" id="hexo.configurations">var NexT=window.NexT||{},CONFIG={root:"/",scheme:"Mist",sidebar:{position:"left",display:"post"},fancybox:!0,motion:!1,duoshuo:{userId:"0",author:"博主"},algolia:{applicationID:"",apiKey:"",indexName:"",hits:{per_page:10},labels:{input_placeholder:"Search for Posts",hits_empty:"We didn't find any results for the search: ${query}",hits_stats:"${hits} results found in ${time} ms"}}}</script><link rel="canonical" href="https://lucius0.github.io/2016/10/28//archivers/seven_ways_of_centering_with_css/"><title> CSS - 七种元素居中的方法 | Lucius's Blog</title></head><body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans"><div class="container one-collumn sidebar-position-left page-post-detail"><div class="headband"></div><header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="header-inner"><div class="site-meta"><div class="custom-logo-site-title"><a href="/" class="brand" rel="start"><span class="logo-line-before"><i></i></span> <span class="site-title">Lucius's Blog</span><span class="logo-line-after"><i></i></span></a></div><p class="site-subtitle"></p></div><div class="site-nav-toggle"> <button><span class="btn-bar"></span><span class="btn-bar"></span><span class="btn-bar"></span></button></div><nav class="site-nav"><ul id="menu" class="menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i><br> 首页</a></li><li class="menu-item menu-item-archives"><a href="/archives" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i><br> 日志</a></li><li class="menu-item menu-item-categories"><a href="/categories" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i><br> 分类</a></li><li class="menu-item menu-item-tags"><a href="/tags" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i><br> 标签</a></li><li class="menu-item menu-item-about"><a href="/about" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i><br> 关于</a></li><li class="menu-item menu-item-search"><a href="javascript:;" class="popup-trigger"><i class="menu-item-icon fa fa-search fa-fw"></i><br> 搜索</a></li></ul><div class="site-search"><div class="popup"><span class="search-icon fa fa-search"></span> <input type="text" id="local-search-input"><div id="local-search-result"></div> <span class="popup-btn-close">close</span></div></div></nav></div></header><main id="main" class="main"><div class="main-inner"><div class="content-wrap"><div id="content" class="content"><div id="posts" class="posts-expand"><article class="post post-type-normal" itemscope itemtype="http://schema.org/Article"><link itemprop="mainEntityOfPage" href="https://lucius0.github.io/2016/10/28/archivers/seven_ways_of_centering_with_css/"><span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person"><meta itemprop="name" content="Lucius"><meta itemprop="description" content=""><meta itemprop="image" content="/images/avatar.jpg"></span><span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization"><meta itemprop="name" content="Lucius's Blog"> <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject"><img style="display:none" itemprop="url image" alt="Lucius's Blog" src=""></span></span><header class="post-header"><h1 class="post-title" itemprop="name headline"> CSS - 七种元素居中的方法</h1><div class="post-meta"><span class="post-time"><span class="post-meta-item-icon"><i class="fa fa-calendar-o"></i></span> <span class="post-meta-item-text">发表于</span> <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-10-28T00:00:00+08:00">2016-10-28</time></span> <span class="post-category"><span class="post-meta-divider">|</span><span class="post-meta-item-icon"><i class="fa fa-folder-o"></i></span> <span class="post-meta-item-text">分类于</span> <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/front-end/" itemprop="url" rel="index"><span itemprop="name">front-end</span></a></span></span> <span class="post-comments-count"><span class="post-meta-divider">|</span><a href="/2016/10/28/archivers/seven_ways_of_centering_with_css/#comments" itemprop="discussionUrl"><span class="post-comments-count disqus-comment-count" data-disqus-identifier="2016/10/28//archivers/seven_ways_of_centering_with_css/" itemprop="commentCount"></span></a></span> <span class="post-meta-divider">|</span><span class="page-pv"><i class="fa fa-file-o"></i> 浏览<span class="busuanzi-value" id="busuanzi_value_page_pv"></span> 次</span></div></header><div class="post-body" itemprop="articleBody"><p>由于工作时间太忙加上大长假很久没有更新了。</p><p>接下来更新一下如何用css居中元素，原文链接<a href="http://thenewcode.com/723/Seven-Ways-of-Centering-With-CSS" target="_blank" rel="noopener">《Seven-Ways-of-Centering-With-CSS》</a>。</p><h2 id="七种元素居中的方法"><a href="#七种元素居中的方法" class="headerlink" title="七种元素居中的方法"></a>七种元素居中的方法</h2><p>居中html元素在网页开发似乎看起来挺简单的。但是在某些案例中，复杂的布局会经常消除一些解决方法，使得网页开发人员特别的头痛。</p><p>相对垂直居中，水平居中就略显得简单些，但同时要解决两者就有难度了。在这响应式设计的时代，我们很少能准确的知道元素的高度跟宽度，因此导致很多方案失效。据我所知，CSS至少有6种居中元素的方法。我将用以下的基础代码，讲解从最简单最好实现的到复杂的方法：</p><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;div <span class="class"><span class="keyword">class</span></span>=<span class="string">"center"</span>&gt;</span><br><span class="line">  &lt;img src=<span class="string">"jimmy-choo-shoe.jpg"</span> alt&gt;</span><br><span class="line">&lt;<span class="regexp">/div&gt;</span></span><br></pre></td></tr></table></figure><p>鞋子图片会改变，但都会保持在500px X 500px 的大小。<a href="http://thenewcode.com/61/An-Easy-Guide-To-HSL-Color-In-CSS3" target="_blank" rel="noopener">HSL colors</a>会使背景图片保持一致。</p><h3 id="使用text-align水平居中"><a href="#使用text-align水平居中" class="headerlink" title="使用text-align水平居中"></a>使用text-align水平居中</h3><p><img src="/images/css/css-01.png" alt=""></p><p>有时显而易见的解决方案是最好的选择。</p><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">div</span><span class="selector-class">.center</span> &#123;</span><br><span class="line">  <span class="attribute">text-align</span>: center;</span><br><span class="line">  <span class="attribute">background</span>: <span class="built_in">hsl</span>(0, 100%, 97%);</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-tag">div</span><span class="selector-class">.center</span> <span class="selector-tag">img</span> &#123;</span><br><span class="line">  <span class="attribute">width</span>: <span class="number">33%</span>;</span><br><span class="line">  <span class="attribute">height</span>: auto;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>这个方案并不能使图片垂直居中：你需要在<code>&lt;div&gt;</code>添加<code>padding</code>或者给内容添加<code>margin-top</code>跟<code>margin-bottom</code>使得内容与容器有一定的高度。</p><h3 id="使用margin居中：auto"><a href="#使用margin居中：auto" class="headerlink" title="使用margin居中：auto"></a>使用margin居中：auto</h3><p><img src="/images/css/css-02.png" alt=""></p><p>又一次主要是针对水平居中，跟上面的<code>text-align</code>同样具有局限性</p><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">div</span><span class="selector-class">.center</span> &#123;</span><br><span class="line">  <span class="attribute">background</span>: <span class="built_in">hsl</span>(60, 100%, 97%);</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-tag">div</span><span class="selector-class">.center</span> <span class="selector-tag">img</span> &#123;</span><br><span class="line">  <span class="attribute">display</span>: block;</span><br><span class="line">  <span class="attribute">width</span>: <span class="number">33%</span>;</span><br><span class="line">  <span class="attribute">height</span>: auto;</span><br><span class="line">  <span class="attribute">margin</span>: <span class="number">0</span> auto;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>注意一下<code>display: block</code>，是其属性使得<code>margin: 0 auto</code>生效的。</p><h3 id="table-cell-居中"><a href="#table-cell-居中" class="headerlink" title="table-cell 居中"></a>table-cell 居中</h3><p>使用<code>display: table-cell</code>，而不是<code>tabel</code>标签；可以对水平跟垂直居中同时有效，但是需要添加额外的元素作为容器</p><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"center-aligned"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"center-core"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">"jimmy-choo-shoe.jpg"</span> <span class="attr">alt</span>=<span class="string">""</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure><p>The Css</p><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.center-aligned</span> &#123;</span><br><span class="line">  <span class="attribute">display</span>: table;</span><br><span class="line">  <span class="attribute">background</span>: <span class="built_in">hsl</span>(120, 100%, 97%);</span><br><span class="line">  <span class="attribute">width</span>: <span class="number">100%</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.center-core</span> &#123;</span><br><span class="line">  <span class="attribute">display</span>: table-cell;</span><br><span class="line">  <span class="attribute">text-align</span>: center;</span><br><span class="line">  <span class="attribute">vertical-align</span>: middle;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.center-core</span> <span class="selector-tag">img</span> &#123;</span><br><span class="line">  <span class="attribute">width</span>: <span class="number">33%</span>;</span><br><span class="line">  <span class="attribute">height</span>: auto;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>注意宽度<code>width: 100%</code>，是为了使其<code>&lt;div&gt;</code>不发生折叠，还有外部容器需要添加高度使其内容垂直居中。可以尝试给<code>html</code>和<code>body</code>设置高度，其内容元素同样也可以在<code>body</code>垂直居中。可以正常的运行在IE 8+浏览器。</p><h3 id="绝对居中-Absolute-Centering"><a href="#绝对居中-Absolute-Centering" class="headerlink" title="绝对居中(Absolute Centering)"></a>绝对居中(Absolute Centering)</h3><p><img src="/images/css/css-03.png" alt=""></p><p>有一种跨浏览器支持的方案，但是唯一的缺点就是需要在外部容器声明其高度<code>height</code></p><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.absolute-aligned</span> &#123;</span><br><span class="line">  <span class="attribute">position</span>: relative;</span><br><span class="line">  <span class="attribute">min-height</span>: <span class="number">500px</span>;</span><br><span class="line">  <span class="attribute">background</span>: <span class="built_in">hsl</span>(200, 100%, 97%);</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.absolute-aligned</span> <span class="selector-tag">img</span> &#123;</span><br><span class="line">  <span class="attribute">width</span>: <span class="number">50%</span>;</span><br><span class="line">  <span class="attribute">min-width</span>: <span class="number">200px</span>;</span><br><span class="line">  <span class="attribute">height</span>: auto;</span><br><span class="line">  <span class="attribute">overflow</span>: auto;</span><br><span class="line">  <span class="attribute">margin</span>: auto;</span><br><span class="line">  <span class="attribute">position</span>: absolute;</span><br><span class="line">  <span class="attribute">top</span>: <span class="number">0</span>;</span><br><span class="line">  <span class="attribute">left</span>: <span class="number">0</span>;</span><br><span class="line">  <span class="attribute">bottom</span>: <span class="number">0</span>;</span><br><span class="line">  <span class="attribute">top</span>: <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><h3 id="使用translate居中"><a href="#使用translate居中" class="headerlink" title="使用translate居中"></a>使用translate居中</h3><p><img src="/images/css/css-04.png" alt=""></p><p>Chris Coiyer 提出了一种能同时支持水平居中跟垂直居中的<a href="http://thenewcode.com/273/CSS3-2D-Transformations-Introduction" target="_blank" rel="noopener">《新方案》</a></p><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.center</span> &#123;</span><br><span class="line">  <span class="attribute">background</span>: <span class="built_in">hsl</span>(180, 100%, 97%);</span><br><span class="line">  <span class="attribute">position</span>: relative;</span><br><span class="line">  <span class="attribute">min-height</span>: <span class="number">500px</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.center</span> <span class="selector-tag">img</span> &#123;</span><br><span class="line">  <span class="attribute">position</span>: absolute;</span><br><span class="line">  <span class="attribute">top</span>: <span class="number">50%</span>;</span><br><span class="line">  <span class="attribute">left</span>: <span class="number">50%</span>;</span><br><span class="line">  <span class="attribute">transform</span>: <span class="built_in">translate</span>(-50%, -50%);</span><br><span class="line">  <span class="attribute">width</span>: <span class="number">30%</span>;</span><br><span class="line">  <span class="attribute">height</span>: auto;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p><strong>同时也带来了以下几点缺点：</strong></p><ul><li><p>CSS transform 会要求在不同的浏览器添加浏览器前缀；</p></li><li><p>不能在比较老的IE浏览器兼容(IE 8及以下版本)；</p></li><li><p>外部容器将需要设置高度(或其他方式)，并且不能从处于绝对位置的内容获取任何高度；</p></li><li><p>如何内容包含文本，当前浏览器合成技术也会使已发生转换的文本模糊。</p></li></ul><h3 id="Flexbox-居中"><a href="#Flexbox-居中" class="headerlink" title="Flexbox 居中"></a>Flexbox 居中</h3><p><img src="/images/css/css-05.png" alt=""></p><p>一旦属性差异性以及浏览器前缀的问题逐渐消失，这种解决方案将会成为主流方案。</p><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.center</span> &#123;</span><br><span class="line">  <span class="attribute">backgroud</span>: <span class="built_in">hsl</span>(240, 100%, 97%);</span><br><span class="line">  <span class="attribute">display</span>: flex;</span><br><span class="line">  <span class="attribute">justify-content</span>: center;</span><br><span class="line">  <span class="attribute">align-items</span>: center;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.center</span> <span class="selector-tag">img</span> &#123;</span><br><span class="line">  <span class="attribute">width</span>: <span class="number">30%</span>;</span><br><span class="line">  <span class="attribute">height</span>: auto;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>在许多方面<code>flexbox</code>是最简单的解决方案，但有一个缺点的是新旧两种语法以及早期版本的IE浏览器不支持(尽管使用<code>display:table-cell</code>可以作为降级方案)。</p><p>如今的规范已经确定下来，并且现代的浏览器也支持了，具体的使用方法可以参考<a href="http://thenewcode.com/780/A-Designers-Guide-To-Flexbox" target="_blank" rel="noopener">《flexbox layout and its uses》</a></p><h3 id="使用calc居中"><a href="#使用calc居中" class="headerlink" title="使用calc居中"></a>使用calc居中</h3><p><img src="/images/css/css-06.png" alt=""></p><p>在某些方面比<code>flexbox</code>更灵活：</p><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.center</span> &#123;</span><br><span class="line">  <span class="attribute">background</span>: <span class="built_in">hsl</span>(300, 100%, 97%);</span><br><span class="line">  <span class="attribute">min-height</span>: <span class="number">600px</span>;</span><br><span class="line">  <span class="attribute">position</span>: relative;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.center</span> <span class="selector-tag">img</span> &#123;</span><br><span class="line">  <span class="attribute">width</span>: <span class="number">40%</span>;</span><br><span class="line">  <span class="attribute">height</span>: auto;</span><br><span class="line">  <span class="attribute">position</span>: absolute;</span><br><span class="line">  <span class="attribute">top</span>: <span class="built_in">calc</span>(50% - 20%);</span><br><span class="line">  <span class="attribute">left</span>: <span class="built_in">calc</span>(50% - 20%);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>非常简单，<code>calc</code>允许你基于当前页面的布局进行计算。在上面的计算中，50%是容器元素的中心点，但是仅仅使用50%会使<em>图片的左上角</em>对其<code>&lt;div&gt;</code>的中心。我们需要将图片的宽高同时移回一半。计算方式如下：</p><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">top: calc(50% - (40% / 2));</span><br><span class="line">left: calc(50% - (40% / 2));</span><br></pre></td></tr></table></figure><p>在如今的浏览器，你会发现这种解决方案更适合内容的宽高为固定尺寸：</p><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.center</span> <span class="selector-tag">img</span> &#123;</span><br><span class="line">  <span class="attribute">width</span>: <span class="number">500px</span>;</span><br><span class="line">  <span class="attribute">height</span>: <span class="number">500px</span>;</span><br><span class="line">  <span class="attribute">position</span>: absolute;</span><br><span class="line">  <span class="attribute">top</span>: <span class="built_in">calc</span>(50% - (300px / 2));</span><br><span class="line">  <span class="attribute">left</span>: <span class="built_in">calc</span>(50% - (300px - 2));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>详细的<code>calc</code>使用方法可以查看：<a href="http://thenewcode.com/953/Layout-Math-with-CSS-Understanding-calc" target="_blank" rel="noopener">Layout Math with CSS: Understanding calc</a></p><p>这种解决方案跟<code>flexbox</code>一样有许多缺点：当代浏览器能很好的支持该方案，但是在早期的浏览器还是还是需要浏览器前缀，并且不支持IE 8</p><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.center</span> <span class="selector-tag">img</span> &#123;</span><br><span class="line">  <span class="attribute">width</span>: <span class="number">40%</span>;</span><br><span class="line">  <span class="attribute">height</span>: auto;</span><br><span class="line">  <span class="attribute">top</span>: <span class="built_in">calc</span>(50% - 20%);</span><br><span class="line">  <span class="attribute">left</span>: <span class="built_in">calc</span>(50% - 20%);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div><div></div><div><div style="padding:10px 0;margin:20px auto;width:90%;text-align:center"><div>我只是试下能不能被赞赏😳</div> <button id="rewardButton" disable="enable" onclick='var qr=document.getElementById("QR");"none"===qr.style.display?qr.style.display="block":qr.style.display="none"'> <span>赏</span></button><div id="QR" style="display:none"><div id="wechat" style="display:inline-block"> <img id="wechat_qr" src="http://ouazw12mz.bkt.clouddn.com/IMG_4838.jpg" alt="Lucius WeChat Pay"><p>微信打赏</p></div><div id="alipay" style="display:inline-block"> <img id="alipay_qr" src="http://ouazw12mz.bkt.clouddn.com/171226222918.png?imageslim" alt="Lucius Alipay"><p>支付宝打赏</p></div></div></div></div><div><ul class="post-copyright"><li class="post-copyright-author"> <strong>本文作者：</strong>Lucius</li><li class="post-copyright-link"> <strong>本文链接：</strong> <a href="/2016/10/28/archivers/seven_ways_of_centering_with_css/" title="CSS - 七种元素居中的方法">2016/10/28//archivers/seven_ways_of_centering_with_css/</a></li><li class="post-copyright-license"> <strong>版权声明：</strong> 本博客所有文章除特别声明外，均采用 <a href="http://creativecommons.org/licenses/by-nc-sa/3.0/cn/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0 CN</a> 许可协议。转载请注明出处！</li></ul></div><footer class="post-footer"><div class="post-tags"> <a href="/tags/CSS/" rel="tag"># CSS</a></div><div class="post-nav"><div class="post-nav-next post-nav-item"><a href="/2016/08/20/archivers/javascript-cmd-amd/" rel="next" title="JavaScript之十二 - CMD与AMD异同"><i class="fa fa-chevron-left"></i> JavaScript之十二 - CMD与AMD异同</a></div><span class="post-nav-divider"></span><div class="post-nav-prev post-nav-item"> <a href="/2016/10/30/archivers/5-things-you-should-know-about-css/" rel="prev" title="CSS - 5件你需要知道的css定位">CSS - 5件你需要知道的css定位<i class="fa fa-chevron-right"></i></a></div></div></footer></article><div class="post-spread"></div></div></div><div class="comments" id="comments"><div id="disqus_thread"><noscript> Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript></div></div></div><div class="sidebar-toggle"><div class="sidebar-toggle-line-wrap"><span class="sidebar-toggle-line sidebar-toggle-line-first"></span><span class="sidebar-toggle-line sidebar-toggle-line-middle"></span><span class="sidebar-toggle-line sidebar-toggle-line-last"></span></div></div><aside id="sidebar" class="sidebar"><div class="sidebar-inner"><ul class="sidebar-nav motion-element"><li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap"> 文章目录</li><li class="sidebar-nav-overview" data-target="site-overview"> 站点概览</li></ul><section class="site-overview sidebar-panel"><div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person"> <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="Lucius"><p class="site-author-name" itemprop="name">Lucius</p><p class="site-description motion-element" itemprop="description">stay hungry, stay foolish...</p></div><nav class="site-state motion-element"><div class="site-state-item site-state-posts"> <a href="/archives"><span class="site-state-item-count">44</span> <span class="site-state-item-name">日志</span></a></div><div class="site-state-item site-state-categories"> <a href="/categories"><span class="site-state-item-count">4</span> <span class="site-state-item-name">分类</span></a></div><div class="site-state-item site-state-tags"> <a href="/tags"><span class="site-state-item-count">9</span> <span class="site-state-item-name">标签</span></a></div></nav><div class="links-of-author motion-element"><span class="links-of-author-item"><a href="https://github.com/Lucius0" target="_blank" title="GitHub"><i class="fa fa-fw fa-github"></i> GitHub</a></span></div></section><section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active"><div class="post-toc"><div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#七种元素居中的方法"><span class="nav-number">1.</span> <span class="nav-text">七种元素居中的方法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#使用text-align水平居中"><span class="nav-number">1.1.</span> <span class="nav-text">使用text-align水平居中</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#使用margin居中：auto"><span class="nav-number">1.2.</span> <span class="nav-text">使用margin居中：auto</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#table-cell-居中"><span class="nav-number">1.3.</span> <span class="nav-text">table-cell 居中</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#绝对居中-Absolute-Centering"><span class="nav-number">1.4.</span> <span class="nav-text">绝对居中(Absolute Centering)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#使用translate居中"><span class="nav-number">1.5.</span> <span class="nav-text">使用translate居中</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Flexbox-居中"><span class="nav-number">1.6.</span> <span class="nav-text">Flexbox 居中</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#使用calc居中"><span class="nav-number">1.7.</span> <span class="nav-text">使用calc居中</span></a></li></ol></li></ol></div></div></section></div></aside></div></main><footer id="footer" class="footer"><div class="footer-inner"><div class="copyright"> &copy; <span itemprop="copyrightYear">2018</span><span class="with-love"><i class="fa fa-heart"></i></span> <span class="author" itemprop="copyrightHolder">Lucius</span></div><div class="powered-by"> 由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动</div><div class="theme-info"> 主题 - <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a></div><div class="busuanzi-count"><script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script><span class="site-uv"><i class="fa fa-user"></i> 访问人数<span class="busuanzi-value" id="busuanzi_value_site_uv"></span></span><span class="site-pv"><i class="fa fa-eye"></i> 总访问量<span class="busuanzi-value" id="busuanzi_value_site_pv"></span>次</span></div></div></footer><div class="back-to-top"><i class="fa fa-arrow-up"></i></div></div><script type="text/javascript">"[object Function]"!==Object.prototype.toString.call(window.Promise)&&(window.Promise=null)</script><script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script><script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script><script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script><script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script><script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script><script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script><script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script><script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script><script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script><script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script><script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script><script type="text/javascript">var disqus_shortname="lucius0",disqus_identifier="2016/10/28//archivers/seven_ways_of_centering_with_css/",disqus_title="CSS - 七种元素居中的方法";function run_disqus_script(s){var e=document.createElement("script");e.type="text/javascript",e.async=!0,e.src="//"+disqus_shortname+".disqus.com/"+s,(document.getElementsByTagName("head")[0]||document.getElementsByTagName("body")[0]).appendChild(e)}run_disqus_script("count.js");var disqus_config=function(){this.page.url=disqus_url,this.page.identifier=disqus_identifier,this.page.title=disqus_title};run_disqus_script("embed.js")</script><script type="text/javascript">var isfetched=!1,search_path="search.xml";0==search_path.length&&(search_path="search.xml");var path="/"+search_path;function proceedsearch(){$("body").append('<div class="popoverlay">').css("overflow","hidden"),$(".popup").toggle()}var searchFunc=function(e,t,a){"use strict";$.ajax({url:e,dataType:"xml",async:!0,success:function(e){isfetched=!0,$(".popup").detach().appendTo(".header-inner");var r=$("entry",e).map(function(){return{title:$("title",this).text(),content:$("content",this).text(),url:$("url",this).text()}}).get(),c=document.getElementById(t),n=document.getElementById(a);c.addEventListener("input",function(){var e=0,t='<ul class="search-result-list">',a=this.value.trim().toLowerCase().split(/[\s\-]+/);n.innerHTML="",this.value.trim().length>1&&r.forEach(function(r){var c=!1,n=r.title.trim().toLowerCase(),s=r.content.trim().replace(/<[^>]+>/g,"").toLowerCase(),o=decodeURIComponent(r.url),i=-1,l=-1,p=-1;if(""!=n&&a.forEach(function(e,t){i=n.indexOf(e),l=s.indexOf(e),(i>=0||l>=0)&&(c=!0,0==t&&(p=l))}),c){e+=1,t+="<li><a href='"+o+"' class='search-result-title'>"+n+"</a>";var h=r.content.trim().replace(/<[^>]+>/g,"");if(p>=0){var u=p-20,d=p+80;u<0&&(u=0),0==u&&(d=50),d>h.length&&(d=h.length);var f=h.substring(u,d);a.forEach(function(e){var t=new RegExp(e,"gi");f=f.replace(t,'<b class="search-keyword">'+e+"</b>")}),t+='<p class="search-result">'+f+"...</p>"}t+="</li>"}}),t+="</ul>",0==e&&(t='<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'),""==a&&(t='<div id="no-result"><i class="fa fa-search fa-5x" /></div>'),n.innerHTML=t}),proceedsearch()}})};$(".popup-trigger").click(function(e){e.stopPropagation(),0==isfetched?searchFunc(path,"local-search-input","local-search-result"):proceedsearch()}),$(".popup-btn-close").click(function(e){$(".popup").hide(),$(".popoverlay").remove(),$("body").css("overflow","")}),$(".popup").click(function(e){e.stopPropagation()})</script><script>!function(){var t=document.createElement("script"),e=window.location.protocol.split(":")[0];t.src="https"===e?"https://zz.bdstatic.com/linksubmit/push.js":"http://push.zhanzhang.baidu.com/push.js";var s=document.getElementsByTagName("script")[0];s.parentNode.insertBefore(t,s)}()</script><script type="text/javascript"></script></body></html>
+<!doctype html>
+
+
+
+
+<html class="theme-next mist" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="CSS," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="由于工作时间太忙加上大长假很久没有更新了。 接下来更新一下如何用css居中元素，原文链接《Seven-Ways-of-Centering-With-CSS》。 七种元素居中的方法居中html元素在网页开发似乎看起来挺简单的。但是在某些案例中，复杂的布局会经常消除一些解决方法，使得网页开发人员特别的头痛。 相对垂直居中，水平居中就略显得简单些，但同时要解决两者就有难度了。在这响应式设计的时代，我们很">
+<meta name="keywords" content="CSS">
+<meta property="og:type" content="article">
+<meta property="og:title" content="CSS - 七种元素居中的方法">
+<meta property="og:url" content="https://lucius0.github.io/2016/10/28//archivers/seven_ways_of_centering_with_css/index.html">
+<meta property="og:site_name" content="Lucius&#39;s Blog">
+<meta property="og:description" content="由于工作时间太忙加上大长假很久没有更新了。 接下来更新一下如何用css居中元素，原文链接《Seven-Ways-of-Centering-With-CSS》。 七种元素居中的方法居中html元素在网页开发似乎看起来挺简单的。但是在某些案例中，复杂的布局会经常消除一些解决方法，使得网页开发人员特别的头痛。 相对垂直居中，水平居中就略显得简单些，但同时要解决两者就有难度了。在这响应式设计的时代，我们很">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://lucius0.github.io/images/css/css-01.png">
+<meta property="og:image" content="https://lucius0.github.io/images/css/css-02.png">
+<meta property="og:image" content="https://lucius0.github.io/images/css/css-03.png">
+<meta property="og:image" content="https://lucius0.github.io/images/css/css-04.png">
+<meta property="og:image" content="https://lucius0.github.io/images/css/css-05.png">
+<meta property="og:image" content="https://lucius0.github.io/images/css/css-06.png">
+<meta property="og:updated_time" content="2018-01-12T05:23:46.704Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="CSS - 七种元素居中的方法">
+<meta name="twitter:description" content="由于工作时间太忙加上大长假很久没有更新了。 接下来更新一下如何用css居中元素，原文链接《Seven-Ways-of-Centering-With-CSS》。 七种元素居中的方法居中html元素在网页开发似乎看起来挺简单的。但是在某些案例中，复杂的布局会经常消除一些解决方法，使得网页开发人员特别的头痛。 相对垂直居中，水平居中就略显得简单些，但同时要解决两者就有难度了。在这响应式设计的时代，我们很">
+<meta name="twitter:image" content="https://lucius0.github.io/images/css/css-01.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: false,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://lucius0.github.io/2016/10/28//archivers/seven_ways_of_centering_with_css/"/>
+
+
+
+
+
+  <title> CSS - 七种元素居中的方法 | Lucius's Blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Lucius's Blog</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            日志
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup">
+ <span class="search-icon fa fa-search"></span>
+ <input type="text" id="local-search-input">
+ <div id="local-search-result"></div>
+ <span class="popup-btn-close">close</span>
+</div>
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="https://lucius0.github.io/2016/10/28/archivers/seven_ways_of_centering_with_css/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="Lucius">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.jpg">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="Lucius's Blog">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="Lucius's Blog" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                CSS - 七种元素居中的方法
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-10-28T00:00:00+08:00">
+                2016-10-28
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/front-end/" itemprop="url" rel="index">
+                    <span itemprop="name">front-end</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <a href="/2016/10/28/archivers/seven_ways_of_centering_with_css/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2016/10/28//archivers/seven_ways_of_centering_with_css/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i> 浏览
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>次
+            </span>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>由于工作时间太忙加上大长假很久没有更新了。</p>
+<p>接下来更新一下如何用css居中元素，原文链接<a href="http://thenewcode.com/723/Seven-Ways-of-Centering-With-CSS" target="_blank" rel="noopener">《Seven-Ways-of-Centering-With-CSS》</a>。</p>
+<h2 id="七种元素居中的方法"><a href="#七种元素居中的方法" class="headerlink" title="七种元素居中的方法"></a>七种元素居中的方法</h2><p>居中html元素在网页开发似乎看起来挺简单的。但是在某些案例中，复杂的布局会经常消除一些解决方法，使得网页开发人员特别的头痛。</p>
+<p>相对垂直居中，水平居中就略显得简单些，但同时要解决两者就有难度了。在这响应式设计的时代，我们很少能准确的知道元素的高度跟宽度，因此导致很多方案失效。据我所知，CSS至少有6种居中元素的方法。我将用以下的基础代码，讲解从最简单最好实现的到复杂的方法：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;div <span class="class"><span class="keyword">class</span></span>=<span class="string">"center"</span>&gt;</span><br><span class="line">  &lt;img src=<span class="string">"jimmy-choo-shoe.jpg"</span> alt&gt;</span><br><span class="line">&lt;<span class="regexp">/div&gt;</span></span><br></pre></td></tr></table></figure>
+<p>鞋子图片会改变，但都会保持在500px X 500px 的大小。<a href="http://thenewcode.com/61/An-Easy-Guide-To-HSL-Color-In-CSS3" target="_blank" rel="noopener">HSL colors</a>会使背景图片保持一致。</p>
+<h3 id="使用text-align水平居中"><a href="#使用text-align水平居中" class="headerlink" title="使用text-align水平居中"></a>使用text-align水平居中</h3><p><img src="/images/css/css-01.png" alt=""></p>
+<p>有时显而易见的解决方案是最好的选择。</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">div</span><span class="selector-class">.center</span> &#123;</span><br><span class="line">  <span class="attribute">text-align</span>: center;</span><br><span class="line">  <span class="attribute">background</span>: <span class="built_in">hsl</span>(0, 100%, 97%);</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-tag">div</span><span class="selector-class">.center</span> <span class="selector-tag">img</span> &#123;</span><br><span class="line">  <span class="attribute">width</span>: <span class="number">33%</span>;</span><br><span class="line">  <span class="attribute">height</span>: auto;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这个方案并不能使图片垂直居中：你需要在<code>&lt;div&gt;</code>添加<code>padding</code>或者给内容添加<code>margin-top</code>跟<code>margin-bottom</code>使得内容与容器有一定的高度。</p>
+<h3 id="使用margin居中：auto"><a href="#使用margin居中：auto" class="headerlink" title="使用margin居中：auto"></a>使用margin居中：auto</h3><p><img src="/images/css/css-02.png" alt=""></p>
+<p>又一次主要是针对水平居中，跟上面的<code>text-align</code>同样具有局限性</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">div</span><span class="selector-class">.center</span> &#123;</span><br><span class="line">  <span class="attribute">background</span>: <span class="built_in">hsl</span>(60, 100%, 97%);</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-tag">div</span><span class="selector-class">.center</span> <span class="selector-tag">img</span> &#123;</span><br><span class="line">  <span class="attribute">display</span>: block;</span><br><span class="line">  <span class="attribute">width</span>: <span class="number">33%</span>;</span><br><span class="line">  <span class="attribute">height</span>: auto;</span><br><span class="line">  <span class="attribute">margin</span>: <span class="number">0</span> auto;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>注意一下<code>display: block</code>，是其属性使得<code>margin: 0 auto</code>生效的。</p>
+<h3 id="table-cell-居中"><a href="#table-cell-居中" class="headerlink" title="table-cell 居中"></a>table-cell 居中</h3><p>使用<code>display: table-cell</code>，而不是<code>tabel</code>标签；可以对水平跟垂直居中同时有效，但是需要添加额外的元素作为容器</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"center-aligned"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"center-core"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">"jimmy-choo-shoe.jpg"</span> <span class="attr">alt</span>=<span class="string">""</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>The Css</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.center-aligned</span> &#123;</span><br><span class="line">  <span class="attribute">display</span>: table;</span><br><span class="line">  <span class="attribute">background</span>: <span class="built_in">hsl</span>(120, 100%, 97%);</span><br><span class="line">  <span class="attribute">width</span>: <span class="number">100%</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.center-core</span> &#123;</span><br><span class="line">  <span class="attribute">display</span>: table-cell;</span><br><span class="line">  <span class="attribute">text-align</span>: center;</span><br><span class="line">  <span class="attribute">vertical-align</span>: middle;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.center-core</span> <span class="selector-tag">img</span> &#123;</span><br><span class="line">  <span class="attribute">width</span>: <span class="number">33%</span>;</span><br><span class="line">  <span class="attribute">height</span>: auto;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>注意宽度<code>width: 100%</code>，是为了使其<code>&lt;div&gt;</code>不发生折叠，还有外部容器需要添加高度使其内容垂直居中。可以尝试给<code>html</code>和<code>body</code>设置高度，其内容元素同样也可以在<code>body</code>垂直居中。可以正常的运行在IE 8+浏览器。</p>
+<h3 id="绝对居中-Absolute-Centering"><a href="#绝对居中-Absolute-Centering" class="headerlink" title="绝对居中(Absolute Centering)"></a>绝对居中(Absolute Centering)</h3><p><img src="/images/css/css-03.png" alt=""></p>
+<p>有一种跨浏览器支持的方案，但是唯一的缺点就是需要在外部容器声明其高度<code>height</code></p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.absolute-aligned</span> &#123;</span><br><span class="line">  <span class="attribute">position</span>: relative;</span><br><span class="line">  <span class="attribute">min-height</span>: <span class="number">500px</span>;</span><br><span class="line">  <span class="attribute">background</span>: <span class="built_in">hsl</span>(200, 100%, 97%);</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.absolute-aligned</span> <span class="selector-tag">img</span> &#123;</span><br><span class="line">  <span class="attribute">width</span>: <span class="number">50%</span>;</span><br><span class="line">  <span class="attribute">min-width</span>: <span class="number">200px</span>;</span><br><span class="line">  <span class="attribute">height</span>: auto;</span><br><span class="line">  <span class="attribute">overflow</span>: auto;</span><br><span class="line">  <span class="attribute">margin</span>: auto;</span><br><span class="line">  <span class="attribute">position</span>: absolute;</span><br><span class="line">  <span class="attribute">top</span>: <span class="number">0</span>;</span><br><span class="line">  <span class="attribute">left</span>: <span class="number">0</span>;</span><br><span class="line">  <span class="attribute">bottom</span>: <span class="number">0</span>;</span><br><span class="line">  <span class="attribute">top</span>: <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="使用translate居中"><a href="#使用translate居中" class="headerlink" title="使用translate居中"></a>使用translate居中</h3><p><img src="/images/css/css-04.png" alt=""></p>
+<p>Chris Coiyer 提出了一种能同时支持水平居中跟垂直居中的<a href="http://thenewcode.com/273/CSS3-2D-Transformations-Introduction" target="_blank" rel="noopener">《新方案》</a></p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.center</span> &#123;</span><br><span class="line">  <span class="attribute">background</span>: <span class="built_in">hsl</span>(180, 100%, 97%);</span><br><span class="line">  <span class="attribute">position</span>: relative;</span><br><span class="line">  <span class="attribute">min-height</span>: <span class="number">500px</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.center</span> <span class="selector-tag">img</span> &#123;</span><br><span class="line">  <span class="attribute">position</span>: absolute;</span><br><span class="line">  <span class="attribute">top</span>: <span class="number">50%</span>;</span><br><span class="line">  <span class="attribute">left</span>: <span class="number">50%</span>;</span><br><span class="line">  <span class="attribute">transform</span>: <span class="built_in">translate</span>(-50%, -50%);</span><br><span class="line">  <span class="attribute">width</span>: <span class="number">30%</span>;</span><br><span class="line">  <span class="attribute">height</span>: auto;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>同时也带来了以下几点缺点：</strong></p>
+<ul>
+<li><p>CSS transform 会要求在不同的浏览器添加浏览器前缀；</p>
+</li>
+<li><p>不能在比较老的IE浏览器兼容(IE 8及以下版本)；</p>
+</li>
+<li><p>外部容器将需要设置高度(或其他方式)，并且不能从处于绝对位置的内容获取任何高度；</p>
+</li>
+<li><p>如何内容包含文本，当前浏览器合成技术也会使已发生转换的文本模糊。</p>
+</li>
+</ul>
+<h3 id="Flexbox-居中"><a href="#Flexbox-居中" class="headerlink" title="Flexbox 居中"></a>Flexbox 居中</h3><p><img src="/images/css/css-05.png" alt=""></p>
+<p>一旦属性差异性以及浏览器前缀的问题逐渐消失，这种解决方案将会成为主流方案。</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.center</span> &#123;</span><br><span class="line">  <span class="attribute">backgroud</span>: <span class="built_in">hsl</span>(240, 100%, 97%);</span><br><span class="line">  <span class="attribute">display</span>: flex;</span><br><span class="line">  <span class="attribute">justify-content</span>: center;</span><br><span class="line">  <span class="attribute">align-items</span>: center;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.center</span> <span class="selector-tag">img</span> &#123;</span><br><span class="line">  <span class="attribute">width</span>: <span class="number">30%</span>;</span><br><span class="line">  <span class="attribute">height</span>: auto;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在许多方面<code>flexbox</code>是最简单的解决方案，但有一个缺点的是新旧两种语法以及早期版本的IE浏览器不支持(尽管使用<code>display:table-cell</code>可以作为降级方案)。</p>
+<p>如今的规范已经确定下来，并且现代的浏览器也支持了，具体的使用方法可以参考<a href="http://thenewcode.com/780/A-Designers-Guide-To-Flexbox" target="_blank" rel="noopener">《flexbox layout and its uses》</a></p>
+<h3 id="使用calc居中"><a href="#使用calc居中" class="headerlink" title="使用calc居中"></a>使用calc居中</h3><p><img src="/images/css/css-06.png" alt=""></p>
+<p>在某些方面比<code>flexbox</code>更灵活：</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.center</span> &#123;</span><br><span class="line">  <span class="attribute">background</span>: <span class="built_in">hsl</span>(300, 100%, 97%);</span><br><span class="line">  <span class="attribute">min-height</span>: <span class="number">600px</span>;</span><br><span class="line">  <span class="attribute">position</span>: relative;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.center</span> <span class="selector-tag">img</span> &#123;</span><br><span class="line">  <span class="attribute">width</span>: <span class="number">40%</span>;</span><br><span class="line">  <span class="attribute">height</span>: auto;</span><br><span class="line">  <span class="attribute">position</span>: absolute;</span><br><span class="line">  <span class="attribute">top</span>: <span class="built_in">calc</span>(50% - 20%);</span><br><span class="line">  <span class="attribute">left</span>: <span class="built_in">calc</span>(50% - 20%);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>非常简单，<code>calc</code>允许你基于当前页面的布局进行计算。在上面的计算中，50%是容器元素的中心点，但是仅仅使用50%会使<em>图片的左上角</em>对其<code>&lt;div&gt;</code>的中心。我们需要将图片的宽高同时移回一半。计算方式如下：</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">top: calc(50% - (40% / 2));</span><br><span class="line">left: calc(50% - (40% / 2));</span><br></pre></td></tr></table></figure>
+<p>在如今的浏览器，你会发现这种解决方案更适合内容的宽高为固定尺寸：</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.center</span> <span class="selector-tag">img</span> &#123;</span><br><span class="line">  <span class="attribute">width</span>: <span class="number">500px</span>;</span><br><span class="line">  <span class="attribute">height</span>: <span class="number">500px</span>;</span><br><span class="line">  <span class="attribute">position</span>: absolute;</span><br><span class="line">  <span class="attribute">top</span>: <span class="built_in">calc</span>(50% - (300px / 2));</span><br><span class="line">  <span class="attribute">left</span>: <span class="built_in">calc</span>(50% - (300px - 2));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>详细的<code>calc</code>使用方法可以查看：<a href="http://thenewcode.com/953/Layout-Math-with-CSS-Understanding-calc" target="_blank" rel="noopener">Layout Math with CSS: Understanding calc</a></p>
+<p>这种解决方案跟<code>flexbox</code>一样有许多缺点：当代浏览器能很好的支持该方案，但是在早期的浏览器还是还是需要浏览器前缀，并且不支持IE 8</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.center</span> <span class="selector-tag">img</span> &#123;</span><br><span class="line">  <span class="attribute">width</span>: <span class="number">40%</span>;</span><br><span class="line">  <span class="attribute">height</span>: auto;</span><br><span class="line">  <span class="attribute">top</span>: <span class="built_in">calc</span>(50% - 20%);</span><br><span class="line">  <span class="attribute">left</span>: <span class="built_in">calc</span>(50% - 20%);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+  <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+    <div>我只是试下能不能被赞赏😳</div>
+    <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+      <span>赏</span>
+    </button>
+    <div id="QR" style="display: none;">
+      
+        <div id="wechat" style="display: inline-block">
+          <img id="wechat_qr" src="http://ouazw12mz.bkt.clouddn.com/IMG_4838.jpg" alt="Lucius WeChat Pay"/>
+          <p>微信打赏</p>
+        </div>
+      
+      
+        <div id="alipay" style="display: inline-block">
+          <img id="alipay_qr" src="http://ouazw12mz.bkt.clouddn.com/171226222918.png?imageslim" alt="Lucius Alipay"/>
+          <p>支付宝打赏</p>
+        </div>
+      
+    </div>
+  </div>
+
+
+      
+    </div>
+
+    <div>    
+     
+     
+        <ul class="post-copyright">
+          <li class="post-copyright-author">
+              <strong>本文作者：</strong>Lucius
+          </li>
+          <li class="post-copyright-link">
+            <strong>本文链接：</strong>
+            <a href="/2016/10/28/archivers/seven_ways_of_centering_with_css/" title="CSS - 七种元素居中的方法">2016/10/28//archivers/seven_ways_of_centering_with_css/</a>
+          </li>
+          <li class="post-copyright-license">
+            <strong>版权声明： </strong>
+            本博客所有文章除特别声明外，均采用 <a href="http://creativecommons.org/licenses/by-nc-sa/3.0/cn/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0 CN</a> 许可协议。转载请注明出处！
+          </li>
+        </ul>
+      
+    </div>
+    
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/CSS/" rel="tag"># CSS</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/08/20/archivers/javascript-cmd-amd/" rel="next" title="JavaScript之十二 - CMD与AMD异同">
+                <i class="fa fa-chevron-left"></i> JavaScript之十二 - CMD与AMD异同
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/10/30/archivers/5-things-you-should-know-about-css/" rel="prev" title="CSS - 5件你需要知道的css定位">
+                CSS - 5件你需要知道的css定位 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.jpg"
+               alt="Lucius" />
+          <p class="site-author-name" itemprop="name">Lucius</p>
+          <p class="site-description motion-element" itemprop="description">stay hungry, stay foolish...</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">44</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">4</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">9</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/Lucius0" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#七种元素居中的方法"><span class="nav-number">1.</span> <span class="nav-text">七种元素居中的方法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#使用text-align水平居中"><span class="nav-number">1.1.</span> <span class="nav-text">使用text-align水平居中</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#使用margin居中：auto"><span class="nav-number">1.2.</span> <span class="nav-text">使用margin居中：auto</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#table-cell-居中"><span class="nav-number">1.3.</span> <span class="nav-text">table-cell 居中</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#绝对居中-Absolute-Centering"><span class="nav-number">1.4.</span> <span class="nav-text">绝对居中(Absolute Centering)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#使用translate居中"><span class="nav-number">1.5.</span> <span class="nav-text">使用translate居中</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Flexbox-居中"><span class="nav-number">1.6.</span> <span class="nav-text">Flexbox 居中</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#使用calc居中"><span class="nav-number">1.7.</span> <span class="nav-text">使用calc居中</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Lucius</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+
+<div class="busuanzi-count">
+
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv"><i class="fa fa-user"></i> 访问人数<span class="busuanzi-value" id="busuanzi_value_site_uv"></span></span>
+  
+
+  
+    <span class="site-pv"><i class="fa fa-eye"></i> 总访问量<span class="busuanzi-value" id="busuanzi_value_site_pv"></span>次</span>
+  
+  
+</div>
+
+
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+
+  
+
+    <script type="text/javascript">
+      var disqus_shortname = 'lucius0';
+      var disqus_identifier = '2016/10/28//archivers/seven_ways_of_centering_with_css/';
+
+      var disqus_title = "CSS - 七种元素居中的方法";
+
+
+      function run_disqus_script(disqus_script) {
+        var dsq = document.createElement('script');
+        dsq.type = 'text/javascript';
+        dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      }
+
+      run_disqus_script('count.js');
+
+      
+        var disqus_config = function () {
+            this.page.url = disqus_url;
+            this.page.identifier = disqus_identifier;
+            this.page.title = disqus_title;
+        };
+        run_disqus_script('embed.js');
+      
+
+    </script>
+  
+
+
+
+
+
+  
+  
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length == 0) {
+      search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body").append('<div class="popoverlay">').css('overflow', 'hidden');
+      $('.popup').toggle();
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+      $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = $( "entry", xmlResponse ).map(function() {
+            return {
+              title: $( "title", this ).text(),
+              content: $("content",this).text(),
+              url: $( "url" , this).text()
+            };
+          }).get();
+          var $input = document.getElementById(search_id);
+          var $resultContent = document.getElementById(content_id);
+          $input.addEventListener('input', function(){
+            var matchcounts = 0;
+            var str='<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length > 1) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var content_index = [];
+                var data_title = data.title.trim().toLowerCase();
+                var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                var data_url = decodeURIComponent(data.url);
+                var index_title = -1;
+                var index_content = -1;
+                var first_occur = -1;
+                // only match artiles with not empty titles and contents
+                if(data_title != '') {
+                  keywords.forEach(function(keyword, i) {
+                    index_title = data_title.indexOf(keyword);
+                    index_content = data_content.indexOf(keyword);
+                    if( index_title >= 0 || index_content >= 0 ){
+                      isMatch = true;
+                      if (i == 0) {
+                        first_occur = index_content;
+                      }
+                    }
+
+                  });
+                }
+                // show search results
+                if (isMatch) {
+                  matchcounts += 1;
+                  str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                  var content = data.content.trim().replace(/<[^>]+>/g,"");
+                  if (first_occur >= 0) {
+                    // cut out 100 characters
+                    var start = first_occur - 20;
+                    var end = first_occur + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if(start == 0){
+                      end = 50;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    var match_content = content.substring(start, end);
+                    // highlight all keywords
+                    keywords.forEach(function(keyword){
+                      var regS = new RegExp(keyword, "gi");
+                      match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                    });
+
+                    str += "<p class=\"search-result\">" + match_content +"...</p>"
+                  }
+                  str += "</li>";
+                }
+              })};
+            str += "</ul>";
+            if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+            if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+            $resultContent.innerHTML = str;
+          });
+          proceedsearch();
+        }
+      });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".popoverlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+
+  
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+
+  <script type="text/javascript">
+    (function() {
+      // try {
+      //   var document = window.document;
+      //   document.oncontextmenu = function() {
+      //     return false;
+      //   }
+      //   document.onkeydown = function() {
+      //     if (window.event.ctrlKey && window.event.keyCode == 67) {
+      //       return false;
+      //     }
+      //     return false;
+      //   }
+      //   document.body.oncopy = function() {
+      //     return false;
+      //   }
+      //   document.onselectstart = function() {
+      //     return false;
+      //   }
+            
+      //   document.onselectstart=function(){return false};
+      //   // document.style.MozUserSelect && document.style.MozUserSelect="none";
+      //   document.onmousedown=function(){return false};
+      //   document.style.cursor = "default"; 
+      // } catch(e) {}
+    })();
+  </script>
+
+</body>
+</html>

@@ -1,1 +1,1057 @@
-<!doctype html><html class="theme-next mist" lang="zh-Hans"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1"><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css"><link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css"><link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css"><link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css"><meta name="keywords" content="media,"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0"><meta name="description" content="初次学习有关音视频这一块的开发，主要是基于 flv.js 的学习。这一块的知识概念实在是太多太深了，所以本人是先在本地做记录，后面会整理慢慢地上传与各位分享，假如有地方说错，请勘误。谢谢指点。 什么是FLV？ Flash Video（简称FLV），是一种网络视频格式，用作串流媒体格式，它的出现有效地解决了视频文件导入Flash后，使导出的SWF文件体积庞大，不能在网络上有效使用等缺点。一般FLV文"><meta name="keywords" content="media"><meta property="og:type" content="article"><meta property="og:title" content="音视频学习-flv初认识"><meta property="og:url" content="https://lucius0.github.io/2017/12/25//archivers/media-study-01/index.html"><meta property="og:site_name" content="Lucius&#39;s Blog"><meta property="og:description" content="初次学习有关音视频这一块的开发，主要是基于 flv.js 的学习。这一块的知识概念实在是太多太深了，所以本人是先在本地做记录，后面会整理慢慢地上传与各位分享，假如有地方说错，请勘误。谢谢指点。 什么是FLV？ Flash Video（简称FLV），是一种网络视频格式，用作串流媒体格式，它的出现有效地解决了视频文件导入Flash后，使导出的SWF文件体积庞大，不能在网络上有效使用等缺点。一般FLV文"><meta property="og:locale" content="zh-Hans"><meta property="og:image" content="http://ouazw12mz.bkt.clouddn.com/171225224159.png?imageslim"><meta property="og:updated_time" content="2018-01-12T05:23:46.730Z"><meta name="twitter:card" content="summary"><meta name="twitter:title" content="音视频学习-flv初认识"><meta name="twitter:description" content="初次学习有关音视频这一块的开发，主要是基于 flv.js 的学习。这一块的知识概念实在是太多太深了，所以本人是先在本地做记录，后面会整理慢慢地上传与各位分享，假如有地方说错，请勘误。谢谢指点。 什么是FLV？ Flash Video（简称FLV），是一种网络视频格式，用作串流媒体格式，它的出现有效地解决了视频文件导入Flash后，使导出的SWF文件体积庞大，不能在网络上有效使用等缺点。一般FLV文"><meta name="twitter:image" content="http://ouazw12mz.bkt.clouddn.com/171225224159.png?imageslim"><script type="text/javascript" id="hexo.configurations">var NexT=window.NexT||{},CONFIG={root:"/",scheme:"Mist",sidebar:{position:"left",display:"post"},fancybox:!0,motion:!1,duoshuo:{userId:"0",author:"博主"},algolia:{applicationID:"",apiKey:"",indexName:"",hits:{per_page:10},labels:{input_placeholder:"Search for Posts",hits_empty:"We didn't find any results for the search: ${query}",hits_stats:"${hits} results found in ${time} ms"}}}</script><link rel="canonical" href="https://lucius0.github.io/2017/12/25//archivers/media-study-01/"><title> 音视频学习-flv初认识 | Lucius's Blog</title></head><body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans"><div class="container one-collumn sidebar-position-left page-post-detail"><div class="headband"></div><header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="header-inner"><div class="site-meta"><div class="custom-logo-site-title"><a href="/" class="brand" rel="start"><span class="logo-line-before"><i></i></span> <span class="site-title">Lucius's Blog</span><span class="logo-line-after"><i></i></span></a></div><p class="site-subtitle"></p></div><div class="site-nav-toggle"> <button><span class="btn-bar"></span><span class="btn-bar"></span><span class="btn-bar"></span></button></div><nav class="site-nav"><ul id="menu" class="menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i><br> 首页</a></li><li class="menu-item menu-item-archives"><a href="/archives" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i><br> 日志</a></li><li class="menu-item menu-item-categories"><a href="/categories" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i><br> 分类</a></li><li class="menu-item menu-item-tags"><a href="/tags" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i><br> 标签</a></li><li class="menu-item menu-item-about"><a href="/about" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i><br> 关于</a></li><li class="menu-item menu-item-search"><a href="javascript:;" class="popup-trigger"><i class="menu-item-icon fa fa-search fa-fw"></i><br> 搜索</a></li></ul><div class="site-search"><div class="popup"><span class="search-icon fa fa-search"></span> <input type="text" id="local-search-input"><div id="local-search-result"></div> <span class="popup-btn-close">close</span></div></div></nav></div></header><main id="main" class="main"><div class="main-inner"><div class="content-wrap"><div id="content" class="content"><div id="posts" class="posts-expand"><article class="post post-type-normal" itemscope itemtype="http://schema.org/Article"><link itemprop="mainEntityOfPage" href="https://lucius0.github.io/2017/12/25/archivers/media-study-01/"><span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person"><meta itemprop="name" content="Lucius"><meta itemprop="description" content=""><meta itemprop="image" content="/images/avatar.jpg"></span><span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization"><meta itemprop="name" content="Lucius's Blog"> <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject"><img style="display:none" itemprop="url image" alt="Lucius's Blog" src=""></span></span><header class="post-header"><h1 class="post-title" itemprop="name headline"> 音视频学习-flv初认识</h1><div class="post-meta"><span class="post-time"><span class="post-meta-item-icon"><i class="fa fa-calendar-o"></i></span> <span class="post-meta-item-text">发表于</span> <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-12-25T00:00:00+08:00">2017-12-25</time></span> <span class="post-category"><span class="post-meta-divider">|</span><span class="post-meta-item-icon"><i class="fa fa-folder-o"></i></span> <span class="post-meta-item-text">分类于</span> <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/media/" itemprop="url" rel="index"><span itemprop="name">media</span></a></span></span> <span class="post-comments-count"><span class="post-meta-divider">|</span><a href="/2017/12/25/archivers/media-study-01/#comments" itemprop="discussionUrl"><span class="post-comments-count disqus-comment-count" data-disqus-identifier="2017/12/25//archivers/media-study-01/" itemprop="commentCount"></span></a></span> <span class="post-meta-divider">|</span><span class="page-pv"><i class="fa fa-file-o"></i> 浏览<span class="busuanzi-value" id="busuanzi_value_page_pv"></span> 次</span></div></header><div class="post-body" itemprop="articleBody"><p>初次学习有关音视频这一块的开发，主要是基于 <strong><a href="https://github.com/Bilibili/flv.js" target="_blank" rel="noopener">flv.js</a></strong> 的学习。这一块的知识概念实在是太多太深了，所以本人是先在本地做记录，后面会整理慢慢地上传与各位分享，假如有地方说错，请勘误。谢谢指点。</p><h2 id="什么是FLV？"><a href="#什么是FLV？" class="headerlink" title="什么是FLV？"></a>什么是FLV？</h2><blockquote><p>Flash Video（简称FLV），是一种网络视频格式，用作串流媒体格式，它的出现有效地解决了视频文件导入Flash后，使导出的SWF文件体积庞大，不能在网络上有效使用等缺点。<br>一般FLV文件包在SWF PLAYER的壳里，并且FLV可以很好的保护原始地址，不容易被下载到，从而起到保护版权的作用。但还是有些视频格式转换软件将FLV转成一般的视频格式，如中国的软件格式工厂。随着视频网站的丰富，在2008年时这个格式已经非常普及，包括YouTube、NICONICO动画、Google Video、Yahoo! Video、MySpace，以及中国的优酷、酷6等大部分视频分享网站均采用这个格式。——- wiki百科</p></blockquote><h2 id="FLV的分类"><a href="#FLV的分类" class="headerlink" title="FLV的分类"></a>FLV的分类</h2><p>除了 flv（H264视频格式、AAC音频格式），还有 f4v，主要是为了突破 flv 的限制。 f4v 支持 H.264 视频格式之外，还支持 GIF、PNG 以及 JPEG；音频格式则有 AAC 以及 MP3 。<br><strong>PS：</strong> Adobe的规范中，UB 表示Unsigned Bit，UB(2)表示2个bit，UI 表示Unsigned Integer，UI24 表示24位整数，也就是3个Byte。</p><h2 id="FLV的结构"><a href="#FLV的结构" class="headerlink" title="FLV的结构"></a>FLV的结构</h2><p>先看一下flv的一小片段，这是一份二进制文件。<br></p><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">464</span>c <span class="number">5601</span> <span class="number">0500</span> <span class="number">0000</span> <span class="number">0900</span> <span class="number">0000</span> <span class="number">0012</span> <span class="number">0000</span></span><br><span class="line"><span class="number">3</span>f00 <span class="number">0000</span> <span class="number">0000</span> <span class="number">0000</span> <span class="number">0200</span> <span class="number">0</span>a6f <span class="number">6e4</span>d <span class="number">6574</span></span><br><span class="line"><span class="number">6144</span> <span class="number">6174</span> <span class="number">6108</span> <span class="number">0000</span> <span class="number">0002</span> <span class="number">0008</span> <span class="number">6475</span> <span class="number">7261</span></span><br><span class="line"><span class="number">7469</span> <span class="number">6</span>f6e <span class="number">0040</span> <span class="number">27</span>c8 b439 <span class="number">5810</span> <span class="number">6200</span> <span class="number">0</span>c76</span><br><span class="line"><span class="number">6964</span> <span class="number">656</span>f <span class="number">636</span>f <span class="number">6465</span> <span class="number">6369</span> <span class="number">6400</span> <span class="number">4000</span> <span class="number">0000</span></span><br><span class="line"><span class="number">0000</span> <span class="number">0000</span> <span class="number">0000</span> <span class="number">0900</span> <span class="number">0000</span> <span class="number">4</span>a08 <span class="number">0000</span> <span class="number">0400</span></span><br><span class="line"><span class="number">0000</span> <span class="number">0000</span> <span class="number">0000</span> af00 <span class="number">1208</span> <span class="number">0000</span> <span class="number">000</span>f <span class="number">0900</span></span><br><span class="line"><span class="number">0043</span> <span class="number">0000</span> <span class="number">0000</span> <span class="number">0000</span> <span class="number">0017</span> <span class="number">0000</span> <span class="number">0000</span> <span class="number">0142</span></span><br><span class="line"><span class="number">001</span>f <span class="number">0301</span> <span class="number">002</span>f <span class="number">6742</span> <span class="number">801</span>f <span class="number">9652</span> <span class="number">0283</span> f602</span><br><span class="line">a100 <span class="number">0003</span> <span class="number">0001</span> <span class="number">0000</span> <span class="number">0300</span> <span class="number">32e0</span> <span class="number">6003</span> <span class="number">0</span>d40</span><br><span class="line"><span class="number">0046</span> <span class="number">30</span>ff <span class="number">18e3</span> <span class="number">0300</span> <span class="number">186</span>a <span class="number">0002</span> <span class="number">3187</span> f8c7</span><br><span class="line"><span class="number">0</span>ed0 a152 <span class="number">4001</span> <span class="number">0004</span> <span class="number">68</span>cb <span class="number">8</span>d48 <span class="number">0000</span> <span class="number">004</span>e</span><br><span class="line"><span class="number">0900</span> <span class="number">0</span>d1c <span class="number">0000</span> <span class="number">0000</span> <span class="number">0000</span> <span class="number">0017</span> <span class="number">0100</span> <span class="number">029</span>d</span><br><span class="line"><span class="number">0000</span> <span class="number">0</span>d13 <span class="number">6588</span> <span class="number">8040</span> <span class="number">0</span>db1 <span class="number">185</span>c <span class="number">0008</span> <span class="number">2</span>d1f</span><br><span class="line"><span class="number">7893</span> de24 f789 f785 c2c4 f8a6 d3e2 <span class="number">43</span>fa</span><br><span class="line">f177 <span class="number">85</span>ea f377 a930 f991 ea7c <span class="number">4</span>f2a f0b9</span><br></pre></td></tr></table></figure><p></p><p>它的结构图是这样的。<br><img src="http://ouazw12mz.bkt.clouddn.com/171225224159.png?imageslim" alt=""></p><p>FLV Header自然时不用多说，上面的结构图都一目了然。重点讲下Flv Body下的Tag的三种类型。</p><h3 id="Script-Tag"><a href="#Script-Tag" class="headerlink" title="Script Tag"></a>Script Tag</h3><p><strong>KEY</strong><br>1、第1个字节为AMF类型，一般有以下的类型：</p><ul><li>0 = Number</li><li>1 = Boolean</li><li>2 = String</li><li>3 = Object</li><li>4 = MovieClip (reserved, not supported)</li><li>5 = Null</li><li>6 = Undefined</li><li>7 = Reference</li><li>8 = ECMA array</li><li>9 = Object end marker</li><li>10 = Strict array</li><li>11 = Date</li><li>12 = Long string</li></ul><p>因此第一个Tag Data <code>onMetaData</code> 的类型为0x02。</p><p>2、第2-3个字节表示标识字符串的长度，所以第一个为0x0000A。</p><p>3、接着是为key的具体字符串，因此第一个为<code>onMetaData</code>。</p><p><strong>Value</strong><br>1、紧接着后面则为ScriptTag的value值，第1个字节同样也是AMF类型，一般为0x08，表示ECMA Array。</p><p>2、第2-5个字节表示数组元素的个数。</p><p>3、后面即为各元素的封装，为一一对应的键值对，常见的MetaData如下：</p><ul><li>duration：时长</li><li>width：视频宽度</li><li>height：视频高度</li><li>videodatarate：视频码率</li><li>framerate：视频帧率</li><li>videocodecid：视频编码方式</li><li>audiosamplerate：音频采样率</li><li>audiosamplesize：音频采样精度</li><li>stereo：是否为立体声</li><li>audiocodecid：音频编码方式</li><li>filesize：文件大小</li></ul><p>4、最后用3个字节的固定值0000 09表示value值结束。</p><h3 id="Audio-Tag"><a href="#Audio-Tag" class="headerlink" title="Audio Tag"></a>Audio Tag</h3><p>Audio Tag Data开始的第一个字节包含了音频数据的参数信息，第二个字节开始为音频流数据。</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">--------------------------------------------------------------</span><br><span class="line">|                    音频参数(8bit)                 | 音频数据 |</span><br><span class="line">--------------------------------------------------------------</span><br><span class="line">|音频编码类型(4bit)| 采样率(2bit)|精度(1bit)|类型(1bit)|   数据  |</span><br><span class="line">--------------------------------------------------------------</span><br></pre></td></tr></table></figure><p><strong>第1字节：</strong><br>1、前4位标识音频数据的格式，如：0x2表示的是MP3数据，当前合法的数值为0，1，2，3，4，5，6，7，8，9，10，11，14，15（7，8，14，15保留为内部使用）</p><ul><li>0：Linear PCM，platform endian</li><li>1：ADPCM</li><li>2：MP3</li><li>3：Linear PCM，little endian</li><li>4：Nellymoser 16-kHz mono</li><li>5：Nellymoser 8-kHz mono</li><li>6：Nellymoser</li><li>7：G.711 A-law logarithmic PCM</li><li>8：G.711 mu-law logarithmic PCM</li><li>9：reserved</li><li>10：AAC</li><li>14：MP3 8-Khz</li><li>15：Device-specific sound</li></ul><p>2、第5，6位bit表示采样率（AAC，总是3）</p><ul><li>0：5.5kHz</li><li>1：11KHz</li><li>2：22 kHz</li><li>3：44 kHz</li></ul><p>3、第7位，采样精度， 0为8bits， 1为16bits</p><p>4、第8位，音频类型，mono=0， stereo=1</p><h3 id="Video-Tag"><a href="#Video-Tag" class="headerlink" title="Video Tag"></a>Video Tag</h3><p>和音频一样，其第一个字节包含的是视频参数信息，第二字节开始为视频流数据。<br></p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">--------------------------------------------------------------</span><br><span class="line">|                    视频参数(8bit)                 | 视频数据 |</span><br><span class="line">--------------------------------------------------------------</span><br><span class="line">|     标识帧类型(4bit)     |    标识视频编码(4bit)     |   数据  |</span><br><span class="line">--------------------------------------------------------------</span><br></pre></td></tr></table></figure><p></p><p><strong>第1字节：</strong></p><ul><li>前4位标识帧类型。<ul><li>1：keyframe (for AVC, a seekable frame)；</li><li>2：inter frame (for AVC, a nonseekable frame)；</li><li>3：disposable inter frame (H.263 only)；</li><li>4：generated keyframe (reserved for server use only)；</li><li>5：video info/command frame</li></ul></li><li>后4位标识视频编码。<ul><li>1：JPEG (currently unused) ；</li><li>2：Sorenson H.263；</li><li>3：Screen video；</li><li>4：On2 VP6；</li><li>5：On2 VP6 with alpha channel；</li><li>6：Screen video version 2；</li><li>7：AVC</li></ul></li></ul><h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><ul><li><a href="https://www.adobe.com/content/dam/acom/en/devnet/flv/video_file_format_spec_v10.pdf" target="_blank" rel="noopener">video_file_format_spec</a></li></ul></div><div></div><div><div style="padding:10px 0;margin:20px auto;width:90%;text-align:center"><div>我只是试下能不能被赞赏😳</div> <button id="rewardButton" disable="enable" onclick='var qr=document.getElementById("QR");"none"===qr.style.display?qr.style.display="block":qr.style.display="none"'> <span>赏</span></button><div id="QR" style="display:none"><div id="wechat" style="display:inline-block"> <img id="wechat_qr" src="http://ouazw12mz.bkt.clouddn.com/IMG_4838.jpg" alt="Lucius WeChat Pay"><p>微信打赏</p></div><div id="alipay" style="display:inline-block"> <img id="alipay_qr" src="http://ouazw12mz.bkt.clouddn.com/171226222918.png?imageslim" alt="Lucius Alipay"><p>支付宝打赏</p></div></div></div></div><div><ul class="post-copyright"><li class="post-copyright-author"> <strong>本文作者：</strong>Lucius</li><li class="post-copyright-link"> <strong>本文链接：</strong> <a href="/2017/12/25/archivers/media-study-01/" title="音视频学习-flv初认识">2017/12/25//archivers/media-study-01/</a></li><li class="post-copyright-license"> <strong>版权声明：</strong> 本博客所有文章除特别声明外，均采用 <a href="http://creativecommons.org/licenses/by-nc-sa/3.0/cn/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0 CN</a> 许可协议。转载请注明出处！</li></ul></div><footer class="post-footer"><div class="post-tags"> <a href="/tags/media/" rel="tag"># media</a></div><div class="post-nav"><div class="post-nav-next post-nav-item"><a href="/2017/06/01/archivers/html-element-dimensions-and-position/" rel="next" title="关于html元素的尺寸以及位置的问题"><i class="fa fa-chevron-left"></i> 关于html元素的尺寸以及位置的问题</a></div><span class="post-nav-divider"></span><div class="post-nav-prev post-nav-item"> <a href="/2017/12/26/archivers/media-study-02/" rel="prev" title="音视频学习-flv之ScriptTag">音视频学习-flv之ScriptTag<i class="fa fa-chevron-right"></i></a></div></div></footer></article><div class="post-spread"></div></div></div><div class="comments" id="comments"><div id="disqus_thread"><noscript> Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript></div></div></div><div class="sidebar-toggle"><div class="sidebar-toggle-line-wrap"><span class="sidebar-toggle-line sidebar-toggle-line-first"></span><span class="sidebar-toggle-line sidebar-toggle-line-middle"></span><span class="sidebar-toggle-line sidebar-toggle-line-last"></span></div></div><aside id="sidebar" class="sidebar"><div class="sidebar-inner"><ul class="sidebar-nav motion-element"><li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap"> 文章目录</li><li class="sidebar-nav-overview" data-target="site-overview"> 站点概览</li></ul><section class="site-overview sidebar-panel"><div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person"> <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="Lucius"><p class="site-author-name" itemprop="name">Lucius</p><p class="site-description motion-element" itemprop="description">stay hungry, stay foolish...</p></div><nav class="site-state motion-element"><div class="site-state-item site-state-posts"> <a href="/archives"><span class="site-state-item-count">44</span> <span class="site-state-item-name">日志</span></a></div><div class="site-state-item site-state-categories"> <a href="/categories"><span class="site-state-item-count">4</span> <span class="site-state-item-name">分类</span></a></div><div class="site-state-item site-state-tags"> <a href="/tags"><span class="site-state-item-count">9</span> <span class="site-state-item-name">标签</span></a></div></nav><div class="links-of-author motion-element"><span class="links-of-author-item"><a href="https://github.com/Lucius0" target="_blank" title="GitHub"><i class="fa fa-fw fa-github"></i> GitHub</a></span></div></section><section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active"><div class="post-toc"><div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#什么是FLV？"><span class="nav-number">1.</span> <span class="nav-text">什么是FLV？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#FLV的分类"><span class="nav-number">2.</span> <span class="nav-text">FLV的分类</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#FLV的结构"><span class="nav-number">3.</span> <span class="nav-text">FLV的结构</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Script-Tag"><span class="nav-number">3.1.</span> <span class="nav-text">Script Tag</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Audio-Tag"><span class="nav-number">3.2.</span> <span class="nav-text">Audio Tag</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Video-Tag"><span class="nav-number">3.3.</span> <span class="nav-text">Video Tag</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考资料"><span class="nav-number">4.</span> <span class="nav-text">参考资料</span></a></li></ol></div></div></section></div></aside></div></main><footer id="footer" class="footer"><div class="footer-inner"><div class="copyright"> &copy; <span itemprop="copyrightYear">2018</span><span class="with-love"><i class="fa fa-heart"></i></span> <span class="author" itemprop="copyrightHolder">Lucius</span></div><div class="powered-by"> 由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动</div><div class="theme-info"> 主题 - <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a></div><div class="busuanzi-count"><script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script><span class="site-uv"><i class="fa fa-user"></i> 访问人数<span class="busuanzi-value" id="busuanzi_value_site_uv"></span></span><span class="site-pv"><i class="fa fa-eye"></i> 总访问量<span class="busuanzi-value" id="busuanzi_value_site_pv"></span>次</span></div></div></footer><div class="back-to-top"><i class="fa fa-arrow-up"></i></div></div><script type="text/javascript">"[object Function]"!==Object.prototype.toString.call(window.Promise)&&(window.Promise=null)</script><script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script><script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script><script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script><script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script><script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script><script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script><script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script><script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script><script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script><script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script><script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script><script type="text/javascript">var disqus_shortname="lucius0",disqus_identifier="2017/12/25//archivers/media-study-01/",disqus_title="音视频学习-flv初认识";function run_disqus_script(s){var i=document.createElement("script");i.type="text/javascript",i.async=!0,i.src="//"+disqus_shortname+".disqus.com/"+s,(document.getElementsByTagName("head")[0]||document.getElementsByTagName("body")[0]).appendChild(i)}run_disqus_script("count.js");var disqus_config=function(){this.page.url=disqus_url,this.page.identifier=disqus_identifier,this.page.title=disqus_title};run_disqus_script("embed.js")</script><script type="text/javascript">var isfetched=!1,search_path="search.xml";0==search_path.length&&(search_path="search.xml");var path="/"+search_path;function proceedsearch(){$("body").append('<div class="popoverlay">').css("overflow","hidden"),$(".popup").toggle()}var searchFunc=function(e,t,a){"use strict";$.ajax({url:e,dataType:"xml",async:!0,success:function(e){isfetched=!0,$(".popup").detach().appendTo(".header-inner");var r=$("entry",e).map(function(){return{title:$("title",this).text(),content:$("content",this).text(),url:$("url",this).text()}}).get(),c=document.getElementById(t),n=document.getElementById(a);c.addEventListener("input",function(){var e=0,t='<ul class="search-result-list">',a=this.value.trim().toLowerCase().split(/[\s\-]+/);n.innerHTML="",this.value.trim().length>1&&r.forEach(function(r){var c=!1,n=r.title.trim().toLowerCase(),s=r.content.trim().replace(/<[^>]+>/g,"").toLowerCase(),o=decodeURIComponent(r.url),i=-1,l=-1,p=-1;if(""!=n&&a.forEach(function(e,t){i=n.indexOf(e),l=s.indexOf(e),(i>=0||l>=0)&&(c=!0,0==t&&(p=l))}),c){e+=1,t+="<li><a href='"+o+"' class='search-result-title'>"+n+"</a>";var h=r.content.trim().replace(/<[^>]+>/g,"");if(p>=0){var u=p-20,d=p+80;u<0&&(u=0),0==u&&(d=50),d>h.length&&(d=h.length);var f=h.substring(u,d);a.forEach(function(e){var t=new RegExp(e,"gi");f=f.replace(t,'<b class="search-keyword">'+e+"</b>")}),t+='<p class="search-result">'+f+"...</p>"}t+="</li>"}}),t+="</ul>",0==e&&(t='<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'),""==a&&(t='<div id="no-result"><i class="fa fa-search fa-5x" /></div>'),n.innerHTML=t}),proceedsearch()}})};$(".popup-trigger").click(function(e){e.stopPropagation(),0==isfetched?searchFunc(path,"local-search-input","local-search-result"):proceedsearch()}),$(".popup-btn-close").click(function(e){$(".popup").hide(),$(".popoverlay").remove(),$("body").css("overflow","")}),$(".popup").click(function(e){e.stopPropagation()})</script><script>!function(){var t=document.createElement("script"),e=window.location.protocol.split(":")[0];t.src="https"===e?"https://zz.bdstatic.com/linksubmit/push.js":"http://push.zhanzhang.baidu.com/push.js";var s=document.getElementsByTagName("script")[0];s.parentNode.insertBefore(t,s)}()</script><script type="text/javascript"></script></body></html>
+<!doctype html>
+
+
+
+
+<html class="theme-next mist" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="media," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="初次学习有关音视频这一块的开发，主要是基于 flv.js 的学习。这一块的知识概念实在是太多太深了，所以本人是先在本地做记录，后面会整理慢慢地上传与各位分享，假如有地方说错，请勘误。谢谢指点。 什么是FLV？ Flash Video（简称FLV），是一种网络视频格式，用作串流媒体格式，它的出现有效地解决了视频文件导入Flash后，使导出的SWF文件体积庞大，不能在网络上有效使用等缺点。一般FLV文">
+<meta name="keywords" content="media">
+<meta property="og:type" content="article">
+<meta property="og:title" content="音视频学习-flv初认识">
+<meta property="og:url" content="https://lucius0.github.io/2017/12/25//archivers/media-study-01/index.html">
+<meta property="og:site_name" content="Lucius&#39;s Blog">
+<meta property="og:description" content="初次学习有关音视频这一块的开发，主要是基于 flv.js 的学习。这一块的知识概念实在是太多太深了，所以本人是先在本地做记录，后面会整理慢慢地上传与各位分享，假如有地方说错，请勘误。谢谢指点。 什么是FLV？ Flash Video（简称FLV），是一种网络视频格式，用作串流媒体格式，它的出现有效地解决了视频文件导入Flash后，使导出的SWF文件体积庞大，不能在网络上有效使用等缺点。一般FLV文">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://ouazw12mz.bkt.clouddn.com/171225224159.png?imageslim">
+<meta property="og:updated_time" content="2018-01-12T05:23:46.730Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="音视频学习-flv初认识">
+<meta name="twitter:description" content="初次学习有关音视频这一块的开发，主要是基于 flv.js 的学习。这一块的知识概念实在是太多太深了，所以本人是先在本地做记录，后面会整理慢慢地上传与各位分享，假如有地方说错，请勘误。谢谢指点。 什么是FLV？ Flash Video（简称FLV），是一种网络视频格式，用作串流媒体格式，它的出现有效地解决了视频文件导入Flash后，使导出的SWF文件体积庞大，不能在网络上有效使用等缺点。一般FLV文">
+<meta name="twitter:image" content="http://ouazw12mz.bkt.clouddn.com/171225224159.png?imageslim">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: false,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://lucius0.github.io/2017/12/25//archivers/media-study-01/"/>
+
+
+
+
+
+  <title> 音视频学习-flv初认识 | Lucius's Blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Lucius's Blog</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            日志
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup">
+ <span class="search-icon fa fa-search"></span>
+ <input type="text" id="local-search-input">
+ <div id="local-search-result"></div>
+ <span class="popup-btn-close">close</span>
+</div>
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="https://lucius0.github.io/2017/12/25/archivers/media-study-01/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="Lucius">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.jpg">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="Lucius's Blog">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="Lucius's Blog" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                音视频学习-flv初认识
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-12-25T00:00:00+08:00">
+                2017-12-25
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/media/" itemprop="url" rel="index">
+                    <span itemprop="name">media</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <a href="/2017/12/25/archivers/media-study-01/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2017/12/25//archivers/media-study-01/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i> 浏览
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>次
+            </span>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>初次学习有关音视频这一块的开发，主要是基于 <strong><a href="https://github.com/Bilibili/flv.js" target="_blank" rel="noopener">flv.js</a></strong> 的学习。这一块的知识概念实在是太多太深了，所以本人是先在本地做记录，后面会整理慢慢地上传与各位分享，假如有地方说错，请勘误。谢谢指点。</p>
+<h2 id="什么是FLV？"><a href="#什么是FLV？" class="headerlink" title="什么是FLV？"></a>什么是FLV？</h2><blockquote>
+<p>Flash Video（简称FLV），是一种网络视频格式，用作串流媒体格式，它的出现有效地解决了视频文件导入Flash后，使导出的SWF文件体积庞大，不能在网络上有效使用等缺点。<br>一般FLV文件包在SWF PLAYER的壳里，并且FLV可以很好的保护原始地址，不容易被下载到，从而起到保护版权的作用。但还是有些视频格式转换软件将FLV转成一般的视频格式，如中国的软件格式工厂。随着视频网站的丰富，在2008年时这个格式已经非常普及，包括YouTube、NICONICO动画、Google Video、Yahoo! Video、MySpace，以及中国的优酷、酷6等大部分视频分享网站均采用这个格式。——- wiki百科</p>
+</blockquote>
+<h2 id="FLV的分类"><a href="#FLV的分类" class="headerlink" title="FLV的分类"></a>FLV的分类</h2><p>除了 flv（H264视频格式、AAC音频格式），还有 f4v，主要是为了突破 flv 的限制。 f4v 支持 H.264 视频格式之外，还支持 GIF、PNG 以及 JPEG；音频格式则有 AAC 以及 MP3 。<br><strong>PS：</strong> Adobe的规范中，UB 表示Unsigned Bit，UB(2)表示2个bit，UI 表示Unsigned Integer，UI24 表示24位整数，也就是3个Byte。</p>
+<h2 id="FLV的结构"><a href="#FLV的结构" class="headerlink" title="FLV的结构"></a>FLV的结构</h2><p>先看一下flv的一小片段，这是一份二进制文件。<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">464</span>c <span class="number">5601</span> <span class="number">0500</span> <span class="number">0000</span> <span class="number">0900</span> <span class="number">0000</span> <span class="number">0012</span> <span class="number">0000</span></span><br><span class="line"><span class="number">3</span>f00 <span class="number">0000</span> <span class="number">0000</span> <span class="number">0000</span> <span class="number">0200</span> <span class="number">0</span>a6f <span class="number">6e4</span>d <span class="number">6574</span></span><br><span class="line"><span class="number">6144</span> <span class="number">6174</span> <span class="number">6108</span> <span class="number">0000</span> <span class="number">0002</span> <span class="number">0008</span> <span class="number">6475</span> <span class="number">7261</span></span><br><span class="line"><span class="number">7469</span> <span class="number">6</span>f6e <span class="number">0040</span> <span class="number">27</span>c8 b439 <span class="number">5810</span> <span class="number">6200</span> <span class="number">0</span>c76</span><br><span class="line"><span class="number">6964</span> <span class="number">656</span>f <span class="number">636</span>f <span class="number">6465</span> <span class="number">6369</span> <span class="number">6400</span> <span class="number">4000</span> <span class="number">0000</span></span><br><span class="line"><span class="number">0000</span> <span class="number">0000</span> <span class="number">0000</span> <span class="number">0900</span> <span class="number">0000</span> <span class="number">4</span>a08 <span class="number">0000</span> <span class="number">0400</span></span><br><span class="line"><span class="number">0000</span> <span class="number">0000</span> <span class="number">0000</span> af00 <span class="number">1208</span> <span class="number">0000</span> <span class="number">000</span>f <span class="number">0900</span></span><br><span class="line"><span class="number">0043</span> <span class="number">0000</span> <span class="number">0000</span> <span class="number">0000</span> <span class="number">0017</span> <span class="number">0000</span> <span class="number">0000</span> <span class="number">0142</span></span><br><span class="line"><span class="number">001</span>f <span class="number">0301</span> <span class="number">002</span>f <span class="number">6742</span> <span class="number">801</span>f <span class="number">9652</span> <span class="number">0283</span> f602</span><br><span class="line">a100 <span class="number">0003</span> <span class="number">0001</span> <span class="number">0000</span> <span class="number">0300</span> <span class="number">32e0</span> <span class="number">6003</span> <span class="number">0</span>d40</span><br><span class="line"><span class="number">0046</span> <span class="number">30</span>ff <span class="number">18e3</span> <span class="number">0300</span> <span class="number">186</span>a <span class="number">0002</span> <span class="number">3187</span> f8c7</span><br><span class="line"><span class="number">0</span>ed0 a152 <span class="number">4001</span> <span class="number">0004</span> <span class="number">68</span>cb <span class="number">8</span>d48 <span class="number">0000</span> <span class="number">004</span>e</span><br><span class="line"><span class="number">0900</span> <span class="number">0</span>d1c <span class="number">0000</span> <span class="number">0000</span> <span class="number">0000</span> <span class="number">0017</span> <span class="number">0100</span> <span class="number">029</span>d</span><br><span class="line"><span class="number">0000</span> <span class="number">0</span>d13 <span class="number">6588</span> <span class="number">8040</span> <span class="number">0</span>db1 <span class="number">185</span>c <span class="number">0008</span> <span class="number">2</span>d1f</span><br><span class="line"><span class="number">7893</span> de24 f789 f785 c2c4 f8a6 d3e2 <span class="number">43</span>fa</span><br><span class="line">f177 <span class="number">85</span>ea f377 a930 f991 ea7c <span class="number">4</span>f2a f0b9</span><br></pre></td></tr></table></figure></p>
+<p>它的结构图是这样的。<br><img src="http://ouazw12mz.bkt.clouddn.com/171225224159.png?imageslim" alt=""></p>
+<p>FLV Header自然时不用多说，上面的结构图都一目了然。重点讲下Flv Body下的Tag的三种类型。</p>
+<h3 id="Script-Tag"><a href="#Script-Tag" class="headerlink" title="Script Tag"></a>Script Tag</h3><p><strong>KEY</strong><br>1、第1个字节为AMF类型，一般有以下的类型：</p>
+<ul>
+<li>0 = Number</li>
+<li>1 = Boolean</li>
+<li>2 = String</li>
+<li>3 = Object</li>
+<li>4 = MovieClip (reserved, not supported)</li>
+<li>5 = Null</li>
+<li>6 = Undefined</li>
+<li>7 = Reference</li>
+<li>8 = ECMA array</li>
+<li>9 = Object end marker</li>
+<li>10 = Strict array</li>
+<li>11 = Date</li>
+<li>12 = Long string</li>
+</ul>
+<p>因此第一个Tag Data <code>onMetaData</code> 的类型为0x02。</p>
+<p>2、第2-3个字节表示标识字符串的长度，所以第一个为0x0000A。</p>
+<p>3、接着是为key的具体字符串，因此第一个为<code>onMetaData</code>。</p>
+<p><strong>Value</strong><br>1、紧接着后面则为ScriptTag的value值，第1个字节同样也是AMF类型，一般为0x08，表示ECMA Array。</p>
+<p>2、第2-5个字节表示数组元素的个数。</p>
+<p>3、后面即为各元素的封装，为一一对应的键值对，常见的MetaData如下：</p>
+<ul>
+<li>duration：时长</li>
+<li>width：视频宽度</li>
+<li>height：视频高度</li>
+<li>videodatarate：视频码率</li>
+<li>framerate：视频帧率</li>
+<li>videocodecid：视频编码方式</li>
+<li>audiosamplerate：音频采样率</li>
+<li>audiosamplesize：音频采样精度</li>
+<li>stereo：是否为立体声</li>
+<li>audiocodecid：音频编码方式</li>
+<li>filesize：文件大小</li>
+</ul>
+<p>4、最后用3个字节的固定值0000 09表示value值结束。</p>
+<h3 id="Audio-Tag"><a href="#Audio-Tag" class="headerlink" title="Audio Tag"></a>Audio Tag</h3><p>Audio Tag Data开始的第一个字节包含了音频数据的参数信息，第二个字节开始为音频流数据。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">--------------------------------------------------------------</span><br><span class="line">|                    音频参数(8bit)                 | 音频数据 |</span><br><span class="line">--------------------------------------------------------------</span><br><span class="line">|音频编码类型(4bit)| 采样率(2bit)|精度(1bit)|类型(1bit)|   数据  |</span><br><span class="line">--------------------------------------------------------------</span><br></pre></td></tr></table></figure>
+<p><strong>第1字节：</strong><br>1、前4位标识音频数据的格式，如：0x2表示的是MP3数据，当前合法的数值为0，1，2，3，4，5，6，7，8，9，10，11，14，15（7，8，14，15保留为内部使用）</p>
+<ul>
+<li>0：Linear PCM，platform endian</li>
+<li>1：ADPCM</li>
+<li>2：MP3</li>
+<li>3：Linear PCM，little endian</li>
+<li>4：Nellymoser 16-kHz mono</li>
+<li>5：Nellymoser 8-kHz mono</li>
+<li>6：Nellymoser</li>
+<li>7：G.711 A-law logarithmic PCM</li>
+<li>8：G.711 mu-law logarithmic PCM</li>
+<li>9：reserved</li>
+<li>10：AAC</li>
+<li>14：MP3 8-Khz</li>
+<li>15：Device-specific sound</li>
+</ul>
+<p>2、第5，6位bit表示采样率（AAC，总是3）</p>
+<ul>
+<li>0：5.5kHz</li>
+<li>1：11KHz</li>
+<li>2：22 kHz</li>
+<li>3：44 kHz</li>
+</ul>
+<p>3、第7位，采样精度， 0为8bits， 1为16bits</p>
+<p>4、第8位，音频类型，mono=0， stereo=1</p>
+<h3 id="Video-Tag"><a href="#Video-Tag" class="headerlink" title="Video Tag"></a>Video Tag</h3><p>和音频一样，其第一个字节包含的是视频参数信息，第二字节开始为视频流数据。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">--------------------------------------------------------------</span><br><span class="line">|                    视频参数(8bit)                 | 视频数据 |</span><br><span class="line">--------------------------------------------------------------</span><br><span class="line">|     标识帧类型(4bit)     |    标识视频编码(4bit)     |   数据  |</span><br><span class="line">--------------------------------------------------------------</span><br></pre></td></tr></table></figure></p>
+<p><strong>第1字节：</strong></p>
+<ul>
+<li>前4位标识帧类型。<ul>
+<li>1：keyframe (for AVC, a seekable frame)； </li>
+<li>2：inter frame (for AVC, a nonseekable frame)； </li>
+<li>3：disposable inter frame (H.263 only)； </li>
+<li>4：generated keyframe (reserved for server use only)； </li>
+<li>5：video info/command frame</li>
+</ul>
+</li>
+<li>后4位标识视频编码。<ul>
+<li>1：JPEG (currently unused) ；</li>
+<li>2：Sorenson H.263； </li>
+<li>3：Screen video； </li>
+<li>4：On2 VP6； </li>
+<li>5：On2 VP6 with alpha channel；</li>
+<li>6：Screen video version 2； </li>
+<li>7：AVC</li>
+</ul>
+</li>
+</ul>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><ul>
+<li><a href="https://www.adobe.com/content/dam/acom/en/devnet/flv/video_file_format_spec_v10.pdf" target="_blank" rel="noopener">video_file_format_spec</a></li>
+</ul>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+  <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+    <div>我只是试下能不能被赞赏😳</div>
+    <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+      <span>赏</span>
+    </button>
+    <div id="QR" style="display: none;">
+      
+        <div id="wechat" style="display: inline-block">
+          <img id="wechat_qr" src="http://ouazw12mz.bkt.clouddn.com/IMG_4838.jpg" alt="Lucius WeChat Pay"/>
+          <p>微信打赏</p>
+        </div>
+      
+      
+        <div id="alipay" style="display: inline-block">
+          <img id="alipay_qr" src="http://ouazw12mz.bkt.clouddn.com/171226222918.png?imageslim" alt="Lucius Alipay"/>
+          <p>支付宝打赏</p>
+        </div>
+      
+    </div>
+  </div>
+
+
+      
+    </div>
+
+    <div>    
+     
+     
+        <ul class="post-copyright">
+          <li class="post-copyright-author">
+              <strong>本文作者：</strong>Lucius
+          </li>
+          <li class="post-copyright-link">
+            <strong>本文链接：</strong>
+            <a href="/2017/12/25/archivers/media-study-01/" title="音视频学习-flv初认识">2017/12/25//archivers/media-study-01/</a>
+          </li>
+          <li class="post-copyright-license">
+            <strong>版权声明： </strong>
+            本博客所有文章除特别声明外，均采用 <a href="http://creativecommons.org/licenses/by-nc-sa/3.0/cn/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0 CN</a> 许可协议。转载请注明出处！
+          </li>
+        </ul>
+      
+    </div>
+    
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/media/" rel="tag"># media</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/06/01/archivers/html-element-dimensions-and-position/" rel="next" title="关于html元素的尺寸以及位置的问题">
+                <i class="fa fa-chevron-left"></i> 关于html元素的尺寸以及位置的问题
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/12/26/archivers/media-study-02/" rel="prev" title="音视频学习-flv之ScriptTag">
+                音视频学习-flv之ScriptTag <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.jpg"
+               alt="Lucius" />
+          <p class="site-author-name" itemprop="name">Lucius</p>
+          <p class="site-description motion-element" itemprop="description">stay hungry, stay foolish...</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">44</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">4</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">9</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/Lucius0" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#什么是FLV？"><span class="nav-number">1.</span> <span class="nav-text">什么是FLV？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#FLV的分类"><span class="nav-number">2.</span> <span class="nav-text">FLV的分类</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#FLV的结构"><span class="nav-number">3.</span> <span class="nav-text">FLV的结构</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Script-Tag"><span class="nav-number">3.1.</span> <span class="nav-text">Script Tag</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Audio-Tag"><span class="nav-number">3.2.</span> <span class="nav-text">Audio Tag</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Video-Tag"><span class="nav-number">3.3.</span> <span class="nav-text">Video Tag</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考资料"><span class="nav-number">4.</span> <span class="nav-text">参考资料</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Lucius</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+
+<div class="busuanzi-count">
+
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv"><i class="fa fa-user"></i> 访问人数<span class="busuanzi-value" id="busuanzi_value_site_uv"></span></span>
+  
+
+  
+    <span class="site-pv"><i class="fa fa-eye"></i> 总访问量<span class="busuanzi-value" id="busuanzi_value_site_pv"></span>次</span>
+  
+  
+</div>
+
+
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+
+  
+
+    <script type="text/javascript">
+      var disqus_shortname = 'lucius0';
+      var disqus_identifier = '2017/12/25//archivers/media-study-01/';
+
+      var disqus_title = "音视频学习-flv初认识";
+
+
+      function run_disqus_script(disqus_script) {
+        var dsq = document.createElement('script');
+        dsq.type = 'text/javascript';
+        dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      }
+
+      run_disqus_script('count.js');
+
+      
+        var disqus_config = function () {
+            this.page.url = disqus_url;
+            this.page.identifier = disqus_identifier;
+            this.page.title = disqus_title;
+        };
+        run_disqus_script('embed.js');
+      
+
+    </script>
+  
+
+
+
+
+
+  
+  
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length == 0) {
+      search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body").append('<div class="popoverlay">').css('overflow', 'hidden');
+      $('.popup').toggle();
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+      $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = $( "entry", xmlResponse ).map(function() {
+            return {
+              title: $( "title", this ).text(),
+              content: $("content",this).text(),
+              url: $( "url" , this).text()
+            };
+          }).get();
+          var $input = document.getElementById(search_id);
+          var $resultContent = document.getElementById(content_id);
+          $input.addEventListener('input', function(){
+            var matchcounts = 0;
+            var str='<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length > 1) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var content_index = [];
+                var data_title = data.title.trim().toLowerCase();
+                var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                var data_url = decodeURIComponent(data.url);
+                var index_title = -1;
+                var index_content = -1;
+                var first_occur = -1;
+                // only match artiles with not empty titles and contents
+                if(data_title != '') {
+                  keywords.forEach(function(keyword, i) {
+                    index_title = data_title.indexOf(keyword);
+                    index_content = data_content.indexOf(keyword);
+                    if( index_title >= 0 || index_content >= 0 ){
+                      isMatch = true;
+                      if (i == 0) {
+                        first_occur = index_content;
+                      }
+                    }
+
+                  });
+                }
+                // show search results
+                if (isMatch) {
+                  matchcounts += 1;
+                  str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                  var content = data.content.trim().replace(/<[^>]+>/g,"");
+                  if (first_occur >= 0) {
+                    // cut out 100 characters
+                    var start = first_occur - 20;
+                    var end = first_occur + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if(start == 0){
+                      end = 50;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    var match_content = content.substring(start, end);
+                    // highlight all keywords
+                    keywords.forEach(function(keyword){
+                      var regS = new RegExp(keyword, "gi");
+                      match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                    });
+
+                    str += "<p class=\"search-result\">" + match_content +"...</p>"
+                  }
+                  str += "</li>";
+                }
+              })};
+            str += "</ul>";
+            if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+            if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+            $resultContent.innerHTML = str;
+          });
+          proceedsearch();
+        }
+      });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".popoverlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+
+  
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+
+  <script type="text/javascript">
+    (function() {
+      // try {
+      //   var document = window.document;
+      //   document.oncontextmenu = function() {
+      //     return false;
+      //   }
+      //   document.onkeydown = function() {
+      //     if (window.event.ctrlKey && window.event.keyCode == 67) {
+      //       return false;
+      //     }
+      //     return false;
+      //   }
+      //   document.body.oncopy = function() {
+      //     return false;
+      //   }
+      //   document.onselectstart = function() {
+      //     return false;
+      //   }
+            
+      //   document.onselectstart=function(){return false};
+      //   // document.style.MozUserSelect && document.style.MozUserSelect="none";
+      //   document.onmousedown=function(){return false};
+      //   document.style.cursor = "default"; 
+      // } catch(e) {}
+    })();
+  </script>
+
+</body>
+</html>

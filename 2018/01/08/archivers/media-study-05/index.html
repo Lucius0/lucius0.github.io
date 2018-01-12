@@ -1,1 +1,1064 @@
-<!doctype html><html class="theme-next mist" lang="zh-Hans"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1"><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css"><link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css"><link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css"><link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css"><meta name="keywords" content="media,"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0"><meta name="description" content="初次学习有关音视频这一块的开发，主要是基于 flv.js 的学习。这一块的知识概念实在是太多太深了，所以本人是先在本地做记录，后面会整理慢慢地上传与各位分享，假如有地方说错，请勘误。谢谢指点。 这里主要讲的是FLV的视频格式H.264，而H.264跟MPEG-4 Part 10、ISO/IEC 14496-10、MPEG-4 AVC其实都是同一个视频格式，也就是我们常说的H.264或AVC。那么我"><meta name="keywords" content="media"><meta property="og:type" content="article"><meta property="og:title" content="音视频学习-flv之VideoTag(1)[转]"><meta property="og:url" content="https://lucius0.github.io/2018/01/08//archivers/media-study-05/index.html"><meta property="og:site_name" content="Lucius&#39;s Blog"><meta property="og:description" content="初次学习有关音视频这一块的开发，主要是基于 flv.js 的学习。这一块的知识概念实在是太多太深了，所以本人是先在本地做记录，后面会整理慢慢地上传与各位分享，假如有地方说错，请勘误。谢谢指点。 这里主要讲的是FLV的视频格式H.264，而H.264跟MPEG-4 Part 10、ISO/IEC 14496-10、MPEG-4 AVC其实都是同一个视频格式，也就是我们常说的H.264或AVC。那么我"><meta property="og:locale" content="zh-Hans"><meta property="og:image" content="http://ouazw12mz.bkt.clouddn.com/180108004838.png?imageslim"><meta property="og:image" content="http://ouazw12mz.bkt.clouddn.com/180108004954.png?imageslim"><meta property="og:image" content="http://ouazw12mz.bkt.clouddn.com/180108005022.png?imageslim"><meta property="og:image" content="http://ouazw12mz.bkt.clouddn.com/180108005131.png?imageslim"><meta property="og:image" content="http://ouazw12mz.bkt.clouddn.com/180108005156.png?imageslim"><meta property="og:image" content="http://ouazw12mz.bkt.clouddn.com/180108005317.png?imageslim"><meta property="og:updated_time" content="2018-01-12T05:23:46.732Z"><meta name="twitter:card" content="summary"><meta name="twitter:title" content="音视频学习-flv之VideoTag(1)[转]"><meta name="twitter:description" content="初次学习有关音视频这一块的开发，主要是基于 flv.js 的学习。这一块的知识概念实在是太多太深了，所以本人是先在本地做记录，后面会整理慢慢地上传与各位分享，假如有地方说错，请勘误。谢谢指点。 这里主要讲的是FLV的视频格式H.264，而H.264跟MPEG-4 Part 10、ISO/IEC 14496-10、MPEG-4 AVC其实都是同一个视频格式，也就是我们常说的H.264或AVC。那么我"><meta name="twitter:image" content="http://ouazw12mz.bkt.clouddn.com/180108004838.png?imageslim"><script type="text/javascript" id="hexo.configurations">var NexT=window.NexT||{},CONFIG={root:"/",scheme:"Mist",sidebar:{position:"left",display:"post"},fancybox:!0,motion:!1,duoshuo:{userId:"0",author:"博主"},algolia:{applicationID:"",apiKey:"",indexName:"",hits:{per_page:10},labels:{input_placeholder:"Search for Posts",hits_empty:"We didn't find any results for the search: ${query}",hits_stats:"${hits} results found in ${time} ms"}}}</script><link rel="canonical" href="https://lucius0.github.io/2018/01/08//archivers/media-study-05/"><title> 音视频学习-flv之VideoTag(1)[转] | Lucius's Blog</title></head><body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans"><div class="container one-collumn sidebar-position-left page-post-detail"><div class="headband"></div><header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="header-inner"><div class="site-meta"><div class="custom-logo-site-title"><a href="/" class="brand" rel="start"><span class="logo-line-before"><i></i></span> <span class="site-title">Lucius's Blog</span><span class="logo-line-after"><i></i></span></a></div><p class="site-subtitle"></p></div><div class="site-nav-toggle"> <button><span class="btn-bar"></span><span class="btn-bar"></span><span class="btn-bar"></span></button></div><nav class="site-nav"><ul id="menu" class="menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i><br> 首页</a></li><li class="menu-item menu-item-archives"><a href="/archives" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i><br> 日志</a></li><li class="menu-item menu-item-categories"><a href="/categories" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i><br> 分类</a></li><li class="menu-item menu-item-tags"><a href="/tags" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i><br> 标签</a></li><li class="menu-item menu-item-about"><a href="/about" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i><br> 关于</a></li><li class="menu-item menu-item-search"><a href="javascript:;" class="popup-trigger"><i class="menu-item-icon fa fa-search fa-fw"></i><br> 搜索</a></li></ul><div class="site-search"><div class="popup"><span class="search-icon fa fa-search"></span> <input type="text" id="local-search-input"><div id="local-search-result"></div> <span class="popup-btn-close">close</span></div></div></nav></div></header><main id="main" class="main"><div class="main-inner"><div class="content-wrap"><div id="content" class="content"><div id="posts" class="posts-expand"><article class="post post-type-normal" itemscope itemtype="http://schema.org/Article"><link itemprop="mainEntityOfPage" href="https://lucius0.github.io/2018/01/08/archivers/media-study-05/"><span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person"><meta itemprop="name" content="Lucius"><meta itemprop="description" content=""><meta itemprop="image" content="/images/avatar.jpg"></span><span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization"><meta itemprop="name" content="Lucius's Blog"> <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject"><img style="display:none" itemprop="url image" alt="Lucius's Blog" src=""></span></span><header class="post-header"><h1 class="post-title" itemprop="name headline"> 音视频学习-flv之VideoTag(1)[转]</h1><div class="post-meta"><span class="post-time"><span class="post-meta-item-icon"><i class="fa fa-calendar-o"></i></span> <span class="post-meta-item-text">发表于</span> <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-01-08T00:00:00+08:00">2018-01-08</time></span> <span class="post-category"><span class="post-meta-divider">|</span><span class="post-meta-item-icon"><i class="fa fa-folder-o"></i></span> <span class="post-meta-item-text">分类于</span> <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/media/" itemprop="url" rel="index"><span itemprop="name">media</span></a></span></span> <span class="post-comments-count"><span class="post-meta-divider">|</span><a href="/2018/01/08/archivers/media-study-05/#comments" itemprop="discussionUrl"><span class="post-comments-count disqus-comment-count" data-disqus-identifier="2018/01/08//archivers/media-study-05/" itemprop="commentCount"></span></a></span> <span class="post-meta-divider">|</span><span class="page-pv"><i class="fa fa-file-o"></i> 浏览<span class="busuanzi-value" id="busuanzi_value_page_pv"></span> 次</span></div></header><div class="post-body" itemprop="articleBody"><p>初次学习有关音视频这一块的开发，主要是基于 <strong><a href="https://github.com/Bilibili/flv.js" target="_blank" rel="noopener">flv.js</a></strong> 的学习。这一块的知识概念实在是太多太深了，所以本人是先在本地做记录，后面会整理慢慢地上传与各位分享，假如有地方说错，请勘误。谢谢指点。</p><p>这里主要讲的是FLV的视频格式H.264，而H.264跟MPEG-4 Part 10、ISO/IEC 14496-10、MPEG-4 AVC其实都是同一个视频格式，也就是我们常说的H.264或AVC。那么我们常说的MPEG-4其实是指MPEG-4 Part 2(注意跟MPEG-2是两个概念)。更多的细节可以查看<a href="https://zh.wikipedia.org/wiki/MPEG-4" target="_blank" rel="noopener">MPEG-4 - 维基百科，自由的百科全书</a>、<a href="https://zh.wikipedia.org/wiki/H.264/MPEG-4_AVC" target="_blank" rel="noopener">H.264/MPEG-4 AVC - 维基百科，自由的百科全书</a>。总的来讲，H.264具有高压缩比，同时也对网络的兼容性好。</p><p>以下内容转自<a href="https://maxwellqi.github.io/ios-h264-summ/" target="_blank" rel="noopener">H.264码流以及H.264编解码的基本概念</a>。</p><h2 id="软编码和硬编码的概念"><a href="#软编码和硬编码的概念" class="headerlink" title="软编码和硬编码的概念"></a>软编码和硬编码的概念</h2><p>软编码：使用CPU进行编码。</p><p>硬编码：不使用CPU进行编码，使用显卡GPU,专用的DSP、FPGA、ASIC芯片等硬件进行编码。</p><h2 id="软编码和硬编码的比较"><a href="#软编码和硬编码的比较" class="headerlink" title="软编码和硬编码的比较"></a>软编码和硬编码的比较</h2><p>软编码：实现直接、简单，参数调整方便，升级易，但CPU负载重，性能较硬编码低，低码率下质量通常比硬编码要好一点。</p><p>硬编码：性能高，低码率下通常质量低于硬编码器，但部分产品在GPU硬件平台移植了优秀的软编码算法（如X264）的，质量基本等同于软编码。</p><h2 id="H-264编码原理以及I帧B帧P帧"><a href="#H-264编码原理以及I帧B帧P帧" class="headerlink" title="H.264编码原理以及I帧B帧P帧"></a>H.264编码原理以及I帧B帧P帧</h2><h3 id="H-264编码原理"><a href="#H-264编码原理" class="headerlink" title="H.264编码原理"></a>H.264编码原理</h3><p>H264是新一代的编码标准，以高压缩高质量和支持多种网络的流媒体传输著称，在编码方面，我理解的他的理论依据是：参照一段时间内图像的统计结果表明，在相邻几幅图像画面中，一般有差别的像素只有10%以内的点,亮度差值变化不超过2%，而色度差值的变化只有1%以内。所以对于一段变化不大图像画面，我们可以先编码出一个完整的图像帧A，随后的B帧就不编码全部图像，只写入与A帧的差别，这样B帧的大小就只有完整帧的1/10或更小！B帧之后的C帧如果变化不大，我们可以继续以参考B的方式编码C帧，这样循环下去。这段图像我们称为一个序列（序列就是有相同特点的一段数据），当某个图像与之前的图像变化很大，无法参考前面的帧来生成，那我们就结束上一个序列，开始下一段序列，也就是对这个图像生成一个完整帧A1，随后的图像就参考A1生成，只写入与A1的差别内容。</p><p>在H264协议里定义了三种帧，完整编码的帧叫I帧，参考之前的I帧生成的只包含差异部分编码的帧叫P帧，还有一种参考前后的帧编码的帧叫B帧。</p><p>H264采用的核心算法是帧内压缩和帧间压缩，帧内压缩是生成I帧的算法，帧间压缩是生成B帧和P帧的算法。</p><h3 id="对序列的说明"><a href="#对序列的说明" class="headerlink" title="对序列的说明"></a>对序列的说明</h3><p>在H264中图像以序列为单位进行组织，一个序列是一段图像编码后的数据流，以I帧开始，到下一个I帧结束。<br>一个序列的第一个图像叫做 IDR 图像（立即刷新图像），IDR 图像都是 I 帧图像。H.264 引入 IDR 图像是为了解码的重同步，当解码器解码到 IDR 图像时，立即将参考帧队列清空，将已解码的数据全部输出或抛弃，重新查找参数集，开始一个新的序列。这样，如果前一个序列出现重大错误，在这里可以获得重新同步的机会。IDR图像之后的图像永远不会使用IDR之前的图像的数据来解码。<br>一个序列就是一段内容差异不太大的图像编码后生成的一串数据流。当运动变化比较少时，一个序列可以很长，因为运动变化少就代表图像画面的内容变动很小，所以就可以编一个I帧，然后一直P帧、B帧了。当运动变化多时，可能一个序列就比较短了，比如就包含一个I帧和3、4个P帧。</p><h3 id="对三种帧的介绍"><a href="#对三种帧的介绍" class="headerlink" title="对三种帧的介绍"></a>对三种帧的介绍</h3><ul><li><p><strong>I帧</strong><br>为了更好地理解I帧的概念，我罗列了两种解释：</p><ul><li>帧内编码帧 ，I帧表示关键帧，你可以理解为这一帧画面的完整保留；解码时只需要本帧数据就可以完成（因为包含完整画面）。</li><li><p>帧内编码帧 又称intra picture，I 帧通常是每个 GOP（MPEG 所使用的一种视频压缩技术）的第一个帧，经过适度地压缩，做为随机访问的参考点，可以当成图象。I帧可以看成是一个图像经过压缩后的产物。</p><p><strong>I帧的特点：</strong></p><ul><li>它是一个全帧压缩编码帧。它将全帧图像信息进行JPEG压缩编码及传输</li><li>解码时仅用I帧的数据就可重构完整图像</li><li>I帧描述了图像背景和运动主体的详情</li><li>I帧不需要参考其他画面而生成</li><li>I帧是P帧和B帧的参考帧(其质量直接影响到同组中以后各帧的质量)</li><li>I帧是帧组GOP的基础帧(第一帧),在一组中只有一个I帧</li><li>I帧不需要考虑运动矢量</li><li>I帧所占数据的信息量比较大</li></ul></li></ul></li></ul><ul><li><p><strong>P帧</strong><br>为了更好地理解P帧的概念，我也罗列了两种解释：</p><ul><li>前向预测编码帧。P帧表示的是这一帧跟之前的一个关键帧（或P帧）的差别，解码时需要用之前缓存的画面叠加上本帧定义的差别，生成最终画面。（也就是差别帧，P帧没有完整画面数据，只有与前一帧的画面差别的数据）</li><li><p>前向预测编码帧 又称predictive-frame，通过充分将低于图像序列中前面已编码帧的时间冗余信息来压缩传输数据量的编码图像，也叫预测帧</p><p><strong>P帧的预测与重构：</strong>P帧是以I帧为参考帧,在I帧中找出P帧“某点”的预测值和运动矢量,取预测差值和运动矢量一起传送。在接收端根据运动矢量从I帧中找出P帧“某点”的预测值并与差值相加以得到P帧“某点”样值,从而可得到完整的P帧。</p><p><strong>P帧特点:</strong></p><ul><li>P帧是I帧后面相隔1~2帧的编码帧</li><li>P帧采用运动补偿的方法传送它与前面的I或P帧的差值及运动矢量(预测误差)</li><li>解码时必须将I帧中的预测值与预测误差求和后才能重构完整的P帧图像</li><li>P帧属于前向预测的帧间编码。它只参考前面最靠近它的I帧或P帧</li><li>P帧可以是其后面P帧的参考帧,也可以是其前后的B帧的参考帧</li><li>由于P帧是参考帧,它可能造成解码错误的扩散</li><li>由于是差值传送,P帧的压缩比较高</li></ul></li></ul></li></ul><ul><li><p><strong>B帧</strong><br>为了更好地理解P帧的概念，我依然罗列了两种解释：</p><ul><li>双向预测内插编码帧。B帧是双向差别帧，也就是B帧记录的是本帧与前后帧的差别（具体比较复杂，有4种情况，但我这样说简单些），换言之，要解码B帧，不仅要取得之前的缓存画面，还要解码之后的画面，通过前后画面的与本帧数据的叠加取得最终的画面。B帧压缩率高，但是解码时CPU会比较累。</li><li><p>双向预测内插编码帧 又称bi-directional interpolated prediction frame，既考虑与源图像序列前面已编码帧，也顾及源图像序列后面已编码帧之间的时间冗余信息来压缩传输数据量的编码图像，也叫双向预测帧；</p><p><strong>B帧的预测与重构：</strong>B帧以前面的I或P帧和后面的P帧为参考帧,“找出”B帧“某点”的预测值和两个运动矢量,并取预测差值和运动矢量传送。接收端根据运动矢量在两个参考帧中“找出(算出)”预测值并与差值求和,得到B帧“某点”样值,从而可得到完整的B帧。</p><p><strong>B帧的特点：</strong></p><ul><li>B帧是由前面的I或P帧和后面的P帧来进行预测的</li><li>B帧传送的是它与前面的I或P帧和后面的P帧之间的预测误差及运动矢量</li><li>B帧是双向预测编码帧</li><li>B帧压缩比最高,因为它只反映丙参考帧间运动主体的变化情况,预测比较准确</li><li>B帧不是参考帧,不会造成解码错误的扩散</li></ul></li></ul></li></ul><p>I、B、P各帧是根据压缩算法的需要，是人为定义的,它们都是实实在在的物理帧。一般来说，I帧的压缩率是7（跟JPG差不多），P帧是20，B帧可以达到50。可见使用B帧能节省大量空间，节省出来的空间可以用来保存多一些I帧，这样在相同码率下，可以提供更好的画质。</p><h3 id="对压缩算法的说明"><a href="#对压缩算法的说明" class="headerlink" title="对压缩算法的说明"></a>对压缩算法的说明</h3><p>h264的压缩方法:</p><ol><li>分组:把几帧图像分为一组(GOP，也就是一个序列),为防止运动变化,帧数不宜取多。</li><li>定义帧:将每组内各帧图像定义为三种类型,即I帧、B帧和P帧;</li><li>预测帧:以I帧做为基础帧,以I帧预测P帧,再由I帧和P帧预测B帧;</li><li>数据传输:最后将I帧数据与预测的差值信息进行存储和传输。</li></ol><p>帧内（Intraframe）压缩也称为空间压缩（Spatial compression）。当压缩一帧图像时，仅考虑本帧的数据而不考虑相邻帧之间的冗余信息，这实际上与静态图像压缩类似。帧内一般采用有损压缩算法，由于帧内压缩是编码一个完整的图像，所以可以独立的解码、显示。帧内压缩一般达不到很高的压缩，跟编码jpeg差不多。</p><p>帧间（Interframe）压缩的原理是：相邻几帧的数据有很大的相关性，或者说前后两帧信息变化很小的特点。也即连续的视频其相邻帧之间具有冗余信息,根据这一特性，压缩相邻帧之间的冗余量就可以进一步提高压缩量，减小压缩比。帧间压缩也称为时间压缩（Temporal compression），它通过比较时间轴上不同帧之间的数据进行压缩。帧间压缩一般是无损的。帧差值（Frame differencing）算法是一种典型的时间压缩法，它通过比较本帧与相邻帧之间的差异，仅记录本帧与其相邻帧的差值，这样可以大大减少数据量。</p><p>顺便说下有损（Lossy ）压缩和无损（Lossy less）压缩。无损压缩也即压缩前和解压缩后的数据完全一致。多数的无损压缩都采用RLE行程编码算法。有损压缩意味着解压缩后的数据与压缩前的数据不一致。在压缩的过程中要丢失一些人眼和人耳所不敏感的图像或音频信息,而且丢失的信息不可恢复。几乎所有高压缩的算法都采用有损压缩,这样才能达到低数据率的目标。丢失的数据率与压缩比有关,压缩比越小，丢失的数据越多,解压缩后的效果一般越差。此外,某些有损压缩算法采用多次重复压缩的方式,这样还会引起额外的数据丢失。</p><h3 id="三种帧的不同"><a href="#三种帧的不同" class="headerlink" title="三种帧的不同"></a>三种帧的不同</h3><ul><li>I frame:自身可以通过视频解压算法解压成一张单独的完整的图片。</li><li>P frame：需要参考其前面的一个I frame 或者P frame来生成一张完整的图片。</li><li>B frame:则要参考其前一个I或者P帧及其后面的一个P帧来生成一张完整的图片。</li><li>两个I frame之间形成一个GOP，在x264中同时可以通过参数来设定bf的大小，即：I和P或者两个P之间B的数量。</li><li>通过上述基本可以说明如果有B frame 存在的情况下一个GOP的最后一个frame一定是P.</li></ul><h3 id="DTS和PTS的不同"><a href="#DTS和PTS的不同" class="headerlink" title="DTS和PTS的不同"></a>DTS和PTS的不同</h3><p>DTS主要用于视频的解码,在解码阶段使用.PTS主要用于视频的同步和输出.在display的时候使用.在没有B frame的情况下.DTS和PTS的输出顺序是一样的。</p><p>例子:<br>下面给出一个GOP为15的例子,其解码的参照frame及其解码的顺序都在里面:<br><img src="http://ouazw12mz.bkt.clouddn.com/180108004838.png?imageslim" alt=""><br>如上图：I frame 的解码不依赖于任何的其它的帧.而p frame的解码则依赖于其前面的I frame或者P frame.B frame的解码则依赖于其前的最近的一个I frame或者P frame 及其后的最近的一个P frame.</p><h2 id="H-264流数据"><a href="#H-264流数据" class="headerlink" title="H.264流数据"></a>H.264流数据</h2><p>在H.264的语法中，有一个最基础的层，叫做Network Abstraction Layer, 简称为NAL。H.264流数据正是由一系列的NAL单元(NAL Unit, 简称NAUL)组成的。<br><img src="http://ouazw12mz.bkt.clouddn.com/180108004954.png?imageslim" alt=""><br>H264的码流由NALU单元组成,一个NALU可能包含有：</p><ul><li><p><strong>视频帧</strong><br>视频帧也就是视频片段，具体有 P帧, I帧，B帧<br><img src="http://ouazw12mz.bkt.clouddn.com/180108005022.png?imageslim" alt=""></p></li><li><p><strong>H.264属性合集-FormatDesc(包含 SPS和PPS)</strong><br>流数据中，属性集合可能是这样的：<br><img src="http://ouazw12mz.bkt.clouddn.com/180108005131.png?imageslim" alt=""></p></li></ul><h3 id="NALU-header"><a href="#NALU-header" class="headerlink" title="NALU header"></a>NALU header</h3><p>对于流数据来说，一个NAUL的Header中，可能是<code>0x00 00 01</code>或者是<code>0x00 00 00 01</code>作为开头(两者都有可能，下面以0x00 00 01作为例子)。0x00 00 01因此被称为开始码(Start code).<br><img src="http://ouazw12mz.bkt.clouddn.com/180108005156.png?imageslim" alt=""></p><p>总结以上知识，我们知道H264的码流由NALU单元组成，NALU单元包含视频图像数据和H264的参数信息。具体来说参数信息包含SPS（Sequence Parameter Set）和PPS（Picture Parameter Set）.如下图显示了一个H.264码流结构：<br><img src="http://ouazw12mz.bkt.clouddn.com/180108005317.png?imageslim" alt=""></p></div><div></div><div><div style="padding:10px 0;margin:20px auto;width:90%;text-align:center"><div>我只是试下能不能被赞赏😳</div> <button id="rewardButton" disable="enable" onclick='var qr=document.getElementById("QR");"none"===qr.style.display?qr.style.display="block":qr.style.display="none"'> <span>赏</span></button><div id="QR" style="display:none"><div id="wechat" style="display:inline-block"> <img id="wechat_qr" src="http://ouazw12mz.bkt.clouddn.com/IMG_4838.jpg" alt="Lucius WeChat Pay"><p>微信打赏</p></div><div id="alipay" style="display:inline-block"> <img id="alipay_qr" src="http://ouazw12mz.bkt.clouddn.com/171226222918.png?imageslim" alt="Lucius Alipay"><p>支付宝打赏</p></div></div></div></div><div><ul class="post-copyright"><li class="post-copyright-author"> <strong>本文作者：</strong>Lucius</li><li class="post-copyright-link"> <strong>本文链接：</strong> <a href="/2018/01/08/archivers/media-study-05/" title="音视频学习-flv之VideoTag(1)[转]">2018/01/08//archivers/media-study-05/</a></li><li class="post-copyright-license"> <strong>版权声明：</strong> 本博客所有文章除特别声明外，均采用 <a href="http://creativecommons.org/licenses/by-nc-sa/3.0/cn/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0 CN</a> 许可协议。转载请注明出处！</li></ul></div><footer class="post-footer"><div class="post-tags"> <a href="/tags/media/" rel="tag"># media</a></div><div class="post-nav"><div class="post-nav-next post-nav-item"><a href="/2018/01/03/archivers/media-study-04/" rel="next" title="音视频学习-flv之AudioTag(2)"><i class="fa fa-chevron-left"></i> 音视频学习-flv之AudioTag(2)</a></div><span class="post-nav-divider"></span><div class="post-nav-prev post-nav-item"> <a href="/2018/01/11/archivers/media-study-06/" rel="prev" title="音视频学习-flv之VideoTag(2)">音视频学习-flv之VideoTag(2)<i class="fa fa-chevron-right"></i></a></div></div></footer></article><div class="post-spread"></div></div></div><div class="comments" id="comments"><div id="disqus_thread"><noscript> Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript></div></div></div><div class="sidebar-toggle"><div class="sidebar-toggle-line-wrap"><span class="sidebar-toggle-line sidebar-toggle-line-first"></span><span class="sidebar-toggle-line sidebar-toggle-line-middle"></span><span class="sidebar-toggle-line sidebar-toggle-line-last"></span></div></div><aside id="sidebar" class="sidebar"><div class="sidebar-inner"><ul class="sidebar-nav motion-element"><li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap"> 文章目录</li><li class="sidebar-nav-overview" data-target="site-overview"> 站点概览</li></ul><section class="site-overview sidebar-panel"><div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person"> <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="Lucius"><p class="site-author-name" itemprop="name">Lucius</p><p class="site-description motion-element" itemprop="description">stay hungry, stay foolish...</p></div><nav class="site-state motion-element"><div class="site-state-item site-state-posts"> <a href="/archives"><span class="site-state-item-count">44</span> <span class="site-state-item-name">日志</span></a></div><div class="site-state-item site-state-categories"> <a href="/categories"><span class="site-state-item-count">4</span> <span class="site-state-item-name">分类</span></a></div><div class="site-state-item site-state-tags"> <a href="/tags"><span class="site-state-item-count">9</span> <span class="site-state-item-name">标签</span></a></div></nav><div class="links-of-author motion-element"><span class="links-of-author-item"><a href="https://github.com/Lucius0" target="_blank" title="GitHub"><i class="fa fa-fw fa-github"></i> GitHub</a></span></div></section><section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active"><div class="post-toc"><div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#软编码和硬编码的概念"><span class="nav-number">1.</span> <span class="nav-text">软编码和硬编码的概念</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#软编码和硬编码的比较"><span class="nav-number">2.</span> <span class="nav-text">软编码和硬编码的比较</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#H-264编码原理以及I帧B帧P帧"><span class="nav-number">3.</span> <span class="nav-text">H.264编码原理以及I帧B帧P帧</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#H-264编码原理"><span class="nav-number">3.1.</span> <span class="nav-text">H.264编码原理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#对序列的说明"><span class="nav-number">3.2.</span> <span class="nav-text">对序列的说明</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#对三种帧的介绍"><span class="nav-number">3.3.</span> <span class="nav-text">对三种帧的介绍</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#对压缩算法的说明"><span class="nav-number">3.4.</span> <span class="nav-text">对压缩算法的说明</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#三种帧的不同"><span class="nav-number">3.5.</span> <span class="nav-text">三种帧的不同</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#DTS和PTS的不同"><span class="nav-number">3.6.</span> <span class="nav-text">DTS和PTS的不同</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#H-264流数据"><span class="nav-number">4.</span> <span class="nav-text">H.264流数据</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#NALU-header"><span class="nav-number">4.1.</span> <span class="nav-text">NALU header</span></a></li></ol></li></ol></div></div></section></div></aside></div></main><footer id="footer" class="footer"><div class="footer-inner"><div class="copyright"> &copy; <span itemprop="copyrightYear">2018</span><span class="with-love"><i class="fa fa-heart"></i></span> <span class="author" itemprop="copyrightHolder">Lucius</span></div><div class="powered-by"> 由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动</div><div class="theme-info"> 主题 - <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a></div><div class="busuanzi-count"><script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script><span class="site-uv"><i class="fa fa-user"></i> 访问人数<span class="busuanzi-value" id="busuanzi_value_site_uv"></span></span><span class="site-pv"><i class="fa fa-eye"></i> 总访问量<span class="busuanzi-value" id="busuanzi_value_site_pv"></span>次</span></div></div></footer><div class="back-to-top"><i class="fa fa-arrow-up"></i></div></div><script type="text/javascript">"[object Function]"!==Object.prototype.toString.call(window.Promise)&&(window.Promise=null)</script><script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script><script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script><script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script><script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script><script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script><script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script><script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script><script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script><script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script><script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script><script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script><script type="text/javascript">var disqus_shortname="lucius0",disqus_identifier="2018/01/08//archivers/media-study-05/",disqus_title="音视频学习-flv之VideoTag(1)[转]";function run_disqus_script(s){var i=document.createElement("script");i.type="text/javascript",i.async=!0,i.src="//"+disqus_shortname+".disqus.com/"+s,(document.getElementsByTagName("head")[0]||document.getElementsByTagName("body")[0]).appendChild(i)}run_disqus_script("count.js");var disqus_config=function(){this.page.url=disqus_url,this.page.identifier=disqus_identifier,this.page.title=disqus_title};run_disqus_script("embed.js")</script><script type="text/javascript">var isfetched=!1,search_path="search.xml";0==search_path.length&&(search_path="search.xml");var path="/"+search_path;function proceedsearch(){$("body").append('<div class="popoverlay">').css("overflow","hidden"),$(".popup").toggle()}var searchFunc=function(e,t,a){"use strict";$.ajax({url:e,dataType:"xml",async:!0,success:function(e){isfetched=!0,$(".popup").detach().appendTo(".header-inner");var r=$("entry",e).map(function(){return{title:$("title",this).text(),content:$("content",this).text(),url:$("url",this).text()}}).get(),c=document.getElementById(t),n=document.getElementById(a);c.addEventListener("input",function(){var e=0,t='<ul class="search-result-list">',a=this.value.trim().toLowerCase().split(/[\s\-]+/);n.innerHTML="",this.value.trim().length>1&&r.forEach(function(r){var c=!1,n=r.title.trim().toLowerCase(),s=r.content.trim().replace(/<[^>]+>/g,"").toLowerCase(),o=decodeURIComponent(r.url),i=-1,l=-1,p=-1;if(""!=n&&a.forEach(function(e,t){i=n.indexOf(e),l=s.indexOf(e),(i>=0||l>=0)&&(c=!0,0==t&&(p=l))}),c){e+=1,t+="<li><a href='"+o+"' class='search-result-title'>"+n+"</a>";var h=r.content.trim().replace(/<[^>]+>/g,"");if(p>=0){var u=p-20,d=p+80;u<0&&(u=0),0==u&&(d=50),d>h.length&&(d=h.length);var f=h.substring(u,d);a.forEach(function(e){var t=new RegExp(e,"gi");f=f.replace(t,'<b class="search-keyword">'+e+"</b>")}),t+='<p class="search-result">'+f+"...</p>"}t+="</li>"}}),t+="</ul>",0==e&&(t='<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'),""==a&&(t='<div id="no-result"><i class="fa fa-search fa-5x" /></div>'),n.innerHTML=t}),proceedsearch()}})};$(".popup-trigger").click(function(e){e.stopPropagation(),0==isfetched?searchFunc(path,"local-search-input","local-search-result"):proceedsearch()}),$(".popup-btn-close").click(function(e){$(".popup").hide(),$(".popoverlay").remove(),$("body").css("overflow","")}),$(".popup").click(function(e){e.stopPropagation()})</script><script>!function(){var t=document.createElement("script"),e=window.location.protocol.split(":")[0];t.src="https"===e?"https://zz.bdstatic.com/linksubmit/push.js":"http://push.zhanzhang.baidu.com/push.js";var s=document.getElementsByTagName("script")[0];s.parentNode.insertBefore(t,s)}()</script><script type="text/javascript"></script></body></html>
+<!doctype html>
+
+
+
+
+<html class="theme-next mist" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="media," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="初次学习有关音视频这一块的开发，主要是基于 flv.js 的学习。这一块的知识概念实在是太多太深了，所以本人是先在本地做记录，后面会整理慢慢地上传与各位分享，假如有地方说错，请勘误。谢谢指点。 这里主要讲的是FLV的视频格式H.264，而H.264跟MPEG-4 Part 10、ISO/IEC 14496-10、MPEG-4 AVC其实都是同一个视频格式，也就是我们常说的H.264或AVC。那么我">
+<meta name="keywords" content="media">
+<meta property="og:type" content="article">
+<meta property="og:title" content="音视频学习-flv之VideoTag(1)[转]">
+<meta property="og:url" content="https://lucius0.github.io/2018/01/08//archivers/media-study-05/index.html">
+<meta property="og:site_name" content="Lucius&#39;s Blog">
+<meta property="og:description" content="初次学习有关音视频这一块的开发，主要是基于 flv.js 的学习。这一块的知识概念实在是太多太深了，所以本人是先在本地做记录，后面会整理慢慢地上传与各位分享，假如有地方说错，请勘误。谢谢指点。 这里主要讲的是FLV的视频格式H.264，而H.264跟MPEG-4 Part 10、ISO/IEC 14496-10、MPEG-4 AVC其实都是同一个视频格式，也就是我们常说的H.264或AVC。那么我">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://ouazw12mz.bkt.clouddn.com/180108004838.png?imageslim">
+<meta property="og:image" content="http://ouazw12mz.bkt.clouddn.com/180108004954.png?imageslim">
+<meta property="og:image" content="http://ouazw12mz.bkt.clouddn.com/180108005022.png?imageslim">
+<meta property="og:image" content="http://ouazw12mz.bkt.clouddn.com/180108005131.png?imageslim">
+<meta property="og:image" content="http://ouazw12mz.bkt.clouddn.com/180108005156.png?imageslim">
+<meta property="og:image" content="http://ouazw12mz.bkt.clouddn.com/180108005317.png?imageslim">
+<meta property="og:updated_time" content="2018-01-12T05:23:46.732Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="音视频学习-flv之VideoTag(1)[转]">
+<meta name="twitter:description" content="初次学习有关音视频这一块的开发，主要是基于 flv.js 的学习。这一块的知识概念实在是太多太深了，所以本人是先在本地做记录，后面会整理慢慢地上传与各位分享，假如有地方说错，请勘误。谢谢指点。 这里主要讲的是FLV的视频格式H.264，而H.264跟MPEG-4 Part 10、ISO/IEC 14496-10、MPEG-4 AVC其实都是同一个视频格式，也就是我们常说的H.264或AVC。那么我">
+<meta name="twitter:image" content="http://ouazw12mz.bkt.clouddn.com/180108004838.png?imageslim">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: false,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://lucius0.github.io/2018/01/08//archivers/media-study-05/"/>
+
+
+
+
+
+  <title> 音视频学习-flv之VideoTag(1)[转] | Lucius's Blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Lucius's Blog</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            日志
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup">
+ <span class="search-icon fa fa-search"></span>
+ <input type="text" id="local-search-input">
+ <div id="local-search-result"></div>
+ <span class="popup-btn-close">close</span>
+</div>
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="https://lucius0.github.io/2018/01/08/archivers/media-study-05/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="Lucius">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.jpg">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="Lucius's Blog">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="Lucius's Blog" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                音视频学习-flv之VideoTag(1)[转]
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-01-08T00:00:00+08:00">
+                2018-01-08
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/media/" itemprop="url" rel="index">
+                    <span itemprop="name">media</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <a href="/2018/01/08/archivers/media-study-05/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2018/01/08//archivers/media-study-05/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i> 浏览
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>次
+            </span>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>初次学习有关音视频这一块的开发，主要是基于 <strong><a href="https://github.com/Bilibili/flv.js" target="_blank" rel="noopener">flv.js</a></strong> 的学习。这一块的知识概念实在是太多太深了，所以本人是先在本地做记录，后面会整理慢慢地上传与各位分享，假如有地方说错，请勘误。谢谢指点。</p>
+<p>这里主要讲的是FLV的视频格式H.264，而H.264跟MPEG-4 Part 10、ISO/IEC 14496-10、MPEG-4 AVC其实都是同一个视频格式，也就是我们常说的H.264或AVC。那么我们常说的MPEG-4其实是指MPEG-4 Part 2(注意跟MPEG-2是两个概念)。更多的细节可以查看<a href="https://zh.wikipedia.org/wiki/MPEG-4" target="_blank" rel="noopener">MPEG-4 - 维基百科，自由的百科全书</a>、<a href="https://zh.wikipedia.org/wiki/H.264/MPEG-4_AVC" target="_blank" rel="noopener">H.264/MPEG-4 AVC - 维基百科，自由的百科全书</a>。总的来讲，H.264具有高压缩比，同时也对网络的兼容性好。</p>
+<p>以下内容转自<a href="https://maxwellqi.github.io/ios-h264-summ/" target="_blank" rel="noopener">H.264码流以及H.264编解码的基本概念</a>。</p>
+<h2 id="软编码和硬编码的概念"><a href="#软编码和硬编码的概念" class="headerlink" title="软编码和硬编码的概念"></a>软编码和硬编码的概念</h2><p>软编码：使用CPU进行编码。</p>
+<p>硬编码：不使用CPU进行编码，使用显卡GPU,专用的DSP、FPGA、ASIC芯片等硬件进行编码。</p>
+<h2 id="软编码和硬编码的比较"><a href="#软编码和硬编码的比较" class="headerlink" title="软编码和硬编码的比较"></a>软编码和硬编码的比较</h2><p>软编码：实现直接、简单，参数调整方便，升级易，但CPU负载重，性能较硬编码低，低码率下质量通常比硬编码要好一点。</p>
+<p>硬编码：性能高，低码率下通常质量低于硬编码器，但部分产品在GPU硬件平台移植了优秀的软编码算法（如X264）的，质量基本等同于软编码。</p>
+<h2 id="H-264编码原理以及I帧B帧P帧"><a href="#H-264编码原理以及I帧B帧P帧" class="headerlink" title="H.264编码原理以及I帧B帧P帧"></a>H.264编码原理以及I帧B帧P帧</h2><h3 id="H-264编码原理"><a href="#H-264编码原理" class="headerlink" title="H.264编码原理"></a>H.264编码原理</h3><p>H264是新一代的编码标准，以高压缩高质量和支持多种网络的流媒体传输著称，在编码方面，我理解的他的理论依据是：参照一段时间内图像的统计结果表明，在相邻几幅图像画面中，一般有差别的像素只有10%以内的点,亮度差值变化不超过2%，而色度差值的变化只有1%以内。所以对于一段变化不大图像画面，我们可以先编码出一个完整的图像帧A，随后的B帧就不编码全部图像，只写入与A帧的差别，这样B帧的大小就只有完整帧的1/10或更小！B帧之后的C帧如果变化不大，我们可以继续以参考B的方式编码C帧，这样循环下去。这段图像我们称为一个序列（序列就是有相同特点的一段数据），当某个图像与之前的图像变化很大，无法参考前面的帧来生成，那我们就结束上一个序列，开始下一段序列，也就是对这个图像生成一个完整帧A1，随后的图像就参考A1生成，只写入与A1的差别内容。</p>
+<p>在H264协议里定义了三种帧，完整编码的帧叫I帧，参考之前的I帧生成的只包含差异部分编码的帧叫P帧，还有一种参考前后的帧编码的帧叫B帧。</p>
+<p>H264采用的核心算法是帧内压缩和帧间压缩，帧内压缩是生成I帧的算法，帧间压缩是生成B帧和P帧的算法。</p>
+<h3 id="对序列的说明"><a href="#对序列的说明" class="headerlink" title="对序列的说明"></a>对序列的说明</h3><p>在H264中图像以序列为单位进行组织，一个序列是一段图像编码后的数据流，以I帧开始，到下一个I帧结束。<br>一个序列的第一个图像叫做 IDR 图像（立即刷新图像），IDR 图像都是 I 帧图像。H.264 引入 IDR 图像是为了解码的重同步，当解码器解码到 IDR 图像时，立即将参考帧队列清空，将已解码的数据全部输出或抛弃，重新查找参数集，开始一个新的序列。这样，如果前一个序列出现重大错误，在这里可以获得重新同步的机会。IDR图像之后的图像永远不会使用IDR之前的图像的数据来解码。<br>一个序列就是一段内容差异不太大的图像编码后生成的一串数据流。当运动变化比较少时，一个序列可以很长，因为运动变化少就代表图像画面的内容变动很小，所以就可以编一个I帧，然后一直P帧、B帧了。当运动变化多时，可能一个序列就比较短了，比如就包含一个I帧和3、4个P帧。</p>
+<h3 id="对三种帧的介绍"><a href="#对三种帧的介绍" class="headerlink" title="对三种帧的介绍"></a>对三种帧的介绍</h3><ul>
+<li><p><strong>I帧</strong><br>为了更好地理解I帧的概念，我罗列了两种解释：</p>
+<ul>
+<li>帧内编码帧 ，I帧表示关键帧，你可以理解为这一帧画面的完整保留；解码时只需要本帧数据就可以完成（因为包含完整画面）。</li>
+<li><p>帧内编码帧 又称intra picture，I 帧通常是每个 GOP（MPEG 所使用的一种视频压缩技术）的第一个帧，经过适度地压缩，做为随机访问的参考点，可以当成图象。I帧可以看成是一个图像经过压缩后的产物。</p>
+<p><strong>I帧的特点：</strong></p>
+<ul>
+<li>它是一个全帧压缩编码帧。它将全帧图像信息进行JPEG压缩编码及传输</li>
+<li>解码时仅用I帧的数据就可重构完整图像</li>
+<li>I帧描述了图像背景和运动主体的详情</li>
+<li>I帧不需要参考其他画面而生成</li>
+<li>I帧是P帧和B帧的参考帧(其质量直接影响到同组中以后各帧的质量)</li>
+<li>I帧是帧组GOP的基础帧(第一帧),在一组中只有一个I帧</li>
+<li>I帧不需要考虑运动矢量</li>
+<li>I帧所占数据的信息量比较大</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li><p><strong>P帧</strong><br>为了更好地理解P帧的概念，我也罗列了两种解释：</p>
+<ul>
+<li>前向预测编码帧。P帧表示的是这一帧跟之前的一个关键帧（或P帧）的差别，解码时需要用之前缓存的画面叠加上本帧定义的差别，生成最终画面。（也就是差别帧，P帧没有完整画面数据，只有与前一帧的画面差别的数据）</li>
+<li><p>前向预测编码帧 又称predictive-frame，通过充分将低于图像序列中前面已编码帧的时间冗余信息来压缩传输数据量的编码图像，也叫预测帧</p>
+<p><strong>P帧的预测与重构：</strong>P帧是以I帧为参考帧,在I帧中找出P帧“某点”的预测值和运动矢量,取预测差值和运动矢量一起传送。在接收端根据运动矢量从I帧中找出P帧“某点”的预测值并与差值相加以得到P帧“某点”样值,从而可得到完整的P帧。</p>
+<p><strong>P帧特点:</strong></p>
+<ul>
+<li>P帧是I帧后面相隔1~2帧的编码帧</li>
+<li>P帧采用运动补偿的方法传送它与前面的I或P帧的差值及运动矢量(预测误差)</li>
+<li>解码时必须将I帧中的预测值与预测误差求和后才能重构完整的P帧图像</li>
+<li>P帧属于前向预测的帧间编码。它只参考前面最靠近它的I帧或P帧</li>
+<li>P帧可以是其后面P帧的参考帧,也可以是其前后的B帧的参考帧</li>
+<li>由于P帧是参考帧,它可能造成解码错误的扩散</li>
+<li>由于是差值传送,P帧的压缩比较高</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li><p><strong>B帧</strong><br>为了更好地理解P帧的概念，我依然罗列了两种解释：</p>
+<ul>
+<li>双向预测内插编码帧。B帧是双向差别帧，也就是B帧记录的是本帧与前后帧的差别（具体比较复杂，有4种情况，但我这样说简单些），换言之，要解码B帧，不仅要取得之前的缓存画面，还要解码之后的画面，通过前后画面的与本帧数据的叠加取得最终的画面。B帧压缩率高，但是解码时CPU会比较累。</li>
+<li><p>双向预测内插编码帧 又称bi-directional interpolated prediction frame，既考虑与源图像序列前面已编码帧，也顾及源图像序列后面已编码帧之间的时间冗余信息来压缩传输数据量的编码图像，也叫双向预测帧；</p>
+<p><strong>B帧的预测与重构：</strong>B帧以前面的I或P帧和后面的P帧为参考帧,“找出”B帧“某点”的预测值和两个运动矢量,并取预测差值和运动矢量传送。接收端根据运动矢量在两个参考帧中“找出(算出)”预测值并与差值求和,得到B帧“某点”样值,从而可得到完整的B帧。</p>
+<p><strong>B帧的特点：</strong></p>
+<ul>
+<li>B帧是由前面的I或P帧和后面的P帧来进行预测的</li>
+<li>B帧传送的是它与前面的I或P帧和后面的P帧之间的预测误差及运动矢量</li>
+<li>B帧是双向预测编码帧</li>
+<li>B帧压缩比最高,因为它只反映丙参考帧间运动主体的变化情况,预测比较准确</li>
+<li>B帧不是参考帧,不会造成解码错误的扩散</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>I、B、P各帧是根据压缩算法的需要，是人为定义的,它们都是实实在在的物理帧。一般来说，I帧的压缩率是7（跟JPG差不多），P帧是20，B帧可以达到50。可见使用B帧能节省大量空间，节省出来的空间可以用来保存多一些I帧，这样在相同码率下，可以提供更好的画质。</p>
+<h3 id="对压缩算法的说明"><a href="#对压缩算法的说明" class="headerlink" title="对压缩算法的说明"></a>对压缩算法的说明</h3><p>h264的压缩方法:</p>
+<ol>
+<li>分组:把几帧图像分为一组(GOP，也就是一个序列),为防止运动变化,帧数不宜取多。</li>
+<li>定义帧:将每组内各帧图像定义为三种类型,即I帧、B帧和P帧;</li>
+<li>预测帧:以I帧做为基础帧,以I帧预测P帧,再由I帧和P帧预测B帧;</li>
+<li>数据传输:最后将I帧数据与预测的差值信息进行存储和传输。</li>
+</ol>
+<p>帧内（Intraframe）压缩也称为空间压缩（Spatial compression）。当压缩一帧图像时，仅考虑本帧的数据而不考虑相邻帧之间的冗余信息，这实际上与静态图像压缩类似。帧内一般采用有损压缩算法，由于帧内压缩是编码一个完整的图像，所以可以独立的解码、显示。帧内压缩一般达不到很高的压缩，跟编码jpeg差不多。</p>
+<p>帧间（Interframe）压缩的原理是：相邻几帧的数据有很大的相关性，或者说前后两帧信息变化很小的特点。也即连续的视频其相邻帧之间具有冗余信息,根据这一特性，压缩相邻帧之间的冗余量就可以进一步提高压缩量，减小压缩比。帧间压缩也称为时间压缩（Temporal compression），它通过比较时间轴上不同帧之间的数据进行压缩。帧间压缩一般是无损的。帧差值（Frame differencing）算法是一种典型的时间压缩法，它通过比较本帧与相邻帧之间的差异，仅记录本帧与其相邻帧的差值，这样可以大大减少数据量。</p>
+<p>顺便说下有损（Lossy ）压缩和无损（Lossy less）压缩。无损压缩也即压缩前和解压缩后的数据完全一致。多数的无损压缩都采用RLE行程编码算法。有损压缩意味着解压缩后的数据与压缩前的数据不一致。在压缩的过程中要丢失一些人眼和人耳所不敏感的图像或音频信息,而且丢失的信息不可恢复。几乎所有高压缩的算法都采用有损压缩,这样才能达到低数据率的目标。丢失的数据率与压缩比有关,压缩比越小，丢失的数据越多,解压缩后的效果一般越差。此外,某些有损压缩算法采用多次重复压缩的方式,这样还会引起额外的数据丢失。</p>
+<h3 id="三种帧的不同"><a href="#三种帧的不同" class="headerlink" title="三种帧的不同"></a>三种帧的不同</h3><ul>
+<li>I frame:自身可以通过视频解压算法解压成一张单独的完整的图片。</li>
+<li>P frame：需要参考其前面的一个I frame 或者P frame来生成一张完整的图片。</li>
+<li>B frame:则要参考其前一个I或者P帧及其后面的一个P帧来生成一张完整的图片。</li>
+<li>两个I frame之间形成一个GOP，在x264中同时可以通过参数来设定bf的大小，即：I和P或者两个P之间B的数量。</li>
+<li>通过上述基本可以说明如果有B frame 存在的情况下一个GOP的最后一个frame一定是P.</li>
+</ul>
+<h3 id="DTS和PTS的不同"><a href="#DTS和PTS的不同" class="headerlink" title="DTS和PTS的不同"></a>DTS和PTS的不同</h3><p>DTS主要用于视频的解码,在解码阶段使用.PTS主要用于视频的同步和输出.在display的时候使用.在没有B frame的情况下.DTS和PTS的输出顺序是一样的。</p>
+<p>例子:<br>下面给出一个GOP为15的例子,其解码的参照frame及其解码的顺序都在里面:<br><img src="http://ouazw12mz.bkt.clouddn.com/180108004838.png?imageslim" alt=""><br>如上图：I frame 的解码不依赖于任何的其它的帧.而p frame的解码则依赖于其前面的I frame或者P frame.B frame的解码则依赖于其前的最近的一个I frame或者P frame 及其后的最近的一个P frame.</p>
+<h2 id="H-264流数据"><a href="#H-264流数据" class="headerlink" title="H.264流数据"></a>H.264流数据</h2><p>在H.264的语法中，有一个最基础的层，叫做Network Abstraction Layer, 简称为NAL。H.264流数据正是由一系列的NAL单元(NAL Unit, 简称NAUL)组成的。<br><img src="http://ouazw12mz.bkt.clouddn.com/180108004954.png?imageslim" alt=""><br>H264的码流由NALU单元组成,一个NALU可能包含有：</p>
+<ul>
+<li><p><strong>视频帧</strong><br>视频帧也就是视频片段，具体有 P帧, I帧，B帧<br><img src="http://ouazw12mz.bkt.clouddn.com/180108005022.png?imageslim" alt=""></p>
+</li>
+<li><p><strong>H.264属性合集-FormatDesc(包含 SPS和PPS)</strong><br>流数据中，属性集合可能是这样的：<br><img src="http://ouazw12mz.bkt.clouddn.com/180108005131.png?imageslim" alt=""></p>
+</li>
+</ul>
+<h3 id="NALU-header"><a href="#NALU-header" class="headerlink" title="NALU header"></a>NALU header</h3><p>对于流数据来说，一个NAUL的Header中，可能是<code>0x00 00 01</code>或者是<code>0x00 00 00 01</code>作为开头(两者都有可能，下面以0x00 00 01作为例子)。0x00 00 01因此被称为开始码(Start code).<br><img src="http://ouazw12mz.bkt.clouddn.com/180108005156.png?imageslim" alt=""></p>
+<p>总结以上知识，我们知道H264的码流由NALU单元组成，NALU单元包含视频图像数据和H264的参数信息。具体来说参数信息包含SPS（Sequence Parameter Set）和PPS（Picture Parameter Set）.如下图显示了一个H.264码流结构：<br><img src="http://ouazw12mz.bkt.clouddn.com/180108005317.png?imageslim" alt=""></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+  <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+    <div>我只是试下能不能被赞赏😳</div>
+    <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+      <span>赏</span>
+    </button>
+    <div id="QR" style="display: none;">
+      
+        <div id="wechat" style="display: inline-block">
+          <img id="wechat_qr" src="http://ouazw12mz.bkt.clouddn.com/IMG_4838.jpg" alt="Lucius WeChat Pay"/>
+          <p>微信打赏</p>
+        </div>
+      
+      
+        <div id="alipay" style="display: inline-block">
+          <img id="alipay_qr" src="http://ouazw12mz.bkt.clouddn.com/171226222918.png?imageslim" alt="Lucius Alipay"/>
+          <p>支付宝打赏</p>
+        </div>
+      
+    </div>
+  </div>
+
+
+      
+    </div>
+
+    <div>    
+     
+     
+        <ul class="post-copyright">
+          <li class="post-copyright-author">
+              <strong>本文作者：</strong>Lucius
+          </li>
+          <li class="post-copyright-link">
+            <strong>本文链接：</strong>
+            <a href="/2018/01/08/archivers/media-study-05/" title="音视频学习-flv之VideoTag(1)[转]">2018/01/08//archivers/media-study-05/</a>
+          </li>
+          <li class="post-copyright-license">
+            <strong>版权声明： </strong>
+            本博客所有文章除特别声明外，均采用 <a href="http://creativecommons.org/licenses/by-nc-sa/3.0/cn/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0 CN</a> 许可协议。转载请注明出处！
+          </li>
+        </ul>
+      
+    </div>
+    
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/media/" rel="tag"># media</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/01/03/archivers/media-study-04/" rel="next" title="音视频学习-flv之AudioTag(2)">
+                <i class="fa fa-chevron-left"></i> 音视频学习-flv之AudioTag(2)
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/01/11/archivers/media-study-06/" rel="prev" title="音视频学习-flv之VideoTag(2)">
+                音视频学习-flv之VideoTag(2) <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.jpg"
+               alt="Lucius" />
+          <p class="site-author-name" itemprop="name">Lucius</p>
+          <p class="site-description motion-element" itemprop="description">stay hungry, stay foolish...</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">44</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">4</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">9</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/Lucius0" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#软编码和硬编码的概念"><span class="nav-number">1.</span> <span class="nav-text">软编码和硬编码的概念</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#软编码和硬编码的比较"><span class="nav-number">2.</span> <span class="nav-text">软编码和硬编码的比较</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#H-264编码原理以及I帧B帧P帧"><span class="nav-number">3.</span> <span class="nav-text">H.264编码原理以及I帧B帧P帧</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#H-264编码原理"><span class="nav-number">3.1.</span> <span class="nav-text">H.264编码原理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#对序列的说明"><span class="nav-number">3.2.</span> <span class="nav-text">对序列的说明</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#对三种帧的介绍"><span class="nav-number">3.3.</span> <span class="nav-text">对三种帧的介绍</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#对压缩算法的说明"><span class="nav-number">3.4.</span> <span class="nav-text">对压缩算法的说明</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#三种帧的不同"><span class="nav-number">3.5.</span> <span class="nav-text">三种帧的不同</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#DTS和PTS的不同"><span class="nav-number">3.6.</span> <span class="nav-text">DTS和PTS的不同</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#H-264流数据"><span class="nav-number">4.</span> <span class="nav-text">H.264流数据</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#NALU-header"><span class="nav-number">4.1.</span> <span class="nav-text">NALU header</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Lucius</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+
+<div class="busuanzi-count">
+
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv"><i class="fa fa-user"></i> 访问人数<span class="busuanzi-value" id="busuanzi_value_site_uv"></span></span>
+  
+
+  
+    <span class="site-pv"><i class="fa fa-eye"></i> 总访问量<span class="busuanzi-value" id="busuanzi_value_site_pv"></span>次</span>
+  
+  
+</div>
+
+
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+
+  
+
+    <script type="text/javascript">
+      var disqus_shortname = 'lucius0';
+      var disqus_identifier = '2018/01/08//archivers/media-study-05/';
+
+      var disqus_title = "音视频学习-flv之VideoTag(1)[转]";
+
+
+      function run_disqus_script(disqus_script) {
+        var dsq = document.createElement('script');
+        dsq.type = 'text/javascript';
+        dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      }
+
+      run_disqus_script('count.js');
+
+      
+        var disqus_config = function () {
+            this.page.url = disqus_url;
+            this.page.identifier = disqus_identifier;
+            this.page.title = disqus_title;
+        };
+        run_disqus_script('embed.js');
+      
+
+    </script>
+  
+
+
+
+
+
+  
+  
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length == 0) {
+      search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body").append('<div class="popoverlay">').css('overflow', 'hidden');
+      $('.popup').toggle();
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+      $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = $( "entry", xmlResponse ).map(function() {
+            return {
+              title: $( "title", this ).text(),
+              content: $("content",this).text(),
+              url: $( "url" , this).text()
+            };
+          }).get();
+          var $input = document.getElementById(search_id);
+          var $resultContent = document.getElementById(content_id);
+          $input.addEventListener('input', function(){
+            var matchcounts = 0;
+            var str='<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length > 1) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var content_index = [];
+                var data_title = data.title.trim().toLowerCase();
+                var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                var data_url = decodeURIComponent(data.url);
+                var index_title = -1;
+                var index_content = -1;
+                var first_occur = -1;
+                // only match artiles with not empty titles and contents
+                if(data_title != '') {
+                  keywords.forEach(function(keyword, i) {
+                    index_title = data_title.indexOf(keyword);
+                    index_content = data_content.indexOf(keyword);
+                    if( index_title >= 0 || index_content >= 0 ){
+                      isMatch = true;
+                      if (i == 0) {
+                        first_occur = index_content;
+                      }
+                    }
+
+                  });
+                }
+                // show search results
+                if (isMatch) {
+                  matchcounts += 1;
+                  str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                  var content = data.content.trim().replace(/<[^>]+>/g,"");
+                  if (first_occur >= 0) {
+                    // cut out 100 characters
+                    var start = first_occur - 20;
+                    var end = first_occur + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if(start == 0){
+                      end = 50;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    var match_content = content.substring(start, end);
+                    // highlight all keywords
+                    keywords.forEach(function(keyword){
+                      var regS = new RegExp(keyword, "gi");
+                      match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                    });
+
+                    str += "<p class=\"search-result\">" + match_content +"...</p>"
+                  }
+                  str += "</li>";
+                }
+              })};
+            str += "</ul>";
+            if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+            if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+            $resultContent.innerHTML = str;
+          });
+          proceedsearch();
+        }
+      });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".popoverlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+
+  
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+
+  <script type="text/javascript">
+    (function() {
+      // try {
+      //   var document = window.document;
+      //   document.oncontextmenu = function() {
+      //     return false;
+      //   }
+      //   document.onkeydown = function() {
+      //     if (window.event.ctrlKey && window.event.keyCode == 67) {
+      //       return false;
+      //     }
+      //     return false;
+      //   }
+      //   document.body.oncopy = function() {
+      //     return false;
+      //   }
+      //   document.onselectstart = function() {
+      //     return false;
+      //   }
+            
+      //   document.onselectstart=function(){return false};
+      //   // document.style.MozUserSelect && document.style.MozUserSelect="none";
+      //   document.onmousedown=function(){return false};
+      //   document.style.cursor = "default"; 
+      // } catch(e) {}
+    })();
+  </script>
+
+</body>
+</html>

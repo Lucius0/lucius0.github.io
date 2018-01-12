@@ -3876,15 +3876,15 @@ $ npm install -D webpack webpack-dev-server</code></p>
     </entry>
     
     <entry>
-      <title><![CDATA[about]]></title>
-      <url>https://lucius0.github.io/about/index.html</url>
-      <content type="html"><![CDATA[<h1>WElCOME</h1>]]></content>
-    </entry>
-    
-    <entry>
       <title><![CDATA[categories]]></title>
       <url>https://lucius0.github.io/categories/index.html</url>
       <content type="html"></content>
+    </entry>
+    
+    <entry>
+      <title><![CDATA[about]]></title>
+      <url>https://lucius0.github.io/about/index.html</url>
+      <content type="html"><![CDATA[<h1>WElCOME</h1>]]></content>
     </entry>
     
     <entry>

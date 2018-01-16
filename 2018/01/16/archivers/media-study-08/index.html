@@ -1,0 +1,982 @@
+<!doctype html>
+
+
+
+
+<html class="theme-next mist" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="media," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="初次学习有关音视频这一块的开发，主要是基于 flv.js 的学习。这一块的知识概念实在是太多太深了，所以本人是先在本地做记录，后面会整理慢慢地上传与各位分享，假如有地方说错，请勘误。谢谢指点。 接上篇音视频学习-FMP4结构之MP4，这篇来说下FMP4的格式。在上篇文章中，有列举过FMP4与MP4之间的差异，其实就可以通过图片看出主要的差异性，FMP4主要是有moof + mdat来作为媒体流数据">
+<meta name="keywords" content="media">
+<meta property="og:type" content="article">
+<meta property="og:title" content="音视频学习-FMP4结构之FMP4">
+<meta property="og:url" content="https://lucius0.github.io/2018/01/16//archivers/media-study-08/index.html">
+<meta property="og:site_name" content="Lucius&#39;s Blog">
+<meta property="og:description" content="初次学习有关音视频这一块的开发，主要是基于 flv.js 的学习。这一块的知识概念实在是太多太深了，所以本人是先在本地做记录，后面会整理慢慢地上传与各位分享，假如有地方说错，请勘误。谢谢指点。 接上篇音视频学习-FMP4结构之MP4，这篇来说下FMP4的格式。在上篇文章中，有列举过FMP4与MP4之间的差异，其实就可以通过图片看出主要的差异性，FMP4主要是有moof + mdat来作为媒体流数据">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-01-16T15:21:28.505Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="音视频学习-FMP4结构之FMP4">
+<meta name="twitter:description" content="初次学习有关音视频这一块的开发，主要是基于 flv.js 的学习。这一块的知识概念实在是太多太深了，所以本人是先在本地做记录，后面会整理慢慢地上传与各位分享，假如有地方说错，请勘误。谢谢指点。 接上篇音视频学习-FMP4结构之MP4，这篇来说下FMP4的格式。在上篇文章中，有列举过FMP4与MP4之间的差异，其实就可以通过图片看出主要的差异性，FMP4主要是有moof + mdat来作为媒体流数据">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: false,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://lucius0.github.io/2018/01/16//archivers/media-study-08/"/>
+
+
+
+
+
+  <title> 音视频学习-FMP4结构之FMP4 | Lucius's Blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Lucius's Blog</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            日志
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup">
+ <span class="search-icon fa fa-search"></span>
+ <input type="text" id="local-search-input">
+ <div id="local-search-result"></div>
+ <span class="popup-btn-close">close</span>
+</div>
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="https://lucius0.github.io/2018/01/16/archivers/media-study-08/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="Lucius">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.jpg">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="Lucius's Blog">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="Lucius's Blog" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                音视频学习-FMP4结构之FMP4
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-01-16T00:00:00+08:00">
+                2018-01-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/media/" itemprop="url" rel="index">
+                    <span itemprop="name">media</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <a href="/2018/01/16/archivers/media-study-08/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2018/01/16//archivers/media-study-08/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i> 浏览
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>次
+            </span>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>初次学习有关音视频这一块的开发，主要是基于 <strong><a href="https://github.com/Bilibili/flv.js" target="_blank" rel="noopener">flv.js</a></strong> 的学习。这一块的知识概念实在是太多太深了，所以本人是先在本地做记录，后面会整理慢慢地上传与各位分享，假如有地方说错，请勘误。谢谢指点。</p>
+<p>接上篇<a href="http://localhost:4000/2018/01/14/archivers/media-study-07/" target="_blank" rel="noopener">音视频学习-FMP4结构之MP4</a>，这篇来说下FMP4的格式。在上篇文章中，有列举过FMP4与MP4之间的差异，其实就可以通过图片看出主要的差异性，FMP4主要是有<code>moof + mdat</code>来作为媒体流数据源。从图片上看，FMP4比MP4多了MVEX Box, MOOF Box以及MDAT Box。</p>
+<h2 id="MOOV-MVEX"><a href="#MOOV-MVEX" class="headerlink" title="MOOV::MVEX"></a>MOOV::MVEX</h2><p>Movie Extends box，该box可能有moof(Movie Fragment Boxes)，并且是按顺序读取。<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">aligned(<span class="number">8</span>) <span class="function">class MovieExtendsBox extends <span class="title">Box</span><span class="params">(‘mvex’)</span></span>&#123; &#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="MOOV-MVEX-MEHD"><a href="#MOOV-MVEX-MEHD" class="headerlink" title="MOOV::MVEX::MEHD"></a>MOOV::MVEX::MEHD</h3><p>Movie extends header box。可有可无，主要是是Movie头扩展用的。<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 官方文档代码</span></span><br><span class="line">aligned(<span class="number">8</span>) <span class="function">class MovieExtendsHeaderBox extends <span class="title">FullBox</span><span class="params">(‘mehd’, version, <span class="number">0</span>)</span> </span>&#123; </span><br><span class="line">  <span class="keyword">if</span> (version==<span class="number">1</span>) &#123;</span><br><span class="line">      <span class="function"><span class="keyword">unsigned</span> <span class="title">int</span><span class="params">(<span class="number">64</span>)</span>  fragment_duration</span>;</span><br><span class="line">   &#125; <span class="keyword">else</span> &#123; <span class="comment">// version==0</span></span><br><span class="line">      <span class="keyword">unsigned</span> <span class="keyword">int</span>(<span class="number">32</span>)  fragment_duration;</span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="MOOV-MVEX-TREX"><a href="#MOOV-MVEX-TREX" class="headerlink" title="MOOV::MVEX::TREX"></a>MOOV::MVEX::TREX</h3><p>Track Extends Box。设置了movie fragment的默认值，可以保存每个track中的空间复杂度。<br><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 官方文档代码</span></span><br><span class="line">aligned(<span class="number">8</span>) <span class="function">class TrackExtendsBox extends <span class="title">FullBox</span><span class="params">(‘trex’, <span class="number">0</span>, <span class="number">0</span>)</span></span>&#123; </span><br><span class="line">    <span class="function"><span class="keyword">unsigned</span> <span class="title">int</span><span class="params">(<span class="number">32</span>)</span> track_ID</span>;</span><br><span class="line">    <span class="function"><span class="keyword">unsigned</span> <span class="title">int</span><span class="params">(<span class="number">32</span>)</span> default_sample_description_index</span>;</span><br><span class="line">    <span class="function"><span class="keyword">unsigned</span> <span class="title">int</span><span class="params">(<span class="number">32</span>)</span> default_sample_duration</span>;</span><br><span class="line">    <span class="function"><span class="keyword">unsigned</span> <span class="title">int</span><span class="params">(<span class="number">32</span>)</span> default_sample_size</span>;</span><br><span class="line">    <span class="function"><span class="keyword">unsigned</span> <span class="title">int</span><span class="params">(<span class="number">32</span>)</span> default_sample_flags </span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="MOOF"><a href="#MOOF" class="headerlink" title="MOOF"></a>MOOF</h2><h3 id="MOOF-TRAF"><a href="#MOOF-TRAF" class="headerlink" title="MOOF::TRAF"></a>MOOF::TRAF</h3><p>Track Fragment Box。存放tfhd，tfdt，sdtp，trun的容器。<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 官方文档代码</span></span><br><span class="line">aligned(<span class="number">8</span>) <span class="function">class TrackFragmentBox extends <span class="title">Box</span><span class="params">(‘traf’)</span></span>&#123; &#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="MOOF-TRAF-TFHD"><a href="#MOOF-TRAF-TFHD" class="headerlink" title="MOOF::TRAF::TFHD"></a>MOOF::TRAF::TFHD</h3><p>Track Fragment Header Box。主要是对指定的 trak 进行相关的默认设置。例如：sample 的时长，大小，偏移量等。不过，这些都可以忽略不设，只要你在其它 box 里面设置完整即可：<br><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 官方文档代码</span></span><br><span class="line">aligned(<span class="number">8</span>) <span class="function">class TrackFragmentHeaderBox extends <span class="title">FullBox</span><span class="params">(‘tfhd’, <span class="number">0</span>, tf_flags)</span></span>&#123;</span><br><span class="line">  <span class="function"><span class="keyword">unsigned</span> <span class="title">int</span><span class="params">(<span class="number">32</span>)</span> track_ID</span>;</span><br><span class="line">  <span class="comment">// all the following are optional fields</span></span><br><span class="line">  <span class="function"><span class="keyword">unsigned</span> <span class="title">int</span><span class="params">(<span class="number">64</span>)</span> base_data_offset</span>;</span><br><span class="line">  <span class="function"><span class="keyword">unsigned</span> <span class="title">int</span><span class="params">(<span class="number">32</span>)</span> sample_description_index</span>;</span><br><span class="line">  <span class="function"><span class="keyword">unsigned</span> <span class="title">int</span><span class="params">(<span class="number">32</span>)</span> default_sample_duration</span>;</span><br><span class="line">  <span class="function"><span class="keyword">unsigned</span> <span class="title">int</span><span class="params">(<span class="number">32</span>)</span> default_sample_size</span>;</span><br><span class="line">  <span class="function"><span class="keyword">unsigned</span> <span class="title">int</span><span class="params">(<span class="number">32</span>)</span> default_sample_flags</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="MOOF-TRAF-TFDT"><a href="#MOOF-TRAF-TFDT" class="headerlink" title="MOOF::TRAF::TFDT"></a>MOOF::TRAF::TFDT</h3><p>Track fragment decode time。主要是用来存放相关 sample 编码的绝对时间的。因为 FMP4 是流式的格式，所以，不像 MP4 一样可以直接根据 sample 直接 seek 到具体位置。这里就需要一个标准时间参考，来快速定位都某个具体的 fragment。<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 官方文档代码</span></span><br><span class="line">aligned(<span class="number">8</span>) <span class="function">class TrackFragmentBaseMediaDecodeTimeBox extends <span class="title">FullBox</span><span class="params">(‘tfdt’, version, <span class="number">0</span>)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (version==<span class="number">1</span>) &#123;</span><br><span class="line">    <span class="function"><span class="keyword">unsigned</span> <span class="title">int</span><span class="params">(<span class="number">64</span>)</span> baseMediaDecodeTime</span>; </span><br><span class="line">  &#125; <span class="keyword">else</span> &#123; <span class="comment">// version==0</span></span><br><span class="line">    <span class="keyword">unsigned</span> <span class="keyword">int</span>(<span class="number">32</span>) baseMediaDecodeTime;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="MOOF-TRAF-TRUN"><a href="#MOOF-TRAF-TRUN" class="headerlink" title="MOOF::TRAF::TRUN"></a>MOOF::TRAF::TRUN</h3><p>Track Fragment Run Box。存储该 moof 里面相关的 sample 内容。例如，每个 sample 的 size，duration，offset 等。<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 官方文档代码</span></span><br><span class="line">aligned(<span class="number">8</span>) <span class="function">class TrackRunBox extends <span class="title">FullBox</span><span class="params">(‘trun’, version, tr_flags)</span> </span>&#123;</span><br><span class="line">  <span class="function"><span class="keyword">unsigned</span> <span class="title">int</span><span class="params">(<span class="number">32</span>)</span> sample_count</span>;</span><br><span class="line">  <span class="comment">// the following are optional fields</span></span><br><span class="line">  <span class="function"><span class="keyword">signed</span> <span class="title">int</span><span class="params">(<span class="number">32</span>)</span> data_offset</span>;</span><br><span class="line">  <span class="function"><span class="keyword">unsigned</span> <span class="title">int</span><span class="params">(<span class="number">32</span>)</span> first_sample_flags</span>;</span><br><span class="line">  <span class="comment">// all fields in the following array are optional </span></span><br><span class="line">  &#123;</span><br><span class="line">      <span class="function"><span class="keyword">unsigned</span> <span class="title">int</span><span class="params">(<span class="number">32</span>)</span>  sample_duration</span>;</span><br><span class="line">      <span class="function"><span class="keyword">unsigned</span> <span class="title">int</span><span class="params">(<span class="number">32</span>)</span>  sample_size</span>;</span><br><span class="line">      <span class="function"><span class="keyword">unsigned</span> <span class="title">int</span><span class="params">(<span class="number">32</span>)</span>  sample_flags</span></span><br><span class="line"><span class="function">      <span class="title">if</span> <span class="params">(version == <span class="number">0</span>)</span> </span>&#123; </span><br><span class="line">      <span class="function"><span class="keyword">unsigned</span> <span class="title">int</span><span class="params">(<span class="number">32</span>)</span> sample_composition_time_offset</span>;</span><br><span class="line">      &#125; <span class="keyword">else</span> &#123; </span><br><span class="line">      <span class="keyword">signed</span> <span class="keyword">int</span>(<span class="number">32</span>) sample_composition_time_offset;</span><br><span class="line">    &#125;</span><br><span class="line">   &#125;[ sample_count ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>可以说，trun 上面的字段是 traf 里面最重要的标识字段：<br>tr_flags 是用来表示下列 sample 相关的标识符是否应用到每个字段中：</p>
+<ul>
+<li>0x000001: data-offset-present，只应用 data-offset</li>
+<li>0x000004: 只对第一个 sample 应用对应的 flags。剩余 sample flags 就不管了。</li>
+<li>0x000100: 这个比较重要，表示每个 sample 都有自己的 duration，否则使用默认的</li>
+<li>0x000200: 每个 sample 有自己的 sample_size，否则使用默认的。</li>
+<li>0x000400: 对每个 sample 使用自己的 flags。否则，使用默认的。</li>
+<li>0x000800: 每个 sample 都有自己的 cts 值<br>后面字段，我们这简单介绍一下。</li>
+<li>data_offset: 用来表示和该 moof 配套的 mdat 中实际数据内容距 moof 开头有多少 byte。相当于就是 moof.byteLength + mdat.headerSize。</li>
+<li>sample_count: 一共有多少个 sample</li>
+<li>first_sample_flags: 主要针对第一个 sample。一般来说，都可以默认设为 0。<br>后面的几个字段，我就不赘述了，对了，里面的 sample_flags 是一个非常重要的东西，常常用它来表示，到底哪一个 sample 是对应的 keyFrame。</li>
+</ul>
+<h3 id="MOOF-TRAF-SDTP"><a href="#MOOF-TRAF-SDTP" class="headerlink" title="MOOF::TRAF::SDTP"></a>MOOF::TRAF::SDTP</h3><p>Independent and Disposable Samples Box。主要是用来描述具体某个 sample 是否是 I 帧，是否是 leading frame 等相关属性值，主要用来作为当进行点播回放时的同步参考信息。<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 官方文档代码</span></span><br><span class="line">aligned(<span class="number">8</span>) <span class="function">class SampleDependencyTypeBox extends <span class="title">FullBox</span><span class="params">(‘sdtp’, version = <span class="number">0</span>, <span class="number">0</span>)</span> </span>&#123; </span><br><span class="line">  <span class="keyword">for</span> (i=<span class="number">0</span>; i &lt; sample_count; i++)&#123;</span><br><span class="line">    <span class="comment">// 是否是开头部分</span></span><br><span class="line">    <span class="comment">// - 0: 当前 sample 的 leading 属性未知（经常用到）</span></span><br><span class="line">    <span class="comment">// - 1: 当前 sample 是 leading sample，并且不能被 decoded</span></span><br><span class="line">    <span class="comment">// - 2: 当前 sample 并不是 leading sample</span></span><br><span class="line">    <span class="comment">// - 3: 当前 sample 是 leading sample，并且能被 decoded</span></span><br><span class="line">    <span class="function"><span class="keyword">unsigned</span> <span class="title">int</span><span class="params">(<span class="number">2</span>)</span> is_leading</span>;</span><br><span class="line">    <span class="comment">// 是否是 I 帧</span></span><br><span class="line">    <span class="comment">// - 0: 该 sample 不知道是否依赖其他帧</span></span><br><span class="line">    <span class="comment">// - 1: 该 sample 是 B/P 帧</span></span><br><span class="line">    <span class="comment">// - 2: 该 sample 是 I 帧</span></span><br><span class="line">    <span class="comment">// - 3: 保留字</span></span><br><span class="line">    <span class="function"><span class="keyword">unsigned</span> <span class="title">int</span><span class="params">(<span class="number">2</span>)</span> sample_depends_on</span>; </span><br><span class="line">    <span class="comment">// 该帧是否被依赖</span></span><br><span class="line">    <span class="comment">// - 0: 不知道是否被依赖，特指（B/P）</span></span><br><span class="line">    <span class="comment">// - 1: 被依赖，特指 I 帧</span></span><br><span class="line">    <span class="comment">// - 2: 保留字</span></span><br><span class="line">    <span class="function"><span class="keyword">unsigned</span> <span class="title">int</span><span class="params">(<span class="number">2</span>)</span> sample_is_depended_on</span>; </span><br><span class="line">    <span class="comment">// 是否有冗余编码</span></span><br><span class="line">    <span class="comment">// - 0: 不知道是否有冗余</span></span><br><span class="line">    <span class="comment">// - 1: 有冗余编码</span></span><br><span class="line">    <span class="comment">// - 2: 没有冗余编码</span></span><br><span class="line">    <span class="comment">// - 3: 保留字</span></span><br><span class="line">    <span class="function"><span class="keyword">unsigned</span> <span class="title">int</span><span class="params">(<span class="number">2</span>)</span> sample_has_redundancy</span>;</span><br><span class="line">  &#125; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>sdtp 对于 video 来说很重要，因为，其内容字段主要就是给 video 相关的帧设计的。而 audio，一般直接采用默认值：<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">isLeading: <span class="number">0</span>,</span><br><span class="line">dependsOn: <span class="number">1</span>, </span><br><span class="line">isDepended: <span class="number">0</span>,</span><br><span class="line">hasRedundancy: <span class="number">0</span></span><br></pre></td></tr></table></figure></p>
+<h2 id="MDAT"><a href="#MDAT" class="headerlink" title="MDAT"></a>MDAT</h2><p>Media Data Box。该box包含媒体数据。对于h264，aac编码的媒体来说，其视频mdat中内容是nal，对于音频来说，其内容为aac的一帧。mdat中的帧依次存放，每个帧的位置、时间、长度都由moov中的信息指定。<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 官方文档代码</span></span><br><span class="line">aligned(<span class="number">8</span>) <span class="function">class MediaDataBox extends <span class="title">Box</span><span class="params">(‘mdat’)</span> </span>&#123; </span><br><span class="line">  bit(<span class="number">8</span>) data[];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><ul>
+<li><a href="https://www.villainhr.com/page/2017/08/21/%E5%AD%A6%E5%A5%BD%20MP4%EF%BC%8C%E8%AE%A9%E7%9B%B4%E6%92%AD%E6%9B%B4%E7%BB%99%E5%8A%9B#fragmented MP4" target="_blank" rel="noopener">学好 MP4，让直播更给力</a></li>
+</ul>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+  <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+    <div>我只是试下能不能被赞赏😳</div>
+    <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+      <span>赏</span>
+    </button>
+    <div id="QR" style="display: none;">
+      
+        <div id="wechat" style="display: inline-block">
+          <img id="wechat_qr" src="http://ouazw12mz.bkt.clouddn.com/IMG_4838.jpg" alt="Lucius WeChat Pay"/>
+          <p>微信打赏</p>
+        </div>
+      
+      
+        <div id="alipay" style="display: inline-block">
+          <img id="alipay_qr" src="http://ouazw12mz.bkt.clouddn.com/171226222918.png?imageslim" alt="Lucius Alipay"/>
+          <p>支付宝打赏</p>
+        </div>
+      
+    </div>
+  </div>
+
+
+      
+    </div>
+
+    <div>    
+     
+     
+        <ul class="post-copyright">
+          <li class="post-copyright-author">
+              <strong>本文作者：</strong>Lucius
+          </li>
+          <li class="post-copyright-link">
+            <strong>本文链接：</strong>
+            <a href="/2018/01/16/archivers/media-study-08/" title="音视频学习-FMP4结构之FMP4">2018/01/16//archivers/media-study-08/</a>
+          </li>
+          <li class="post-copyright-license">
+            <strong>版权声明： </strong>
+            本博客所有文章除特别声明外，均采用 <a href="http://creativecommons.org/licenses/by-nc-sa/3.0/cn/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0 CN</a> 许可协议。转载请注明出处！
+          </li>
+        </ul>
+      
+    </div>
+    
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/media/" rel="tag"># media</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/01/14/archivers/media-study-07/" rel="next" title="音视频学习-FMP4结构之MP4">
+                <i class="fa fa-chevron-left"></i> 音视频学习-FMP4结构之MP4
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.jpg"
+               alt="Lucius" />
+          <p class="site-author-name" itemprop="name">Lucius</p>
+          <p class="site-description motion-element" itemprop="description">stay hungry, stay foolish...</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">46</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">4</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">9</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/Lucius0" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#MOOV-MVEX"><span class="nav-number">1.</span> <span class="nav-text">MOOV::MVEX</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#MOOV-MVEX-MEHD"><span class="nav-number">1.1.</span> <span class="nav-text">MOOV::MVEX::MEHD</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#MOOV-MVEX-TREX"><span class="nav-number">1.2.</span> <span class="nav-text">MOOV::MVEX::TREX</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#MOOF"><span class="nav-number">2.</span> <span class="nav-text">MOOF</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#MOOF-TRAF"><span class="nav-number">2.1.</span> <span class="nav-text">MOOF::TRAF</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#MOOF-TRAF-TFHD"><span class="nav-number">2.2.</span> <span class="nav-text">MOOF::TRAF::TFHD</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#MOOF-TRAF-TFDT"><span class="nav-number">2.3.</span> <span class="nav-text">MOOF::TRAF::TFDT</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#MOOF-TRAF-TRUN"><span class="nav-number">2.4.</span> <span class="nav-text">MOOF::TRAF::TRUN</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#MOOF-TRAF-SDTP"><span class="nav-number">2.5.</span> <span class="nav-text">MOOF::TRAF::SDTP</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#MDAT"><span class="nav-number">3.</span> <span class="nav-text">MDAT</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考资料"><span class="nav-number">4.</span> <span class="nav-text">参考资料</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Lucius</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+
+<div class="busuanzi-count">
+
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv"><i class="fa fa-user"></i> 访问人数<span class="busuanzi-value" id="busuanzi_value_site_uv"></span></span>
+  
+
+  
+    <span class="site-pv"><i class="fa fa-eye"></i> 总访问量<span class="busuanzi-value" id="busuanzi_value_site_pv"></span>次</span>
+  
+  
+</div>
+
+
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+
+  
+
+    <script type="text/javascript">
+      var disqus_shortname = 'lucius0';
+      var disqus_identifier = '2018/01/16//archivers/media-study-08/';
+
+      var disqus_title = "音视频学习-FMP4结构之FMP4";
+
+
+      function run_disqus_script(disqus_script) {
+        var dsq = document.createElement('script');
+        dsq.type = 'text/javascript';
+        dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      }
+
+      run_disqus_script('count.js');
+
+      
+        var disqus_config = function () {
+            this.page.url = disqus_url;
+            this.page.identifier = disqus_identifier;
+            this.page.title = disqus_title;
+        };
+        run_disqus_script('embed.js');
+      
+
+    </script>
+  
+
+
+
+
+
+  
+  
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length == 0) {
+      search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body").append('<div class="popoverlay">').css('overflow', 'hidden');
+      $('.popup').toggle();
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+      $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = $( "entry", xmlResponse ).map(function() {
+            return {
+              title: $( "title", this ).text(),
+              content: $("content",this).text(),
+              url: $( "url" , this).text()
+            };
+          }).get();
+          var $input = document.getElementById(search_id);
+          var $resultContent = document.getElementById(content_id);
+          $input.addEventListener('input', function(){
+            var matchcounts = 0;
+            var str='<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length > 1) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var content_index = [];
+                var data_title = data.title.trim().toLowerCase();
+                var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                var data_url = decodeURIComponent(data.url);
+                var index_title = -1;
+                var index_content = -1;
+                var first_occur = -1;
+                // only match artiles with not empty titles and contents
+                if(data_title != '') {
+                  keywords.forEach(function(keyword, i) {
+                    index_title = data_title.indexOf(keyword);
+                    index_content = data_content.indexOf(keyword);
+                    if( index_title >= 0 || index_content >= 0 ){
+                      isMatch = true;
+                      if (i == 0) {
+                        first_occur = index_content;
+                      }
+                    }
+
+                  });
+                }
+                // show search results
+                if (isMatch) {
+                  matchcounts += 1;
+                  str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                  var content = data.content.trim().replace(/<[^>]+>/g,"");
+                  if (first_occur >= 0) {
+                    // cut out 100 characters
+                    var start = first_occur - 20;
+                    var end = first_occur + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if(start == 0){
+                      end = 50;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    var match_content = content.substring(start, end);
+                    // highlight all keywords
+                    keywords.forEach(function(keyword){
+                      var regS = new RegExp(keyword, "gi");
+                      match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                    });
+
+                    str += "<p class=\"search-result\">" + match_content +"...</p>"
+                  }
+                  str += "</li>";
+                }
+              })};
+            str += "</ul>";
+            if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+            if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+            $resultContent.innerHTML = str;
+          });
+          proceedsearch();
+        }
+      });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".popoverlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+
+  
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+
+  <script type="text/javascript">
+    (function() {
+      // try {
+      //   var document = window.document;
+      //   document.oncontextmenu = function() {
+      //     return false;
+      //   }
+      //   document.onkeydown = function() {
+      //     if (window.event.ctrlKey && window.event.keyCode == 67) {
+      //       return false;
+      //     }
+      //     return false;
+      //   }
+      //   document.body.oncopy = function() {
+      //     return false;
+      //   }
+      //   document.onselectstart = function() {
+      //     return false;
+      //   }
+            
+      //   document.onselectstart=function(){return false};
+      //   // document.style.MozUserSelect && document.style.MozUserSelect="none";
+      //   document.onmousedown=function(){return false};
+      //   document.style.cursor = "default"; 
+      // } catch(e) {}
+    })();
+  </script>
+
+</body>
+</html>

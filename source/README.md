@@ -108,3 +108,7 @@
 - [用shadowsocks加速git clone](https://lucius0.github.io/2017/01/07/archivers/shadowsocks-and-git/)
 
 - [git diff](https://lucius0.github.io/2017/02/23/archivers/git-diff/)
+
+### debug
+
+- [各种debug工具在此汇总](https://lucius0.github.io/2018/01/18/archivers/debug-tools/)

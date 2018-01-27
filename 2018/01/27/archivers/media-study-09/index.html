@@ -1,0 +1,983 @@
+<!doctype html>
+
+
+
+
+<html class="theme-next mist" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="media," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="在上一篇我们只是分析了fmp4的结构，也就是box的结构组成，但是还是需要进行remuxer才可以将flv转成fmp4。 Metadata在flv那边我们有提到parseAACAudioSpecificConfig、parseAVCDecoderConfigurationRecord，其实在那里会通过this._onTrackMetadata这个方法将对应的音视频的metadata传给mp4-re">
+<meta name="keywords" content="media">
+<meta property="og:type" content="article">
+<meta property="og:title" content="音视频学习-flvjs中FLV转FMP4简单概括">
+<meta property="og:url" content="https://lucius0.github.io/2018/01/27//archivers/media-study-09/index.html">
+<meta property="og:site_name" content="Lucius&#39;s Blog">
+<meta property="og:description" content="在上一篇我们只是分析了fmp4的结构，也就是box的结构组成，但是还是需要进行remuxer才可以将flv转成fmp4。 Metadata在flv那边我们有提到parseAACAudioSpecificConfig、parseAVCDecoderConfigurationRecord，其实在那里会通过this._onTrackMetadata这个方法将对应的音视频的metadata传给mp4-re">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://ouazw12mz.bkt.clouddn.com/180127162635.png?imageslim">
+<meta property="og:image" content="http://ouazw12mz.bkt.clouddn.com/180127162849.png?imageslim">
+<meta property="og:updated_time" content="2018-01-27T08:29:02.332Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="音视频学习-flvjs中FLV转FMP4简单概括">
+<meta name="twitter:description" content="在上一篇我们只是分析了fmp4的结构，也就是box的结构组成，但是还是需要进行remuxer才可以将flv转成fmp4。 Metadata在flv那边我们有提到parseAACAudioSpecificConfig、parseAVCDecoderConfigurationRecord，其实在那里会通过this._onTrackMetadata这个方法将对应的音视频的metadata传给mp4-re">
+<meta name="twitter:image" content="http://ouazw12mz.bkt.clouddn.com/180127162635.png?imageslim">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: false,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://lucius0.github.io/2018/01/27//archivers/media-study-09/"/>
+
+
+
+
+
+  <title> 音视频学习-flvjs中FLV转FMP4简单概括 | Lucius's Blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Lucius's Blog</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            日志
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup">
+ <span class="search-icon fa fa-search"></span>
+ <input type="text" id="local-search-input">
+ <div id="local-search-result"></div>
+ <span class="popup-btn-close">close</span>
+</div>
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="https://lucius0.github.io/2018/01/27/archivers/media-study-09/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="Lucius">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.jpg">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="Lucius's Blog">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="Lucius's Blog" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                音视频学习-flvjs中FLV转FMP4简单概括
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-01-27T00:00:00+08:00">
+                2018-01-27
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/media/" itemprop="url" rel="index">
+                    <span itemprop="name">media</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <a href="/2018/01/27/archivers/media-study-09/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2018/01/27//archivers/media-study-09/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i> 浏览
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>次
+            </span>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>在<a href="https://lucius0.github.io/2018/01/16/archivers/media-study-08/">上一篇</a>我们只是分析了fmp4的结构，也就是box的结构组成，但是还是需要进行<code>remuxer</code>才可以将flv转成fmp4。</p>
+<h2 id="Metadata"><a href="#Metadata" class="headerlink" title="Metadata"></a>Metadata</h2><p>在flv那边我们有提到<code>parseAACAudioSpecificConfig</code>、<code>parseAVCDecoderConfigurationRecord</code>，其实在那里会通过<code>this._onTrackMetadata</code>这个方法将对应的音视频的<code>metadata</code>传给<code>mp4-remuxer</code>去处理。而<code>script tag</code>的<code>metadata</code>没有交给fmp4处理，相信大家也明白，这个数据主要是一些媒体信息。</p>
+<h3 id="Audio-Metadata"><a href="#Audio-Metadata" class="headerlink" title="Audio Metadata"></a>Audio Metadata</h3><p>让我们再回到<code>flv-demuxer</code>，在解析Audio时会优先解析<strong>Audio Metadata</strong>，也就是音频的<code>Audio Object Type</code>，<code>channel</code>，<code>codec</code>等信息。解析完毕之后会将这些信息都传递给<code>mp4-remuxer</code>去处理，生成<code>metabox</code>。<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 'audio/mp4, codecs="codec"'</span></span><br><span class="line">metabox = MP4.generateInitSegment(metadata);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 所以第一次初始化 metadata 的数值填给 fmp4 中的对应数值，其他的都可以使用默认值</span></span><br><span class="line">-&gt; ftyp 固定的，这部分不多说，见上一篇FMP4结构那篇文章</span><br><span class="line">-&gt; moov</span><br><span class="line">  -&gt; mvhd: timescale, duration</span><br><span class="line">  -&gt; trak</span><br><span class="line">    -&gt; tkhd: trackId, duration, width, height</span><br><span class="line">    -&gt; mdia</span><br><span class="line">    -&gt; mdhd: timescale, duration</span><br><span class="line">    -&gt; hdlr: hdlr_audio</span><br><span class="line">    -&gt; minf</span><br><span class="line">      -&gt; xmhd: smhd</span><br><span class="line">      -&gt; dinf</span><br><span class="line">      -&gt; dref</span><br><span class="line">      -&gt; stbl</span><br><span class="line">      -&gt; stsd</span><br><span class="line">        /-&gt; mp3: channelCount, sampleRate</span><br><span class="line">        /-&gt; mp4a(aac): channelCount, sampleRate</span><br><span class="line">         -&gt; esds: config, configSize</span><br><span class="line">      -&gt; stts</span><br><span class="line">      -&gt; stsc</span><br><span class="line">      -&gt; stsz</span><br><span class="line">      -&gt; stco</span><br><span class="line">  -&gt; mvex</span><br><span class="line">    -&gt; trex: trackId</span><br><span class="line"></span><br><span class="line"><span class="comment">// 到这里就完成了 Audio 的 InitSegment。</span></span><br><span class="line"><span class="keyword">this</span>._onInitSegment(type, &#123;</span><br><span class="line">    type: type,</span><br><span class="line">    data: metabox.buffer,</span><br><span class="line">    codec: codec,</span><br><span class="line">    container: <span class="string">`<span class="subst">$&#123;type&#125;</span>/<span class="subst">$&#123;container&#125;</span>`</span>,</span><br><span class="line">    mediaDuration: metadata.duration  <span class="comment">// in timescale 1000 (milliseconds)</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure></p>
+<h3 id="Video-Metadata"><a href="#Video-Metadata" class="headerlink" title="Video Metadata"></a>Video Metadata</h3><p>同理，Video在解析数据之前，第一个会是<strong>AVC Decoder Configuration Record</strong>，即会把<code>chromaFormat</code>、<code>duration</code>、<code>frameRate</code>、<code>presentHeight</code>、<code>presentWidth</code>等数据一样传递给<code>mp4-remuxer</code>，跳过 ftyp 不说，会跟Audio一样产生一个 moov 的box。这里只挑跟Audio不同的数据。<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 'video'</span></span><br><span class="line">metabox = MP4.generateInitSegment(metadata);</span><br><span class="line"></span><br><span class="line"><span class="comment">// Video metadata</span></span><br><span class="line">hdlr: hdlr_video</span><br><span class="line">xmhd: vmhd</span><br><span class="line">stsd</span><br><span class="line">  -&gt; avc1: avcc, width, height</span><br><span class="line"></span><br><span class="line"><span class="comment">// 可以看到，其实只要有meta传参的地方，数据都是不一样的(部分没写出来)</span></span><br></pre></td></tr></table></figure></p>
+<h2 id="Data"><a href="#Data" class="headerlink" title="Data"></a>Data</h2><p>读取完 metadata 之后，之后读取到 audio 的，就是<strong>AAC raw frame data</strong>数据了，然后将数据保存到 audio track 中的 sample 数组；当然 video 也是一样，之后的数据就是<strong>nalus</strong>了，然后同时也将数据保存到 video track 中的 sample 数组。待抓取到的媒体流数据解析完成之后，将解析完的数据帧发送给<code>remuxer</code>。<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">this</span>._onDataAvailable(<span class="keyword">this</span>._audioTrack, <span class="keyword">this</span>._videoTrack);</span><br><span class="line"><span class="comment">// ===&gt;&gt;&gt; mp4-remuxer::remux</span></span><br><span class="line"><span class="keyword">this</span>._remuxVideo(videoTrack);</span><br><span class="line"><span class="keyword">this</span>._remuxAudio(audioTrack);</span><br></pre></td></tr></table></figure></p>
+<p>在这里注意一下，在进行<code>remuxVideo</code>跟<code>remuxAudio</code>之前，会先计算一个<code>base dts</code>，这个是什么呢？之后再说。</p>
+<h3 id="Video-Data"><a href="#Video-Data" class="headerlink" title="Video Data"></a>Video Data</h3><p>我们拿 video data 来分析，实际上分析了 video data，那么 audio 的部分也是大同小异的了。这里先将 nal 的数据转为 mdat box，这部分参考<a href="x">FMP4结构</a>的<strong>BOX</strong>部分。这里先写入的是 nal 的头部信息。也就是size、type这些。并不包括真正的数据。<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> offset = <span class="number">8</span>;</span><br><span class="line"><span class="keyword">let</span> mdatBytes = <span class="number">8</span> + videoTrack.length;</span><br><span class="line"><span class="keyword">let</span> mdatbox = <span class="keyword">new</span> <span class="built_in">Uint8Array</span>(mdatBytes);</span><br><span class="line">mdatbox[<span class="number">0</span>] = (mdatBytes &gt;&gt;&gt; <span class="number">24</span>) &amp; <span class="number">0xFF</span>;</span><br><span class="line">mdatbox[<span class="number">1</span>] = (mdatBytes &gt;&gt;&gt; <span class="number">16</span>) &amp; <span class="number">0xFF</span>;</span><br><span class="line">mdatbox[<span class="number">2</span>] = (mdatBytes &gt;&gt;&gt;  <span class="number">8</span>) &amp; <span class="number">0xFF</span>;</span><br><span class="line">mdatbox[<span class="number">3</span>] = (mdatBytes) &amp; <span class="number">0xFF</span>;</span><br><span class="line">mdatbox.set(MP4.types.mdat, <span class="number">4</span>);</span><br></pre></td></tr></table></figure></p>
+<p>为了修正后续的 samples 能与上一次的 samples 形成连续性(MSE要求连续的segments之间是不能存在时间戳间隙)，所以取这次 samples 中第一个 sample 的时间戳，追加到上一次 samples 末尾的位置，根据差值(dtsCorrection)，后面所有 sample 时间戳做相应平移。<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// calculate dtsCorrection</span></span><br><span class="line"><span class="keyword">if</span> (<span class="keyword">this</span>._videoNextDts) &#123;</span><br><span class="line">    dtsCorrection = firstSampleOriginalDts - <span class="keyword">this</span>._videoNextDts;</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;  <span class="comment">// this._videoNextDts == undefined</span></span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">this</span>._videoSegmentInfoList.isEmpty()) &#123;</span><br><span class="line">        dtsCorrection = <span class="number">0</span>;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="comment">// 假如 _videoNextDts 为 undefined，则根据时间戳从_videoSegmentInfoList 中找到最后一个 sample 的信息</span></span><br><span class="line">        <span class="keyword">let</span> lastSample = <span class="keyword">this</span>._videoSegmentInfoList.getLastSampleBefore(firstSampleOriginalDts);</span><br><span class="line">        <span class="keyword">if</span> (lastSample != <span class="literal">null</span>) &#123;</span><br><span class="line">            <span class="keyword">let</span> distance = (firstSampleOriginalDts - (lastSample.originalDts + lastSample.duration));</span><br><span class="line">            <span class="keyword">if</span> (distance &lt;= <span class="number">3</span>) &#123;</span><br><span class="line">                distance = <span class="number">0</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">let</span> expectedDts = lastSample.dts + lastSample.duration + distance;</span><br><span class="line">            dtsCorrection = firstSampleOriginalDts - expectedDts;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123; <span class="comment">// lastSample == null, cannot found</span></span><br><span class="line">            dtsCorrection = <span class="number">0</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>下面的一步其实目的就很明了了，就是根据上面产生的差值，来给每一个 sample 时间戳做相对应的平移。并且输出 mp4Samples 。<br>还记得上面的<strong>mdatbox</strong>吗？我们之前只对它做头部信息处理，那么接下来的一步就是对它填充我们处理过后的数据。<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Write samples into mdatbox</span></span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; mp4Samples.length; i++) &#123;</span><br><span class="line">    <span class="keyword">let</span> units = mp4Samples[i].units;</span><br><span class="line">    <span class="keyword">while</span> (units.length) &#123;</span><br><span class="line">        <span class="keyword">let</span> unit = units.shift();</span><br><span class="line">        <span class="keyword">let</span> data = unit.data;</span><br><span class="line">        mdatbox.set(data, offset);</span><br><span class="line">        offset += data.byteLength;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>生成  moof box。<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">-&gt; moof</span><br><span class="line">  -&gt; mfhd: sequence number</span><br><span class="line">  -&gt; traf</span><br><span class="line">    -&gt; tfhd: trackId</span><br><span class="line">    -&gt; tfdt: baseMediaDecodeTime，也就是一次 packets 的firstDts</span><br><span class="line">    -&gt; sdtp: isLeading，dependsOn，isDependedOn，hasRedundancy</span><br><span class="line">    -&gt; trun: sampleCount，offset，sample(duration，size，flags，cts)</span><br></pre></td></tr></table></figure></p>
+<p>生成完之后需要对这一次的 sample list 清空。<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">track.samples = [];</span><br><span class="line">track.length = <span class="number">0</span>;</span><br></pre></td></tr></table></figure></p>
+<p>最后将数据box合并，并将此次的数据派发出去。</p>
+<h3 id="Audio-Data"><a href="#Audio-Data" class="headerlink" title="Audio Data"></a>Audio Data</h3><p>Audio这里分为AAC跟MP3这两类音频解码格式。我们就针对AAC这一类来，MP3也是大同小异的，因为只有Firefox支持<code>&#39;audio/mp4,codecs=&quot;mp3&quot;&#39;</code>。<br><code>calculate dtsCorrection</code> 这部分就不多讲了。跟上面 Video Data 道理一样。但是这里作者做了一个兼容处理，就是为了解决 Edge seek 后卡住的 bug。作者这一块是这样解释的：<br><img src="http://ouazw12mz.bkt.clouddn.com/180127162635.png?imageslim" alt=""><br>这里注意一下：<code>videoSegment.beginDts &lt; firstSampleDts</code>，假如该空音频是在第一帧，那么就没必要补帧了(AAC.getSilentFrame)，补帧的道理也是为了使其数据连续性。<code>Correct dts for each sample</code>这一步跟Video的处理差不多，只是多了一个<code>large timestamp gap</code>的处理，这个会产生音视频不同步。剩余的后面不讲。因为看注释以及跟Video data差不多。</p>
+<h2 id="音视频同步原理"><a href="#音视频同步原理" class="headerlink" title="音视频同步原理"></a>音视频同步原理</h2><p>最后讲一下音视频同步的原理。<strong>每一帧视频或音频都有一个duration</strong>，认识这一点很重要。然后<strong>采样率(sample rate)</strong>指的是每秒钟对音频信号的采样次数，采样频率越高声音还原度越高，声音更加自然。单位是赫兹 Hz。这里我们拿44.1kHz来讲，实际还有其他的，具体可以看<a href="x">FLV解析-AudioTag(1)</a>。</p>
+<p>视频帧播放时间：</p>
+<ul>
+<li>H.264：<code>duration = 1000 / fps</code>，我们常见的 fps 有25，当然也有见过30的。那么 duration 就为40ms，也就是40ms一个视频帧。</li>
+</ul>
+<p>音频帧播放时间：</p>
+<ul>
+<li>AAC：<code>duration = 1024 / sample_rate</code>，AAC音频一帧有1024个采样样本，我们假如 sample rate 为 44.1kHz，那么 duration 应该为 23.22ms左右。</li>
+<li>MP3：<code>duration = 1152 / sample_rate</code>，MP3音频一帧跟AAC不同，只有1152个采样样本，同样假设 sample rate 为 44.1kHz，那么 duration 为 26.12ms。</li>
+</ul>
+<p>那么理论下的音视频同步如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">--------------------------------------------------------------</span><br><span class="line">时间轴：| 0 | 23.22 | 40 | 46.44 | 69.66 | 80 | ... | 116.1 |</span><br><span class="line">--------------------------------------------------------------</span><br><span class="line">音  频：| 0 | 23.22 |    | 46.44 | 69.66 |    | ... | 116.1 | </span><br><span class="line">--------------------------------------------------------------</span><br><span class="line">视  频：| 0 |       | 40 |               | 80 | ... |       |</span><br><span class="line">--------------------------------------------------------------</span><br></pre></td></tr></table></figure></p>
+<p>可以看得出，音视频的排列是按照<strong>起始时间戳</strong>从小到大来排序的，当然这部分可以允许些许波动，但也要注意一旦出现过大就会发现音视频不同步。例如：<br><img src="http://ouazw12mz.bkt.clouddn.com/180127162849.png?imageslim" alt=""><br>当然这是理论上，还需要考虑到其他的影响因素，例如硬件，网速之类的情况。</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+  <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+    <div>我只是试下能不能被赞赏😳</div>
+    <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+      <span>赏</span>
+    </button>
+    <div id="QR" style="display: none;">
+      
+        <div id="wechat" style="display: inline-block">
+          <img id="wechat_qr" src="http://ouazw12mz.bkt.clouddn.com/IMG_4838.jpg" alt="Lucius WeChat Pay"/>
+          <p>微信打赏</p>
+        </div>
+      
+      
+        <div id="alipay" style="display: inline-block">
+          <img id="alipay_qr" src="http://ouazw12mz.bkt.clouddn.com/171226222918.png?imageslim" alt="Lucius Alipay"/>
+          <p>支付宝打赏</p>
+        </div>
+      
+    </div>
+  </div>
+
+
+      
+    </div>
+
+    <div>    
+     
+     
+        <ul class="post-copyright">
+          <li class="post-copyright-author">
+              <strong>本文作者：</strong>Lucius
+          </li>
+          <li class="post-copyright-link">
+            <strong>本文链接：</strong>
+            <a href="/2018/01/27/archivers/media-study-09/" title="音视频学习-flvjs中FLV转FMP4简单概括">2018/01/27//archivers/media-study-09/</a>
+          </li>
+          <li class="post-copyright-license">
+            <strong>版权声明： </strong>
+            本博客所有文章除特别声明外，均采用 <a href="http://creativecommons.org/licenses/by-nc-sa/3.0/cn/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0 CN</a> 许可协议。转载请注明出处！
+          </li>
+        </ul>
+      
+    </div>
+    
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/media/" rel="tag"># media</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/01/18/archivers/debug-tools/" rel="next" title="各种debug工具在此汇总">
+                <i class="fa fa-chevron-left"></i> 各种debug工具在此汇总
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.jpg"
+               alt="Lucius" />
+          <p class="site-author-name" itemprop="name">Lucius</p>
+          <p class="site-description motion-element" itemprop="description">stay hungry, stay foolish...</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">48</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">4</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">10</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/Lucius0" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Metadata"><span class="nav-number">1.</span> <span class="nav-text">Metadata</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Audio-Metadata"><span class="nav-number">1.1.</span> <span class="nav-text">Audio Metadata</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Video-Metadata"><span class="nav-number">1.2.</span> <span class="nav-text">Video Metadata</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Data"><span class="nav-number">2.</span> <span class="nav-text">Data</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Video-Data"><span class="nav-number">2.1.</span> <span class="nav-text">Video Data</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Audio-Data"><span class="nav-number">2.2.</span> <span class="nav-text">Audio Data</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#音视频同步原理"><span class="nav-number">3.</span> <span class="nav-text">音视频同步原理</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Lucius</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+
+<div class="busuanzi-count">
+
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv"><i class="fa fa-user"></i> 访问人数<span class="busuanzi-value" id="busuanzi_value_site_uv"></span></span>
+  
+
+  
+    <span class="site-pv"><i class="fa fa-eye"></i> 总访问量<span class="busuanzi-value" id="busuanzi_value_site_pv"></span>次</span>
+  
+  
+</div>
+
+
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+
+  
+
+    <script type="text/javascript">
+      var disqus_shortname = 'lucius0';
+      var disqus_identifier = '2018/01/27//archivers/media-study-09/';
+
+      var disqus_title = "音视频学习-flvjs中FLV转FMP4简单概括";
+
+
+      function run_disqus_script(disqus_script) {
+        var dsq = document.createElement('script');
+        dsq.type = 'text/javascript';
+        dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      }
+
+      run_disqus_script('count.js');
+
+      
+        var disqus_config = function () {
+            this.page.url = disqus_url;
+            this.page.identifier = disqus_identifier;
+            this.page.title = disqus_title;
+        };
+        run_disqus_script('embed.js');
+      
+
+    </script>
+  
+
+
+
+
+
+  
+  
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length == 0) {
+      search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body").append('<div class="popoverlay">').css('overflow', 'hidden');
+      $('.popup').toggle();
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+      $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = $( "entry", xmlResponse ).map(function() {
+            return {
+              title: $( "title", this ).text(),
+              content: $("content",this).text(),
+              url: $( "url" , this).text()
+            };
+          }).get();
+          var $input = document.getElementById(search_id);
+          var $resultContent = document.getElementById(content_id);
+          $input.addEventListener('input', function(){
+            var matchcounts = 0;
+            var str='<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length > 1) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var content_index = [];
+                var data_title = data.title.trim().toLowerCase();
+                var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                var data_url = decodeURIComponent(data.url);
+                var index_title = -1;
+                var index_content = -1;
+                var first_occur = -1;
+                // only match artiles with not empty titles and contents
+                if(data_title != '') {
+                  keywords.forEach(function(keyword, i) {
+                    index_title = data_title.indexOf(keyword);
+                    index_content = data_content.indexOf(keyword);
+                    if( index_title >= 0 || index_content >= 0 ){
+                      isMatch = true;
+                      if (i == 0) {
+                        first_occur = index_content;
+                      }
+                    }
+
+                  });
+                }
+                // show search results
+                if (isMatch) {
+                  matchcounts += 1;
+                  str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                  var content = data.content.trim().replace(/<[^>]+>/g,"");
+                  if (first_occur >= 0) {
+                    // cut out 100 characters
+                    var start = first_occur - 20;
+                    var end = first_occur + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if(start == 0){
+                      end = 50;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    var match_content = content.substring(start, end);
+                    // highlight all keywords
+                    keywords.forEach(function(keyword){
+                      var regS = new RegExp(keyword, "gi");
+                      match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                    });
+
+                    str += "<p class=\"search-result\">" + match_content +"...</p>"
+                  }
+                  str += "</li>";
+                }
+              })};
+            str += "</ul>";
+            if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+            if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+            $resultContent.innerHTML = str;
+          });
+          proceedsearch();
+        }
+      });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".popoverlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+
+  
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+
+  <script type="text/javascript">
+    (function() {
+      // try {
+      //   var document = window.document;
+      //   document.oncontextmenu = function() {
+      //     return false;
+      //   }
+      //   document.onkeydown = function() {
+      //     if (window.event.ctrlKey && window.event.keyCode == 67) {
+      //       return false;
+      //     }
+      //     return false;
+      //   }
+      //   document.body.oncopy = function() {
+      //     return false;
+      //   }
+      //   document.onselectstart = function() {
+      //     return false;
+      //   }
+            
+      //   document.onselectstart=function(){return false};
+      //   // document.style.MozUserSelect && document.style.MozUserSelect="none";
+      //   document.onmousedown=function(){return false};
+      //   document.style.cursor = "default"; 
+      // } catch(e) {}
+    })();
+  </script>
+
+</body>
+</html>

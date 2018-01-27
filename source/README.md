@@ -70,7 +70,6 @@
 
 - [css常见的前端布局](https://lucius0.github.io/2017/05/01/archivers/css-layouts/)
 
-
 ## jekyll
 
 - [搬进jekyll](https://lucius0.github.io/2016/08/06/archivers/move-to-jekyll/)
@@ -92,6 +91,10 @@
 - [音视频学习-flv之VideoTag(2)](https://lucius0.github.io/2018/01/11/archivers/media-study-06/)
 
 - [音视频学习-FMP4结构之MP4](https://lucius0.github.io/2018/01/14/archivers/media-study-07)
+
+- [音视频学习-FMP4结构之FMP4](https://lucius0.github.io/2018/01/16/archivers/media-study-08/)
+
+- [音视频学习-flvjs中FLV转FMP4简单概括](https://lucius0.github.io/2018/01/27/archivers/media-study-09/)
 
 ## tools
 

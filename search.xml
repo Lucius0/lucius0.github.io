@@ -1509,6 +1509,62 @@
     </entry>
     
     <entry>
+      <title><![CDATA[css的一些小记]]></title>
+      <url>https://lucius0.github.io/2017/03/19/archivers/css-notes/</url>
+      <content type="html"><![CDATA[<h2 id="before-和-after"><a href="#before-和-after" class="headerlink" title=":before 和 :after"></a>:before 和 :after</h2><p>伪类<code>:before</code>和<code>:after</code>默认是一个行内元素，所以这个元素设置<code>width/height</code>是无效的，就像给<code>a</code>元素设置<code>width/height</code>一样，但是可以通过设置<code>position:absolute;</code>，对这个元素的<code>display</code>属性计算为<code>inline-block</code>值，但是设置了<code>width/height</code>针对的是<code>:before/:after</code>生成的匿名替换元素，而不是其中的<code>content</code>。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">// 无效</span><br><span class="line">span:before &#123;</span><br><span class="line">    content: url(xxx.png);</span><br><span class="line">    width: 800px;</span><br><span class="line">    height: 600px;</span><br><span class="line">&#125;</span><br><span class="line">// 可以</span><br><span class="line">span:before &#123;</span><br><span class="line">    content: '';</span><br><span class="line">    background-image:url(xxx.png);</span><br><span class="line">    background-size:800px 600px;</span><br><span class="line">    width: 800px;</span><br><span class="line">    height: 600px;</span><br><span class="line">    position: absolute; // 设置定位类型</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="inline-block"><a href="#inline-block" class="headerlink" title="inline-block"></a>inline-block</h2><h3 id="元素间隔"><a href="#元素间隔" class="headerlink" title="元素间隔"></a>元素间隔</h3><p><code>inline-block</code>使得元素水平排列，但如果两个<code>inline-block</code>元素之间存在<strong>空格</strong>或者<strong>换行</strong>就会出现奇怪的元素间隔，即使使用了<code>{padding: 0; margin: 0}</code>。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">#text p &#123; display: inline-block; padding: 10px; background-color: red; color: #fff;&#125;</span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">"text"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">p</span>&gt;</span>1<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">p</span>&gt;</span>2<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p><img src="/images/css/css-27.png" alt=""></p>
+<p>常见的解决方法：</p>
+<p>1、元素之间不要存在<strong>空格</strong>或者<strong>换行符</strong>；</p>
+<p>2、父容器的<code>font-size:0</code>。</p>
+<p>去除<code>inline-block</code>之间的间隔有很多种方法，可以参考张鑫旭老师的<a href="http://www.zhangxinxu.com/wordpress/2012/04/inline-block-space-remove-%E5%8E%BB%E9%99%A4%E9%97%B4%E8%B7%9D/" target="_blank" rel="noopener">去除inline-block元素间间距的N种方法</a></p>
+<h3 id="元素对齐问题"><a href="#元素对齐问题" class="headerlink" title="元素对齐问题"></a>元素对齐问题</h3><p>两<code>inline-block</code>元素，不存在文本的情况下</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">#test p &#123;display: inline-block;&#125;</span><br><span class="line">.c1, .c2 &#123;width: 100px; height: 100px;&#125;</span><br><span class="line">.c1 &#123;border: 1px solid #f00;&#125;</span><br><span class="line">.c2 &#123;border: 1px solid #000;&#125;</span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">"test"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">p</span> <span class="attr">class</span>=<span class="string">"c1"</span>&gt;</span><span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">p</span> <span class="attr">class</span>=<span class="string">"c2"</span>&gt;</span><span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p><img src="/images/css/css-28.png" alt=""></p>
+<p>两<code>inline-block</code>元素存在文本的情况下</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">#test p &#123;display: inline-block;&#125;</span><br><span class="line">.c1, .c2 &#123;width: 100px; height: 100px;&#125;</span><br><span class="line">.c1 &#123;border: 1px solid #f00;&#125;</span><br><span class="line">.c2 &#123;border: 1px solid #000;&#125;</span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">"test"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">p</span> <span class="attr">class</span>=<span class="string">"c1"</span>&gt;</span><span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">p</span> <span class="attr">class</span>=<span class="string">"c2"</span>&gt;</span>1<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p><img src="/images/css/css-29.png" alt=""></p>
+<p>常见的解决方法：</p>
+<p>给图片或者背景设置<code>vertical-align: top</code>即可，或者给有文本的元素设置<code>overflow:hidden</code></p>
+<p>出现这种的原因是因为<code>inline-block</code>的默认属性是<code>vertical-align: baseline</code>，即以父元素的基线对齐，但当出现文本的时候，则会影响了对齐的基线。</p>
+<p>来自官方的答案：<a href="https://link.zhihu.com/?target=http%3A//www.w3.org/TR/CSS21/visudet.html%23leading" target="_blank" rel="noopener">“Visual formatting model details”</a></p>
+<blockquote>
+<p>The baseline of an ‘inline-block’ is the baseline of its last line box in the normal flow, unless it has either no in-flow line boxes or if its ‘overflow’ property has a computed value other than ‘visible’, in which case the baseline is the bottom margin edge.</p>
+</blockquote>
+<h2 id="盒模型"><a href="#盒模型" class="headerlink" title="盒模型"></a>盒模型</h2><p>页面上的每一个元素都可以看成一个盒模型。</p>
+<p><img src="/images/css/css-30.png" alt=""></p>
+<p>可以知道盒模型由四部分组成<code>content + padding + border + margin</code>，因此一个元素的宽度应该是：<code>总宽度 = margin-left + border-left + padding-left + width + padding-right + border-right + margin-right</code>。</p>
+<p>但是以上有问题的是，在<strong>IE(低于IE 9)</strong>的宽度为：<code>总宽度 = width + margin-right + margin-left</code>。因此出现了<code>box-sizing: border-box</code>的属性，当设置<code>box-sizing: border-box</code>属性时，<code>border</code> 和 <code>padding</code> 就被包含在了宽高之内，和 IE 之前的标准是一样的。</p>
+<h2 id="Chrome-小于12号字体"><a href="#Chrome-小于12号字体" class="headerlink" title="Chrome 小于12号字体"></a>Chrome 小于12号字体</h2><p>相对于其他的浏览器，chrome的默认最小字体只能是<code>12px</code>，无论你设置再小也是只能是<code>12px</code>，那假如有一个需求是要你兼容其他平台，包括chrome的字体表现小于<code>12px</code>的呢？可以使用css3的一个属性<code>transform: scale(n)</code>。</p>
+<h2 id="text-overflow-ellipsis"><a href="#text-overflow-ellipsis" class="headerlink" title="text-overflow: ellipsis"></a>text-overflow: ellipsis</h2><p><strong>多行文本</strong>在当前标准是不支持<code>text-overflow: ellipsis</code>。在草案中有一个不规范的属性<code>-webkit-line-clamp: &lt;number&gt;</code> <a href="http://developer.apple.com/safari/library/documentation/AppleApplications/Reference/SafariCSSRef/Articles/StandardCSSProperties.html#//apple_ref/doc/uid/TP30001266-UnsupportedProperties" target="_blank" rel="noopener">(unsupported WebKit property)</a>倒是可以支持这一需求，但是目前也只是在草案中。<code>text-overflow: ellipsis</code>需要<code>overflow: hidden</code>跟<code>white-space: nowrap</code>的支持，在IE 6还需要给元素设置<strong>宽度</strong>，至于多行文本，可以用<em>Jquery插件</em>的<em>Jquery-dotdotdot</em>，或者通过伪元素<code>:after</code>也可以很巧妙的解决这个问题。</p>
+<p>在此帖一下张老师的分析以及他的方案：<a href="http://www.zhangxinxu.com/wordpress/2009/09/%E5%85%B3%E4%BA%8E%E6%96%87%E5%AD%97%E5%86%85%E5%AE%B9%E6%BA%A2%E5%87%BA%E7%94%A8%E7%82%B9%E7%82%B9%E7%82%B9-%E7%9C%81%E7%95%A5%E5%8F%B7%E8%A1%A8%E7%A4%BA/" target="_blank" rel="noopener">关于文字内容溢出用点点点(…)省略号表示</a></p>
+<h2 id="letter-spacing-无法居中的问题"><a href="#letter-spacing-无法居中的问题" class="headerlink" title="letter-spacing 无法居中的问题"></a>letter-spacing 无法居中的问题</h2><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">letter-spacing</span>: 20<span class="selector-tag">px</span>;</span><br><span class="line"><span class="selector-tag">text-indent</span>: 20<span class="selector-tag">px</span>;</span><br><span class="line"><span class="selector-tag">text-align</span><span class="selector-pseudo">:center</span>;</span><br></pre></td></tr></table></figure>
+<h2 id="blur"><a href="#blur" class="headerlink" title="blur"></a>blur</h2><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">filter</span>: <span class="selector-tag">blur</span>(10<span class="selector-tag">px</span>);</span><br><span class="line"><span class="selector-tag">-webkit-filter</span>: <span class="selector-tag">blur</span>(10<span class="selector-tag">px</span>);</span><br><span class="line"><span class="selector-tag">-moz-filter</span>: <span class="selector-tag">blur</span>(10<span class="selector-tag">px</span>);</span><br><span class="line"><span class="selector-tag">-o-filter</span>: <span class="selector-tag">blur</span>(10<span class="selector-tag">px</span>);</span><br><span class="line"><span class="selector-tag">-ms-filter</span>: <span class="selector-tag">blur</span>(10<span class="selector-tag">px</span>);</span><br><span class="line">filter: progid:DXImageTransform.Microsoft.Blur(PixelRadius="4");</span><br></pre></td></tr></table></figure>
+<h2 id="work-wrap-amp-amp-work-break"><a href="#work-wrap-amp-amp-work-break" class="headerlink" title="work-wrap &amp;&amp; work-break"></a>work-wrap &amp;&amp; work-break</h2><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">span</span>&gt;</span></span><br><span class="line">    666 asdjkhaksdhksdhkjahskajhsdasdasdaaskashdkasdhkad 872934729347</span><br><span class="line"><span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line"></span><br><span class="line">span &#123;</span><br><span class="line">    word-wrap: break-word;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><img src="/images/css/css-31.png" alt=""></p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">span</span>&gt;</span></span><br><span class="line">    666 asdjkhaksdhksdhkjahskajhsdasdasdaaskashdkasdhkad 872934729347</span><br><span class="line"><span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line"></span><br><span class="line">span &#123;</span><br><span class="line">    word-break: break-all;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><img src="/images/css/css-32.png" alt=""></p>
+<p><code>word-wrap: break-word</code> 会把过长的字符串换行再折断溢出部分，而<code>word-break: break-all</code> 会把过长的字符串在该行就将溢出的折断。</p>
+]]></content>
+      
+        <categories>
+            
+            <category> front-end </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> CSS </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
       <title><![CDATA[七个你可能不了解的CSS单位]]></title>
       <url>https://lucius0.github.io/2017/03/19/archivers/7-css-units-you-might-not-know-about/</url>
       <content type="html"><![CDATA[<p>我们很容易无法摆脱的使用我们所熟悉的CSS技术，当新的问题出现，这样会使我们处于不利的地位。</p>
@@ -1568,62 +1624,6 @@
 <script src="http://codepen.io/assets/embed/ei.js"> </script>
 
 <p>转自：<a href="https://www.w3cplus.com/css/7-css-units-you-might-not-know-about.html" target="_blank" rel="noopener">https://www.w3cplus.com/css/7-css-units-you-might-not-know-about.html</a></p>
-]]></content>
-      
-        <categories>
-            
-            <category> front-end </category>
-            
-        </categories>
-        
-        
-        <tags>
-            
-            <tag> CSS </tag>
-            
-        </tags>
-        
-    </entry>
-    
-    <entry>
-      <title><![CDATA[css的一些小记]]></title>
-      <url>https://lucius0.github.io/2017/03/19/archivers/css-notes/</url>
-      <content type="html"><![CDATA[<h2 id="before-和-after"><a href="#before-和-after" class="headerlink" title=":before 和 :after"></a>:before 和 :after</h2><p>伪类<code>:before</code>和<code>:after</code>默认是一个行内元素，所以这个元素设置<code>width/height</code>是无效的，就像给<code>a</code>元素设置<code>width/height</code>一样，但是可以通过设置<code>position:absolute;</code>，对这个元素的<code>display</code>属性计算为<code>inline-block</code>值，但是设置了<code>width/height</code>针对的是<code>:before/:after</code>生成的匿名替换元素，而不是其中的<code>content</code>。</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">// 无效</span><br><span class="line">span:before &#123;</span><br><span class="line">    content: url(xxx.png);</span><br><span class="line">    width: 800px;</span><br><span class="line">    height: 600px;</span><br><span class="line">&#125;</span><br><span class="line">// 可以</span><br><span class="line">span:before &#123;</span><br><span class="line">    content: '';</span><br><span class="line">    background-image:url(xxx.png);</span><br><span class="line">    background-size:800px 600px;</span><br><span class="line">    width: 800px;</span><br><span class="line">    height: 600px;</span><br><span class="line">    position: absolute; // 设置定位类型</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="inline-block"><a href="#inline-block" class="headerlink" title="inline-block"></a>inline-block</h2><h3 id="元素间隔"><a href="#元素间隔" class="headerlink" title="元素间隔"></a>元素间隔</h3><p><code>inline-block</code>使得元素水平排列，但如果两个<code>inline-block</code>元素之间存在<strong>空格</strong>或者<strong>换行</strong>就会出现奇怪的元素间隔，即使使用了<code>{padding: 0; margin: 0}</code>。</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">#text p &#123; display: inline-block; padding: 10px; background-color: red; color: #fff;&#125;</span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">"text"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">p</span>&gt;</span>1<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">p</span>&gt;</span>2<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<p><img src="/images/css/css-27.png" alt=""></p>
-<p>常见的解决方法：</p>
-<p>1、元素之间不要存在<strong>空格</strong>或者<strong>换行符</strong>；</p>
-<p>2、父容器的<code>font-size:0</code>。</p>
-<p>去除<code>inline-block</code>之间的间隔有很多种方法，可以参考张鑫旭老师的<a href="http://www.zhangxinxu.com/wordpress/2012/04/inline-block-space-remove-%E5%8E%BB%E9%99%A4%E9%97%B4%E8%B7%9D/" target="_blank" rel="noopener">去除inline-block元素间间距的N种方法</a></p>
-<h3 id="元素对齐问题"><a href="#元素对齐问题" class="headerlink" title="元素对齐问题"></a>元素对齐问题</h3><p>两<code>inline-block</code>元素，不存在文本的情况下</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">#test p &#123;display: inline-block;&#125;</span><br><span class="line">.c1, .c2 &#123;width: 100px; height: 100px;&#125;</span><br><span class="line">.c1 &#123;border: 1px solid #f00;&#125;</span><br><span class="line">.c2 &#123;border: 1px solid #000;&#125;</span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">"test"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">p</span> <span class="attr">class</span>=<span class="string">"c1"</span>&gt;</span><span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">p</span> <span class="attr">class</span>=<span class="string">"c2"</span>&gt;</span><span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<p><img src="/images/css/css-28.png" alt=""></p>
-<p>两<code>inline-block</code>元素存在文本的情况下</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">#test p &#123;display: inline-block;&#125;</span><br><span class="line">.c1, .c2 &#123;width: 100px; height: 100px;&#125;</span><br><span class="line">.c1 &#123;border: 1px solid #f00;&#125;</span><br><span class="line">.c2 &#123;border: 1px solid #000;&#125;</span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">"test"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">p</span> <span class="attr">class</span>=<span class="string">"c1"</span>&gt;</span><span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">p</span> <span class="attr">class</span>=<span class="string">"c2"</span>&gt;</span>1<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<p><img src="/images/css/css-29.png" alt=""></p>
-<p>常见的解决方法：</p>
-<p>给图片或者背景设置<code>vertical-align: top</code>即可，或者给有文本的元素设置<code>overflow:hidden</code></p>
-<p>出现这种的原因是因为<code>inline-block</code>的默认属性是<code>vertical-align: baseline</code>，即以父元素的基线对齐，但当出现文本的时候，则会影响了对齐的基线。</p>
-<p>来自官方的答案：<a href="https://link.zhihu.com/?target=http%3A//www.w3.org/TR/CSS21/visudet.html%23leading" target="_blank" rel="noopener">“Visual formatting model details”</a></p>
-<blockquote>
-<p>The baseline of an ‘inline-block’ is the baseline of its last line box in the normal flow, unless it has either no in-flow line boxes or if its ‘overflow’ property has a computed value other than ‘visible’, in which case the baseline is the bottom margin edge.</p>
-</blockquote>
-<h2 id="盒模型"><a href="#盒模型" class="headerlink" title="盒模型"></a>盒模型</h2><p>页面上的每一个元素都可以看成一个盒模型。</p>
-<p><img src="/images/css/css-30.png" alt=""></p>
-<p>可以知道盒模型由四部分组成<code>content + padding + border + margin</code>，因此一个元素的宽度应该是：<code>总宽度 = margin-left + border-left + padding-left + width + padding-right + border-right + margin-right</code>。</p>
-<p>但是以上有问题的是，在<strong>IE(低于IE 9)</strong>的宽度为：<code>总宽度 = width + margin-right + margin-left</code>。因此出现了<code>box-sizing: border-box</code>的属性，当设置<code>box-sizing: border-box</code>属性时，<code>border</code> 和 <code>padding</code> 就被包含在了宽高之内，和 IE 之前的标准是一样的。</p>
-<h2 id="Chrome-小于12号字体"><a href="#Chrome-小于12号字体" class="headerlink" title="Chrome 小于12号字体"></a>Chrome 小于12号字体</h2><p>相对于其他的浏览器，chrome的默认最小字体只能是<code>12px</code>，无论你设置再小也是只能是<code>12px</code>，那假如有一个需求是要你兼容其他平台，包括chrome的字体表现小于<code>12px</code>的呢？可以使用css3的一个属性<code>transform: scale(n)</code>。</p>
-<h2 id="text-overflow-ellipsis"><a href="#text-overflow-ellipsis" class="headerlink" title="text-overflow: ellipsis"></a>text-overflow: ellipsis</h2><p><strong>多行文本</strong>在当前标准是不支持<code>text-overflow: ellipsis</code>。在草案中有一个不规范的属性<code>-webkit-line-clamp: &lt;number&gt;</code> <a href="http://developer.apple.com/safari/library/documentation/AppleApplications/Reference/SafariCSSRef/Articles/StandardCSSProperties.html#//apple_ref/doc/uid/TP30001266-UnsupportedProperties" target="_blank" rel="noopener">(unsupported WebKit property)</a>倒是可以支持这一需求，但是目前也只是在草案中。<code>text-overflow: ellipsis</code>需要<code>overflow: hidden</code>跟<code>white-space: nowrap</code>的支持，在IE 6还需要给元素设置<strong>宽度</strong>，至于多行文本，可以用<em>Jquery插件</em>的<em>Jquery-dotdotdot</em>，或者通过伪元素<code>:after</code>也可以很巧妙的解决这个问题。</p>
-<p>在此帖一下张老师的分析以及他的方案：<a href="http://www.zhangxinxu.com/wordpress/2009/09/%E5%85%B3%E4%BA%8E%E6%96%87%E5%AD%97%E5%86%85%E5%AE%B9%E6%BA%A2%E5%87%BA%E7%94%A8%E7%82%B9%E7%82%B9%E7%82%B9-%E7%9C%81%E7%95%A5%E5%8F%B7%E8%A1%A8%E7%A4%BA/" target="_blank" rel="noopener">关于文字内容溢出用点点点(…)省略号表示</a></p>
-<h2 id="letter-spacing-无法居中的问题"><a href="#letter-spacing-无法居中的问题" class="headerlink" title="letter-spacing 无法居中的问题"></a>letter-spacing 无法居中的问题</h2><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">letter-spacing</span>: 20<span class="selector-tag">px</span>;</span><br><span class="line"><span class="selector-tag">text-indent</span>: 20<span class="selector-tag">px</span>;</span><br><span class="line"><span class="selector-tag">text-align</span><span class="selector-pseudo">:center</span>;</span><br></pre></td></tr></table></figure>
-<h2 id="blur"><a href="#blur" class="headerlink" title="blur"></a>blur</h2><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">filter</span>: <span class="selector-tag">blur</span>(10<span class="selector-tag">px</span>);</span><br><span class="line"><span class="selector-tag">-webkit-filter</span>: <span class="selector-tag">blur</span>(10<span class="selector-tag">px</span>);</span><br><span class="line"><span class="selector-tag">-moz-filter</span>: <span class="selector-tag">blur</span>(10<span class="selector-tag">px</span>);</span><br><span class="line"><span class="selector-tag">-o-filter</span>: <span class="selector-tag">blur</span>(10<span class="selector-tag">px</span>);</span><br><span class="line"><span class="selector-tag">-ms-filter</span>: <span class="selector-tag">blur</span>(10<span class="selector-tag">px</span>);</span><br><span class="line">filter: progid:DXImageTransform.Microsoft.Blur(PixelRadius="4");</span><br></pre></td></tr></table></figure>
-<h2 id="work-wrap-amp-amp-work-break"><a href="#work-wrap-amp-amp-work-break" class="headerlink" title="work-wrap &amp;&amp; work-break"></a>work-wrap &amp;&amp; work-break</h2><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">span</span>&gt;</span></span><br><span class="line">    666 asdjkhaksdhksdhkjahskajhsdasdasdaaskashdkasdhkad 872934729347</span><br><span class="line"><span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line"></span><br><span class="line">span &#123;</span><br><span class="line">    word-wrap: break-word;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><img src="/images/css/css-31.png" alt=""></p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">span</span>&gt;</span></span><br><span class="line">    666 asdjkhaksdhksdhkjahskajhsdasdasdaaskashdkasdhkad 872934729347</span><br><span class="line"><span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line"></span><br><span class="line">span &#123;</span><br><span class="line">    word-break: break-all;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><img src="/images/css/css-32.png" alt=""></p>
-<p><code>word-wrap: break-word</code> 会把过长的字符串换行再折断溢出部分，而<code>word-break: break-all</code> 会把过长的字符串在该行就将溢出的折断。</p>
 ]]></content>
       
         <categories>
@@ -3557,38 +3557,6 @@ $ npm install -D webpack webpack-dev-server</code></p>
     </entry>
     
     <entry>
-      <title><![CDATA[JavaScript之五 - 数组]]></title>
-      <url>https://lucius0.github.io/2016/08/11/archivers/javascript-array/</url>
-      <content type="html"><![CDATA[<p>有序，弱类型(多类型)集合。数组是有长度限制的，即0~2^23 - 1</p>
-<p>数组的原型链：<code>[] -&gt; Array.prototype</code>; 对象的原型链：<code>{} -&gt; Object.prototype</code></p>
-<p><strong>常用方法</strong></p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">Array</span>.prototype.join</span><br><span class="line"><span class="built_in">Array</span>.prototype.reverse</span><br><span class="line"><span class="built_in">Array</span>.prototype.sort</span><br><span class="line"><span class="built_in">Array</span>.prototype.concat</span><br><span class="line"><span class="built_in">Array</span>.prototype.slice</span><br><span class="line"><span class="built_in">Array</span>.prototype.splice</span><br><span class="line"><span class="built_in">Array</span>.prototype.foreach(ES5)</span><br><span class="line"><span class="built_in">Array</span>.prototype.map(ES5)</span><br><span class="line"><span class="built_in">Array</span>.prototype.filter(ES5)</span><br><span class="line"><span class="built_in">Array</span>.prototype.every(ES5)</span><br><span class="line"><span class="built_in">Array</span>.prototype.some(ES5)</span><br><span class="line"><span class="built_in">Array</span>.prototype.reduce/reduceRight(ES5)</span><br><span class="line"><span class="built_in">Array</span>.prototype.indexOf/<span class="built_in">Array</span>.prototype.lastIndexOf(ES5)</span><br><span class="line"><span class="built_in">Array</span>.isArray(ES5)</span><br></pre></td></tr></table></figure>
-<ul>
-<li>reduce</li>
-</ul>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> arr = [<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>];</span><br><span class="line"><span class="keyword">var</span> sum = arr.reduce(<span class="function"><span class="keyword">function</span>(<span class="params">x,y</span>) </span>&#123; <span class="keyword">return</span> x + y&#125;, <span class="number">0</span>); <span class="comment">// 6</span></span><br></pre></td></tr></table></figure>
-<p><em>解析：</em> reduce接受两个参数，第一个参数则是逻辑函数，第二个参数表明是否要跟首次传入逻辑函数的参数进行逻辑处理，例如上文例子，会先进行 0 + 1 = 1，1 + 2 = 3，3 + 3 = 6</p>
-<ul>
-<li>isArray</li>
-</ul>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">Array</span>.isArray([]); <span class="comment">// true</span></span><br><span class="line">[] <span class="keyword">instanceof</span> <span class="built_in">Array</span>; <span class="comment">// true</span></span><br><span class="line">(&#123;&#125;).toString.apply([]) === [<span class="string">"object Array"</span>]; <span class="comment">// true</span></span><br><span class="line">[].constructor === <span class="built_in">Array</span>; <span class="comment">// true</span></span><br></pre></td></tr></table></figure>]]></content>
-      
-        <categories>
-            
-            <category> front-end </category>
-            
-        </categories>
-        
-        
-        <tags>
-            
-            <tag> javascript </tag>
-            
-        </tags>
-        
-    </entry>
-    
-    <entry>
       <title><![CDATA[JavaScript之六 - 函数与作用域(1)]]></title>
       <url>https://lucius0.github.io/2016/08/11/archivers/javascript-function-01/</url>
       <content type="html"><![CDATA[<h2 id="1、调用方式"><a href="#1、调用方式" class="headerlink" title="1、调用方式"></a>1、调用方式</h2><ul>
@@ -3694,6 +3662,38 @@ $ npm install -D webpack webpack-dev-server</code></p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">foo</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">	<span class="keyword">this</span>.b = <span class="number">100</span>;</span><br><span class="line">	<span class="keyword">return</span> <span class="keyword">this</span>.a;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">var</span> func = foo.bind(&#123;<span class="attr">a</span>: <span class="number">1</span>&#125;);</span><br><span class="line">func(); <span class="comment">// 1</span></span><br><span class="line"><span class="keyword">new</span> func(); <span class="comment">// &#123;b: 100&#125;</span></span><br></pre></td></tr></table></figure>
 <p><em>解析：</em> foo函数中返回值除非是<strong>对象</strong>，否则就将<strong>this</strong>作为返回值返回，<strong>this</strong>会被初始化为默认的一个空对象，并且<strong>this</strong>的原型是<em>foo.prototype</em>，该空对象的b属性会赋值为100，然后整个对象会被作为返回值返回并且忽略return的返回值。</p>
 ]]></content>
+      
+        <categories>
+            
+            <category> front-end </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> javascript </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
+      <title><![CDATA[JavaScript之五 - 数组]]></title>
+      <url>https://lucius0.github.io/2016/08/11/archivers/javascript-array/</url>
+      <content type="html"><![CDATA[<p>有序，弱类型(多类型)集合。数组是有长度限制的，即0~2^23 - 1</p>
+<p>数组的原型链：<code>[] -&gt; Array.prototype</code>; 对象的原型链：<code>{} -&gt; Object.prototype</code></p>
+<p><strong>常用方法</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">Array</span>.prototype.join</span><br><span class="line"><span class="built_in">Array</span>.prototype.reverse</span><br><span class="line"><span class="built_in">Array</span>.prototype.sort</span><br><span class="line"><span class="built_in">Array</span>.prototype.concat</span><br><span class="line"><span class="built_in">Array</span>.prototype.slice</span><br><span class="line"><span class="built_in">Array</span>.prototype.splice</span><br><span class="line"><span class="built_in">Array</span>.prototype.foreach(ES5)</span><br><span class="line"><span class="built_in">Array</span>.prototype.map(ES5)</span><br><span class="line"><span class="built_in">Array</span>.prototype.filter(ES5)</span><br><span class="line"><span class="built_in">Array</span>.prototype.every(ES5)</span><br><span class="line"><span class="built_in">Array</span>.prototype.some(ES5)</span><br><span class="line"><span class="built_in">Array</span>.prototype.reduce/reduceRight(ES5)</span><br><span class="line"><span class="built_in">Array</span>.prototype.indexOf/<span class="built_in">Array</span>.prototype.lastIndexOf(ES5)</span><br><span class="line"><span class="built_in">Array</span>.isArray(ES5)</span><br></pre></td></tr></table></figure>
+<ul>
+<li>reduce</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> arr = [<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>];</span><br><span class="line"><span class="keyword">var</span> sum = arr.reduce(<span class="function"><span class="keyword">function</span>(<span class="params">x,y</span>) </span>&#123; <span class="keyword">return</span> x + y&#125;, <span class="number">0</span>); <span class="comment">// 6</span></span><br></pre></td></tr></table></figure>
+<p><em>解析：</em> reduce接受两个参数，第一个参数则是逻辑函数，第二个参数表明是否要跟首次传入逻辑函数的参数进行逻辑处理，例如上文例子，会先进行 0 + 1 = 1，1 + 2 = 3，3 + 3 = 6</p>
+<ul>
+<li>isArray</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">Array</span>.isArray([]); <span class="comment">// true</span></span><br><span class="line">[] <span class="keyword">instanceof</span> <span class="built_in">Array</span>; <span class="comment">// true</span></span><br><span class="line">(&#123;&#125;).toString.apply([]) === [<span class="string">"object Array"</span>]; <span class="comment">// true</span></span><br><span class="line">[].constructor === <span class="built_in">Array</span>; <span class="comment">// true</span></span><br></pre></td></tr></table></figure>]]></content>
       
         <categories>
             

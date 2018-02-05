@@ -79,7 +79,7 @@ this._remuxAudio(audioTrack);
 在这里注意一下，在进行`remuxVideo`跟`remuxAudio`之前，会先计算一个`base dts`，这个是什么呢？之后再说。
 
 ### Video Data
-我们拿 video data 来分析，实际上分析了 video data，那么 audio 的部分也是大同小异的了。这里先将 nal 的数据转为 mdat box，这部分参考[FMP4结构](x)的**BOX**部分。这里先写入的是 nal 的头部信息。也就是size、type这些。并不包括真正的数据。
+我们拿 video data 来分析，实际上分析了 video data，那么 audio 的部分也是大同小异的了。这里先将 nal 的数据转为 mdat box，这部分参考[FMP4结构](https://lucius0.github.io/2018/01/16/archivers/media-study-08/)的**BOX**部分。这里先写入的是 nal 的头部信息。也就是size、type这些。并不包括真正的数据。
 ```js
 let offset = 8;
 let mdatBytes = 8 + videoTrack.length;
@@ -152,7 +152,7 @@ Audio这里分为AAC跟MP3这两类音频解码格式。我们就针对AAC这一
 这里注意一下：`videoSegment.beginDts < firstSampleDts`，假如该空音频是在第一帧，那么就没必要补帧了(AAC.getSilentFrame)，补帧的道理也是为了使其数据连续性。`Correct dts for each sample`这一步跟Video的处理差不多，只是多了一个`large timestamp gap`的处理，这个会产生音视频不同步。剩余的后面不讲。因为看注释以及跟Video data差不多。
 
 ## 音视频同步原理
-最后讲一下音视频同步的原理。**每一帧视频或音频都有一个duration**，认识这一点很重要。然后**采样率(sample rate)**指的是每秒钟对音频信号的采样次数，采样频率越高声音还原度越高，声音更加自然。单位是赫兹 Hz。这里我们拿44.1kHz来讲，实际还有其他的，具体可以看[FLV解析-AudioTag(1)](x)。
+最后讲一下音视频同步的原理。**每一帧视频或音频都有一个duration**，认识这一点很重要。然后**采样率(sample rate)**指的是每秒钟对音频信号的采样次数，采样频率越高声音还原度越高，声音更加自然。单位是赫兹 Hz。这里我们拿44.1kHz来讲，实际还有其他的，具体可以看[FLV解析-AudioTag(1)](https://lucius0.github.io/2017/12/27/archivers/media-study-03/)。
 
 视频帧播放时间：
 - H.264：`duration = 1000 / fps`，我们常见的 fps 有25，当然也有见过30的。那么 duration 就为40ms，也就是40ms一个视频帧。

@@ -195,6 +195,91 @@ tags: CSS
 
 - `flex`有兼容问题
 
+### top + margin(-height / 2)
+
+```html
+<div class="content"> Content goes here</div>
+
+<style>
+  position: absolute;
+  top: 50%;
+  height: 240px;
+  margin-top: -120px; /* negative half of the height */
+</style>
+```
+
+- 绝对定位且固定高度
+
+- 若content太多则会出现溢出，`overflow:auto`则会出现滚动条
+
+- 虽然适用所有浏览器，但是假如没有足够的空间，content则会消失
+
+### height:50% + margin-bottom: -contentheight
+
+```html
+<div id="floater">  
+  <div id="content">Content here</div>
+</div>
+
+<style>
+#floater {
+  float: left;
+  height: 50%;
+  margin-bottom: -120px;
+}
+
+#content {
+  clear: both;
+  height: 240px;
+  position: relative;
+}
+</style>
+```
+
+- 适用所有浏览器
+
+- 没有足够空间时(例如：窗口缩小) content 不会被截断，滚动条出现
+
+### margin:auto + top & bottom
+
+```html
+<div id="content"> Content here</div>
+
+<style>
+#content {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: auto;
+  height: 240px;
+  width: 70%;
+}
+</style>
+```
+
+- 同样若空间小，则 content 会消失
+
+- 存在 IE 不兼容的问题
+
+### line-height
+
+```html
+<div id="content"> Content here</div>
+
+<style>
+#content {
+  height: 100px;
+  line-height: 100px;
+}
+</style>
+```
+
+- 只对文本有效
+
+- 多行时，断词比较糟糕
+
 ## 水平垂直居中
 
 ### absolute + transform

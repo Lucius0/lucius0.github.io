@@ -96,6 +96,8 @@
 
 - [音视频学习-flvjs中FLV转FMP4简单概括](https://lucius0.github.io/2018/01/27/archivers/media-study-09/)
 
+- [音视频学习-MSE基础原理篇](https://lucius0.github.io/2018/02/23/archivers/media-study-10/)
+
 ## tools
 
 ### git

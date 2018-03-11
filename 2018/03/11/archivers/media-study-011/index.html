@@ -1,0 +1,980 @@
+<!doctype html>
+
+
+
+
+<html class="theme-next mist" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="media," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="上一篇大致讲解了MSE的原理，不能光说不练。我们就来简单的来个例子。当然没有flv的解析，也没有fmp4的转换。主要是MPEG-DASH + MSE的操练。 首先先抓来一个mp4的视频，我们就命名为mse.mp4吧。然后这里涉及到了切片的操作。其实切片跟HLS的原理是一样的，目的就是把一个长视频切成一小段一小段的，然后再去请求它们。这样能达到当需要切换码率的时候，可以通过请求不同的片段来达到目的。">
+<meta name="keywords" content="media">
+<meta property="og:type" content="article">
+<meta property="og:title" content="音视频学习-MSE实践篇">
+<meta property="og:url" content="https://lucius0.github.io/2018/03/11//archivers/media-study-011/index.html">
+<meta property="og:site_name" content="Lucius&#39;s Blog">
+<meta property="og:description" content="上一篇大致讲解了MSE的原理，不能光说不练。我们就来简单的来个例子。当然没有flv的解析，也没有fmp4的转换。主要是MPEG-DASH + MSE的操练。 首先先抓来一个mp4的视频，我们就命名为mse.mp4吧。然后这里涉及到了切片的操作。其实切片跟HLS的原理是一样的，目的就是把一个长视频切成一小段一小段的，然后再去请求它们。这样能达到当需要切换码率的时候，可以通过请求不同的片段来达到目的。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-03-11T06:22:32.909Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="音视频学习-MSE实践篇">
+<meta name="twitter:description" content="上一篇大致讲解了MSE的原理，不能光说不练。我们就来简单的来个例子。当然没有flv的解析，也没有fmp4的转换。主要是MPEG-DASH + MSE的操练。 首先先抓来一个mp4的视频，我们就命名为mse.mp4吧。然后这里涉及到了切片的操作。其实切片跟HLS的原理是一样的，目的就是把一个长视频切成一小段一小段的，然后再去请求它们。这样能达到当需要切换码率的时候，可以通过请求不同的片段来达到目的。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: false,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://lucius0.github.io/2018/03/11//archivers/media-study-011/"/>
+
+
+
+
+
+  <title> 音视频学习-MSE实践篇 | Lucius's Blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Lucius's Blog</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            日志
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup">
+ <span class="search-icon fa fa-search"></span>
+ <input type="text" id="local-search-input">
+ <div id="local-search-result"></div>
+ <span class="popup-btn-close">close</span>
+</div>
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="https://lucius0.github.io/2018/03/11/archivers/media-study-011/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="Lucius">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.jpg">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="Lucius's Blog">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="Lucius's Blog" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                音视频学习-MSE实践篇
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-03-11T00:00:00+08:00">
+                2018-03-11
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/media/" itemprop="url" rel="index">
+                    <span itemprop="name">media</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <a href="/2018/03/11/archivers/media-study-011/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2018/03/11//archivers/media-study-011/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i> 浏览
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>次
+            </span>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>上一篇大致讲解了MSE的原理，不能光说不练。我们就来简单的来个例子。当然没有flv的解析，也没有fmp4的转换。主要是MPEG-DASH + MSE的操练。</p>
+<p>首先先抓来一个mp4的视频，我们就命名为<code>mse.mp4</code>吧。然后这里涉及到了切片的操作。其实切片跟HLS的原理是一样的，目的就是把一个长视频切成一小段一小段的，然后再去请求它们。这样能达到当需要切换码率的时候，可以通过请求不同的片段来达到目的。</p>
+<h2 id="MPEG-DASH-概念"><a href="#MPEG-DASH-概念" class="headerlink" title="MPEG-DASH 概念"></a>MPEG-DASH 概念</h2><p>MPEG-DASH， Dynamic Adaptive Streaming over HTTP。本身就是Adaptive Streaming的一种，与HLS是同样的作用。在MPEG-DASH规范中的MPD描述文件，主要是用来描述媒体文件的mimeType、codecs、segment信息等，MPD实际上就是一个xml文件。</p>
+<h2 id="切片方式"><a href="#切片方式" class="headerlink" title="切片方式"></a>切片方式</h2><p>所以我们通过<code>MP4Box</code>对mp4进行MPEG-DASH切片。参考<a href="https://bitmovin.com/mp4box-dash-content-generation-x264/" target="_blank" rel="noopener">MPEG-DASH Content Generation with MP4Box and x264 - Bitmovin</a></p>
+<p>MPEG-DASH切片一般有以下两种方式：</p>
+<ul>
+<li>Adaptive Streaming：跟上面其实意思差不多，也是片段化操作，但是这个会事先把片段都切分好。也就是说我请求的是下一个片段而不是根据时间戳来请求。</li>
+<li>Progress Download：通过<strong>http Range header</strong>，获取每一个片段的range值，从而不断的拉取range的媒体流。举个例子，媒体文件就一个，但是我不断的请求媒体文件的播放起始时间戳之间的媒体流，从而达到片段化的操作。</li>
+</ul>
+<h3 id="Adaptive-Streaming"><a href="#Adaptive-Streaming" class="headerlink" title="Adaptive Streaming"></a>Adaptive Streaming</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; MP4Box -dash 5000 -rap -segment-name output/segment_ mse.mp4</span><br><span class="line"></span><br><span class="line">// _dash.mpd: 将其改为xml或者直接在编辑器打开，就会发现里面放着的是整个媒体文件的信息以及每一段segment的位置。</span><br><span class="line">// *_init.mp4: 初始的mp4文件，相当于视频头，在这个头文件中包含了完整的视频元信息(ftyp + moov)，具体的可以使用 MP4Box &lt;init video&gt; -info 查看。</span><br><span class="line">// *.m4s: 即上面提到的Segments文件，每个m4s仅包含媒体信息 (moof + mdat)，而播放器是不能直接播放这个文件的，需要用支持DASH的播放器从init文件开始播放。</span><br><span class="line">// -rap: random access point</span><br><span class="line">// -segment-name: 生成的切片名字前缀，如segment_1.m4s</span><br></pre></td></tr></table></figure>
+<p>1、将mpd文件改为xml文件，并获取里面我们想要的信息，如mimeType，codecs。<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> xhr = <span class="keyword">new</span> XMLHttpRequest();</span><br><span class="line"></span><br><span class="line">xhr.open(<span class="string">'get'</span>, baseUrl + <span class="string">'mse_dash.xml'</span>, <span class="literal">true</span>);</span><br><span class="line">xhr.responseType = <span class="string">'text'</span>;</span><br><span class="line">xhr.send();</span><br><span class="line"></span><br><span class="line">xhr.onreadystatechange = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (xhr.readyState === xhr.DONE) &#123;</span><br><span class="line">    <span class="keyword">var</span> output = xhr.response;</span><br><span class="line">    <span class="keyword">var</span> parser = <span class="keyword">new</span> DOMParser();</span><br><span class="line">    <span class="keyword">var</span> xmlData = parser.parseFromString(tempoutput, <span class="string">"text/xml"</span>, <span class="number">0</span>);</span><br><span class="line">    getFileType(xmlData);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">getFileType</span>(<span class="params">data</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">try</span> &#123;</span><br><span class="line">    <span class="keyword">var</span> file = data.querySelectorAll(<span class="string">'Representation'</span>)[<span class="number">0</span>];</span><br><span class="line">    mimeType = file.getAttribute(<span class="string">'mimeType'</span>);</span><br><span class="line">    codecs = file.getAttribute(<span class="string">'codecs'</span>);</span><br><span class="line">  &#125; <span class="keyword">catch</span>(e) &#123; &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>2、实例化Media Source对象。<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (<span class="built_in">window</span>.MediaSource) &#123;</span><br><span class="line">  <span class="keyword">var</span> mediaSource = <span class="keyword">new</span> <span class="built_in">window</span>.MediaSource();</span><br><span class="line">  <span class="keyword">var</span> url = URL.createObjectURL(mediaSource);</span><br><span class="line">  videoEle = <span class="built_in">document</span>.getElementsByTagName(<span class="string">'video'</span>)[<span class="number">0</span>];</span><br><span class="line">  videoEle.src = url;</span><br><span class="line"></span><br><span class="line">  mediaSource.addEventListener(<span class="string">'sourceopen'</span>, <span class="function"><span class="keyword">function</span>(<span class="params">e</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">      <span class="keyword">var</span> tempStr = mimeType + <span class="string">'; codecs="'</span> +  codecs + <span class="string">'"'</span>;</span><br><span class="line">      <span class="keyword">if</span> (MediaSource.isTypeSupported(tempStr)) &#123;</span><br><span class="line">        videoSource = mediaSource.addSourceBuffer(tempStr);</span><br><span class="line">        videoSource.addEventListener(<span class="string">'updateend'</span>, nextSegment);</span><br><span class="line">        initVideo();</span><br><span class="line">      &#125;</span><br><span class="line">    &#125; <span class="keyword">catch</span>(e) &#123;</span><br><span class="line">      <span class="built_in">console</span>.error(<span class="string">'source open error'</span>, e.message);</span><br><span class="line">      <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;, <span class="literal">false</span>);</span><br><span class="line"></span><br><span class="line">  mediaSource.addEventListener(<span class="string">'sourceclose'</span>, <span class="function"><span class="keyword">function</span>(<span class="params">e</span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'media source close...'</span>, e.message);</span><br><span class="line">  &#125;, <span class="literal">false</span>);</span><br><span class="line"></span><br><span class="line">  mediaSource.addEventListener(<span class="string">'error'</span>, <span class="function"><span class="keyword">function</span>(<span class="params">e</span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'media source error...'</span>, e.message);</span><br><span class="line">  &#125;, <span class="literal">false</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>3、加载媒体文件初始化片段的信息<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">initVideo</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  getSeg(baseUrl + <span class="string">'output/segment_init.mp4'</span>, appendToBuffer);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">var</span> playPromise = videoEle.play();</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 这里做下promise的处理，参考这里https://developers.google.com/web/updates/2017/06/play-request-was-interrupted</span></span><br><span class="line">  <span class="keyword">if</span> (playPromise !== <span class="literal">undefined</span>) &#123;</span><br><span class="line">    playPromise.then(<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">      <span class="built_in">console</span>.log(<span class="string">'play promise then'</span>);</span><br><span class="line">    &#125;).catch(<span class="function"><span class="keyword">function</span>(<span class="params">err</span>) </span>&#123;</span><br><span class="line">      <span class="built_in">console</span>.log(<span class="string">'play promise error'</span>, err);</span><br><span class="line">    &#125;)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">getSeg</span>(<span class="params">url, callback</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> xhr = <span class="keyword">new</span> XMLHttpRequest();</span><br><span class="line">  xhr.open(<span class="string">'GET'</span>, url);</span><br><span class="line">  xhr.responseType = <span class="string">'arraybuffer'</span>;</span><br><span class="line"></span><br><span class="line">  xhr.onload = <span class="function"><span class="keyword">function</span>(<span class="params">e</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (xhr.status != <span class="number">200</span>) <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    callback(xhr.response);</span><br><span class="line">  &#125;;</span><br><span class="line">  xhr.send();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">appendToBuffer</span>(<span class="params">videoChunk</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (videoChunk) &#123;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">      videoSource.appendBuffer(<span class="keyword">new</span> <span class="built_in">Uint8Array</span>(videoChunk));</span><br><span class="line">    &#125; <span class="keyword">catch</span>(e) &#123;</span><br><span class="line">      <span class="built_in">console</span>.error(e.message);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>4、不断的添加media segment<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">nextSegment</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  ++index;</span><br><span class="line">  <span class="keyword">if</span> (index &lt;= maxChunksIndex) &#123;</span><br><span class="line">    <span class="keyword">var</span> url = baseUrl + <span class="string">'output/segment_'</span> + index + <span class="string">'.m4s'</span>;</span><br><span class="line">    getSeg(url, appendToBuffer);</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    videoSource.removeEventListener(<span class="string">'updateend'</span>, nextSegment);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="Progress-Download"><a href="#Progress-Download" class="headerlink" title="Progress Download"></a>Progress Download</h3><p>跟之前一样，先进行媒体流的片段切片。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 这里不再解释</span></span><br><span class="line">&gt;&gt;&gt; MP4Box -dash 10000 -frag 10000 -rap mse.mp4 </span><br><span class="line"><span class="comment"># 假如上面的操作没有出现MPD文件，那么需要通过ffmpeg转为fmp4文件，再用MP4Box切片</span></span><br></pre></td></tr></table></figure></p>
+<p>Progress Download跟Adaptive Streaming不同的是，它需要计算每一个segment duration。<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> time = (size * <span class="number">8</span>) / bitrate</span><br><span class="line"><span class="comment">// 即在MPD获取相对应的信息之后，代码如下</span></span><br><span class="line"><span class="keyword">var</span> ranges = mediaRange.split(<span class="string">'-'</span>);</span><br><span class="line"><span class="keyword">var</span> time = (ranges[<span class="number">1</span>] - ranges[<span class="number">0</span>]) * <span class="number">8</span> / bandwidth;</span><br></pre></td></tr></table></figure></p>
+<p>实际上，关于Progress Download，可以移步到<a href="https://msdn.microsoft.com/zh-cn/library/dn551368.aspx" target="_blank" rel="noopener">构建简单的 MPEG-DASH 流媒体播放器</a>，这里只是对其做最简单的演示。<br>1、第一步其实跟上面的差不多，只是多了几个字段，bandwidth(做segment duration计算)，segments(每一个segment字段)，initRange(就是上面的<code>segment_init.mp4</code>)。<br>2、实例化Media Source对象。一样的操作，熟悉的味道。<br>3、加载媒体文件初始化片段的信息。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 没给出的代码基本跟上面一致</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">initVideo</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  getSeg(initRange, baseFile, appendToBuffer);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">getSeg</span>(<span class="params">range, url, callback</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> xhr = <span class="keyword">new</span> XMLHttpRequest();</span><br><span class="line">  xhr.open(<span class="string">'get'</span>, url);</span><br><span class="line">  xhr.setRequestHeader(<span class="string">'Range'</span>, <span class="string">'bytes='</span> + range);</span><br><span class="line">  xhr.responseType = <span class="string">'arraybuffer'</span>;</span><br><span class="line">  xhr.send();</span><br><span class="line">      </span><br><span class="line">  <span class="keyword">try</span> &#123;</span><br><span class="line">    xhr.addEventListener(<span class="string">'readystatechange'</span>, <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">      <span class="keyword">if</span> (xhr.readyState === xhr.DONE) &#123;</span><br><span class="line">        callback(xhr.response);</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;, <span class="literal">false</span>);</span><br><span class="line">  &#125; <span class="keyword">catch</span>(e) &#123;</span><br><span class="line">    <span class="built_in">console</span>.error(e.message);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>4、不断的添加media segment<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">nextSegment</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (index &lt;= segments.length - <span class="number">1</span>) &#123;</span><br><span class="line">    <span class="keyword">var</span> segment = segments[index];</span><br><span class="line">    <span class="keyword">var</span> range = segment.getAttribute(<span class="string">'mediaRange'</span>);</span><br><span class="line">    getSeg(range, baseFile, appendToBuffer);</span><br><span class="line">    ++index;</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    videoSource.removeEventListener(<span class="string">'updateend'</span>, nextSegment);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>到这里为止，已经讲得差不多了。基本上从flv.js的解析再到mse的实践，关于媒体的学习先告一段落。但是这一部分本身就是概念很多坑很多，若以后有什么可以分享或者什么坑，我都会到此记录下来。</p>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><ul>
+<li><a href="http://www.mediaentertainmentinfo.com/2015/04/6-concept-series-what-is-the-difference-between-progressive-download-rtmp-streaming-and-adaptive-streaming.html/#Diff-Progressive-RTMP-AdaptiveStreaming" target="_blank" rel="noopener">Difference between Progressive download, RTMP RTSP Streaming and Adaptive Steaming | Media &amp; Entertainment Industry Trends, Technology and Research</a></li>
+<li><a href="https://hacks.mozilla.org/2015/07/streaming-media-on-demand-with-media-source-extensions/" target="_blank" rel="noopener">https://hacks.mozilla.org/2015/07/streaming-media-on-demand-with-media-source-extensions/</a></li>
+<li><a href="https://bitmovin.com/mp4box-dash-content-generation-x264/" target="_blank" rel="noopener">MPEG-DASH Content Generation with MP4Box and x264 - Bitmovin</a></li>
+</ul>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+  <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+    <div>我只是试下能不能被赞赏😳</div>
+    <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+      <span>赏</span>
+    </button>
+    <div id="QR" style="display: none;">
+      
+        <div id="wechat" style="display: inline-block">
+          <img id="wechat_qr" src="http://ouazw12mz.bkt.clouddn.com/IMG_4838.jpg" alt="Lucius WeChat Pay"/>
+          <p>微信打赏</p>
+        </div>
+      
+      
+        <div id="alipay" style="display: inline-block">
+          <img id="alipay_qr" src="http://ouazw12mz.bkt.clouddn.com/171226222918.png?imageslim" alt="Lucius Alipay"/>
+          <p>支付宝打赏</p>
+        </div>
+      
+    </div>
+  </div>
+
+
+      
+    </div>
+
+    <div>    
+     
+     
+        <ul class="post-copyright">
+          <li class="post-copyright-author">
+              <strong>本文作者：</strong>Lucius
+          </li>
+          <li class="post-copyright-link">
+            <strong>本文链接：</strong>
+            <a href="/2018/03/11/archivers/media-study-011/" title="音视频学习-MSE实践篇">2018/03/11//archivers/media-study-011/</a>
+          </li>
+          <li class="post-copyright-license">
+            <strong>版权声明： </strong>
+            本博客所有文章除特别声明外，均采用 <a href="http://creativecommons.org/licenses/by-nc-sa/3.0/cn/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0 CN</a> 许可协议。转载请注明出处！
+          </li>
+        </ul>
+      
+    </div>
+    
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/media/" rel="tag"># media</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/02/23/archivers/media-study-010/" rel="next" title="音视频学习-MSE基础原理篇">
+                <i class="fa fa-chevron-left"></i> 音视频学习-MSE基础原理篇
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.jpg"
+               alt="Lucius" />
+          <p class="site-author-name" itemprop="name">Lucius</p>
+          <p class="site-description motion-element" itemprop="description">stay hungry, stay foolish...</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">50</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">4</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">10</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/Lucius0" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#MPEG-DASH-概念"><span class="nav-number">1.</span> <span class="nav-text">MPEG-DASH 概念</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#切片方式"><span class="nav-number">2.</span> <span class="nav-text">切片方式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Adaptive-Streaming"><span class="nav-number">2.1.</span> <span class="nav-text">Adaptive Streaming</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Progress-Download"><span class="nav-number">2.2.</span> <span class="nav-text">Progress Download</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考资料"><span class="nav-number">3.</span> <span class="nav-text">参考资料</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Lucius</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+
+<div class="busuanzi-count">
+
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv"><i class="fa fa-user"></i> 访问人数<span class="busuanzi-value" id="busuanzi_value_site_uv"></span></span>
+  
+
+  
+    <span class="site-pv"><i class="fa fa-eye"></i> 总访问量<span class="busuanzi-value" id="busuanzi_value_site_pv"></span>次</span>
+  
+  
+</div>
+
+
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+
+  
+
+    <script type="text/javascript">
+      var disqus_shortname = 'lucius0';
+      var disqus_identifier = '2018/03/11//archivers/media-study-011/';
+
+      var disqus_title = "音视频学习-MSE实践篇";
+
+
+      function run_disqus_script(disqus_script) {
+        var dsq = document.createElement('script');
+        dsq.type = 'text/javascript';
+        dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      }
+
+      run_disqus_script('count.js');
+
+      
+        var disqus_config = function () {
+            this.page.url = disqus_url;
+            this.page.identifier = disqus_identifier;
+            this.page.title = disqus_title;
+        };
+        run_disqus_script('embed.js');
+      
+
+    </script>
+  
+
+
+
+
+
+  
+  
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length == 0) {
+      search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body").append('<div class="popoverlay">').css('overflow', 'hidden');
+      $('.popup').toggle();
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+      $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = $( "entry", xmlResponse ).map(function() {
+            return {
+              title: $( "title", this ).text(),
+              content: $("content",this).text(),
+              url: $( "url" , this).text()
+            };
+          }).get();
+          var $input = document.getElementById(search_id);
+          var $resultContent = document.getElementById(content_id);
+          $input.addEventListener('input', function(){
+            var matchcounts = 0;
+            var str='<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length > 1) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var content_index = [];
+                var data_title = data.title.trim().toLowerCase();
+                var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                var data_url = decodeURIComponent(data.url);
+                var index_title = -1;
+                var index_content = -1;
+                var first_occur = -1;
+                // only match artiles with not empty titles and contents
+                if(data_title != '') {
+                  keywords.forEach(function(keyword, i) {
+                    index_title = data_title.indexOf(keyword);
+                    index_content = data_content.indexOf(keyword);
+                    if( index_title >= 0 || index_content >= 0 ){
+                      isMatch = true;
+                      if (i == 0) {
+                        first_occur = index_content;
+                      }
+                    }
+
+                  });
+                }
+                // show search results
+                if (isMatch) {
+                  matchcounts += 1;
+                  str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                  var content = data.content.trim().replace(/<[^>]+>/g,"");
+                  if (first_occur >= 0) {
+                    // cut out 100 characters
+                    var start = first_occur - 20;
+                    var end = first_occur + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if(start == 0){
+                      end = 50;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    var match_content = content.substring(start, end);
+                    // highlight all keywords
+                    keywords.forEach(function(keyword){
+                      var regS = new RegExp(keyword, "gi");
+                      match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                    });
+
+                    str += "<p class=\"search-result\">" + match_content +"...</p>"
+                  }
+                  str += "</li>";
+                }
+              })};
+            str += "</ul>";
+            if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+            if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+            $resultContent.innerHTML = str;
+          });
+          proceedsearch();
+        }
+      });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".popoverlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+
+  
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+
+  <script type="text/javascript">
+    (function() {
+      // try {
+      //   var document = window.document;
+      //   document.oncontextmenu = function() {
+      //     return false;
+      //   }
+      //   document.onkeydown = function() {
+      //     if (window.event.ctrlKey && window.event.keyCode == 67) {
+      //       return false;
+      //     }
+      //     return false;
+      //   }
+      //   document.body.oncopy = function() {
+      //     return false;
+      //   }
+      //   document.onselectstart = function() {
+      //     return false;
+      //   }
+            
+      //   document.onselectstart=function(){return false};
+      //   // document.style.MozUserSelect && document.style.MozUserSelect="none";
+      //   document.onmousedown=function(){return false};
+      //   document.style.cursor = "default"; 
+      // } catch(e) {}
+    })();
+  </script>
+
+</body>
+</html>

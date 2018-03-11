@@ -98,6 +98,8 @@
 
 - [音视频学习-MSE基础原理篇](https://lucius0.github.io/2018/02/23/archivers/media-study-10/)
 
+- [音视频学习-MSE基础原理篇](https://lucius0.github.io/2018/03/11/archivers/media-study-11/)
+
 ## tools
 
 ### git

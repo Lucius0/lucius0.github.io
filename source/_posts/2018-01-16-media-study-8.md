@@ -9,7 +9,7 @@ tags: media
 
 初次学习有关音视频这一块的开发，主要是基于 **[flv.js](https://github.com/Bilibili/flv.js)** 的学习。这一块的知识概念实在是太多太深了，所以本人是先在本地做记录，后面会整理慢慢地上传与各位分享，假如有地方说错，请勘误。谢谢指点。
 
-接上篇[音视频学习-FMP4结构之MP4](http://localhost:4000/2018/01/14/archivers/media-study-07/)，这篇来说下FMP4的格式。在上篇文章中，有列举过FMP4与MP4之间的差异，其实就可以通过图片看出主要的差异性，FMP4主要是有`moof + mdat`来作为媒体流数据源。从图片上看，FMP4比MP4多了MVEX Box, MOOF Box以及MDAT Box。
+接上篇[音视频学习-FMP4结构之MP4](https://lucius0.github.io/2018/01/14/archivers/media-study-07/)，这篇来说下FMP4的格式。在上篇文章中，有列举过FMP4与MP4之间的差异，其实就可以通过图片看出主要的差异性，FMP4主要是有`moof + mdat`来作为媒体流数据源。从图片上看，FMP4比MP4多了MVEX Box, MOOF Box以及MDAT Box。
 
 ## MOOV::MVEX
 Movie Extends box，该box可能有moof(Movie Fragment Boxes)，并且是按顺序读取。

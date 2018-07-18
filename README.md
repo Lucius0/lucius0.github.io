@@ -34,6 +34,8 @@
 
 - [axio-form data问题](https://lucius0.github.io/2017/05/16/archivers/axio-form-data/)
 
+- [脚手架的略知一二](https://lucius0.github.io/2018/07/18/about-scaffold/)
+
 ### html
 
 - [h5播放器学习](https://lucius0.github.io/2017/05/05/archivers/h5-video-learning/)
@@ -117,6 +119,8 @@
 - [用shadowsocks加速git clone](https://lucius0.github.io/2017/01/07/archivers/shadowsocks-and-git/)
 
 - [git diff](https://lucius0.github.io/2017/02/23/archivers/git-diff/)
+
+- [gitlab CI & CD](https://lucius0.github.io/2018/07/09/archivers/gitlab-ci-cd-getting-started-guide/)
 
 ### debug
 

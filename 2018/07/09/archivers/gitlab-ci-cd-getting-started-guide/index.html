@@ -1,0 +1,1002 @@
+<!doctype html>
+
+
+
+
+<html class="theme-next mist" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="git," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="什么是CICI(Continuous integration)，持续集成。即开发成员在工作时不断的集成工作分支到主分支。这样做不仅可以提供开发效率，还可以自动测试和构建工作，快速迭代的同时还可以及时发现错误，一举多得。 什么是CDCD(Continuous Deployment)，持续交付。简单的说就是频繁地将集成后的产品交付给质量团队或用户进行下一步的评审，通过了则到生产阶段。 GitLab C">
+<meta name="keywords" content="git">
+<meta property="og:type" content="article">
+<meta property="og:title" content="GitLab CI &#x2F; CD 入门配置">
+<meta property="og:url" content="https://lucius0.github.io/2018/07/09//archivers/gitlab-ci-cd-getting-started-guide/index.html">
+<meta property="og:site_name" content="Lucius&#39;s Blog">
+<meta property="og:description" content="什么是CICI(Continuous integration)，持续集成。即开发成员在工作时不断的集成工作分支到主分支。这样做不仅可以提供开发效率，还可以自动测试和构建工作，快速迭代的同时还可以及时发现错误，一举多得。 什么是CDCD(Continuous Deployment)，持续交付。简单的说就是频繁地将集成后的产品交付给质量团队或用户进行下一步的评审，通过了则到生产阶段。 GitLab C">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://ouazw12mz.bkt.clouddn.com/18712982379123.png">
+<meta property="og:image" content="http://ouazw12mz.bkt.clouddn.com/123823987231981-1.png">
+<meta property="og:image" content="http://ouazw12mz.bkt.clouddn.com/987128731219231-2.png">
+<meta property="og:updated_time" content="2018-07-18T15:09:33.635Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="GitLab CI &#x2F; CD 入门配置">
+<meta name="twitter:description" content="什么是CICI(Continuous integration)，持续集成。即开发成员在工作时不断的集成工作分支到主分支。这样做不仅可以提供开发效率，还可以自动测试和构建工作，快速迭代的同时还可以及时发现错误，一举多得。 什么是CDCD(Continuous Deployment)，持续交付。简单的说就是频繁地将集成后的产品交付给质量团队或用户进行下一步的评审，通过了则到生产阶段。 GitLab C">
+<meta name="twitter:image" content="http://ouazw12mz.bkt.clouddn.com/18712982379123.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: false,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://lucius0.github.io/2018/07/09//archivers/gitlab-ci-cd-getting-started-guide/"/>
+
+
+
+
+
+  <title> GitLab CI / CD 入门配置 | Lucius's Blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Lucius's Blog</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            日志
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup">
+ <span class="search-icon fa fa-search"></span>
+ <input type="text" id="local-search-input">
+ <div id="local-search-result"></div>
+ <span class="popup-btn-close">close</span>
+</div>
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="https://lucius0.github.io/2018/07/09/archivers/gitlab-ci-cd-getting-started-guide/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="Lucius">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.jpg">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="Lucius's Blog">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="Lucius's Blog" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                GitLab CI / CD 入门配置
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-07-09T00:00:00+08:00">
+                2018-07-09
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/git/" itemprop="url" rel="index">
+                    <span itemprop="name">git</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <a href="/2018/07/09/archivers/gitlab-ci-cd-getting-started-guide/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2018/07/09//archivers/gitlab-ci-cd-getting-started-guide/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i> 浏览
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>次
+            </span>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="什么是CI"><a href="#什么是CI" class="headerlink" title="什么是CI"></a>什么是CI</h2><p><strong>CI(Continuous integration)</strong>，持续集成。即开发成员在工作时不断的集成工作分支到主分支。这样做不仅可以提供开发效率，还可以自动测试和构建工作，快速迭代的同时还可以及时发现错误，一举多得。</p>
+<h2 id="什么是CD"><a href="#什么是CD" class="headerlink" title="什么是CD"></a>什么是CD</h2><p><strong>CD(Continuous Deployment)</strong>，持续交付。简单的说就是频繁地将集成后的产品交付给质量团队或用户进行下一步的评审，通过了则到生产阶段。</p>
+<h2 id="GitLab-CI-CD"><a href="#GitLab-CI-CD" class="headerlink" title="GitLab CI / CD"></a>GitLab CI / CD</h2><p>GitLab CI / CD，就是在GitLab上集成了CI / CD系统。假如你的项目中有<code>.gitlab-ci.yml</code>文件，那么当开发成员在<code>commit</code>或者<code>merge request</code>之后，会按照<code>.gitlab-ci.yml</code>所配置的内容来执行，完成CI / CD操作。</p>
+<p>Runner有很多执行平台，例如<code>SSH、Docker、Kubernetes</code>。这里我们先用SSH来执行一下。(注意：这里操作系统统一为macOS)</p>
+<h3 id="SSH安装GitLab-Runner"><a href="#SSH安装GitLab-Runner" class="headerlink" title="SSH安装GitLab Runner"></a>SSH安装GitLab Runner</h3><p>具体流程：<a href="https://docs.gitlab.com/runner/install/osx.html#installation" target="_blank" rel="noopener">https://docs.gitlab.com/runner/install/osx.html#installation</a></p>
+<ol>
+<li><p>下载</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; sudo curl --output /usr/<span class="built_in">local</span>/bin/gitlab-runner https://gitlab-runner-downloads.s3.amazonaws.com/latest/binaries/gitlab-runner-darwin-amd64</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>赋予权限</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; sudo chmod +x /usr/<span class="built_in">local</span>/bin/gitlab-runner</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>注册<br>其中在注册步骤中，需要你输入URL和Token。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; Please enter the gitlab-ci coordinator URL (e.g. https://gitlab.com )</span><br><span class="line">&gt;&gt;&gt; xxx-url</span><br><span class="line">&gt;&gt;&gt; Please enter the gitlab-ci token <span class="keyword">for</span> this runner</span><br><span class="line">&gt;&gt;&gt; xxx-token</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>那么我们需要在项目中找到对应的信息。如下图中的4则对应xxx-url、5则对应xxx-token。<br><img src="http://ouazw12mz.bkt.clouddn.com/18712982379123.png" alt="1"><br>之后的步骤按照链接的执行，需要注意的是<strong>executor</strong>我们选<strong>ssh</strong>。</p>
+<ol>
+<li><p>启动服务</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; gitlab-runner install</span><br><span class="line">&gt;&gt;&gt; gitlab-runner start</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>运行</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; sudo gitlab-runner run</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h3 id="Docker-安装-GitLab-Runner"><a href="#Docker-安装-GitLab-Runner" class="headerlink" title="Docker 安装 GitLab Runner"></a>Docker 安装 GitLab Runner</h3><p><a href="https://segmentfault.com/a/1190000012279248" target="_blank" rel="noopener">参考链接</a>，这里就不赘述了。</p>
+<h2 id="基础概念介绍"><a href="#基础概念介绍" class="headerlink" title="基础概念介绍"></a>基础概念介绍</h2><h3 id="Pipeline"><a href="#Pipeline" class="headerlink" title="Pipeline"></a>Pipeline</h3><p>每一次commit或者MR都会执行一次pipeline构建任务，当然里面有很多阶段需要执行，如测试、编译等。</p>
+<h3 id="Stage"><a href="#Stage" class="headerlink" title="Stage"></a>Stage</h3><p>这里就是上文提到的阶段，每一次pipeline有很多个stage，这些stage都是会按上到下执行，而且只有当前stage执行完毕之后才能执行下一个stage，否则就会报错。</p>
+<h3 id="Job"><a href="#Job" class="headerlink" title="Job"></a>Job</h3><p>job 为GitLab CI / CD的最小独立运行单位，它表示在指定stage下执行的任务工作，当然加入其中一个job执行失败，同样的该stage也会算是执行失败。但是不同的一点是，相同stage里面可以有很多不同的job，这些job是并行执行的。</p>
+<h3 id="gitlab-ci-yml"><a href="#gitlab-ci-yml" class="headerlink" title=".gitlab-ci.yml"></a>.gitlab-ci.yml</h3><p>介绍完基础概念，那么就是我们项目中需要的文件<code>.gitlab-ci.yml</code>。<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">// 定义在每个job之前运行的命令</span><br><span class="line">before_script:</span><br><span class="line">  - yarn</span><br><span class="line"> </span><br><span class="line">// 定义构建阶段，stages</span><br><span class="line">stages:</span><br><span class="line">  - build</span><br><span class="line">  - test</span><br><span class="line">  - deploy</span><br><span class="line"> </span><br><span class="line">// job1</span><br><span class="line">lint:</span><br><span class="line">  stage: test</span><br><span class="line">  script:</span><br><span class="line">    - echo "Running lint"</span><br><span class="line">    - yarn lint</span><br><span class="line"> </span><br><span class="line">// job2</span><br><span class="line">deploy_staging:</span><br><span class="line">  stage: deploy</span><br><span class="line">  script:</span><br><span class="line">    - echo "Deploy to staging environment"</span><br><span class="line">    - yarn build:stag</span><br><span class="line">    - yarn pub:stag</span><br><span class="line">  // 定义git分支，并为其创建job。这里表示只有release分支才会执行该job</span><br><span class="line">  only:</span><br><span class="line">    - release</span><br></pre></td></tr></table></figure></p>
+<p>更多的可以查看<a href="https://fennay.github.io/gitlab-ci-cn/gitlab-ci-yaml.html" target="_blank" rel="noopener">gitlab-ci-yaml</a>。</p>
+<h3 id="补充"><a href="#补充" class="headerlink" title="补充"></a>补充</h3><p>1、在某些时候，我们的runner假如是在本地运行的时候，会针对项目做一些环境变量的处理，例如<code>CONFIG_ENV=UAT</code>、<code>CONFIG_ENV=DEV</code>分别表示两个不同的环境。那么我们也可以通过<code>.gitlab-cli.yml</code>的配置让runner在不同的环境变量下执行。<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">// 修改 job2</span><br><span class="line">deploy_dev:</span><br><span class="line">  stage: deploy</span><br><span class="line">  script:</span><br><span class="line">    - echo "Deploy to dev environment"</span><br><span class="line">    // @1 表示设置runner执行的环境变量xxx_key为$xxx_key，会下面说明。</span><br><span class="line">    - export xxx_key=$xxx_key</span><br><span class="line">    // 表示设置runner执行的环境变量CONFIG_ENV为DEV</span><br><span class="line">    - export CONFIG_ENV=DEV</span><br><span class="line">    - yarn build:dev</span><br><span class="line">    - yarn pub:dev</span><br><span class="line">  only:</span><br><span class="line">    - release</span><br></pre></td></tr></table></figure></p>
+<p>其中，xxx_key为下图中的4，$xxx_key为下图中的5。例如xxx_key = 123456<br><img src="http://ouazw12mz.bkt.clouddn.com/123823987231981-1.png" alt="1-1"></p>
+<p>2、在有些情况下，我们在runner执行任务时，会想npmjs拉去npm包，但是因为墙的问题，往往会因为超时而拉取失败，这时候我们可以通过<code>.gitlab-cli.yml</code>的配置来指定runner来执行。<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">// 修改 job2</span><br><span class="line">deploy_dev:</span><br><span class="line">  // 新增tags属性，表示指定tag为xxx的runner</span><br><span class="line">  tags:</span><br><span class="line">    - xxx</span><br></pre></td></tr></table></figure></p>
+<p>xxx在哪里可以找到呢？下图中的<code>inernal</code>，<code>k8s</code>，<code>shared</code>，<code>test</code>即为该runner的tag。<br><img src="http://ouazw12mz.bkt.clouddn.com/987128731219231-2.png" alt="1-2"></p>
+<p>3、在补充2中说到，假如要翻墙时我们可以设置指定的runner来执行我们的任务，当然我们也可以在环境变量中设置(不)代理环境的配置。<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">// 修改 job2</span><br><span class="line">deploy_dev:</span><br><span class="line">  // 新增环境代理(表示该job在执行runner时的环境下代理)</span><br><span class="line">  - export http_proxy=http://xx.xx.xx.xx:xxxx</span><br><span class="line">  - export https_proxy=http://xx.xx.xx.xx:xxxx</span><br><span class="line">  // 新增环境不代理(表示当ip或域名为以下变量时，不执行代理)</span><br><span class="line">  - export no_proxy=123.123.123.123:1234,noproxy.com</span><br></pre></td></tr></table></figure></p>
+<h2 id="Q-amp-A-持续更新"><a href="#Q-amp-A-持续更新" class="headerlink" title="Q &amp; A(持续更新)"></a>Q &amp; A(持续更新)</h2><p>Q：为什么<code>yarn: not found</code>？<br>A：镜像里面找不到yarn，可以通过配置image为其指定镜像。</p>
+<p>Q：<code>error An unexpected error occurred: &quot;https://registry.npmjs.org/xxx: ETIMEDOUT&quot;.</code><br>A：npm访问不了，得翻墙。（可以通过个人电脑运行specific runner亦或找运维配置一个shared runner），详情可以参考补充2。</p>
+<p>Q: 一直重复<code>Waiting for pod xxx to be running, status is Pending...</code>。<br>A: 有时候受网络的影响，可能会拉取失败。这时候先自己<strong>尝试多几次</strong>，假如再不行，再看👆的解决方案。</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+  <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+    <div>我只是试下能不能被赞赏😳</div>
+    <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+      <span>赏</span>
+    </button>
+    <div id="QR" style="display: none;">
+      
+        <div id="wechat" style="display: inline-block">
+          <img id="wechat_qr" src="http://ouazw12mz.bkt.clouddn.com/IMG_4838.jpg" alt="Lucius WeChat Pay"/>
+          <p>微信打赏</p>
+        </div>
+      
+      
+        <div id="alipay" style="display: inline-block">
+          <img id="alipay_qr" src="http://ouazw12mz.bkt.clouddn.com/171226222918.png?imageslim" alt="Lucius Alipay"/>
+          <p>支付宝打赏</p>
+        </div>
+      
+    </div>
+  </div>
+
+
+      
+    </div>
+
+    <div>    
+     
+     
+        <ul class="post-copyright">
+          <li class="post-copyright-author">
+              <strong>本文作者：</strong>Lucius
+          </li>
+          <li class="post-copyright-link">
+            <strong>本文链接：</strong>
+            <a href="/2018/07/09/archivers/gitlab-ci-cd-getting-started-guide/" title="GitLab CI / CD 入门配置">2018/07/09//archivers/gitlab-ci-cd-getting-started-guide/</a>
+          </li>
+          <li class="post-copyright-license">
+            <strong>版权声明： </strong>
+            本博客所有文章除特别声明外，均采用 <a href="http://creativecommons.org/licenses/by-nc-sa/3.0/cn/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0 CN</a> 许可协议。转载请注明出处！
+          </li>
+        </ul>
+      
+    </div>
+    
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/git/" rel="tag"># git</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/04/13/archivers/webrtc-01/" rel="next" title="WebRTC-初探">
+                <i class="fa fa-chevron-left"></i> WebRTC-初探
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/07/18/archivers/about-scaffold/" rel="prev" title="脚手架的略知一二">
+                脚手架的略知一二 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.jpg"
+               alt="Lucius" />
+          <p class="site-author-name" itemprop="name">Lucius</p>
+          <p class="site-description motion-element" itemprop="description">stay hungry, stay foolish...</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">53</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">7</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">13</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/Lucius0" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#什么是CI"><span class="nav-number">1.</span> <span class="nav-text">什么是CI</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#什么是CD"><span class="nav-number">2.</span> <span class="nav-text">什么是CD</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#GitLab-CI-CD"><span class="nav-number">3.</span> <span class="nav-text">GitLab CI / CD</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#SSH安装GitLab-Runner"><span class="nav-number">3.1.</span> <span class="nav-text">SSH安装GitLab Runner</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Docker-安装-GitLab-Runner"><span class="nav-number">3.2.</span> <span class="nav-text">Docker 安装 GitLab Runner</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#基础概念介绍"><span class="nav-number">4.</span> <span class="nav-text">基础概念介绍</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Pipeline"><span class="nav-number">4.1.</span> <span class="nav-text">Pipeline</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Stage"><span class="nav-number">4.2.</span> <span class="nav-text">Stage</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Job"><span class="nav-number">4.3.</span> <span class="nav-text">Job</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#gitlab-ci-yml"><span class="nav-number">4.4.</span> <span class="nav-text">.gitlab-ci.yml</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#补充"><span class="nav-number">4.5.</span> <span class="nav-text">补充</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Q-amp-A-持续更新"><span class="nav-number">5.</span> <span class="nav-text">Q &amp; A(持续更新)</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Lucius</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+
+<div class="busuanzi-count">
+
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv"><i class="fa fa-user"></i> 访问人数<span class="busuanzi-value" id="busuanzi_value_site_uv"></span></span>
+  
+
+  
+    <span class="site-pv"><i class="fa fa-eye"></i> 总访问量<span class="busuanzi-value" id="busuanzi_value_site_pv"></span>次</span>
+  
+  
+</div>
+
+
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+
+  
+
+    <script type="text/javascript">
+      var disqus_shortname = 'lucius0';
+      var disqus_identifier = '2018/07/09//archivers/gitlab-ci-cd-getting-started-guide/';
+
+      var disqus_title = "GitLab CI / CD 入门配置";
+
+
+      function run_disqus_script(disqus_script) {
+        var dsq = document.createElement('script');
+        dsq.type = 'text/javascript';
+        dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      }
+
+      run_disqus_script('count.js');
+
+      
+        var disqus_config = function () {
+            this.page.url = disqus_url;
+            this.page.identifier = disqus_identifier;
+            this.page.title = disqus_title;
+        };
+        run_disqus_script('embed.js');
+      
+
+    </script>
+  
+
+
+
+
+
+  
+  
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length == 0) {
+      search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body").append('<div class="popoverlay">').css('overflow', 'hidden');
+      $('.popup').toggle();
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+      $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = $( "entry", xmlResponse ).map(function() {
+            return {
+              title: $( "title", this ).text(),
+              content: $("content",this).text(),
+              url: $( "url" , this).text()
+            };
+          }).get();
+          var $input = document.getElementById(search_id);
+          var $resultContent = document.getElementById(content_id);
+          $input.addEventListener('input', function(){
+            var matchcounts = 0;
+            var str='<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length > 1) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var content_index = [];
+                var data_title = data.title.trim().toLowerCase();
+                var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                var data_url = decodeURIComponent(data.url);
+                var index_title = -1;
+                var index_content = -1;
+                var first_occur = -1;
+                // only match artiles with not empty titles and contents
+                if(data_title != '') {
+                  keywords.forEach(function(keyword, i) {
+                    index_title = data_title.indexOf(keyword);
+                    index_content = data_content.indexOf(keyword);
+                    if( index_title >= 0 || index_content >= 0 ){
+                      isMatch = true;
+                      if (i == 0) {
+                        first_occur = index_content;
+                      }
+                    }
+
+                  });
+                }
+                // show search results
+                if (isMatch) {
+                  matchcounts += 1;
+                  str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                  var content = data.content.trim().replace(/<[^>]+>/g,"");
+                  if (first_occur >= 0) {
+                    // cut out 100 characters
+                    var start = first_occur - 20;
+                    var end = first_occur + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if(start == 0){
+                      end = 50;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    var match_content = content.substring(start, end);
+                    // highlight all keywords
+                    keywords.forEach(function(keyword){
+                      var regS = new RegExp(keyword, "gi");
+                      match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                    });
+
+                    str += "<p class=\"search-result\">" + match_content +"...</p>"
+                  }
+                  str += "</li>";
+                }
+              })};
+            str += "</ul>";
+            if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+            if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+            $resultContent.innerHTML = str;
+          });
+          proceedsearch();
+        }
+      });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".popoverlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+
+  
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+
+  <script type="text/javascript">
+    (function() {
+      // try {
+      //   var document = window.document;
+      //   document.oncontextmenu = function() {
+      //     return false;
+      //   }
+      //   document.onkeydown = function() {
+      //     if (window.event.ctrlKey && window.event.keyCode == 67) {
+      //       return false;
+      //     }
+      //     return false;
+      //   }
+      //   document.body.oncopy = function() {
+      //     return false;
+      //   }
+      //   document.onselectstart = function() {
+      //     return false;
+      //   }
+            
+      //   document.onselectstart=function(){return false};
+      //   // document.style.MozUserSelect && document.style.MozUserSelect="none";
+      //   document.onmousedown=function(){return false};
+      //   document.style.cursor = "default"; 
+      // } catch(e) {}
+    })();
+  </script>
+
+</body>
+</html>

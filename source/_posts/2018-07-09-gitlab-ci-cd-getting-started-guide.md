@@ -16,9 +16,9 @@ tags: [git]
 ## GitLab CI / CD
 GitLab CI / CD，就是在GitLab上集成了CI / CD系统。假如你的项目中有`.gitlab-ci.yml`文件，那么当开发成员在`commit`或者`merge request`之后，会按照`.gitlab-ci.yml`所配置的内容来执行，完成CI / CD操作。
 
-Runner有很多执行平台，例如`SSH、Docker、Kubernetes`。这里我们先用SSH来执行一下。(注意：这里操作系统统一为macOS)
+Runner有很多执行平台，例如`SSH、Docker、Kubernetes`。这里我们先用SHELL来执行一下。(注意：这里操作系统统一为macOS)
 
-### SSH安装GitLab Runner
+### SHELL安装GitLab Runner
 具体流程：[https://docs.gitlab.com/runner/install/osx.html#installation](https://docs.gitlab.com/runner/install/osx.html#installation)
 
 1. 下载
@@ -41,7 +41,7 @@ Runner有很多执行平台，例如`SSH、Docker、Kubernetes`。这里我们�
 ```
 那么我们需要在项目中找到对应的信息。如下图中的4则对应xxx-url、5则对应xxx-token。
 ![1](http://ouazw12mz.bkt.clouddn.com/18712982379123.png)
-之后的步骤按照链接的执行，需要注意的是**executor**我们选**ssh**。
+之后的步骤按照链接的执行，需要注意的是**executor**我们选**shell**。
 
 4. 启动服务
 ```bash
@@ -149,5 +149,9 @@ A：镜像里面找不到yarn，可以通过配置image为其指定镜像。
 Q：`error An unexpected error occurred: "https://registry.npmjs.org/xxx: ETIMEDOUT".`
 A：npm访问不了，得翻墙。（可以通过个人电脑运行specific runner亦或找运维配置一个shared runner），详情可以参考补充2。
 
-Q: 一直重复`Waiting for pod xxx to be running, status is Pending...`。
-A: 有时候受网络的影响，可能会拉取失败。这时候先自己**尝试多几次**，假如再不行，再看👆的解决方案。
+Q：一直重复`Waiting for pod xxx to be running, status is Pending...`。
+A：有时候受网络的影响，可能会拉取失败。这时候先自己**尝试多几次**，假如再不行，再看👆的解决方案。
+
+Q：起了本地服务之后，在gitlab上运行时，一直`pending`状态并且处于`stuck`。如下图：
+![](http://ouazw12mz.bkt.clouddn.com/180720221541.png?imageslim)
+A：假如你成功起了本地服务之后，提示无法找到runner，那么你可以给配置`.gitlab-ci.yml`添加你本地添加的tag

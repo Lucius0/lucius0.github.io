@@ -90,17 +90,17 @@
 <meta property="og:site_name" content="Lucius&#39;s Blog">
 <meta property="og:description" content="初次学习有关音视频这一块的开发，主要是基于 flv.js 的学习。这一块的知识概念实在是太多太深了，所以本人是先在本地做记录，后面会整理慢慢地上传与各位分享，假如有地方说错，请勘误。谢谢指点。 这里主要讲的是FLV的视频格式H.264，而H.264跟MPEG-4 Part 10、ISO/IEC 14496-10、MPEG-4 AVC其实都是同一个视频格式，也就是我们常说的H.264或AVC。那么我">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="http://ouazw12mz.bkt.clouddn.com/180108004838.png?imageslim">
-<meta property="og:image" content="http://ouazw12mz.bkt.clouddn.com/180108004954.png?imageslim">
-<meta property="og:image" content="http://ouazw12mz.bkt.clouddn.com/180108005022.png?imageslim">
-<meta property="og:image" content="http://ouazw12mz.bkt.clouddn.com/180108005131.png?imageslim">
-<meta property="og:image" content="http://ouazw12mz.bkt.clouddn.com/180108005156.png?imageslim">
-<meta property="og:image" content="http://ouazw12mz.bkt.clouddn.com/180108005317.png?imageslim">
-<meta property="og:updated_time" content="2018-01-12T05:23:46.733Z">
+<meta property="og:image" content="https://lucius0.github.io/images/qiniu/180108004838.png">
+<meta property="og:image" content="https://lucius0.github.io/images/qiniu/180108004954.png">
+<meta property="og:image" content="https://lucius0.github.io/images/qiniu/180108005022.png">
+<meta property="og:image" content="https://lucius0.github.io/images/qiniu/180108005131.png">
+<meta property="og:image" content="https://lucius0.github.io/images/qiniu/180108005156.png">
+<meta property="og:image" content="https://lucius0.github.io/images/qiniu/180108005317.png">
+<meta property="og:updated_time" content="2019-01-05T03:44:35.399Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="音视频学习-flv之VideoTag(1)[转]">
 <meta name="twitter:description" content="初次学习有关音视频这一块的开发，主要是基于 flv.js 的学习。这一块的知识概念实在是太多太深了，所以本人是先在本地做记录，后面会整理慢慢地上传与各位分享，假如有地方说错，请勘误。谢谢指点。 这里主要讲的是FLV的视频格式H.264，而H.264跟MPEG-4 Part 10、ISO/IEC 14496-10、MPEG-4 AVC其实都是同一个视频格式，也就是我们常说的H.264或AVC。那么我">
-<meta name="twitter:image" content="http://ouazw12mz.bkt.clouddn.com/180108004838.png?imageslim">
+<meta name="twitter:image" content="https://lucius0.github.io/images/qiniu/180108004838.png">
 
 
 
@@ -479,16 +479,16 @@
 <li>通过上述基本可以说明如果有B frame 存在的情况下一个GOP的最后一个frame一定是P.</li>
 </ul>
 <h3 id="DTS和PTS的不同"><a href="#DTS和PTS的不同" class="headerlink" title="DTS和PTS的不同"></a>DTS和PTS的不同</h3><p>DTS主要用于视频的解码,在解码阶段使用.PTS主要用于视频的同步和输出.在display的时候使用.在没有B frame的情况下.DTS和PTS的输出顺序是一样的。</p>
-<p>例子:<br>下面给出一个GOP为15的例子,其解码的参照frame及其解码的顺序都在里面:<br><img src="http://ouazw12mz.bkt.clouddn.com/180108004838.png?imageslim" alt=""><br>如上图：I frame 的解码不依赖于任何的其它的帧.而p frame的解码则依赖于其前面的I frame或者P frame.B frame的解码则依赖于其前的最近的一个I frame或者P frame 及其后的最近的一个P frame.</p>
-<h2 id="H-264流数据"><a href="#H-264流数据" class="headerlink" title="H.264流数据"></a>H.264流数据</h2><p>在H.264的语法中，有一个最基础的层，叫做Network Abstraction Layer, 简称为NAL。H.264流数据正是由一系列的NAL单元(NAL Unit, 简称NAUL)组成的。<br><img src="http://ouazw12mz.bkt.clouddn.com/180108004954.png?imageslim" alt=""><br>H264的码流由NALU单元组成,一个NALU可能包含有：</p>
+<p>例子:<br>下面给出一个GOP为15的例子,其解码的参照frame及其解码的顺序都在里面:<br><img src="/images/qiniu/180108004838.png" alt=""><br>如上图：I frame 的解码不依赖于任何的其它的帧.而p frame的解码则依赖于其前面的I frame或者P frame.B frame的解码则依赖于其前的最近的一个I frame或者P frame 及其后的最近的一个P frame.</p>
+<h2 id="H-264流数据"><a href="#H-264流数据" class="headerlink" title="H.264流数据"></a>H.264流数据</h2><p>在H.264的语法中，有一个最基础的层，叫做Network Abstraction Layer, 简称为NAL。H.264流数据正是由一系列的NAL单元(NAL Unit, 简称NAUL)组成的。<br><img src="/images/qiniu/180108004954.png" alt=""><br>H264的码流由NALU单元组成,一个NALU可能包含有：</p>
 <ul>
-<li><p><strong>视频帧</strong><br>视频帧也就是视频片段，具体有 P帧, I帧，B帧<br><img src="http://ouazw12mz.bkt.clouddn.com/180108005022.png?imageslim" alt=""></p>
+<li><p><strong>视频帧</strong><br>视频帧也就是视频片段，具体有 P帧, I帧，B帧<br><img src="/images/qiniu/180108005022.png" alt=""></p>
 </li>
-<li><p><strong>H.264属性合集-FormatDesc(包含 SPS和PPS)</strong><br>流数据中，属性集合可能是这样的：<br><img src="http://ouazw12mz.bkt.clouddn.com/180108005131.png?imageslim" alt=""></p>
+<li><p><strong>H.264属性合集-FormatDesc(包含 SPS和PPS)</strong><br>流数据中，属性集合可能是这样的：<br><img src="/images/qiniu/180108005131.png" alt=""></p>
 </li>
 </ul>
-<h3 id="NALU-header"><a href="#NALU-header" class="headerlink" title="NALU header"></a>NALU header</h3><p>对于流数据来说，一个NAUL的Header中，可能是<code>0x00 00 01</code>或者是<code>0x00 00 00 01</code>作为开头(两者都有可能，下面以0x00 00 01作为例子)。0x00 00 01因此被称为开始码(Start code).<br><img src="http://ouazw12mz.bkt.clouddn.com/180108005156.png?imageslim" alt=""></p>
-<p>总结以上知识，我们知道H264的码流由NALU单元组成，NALU单元包含视频图像数据和H264的参数信息。具体来说参数信息包含SPS（Sequence Parameter Set）和PPS（Picture Parameter Set）.如下图显示了一个H.264码流结构：<br><img src="http://ouazw12mz.bkt.clouddn.com/180108005317.png?imageslim" alt=""></p>
+<h3 id="NALU-header"><a href="#NALU-header" class="headerlink" title="NALU header"></a>NALU header</h3><p>对于流数据来说，一个NAUL的Header中，可能是<code>0x00 00 01</code>或者是<code>0x00 00 00 01</code>作为开头(两者都有可能，下面以0x00 00 01作为例子)。0x00 00 01因此被称为开始码(Start code).<br><img src="/images/qiniu/180108005156.png" alt=""></p>
+<p>总结以上知识，我们知道H264的码流由NALU单元组成，NALU单元包含视频图像数据和H264的参数信息。具体来说参数信息包含SPS（Sequence Parameter Set）和PPS（Picture Parameter Set）.如下图显示了一个H.264码流结构：<br><img src="/images/qiniu/180108005317.png" alt=""></p>
 
       
     </div>
@@ -511,13 +511,13 @@
     <div id="QR" style="display: none;">
       
         <div id="wechat" style="display: inline-block">
-          <img id="wechat_qr" src="http://ouazw12mz.bkt.clouddn.com/IMG_4838.jpg" alt="Lucius WeChat Pay"/>
+          <img id="wechat_qr" src="https://bbucket-1257297990.cos.ap-guangzhou.myqcloud.com/IMG_4838.jpg" alt="Lucius WeChat Pay"/>
           <p>微信打赏</p>
         </div>
       
       
         <div id="alipay" style="display: inline-block">
-          <img id="alipay_qr" src="http://ouazw12mz.bkt.clouddn.com/171226222918.png?imageslim" alt="Lucius Alipay"/>
+          <img id="alipay_qr" src="https://bbucket-1257297990.cos.ap-guangzhou.myqcloud.com/171226222918.png" alt="Lucius Alipay"/>
           <p>支付宝打赏</p>
         </div>
       
@@ -731,7 +731,7 @@
         <div class="copyright" >
   
   &copy; 
-  <span itemprop="copyrightYear">2018</span>
+  <span itemprop="copyrightYear">2019</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>

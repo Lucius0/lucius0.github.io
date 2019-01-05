@@ -90,12 +90,12 @@
 <meta property="og:site_name" content="Lucius&#39;s Blog">
 <meta property="og:description" content="MSE 可以说W3C最重要的一个媒体源扩展标准。假如没有 MSE 的存在，那么什么hls.js，flv.js，dash.js都是空谈。因为 MSE，才使得媒体流能根据需要进行更精准地控制。这是w3c的文档Media Source Extensions™。 介绍早先的媒体流还是一直依赖Flash，通过rtmp或者http-flv等协议进行视频串流，再到 Flash 播放器。 然而有了MSE(medi">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="http://ouazw12mz.bkt.clouddn.com/180223211232.png?imageslim">
-<meta property="og:updated_time" content="2018-02-23T14:14:59.391Z">
+<meta property="og:image" content="https://lucius0.github.io/images/qiniu/180223211232.png">
+<meta property="og:updated_time" content="2019-01-05T03:46:41.763Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="音视频学习-MSE基础原理篇">
 <meta name="twitter:description" content="MSE 可以说W3C最重要的一个媒体源扩展标准。假如没有 MSE 的存在，那么什么hls.js，flv.js，dash.js都是空谈。因为 MSE，才使得媒体流能根据需要进行更精准地控制。这是w3c的文档Media Source Extensions™。 介绍早先的媒体流还是一直依赖Flash，通过rtmp或者http-flv等协议进行视频串流，再到 Flash 播放器。 然而有了MSE(medi">
-<meta name="twitter:image" content="http://ouazw12mz.bkt.clouddn.com/180223211232.png?imageslim">
+<meta name="twitter:image" content="https://lucius0.github.io/images/qiniu/180223211232.png">
 
 
 
@@ -389,7 +389,7 @@
         <p>MSE 可以说W3C最重要的一个媒体源扩展标准。假如没有 MSE 的存在，那么什么hls.js，flv.js，dash.js都是空谈。因为 MSE，才使得媒体流能根据需要进行更精准地控制。这是w3c的文档<a href="https://w3c.github.io/media-source/" target="_blank" rel="noopener">Media Source Extensions™</a>。</p>
 <h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><p>早先的媒体流还是一直依赖Flash，通过rtmp或者http-flv等协议进行视频串流，再到 Flash 播放器。</p>
 <p>然而有了MSE(media souce extensions)之后，情况就不一样了。我们可以引用<code>MediaSource</code>对象，你可以把它看成一个容器，一个引用多个<code>SourceBuffer</code>对象的容器。那么在上面我们就提到，MSE能够根据需要对媒体流进行更精准的控制，例如根据网络情况进行切码率不同的媒体流，或是根据内存占用情况释放之前播放过的媒体流等等。</p>
-<p>这是一张Media Source的结构图：<br><img src="http://ouazw12mz.bkt.clouddn.com/180223211232.png?imageslim" alt=""></p>
+<p>这是一张Media Source的结构图：<br><img src="/images/qiniu/180223211232.png" alt=""></p>
 <h2 id="MediaSource"><a href="#MediaSource" class="headerlink" title="MediaSource"></a>MediaSource</h2><p><code>Media Source Extensions API</code>的<code>MediaSource</code>接口表示<code>HTMLMediaElement</code>对象的媒体数据源。<code>MediaSource</code>对象可以附加到<code>HTMLMediaElement</code>在客户端中播放。</p>
 <h3 id="状态"><a href="#状态" class="headerlink" title="状态"></a>状态</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">enum ReadyState &#123;</span><br><span class="line">    <span class="comment">// 说明媒体源当前未附加到媒体元素(HTMLMediaElement)</span></span><br><span class="line">    <span class="string">"closed"</span>,</span><br><span class="line">    <span class="comment">// 媒体源已被媒体元素打开，并准备好将数据添加到sourceBuffers中的SourceBuffer对象</span></span><br><span class="line">    <span class="string">"open"</span>,</span><br><span class="line">    <span class="comment">// 媒体源仍然附加到一个媒体元素上，但endOfStream()已被调用</span></span><br><span class="line">    <span class="string">"ended"</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
 <h3 id="错误"><a href="#错误" class="headerlink" title="错误"></a>错误</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">enum EndOfStreamError &#123;</span><br><span class="line">    <span class="string">"network"</span>, <span class="comment">// 网络错误</span></span><br><span class="line">    <span class="string">"decode"</span> <span class="comment">// 解码错误</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
@@ -536,13 +536,13 @@
     <div id="QR" style="display: none;">
       
         <div id="wechat" style="display: inline-block">
-          <img id="wechat_qr" src="http://ouazw12mz.bkt.clouddn.com/IMG_4838.jpg" alt="Lucius WeChat Pay"/>
+          <img id="wechat_qr" src="https://bbucket-1257297990.cos.ap-guangzhou.myqcloud.com/IMG_4838.jpg" alt="Lucius WeChat Pay"/>
           <p>微信打赏</p>
         </div>
       
       
         <div id="alipay" style="display: inline-block">
-          <img id="alipay_qr" src="http://ouazw12mz.bkt.clouddn.com/171226222918.png?imageslim" alt="Lucius Alipay"/>
+          <img id="alipay_qr" src="https://bbucket-1257297990.cos.ap-guangzhou.myqcloud.com/171226222918.png" alt="Lucius Alipay"/>
           <p>支付宝打赏</p>
         </div>
       
@@ -756,7 +756,7 @@
         <div class="copyright" >
   
   &copy; 
-  <span itemprop="copyrightYear">2018</span>
+  <span itemprop="copyrightYear">2019</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>

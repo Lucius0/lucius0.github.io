@@ -90,15 +90,15 @@
 <meta property="og:site_name" content="Lucius&#39;s Blog">
 <meta property="og:description" content="什么是CICI(Continuous integration)，持续集成。即开发成员在工作时不断的集成工作分支到主分支。这样做不仅可以提供开发效率，还可以自动测试和构建工作，快速迭代的同时还可以及时发现错误，一举多得。 什么是CDCD(Continuous Deployment)，持续交付。简单的说就是频繁地将集成后的产品交付给质量团队或用户进行下一步的评审，通过了则到生产阶段。 GitLab C">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="http://ouazw12mz.bkt.clouddn.com/18712982379123.png">
-<meta property="og:image" content="http://ouazw12mz.bkt.clouddn.com/123823987231981-1.png">
-<meta property="og:image" content="http://ouazw12mz.bkt.clouddn.com/987128731219231-2.png">
-<meta property="og:image" content="http://ouazw12mz.bkt.clouddn.com/180720221541.png?imageslim">
-<meta property="og:updated_time" content="2018-07-20T14:16:56.691Z">
+<meta property="og:image" content="https://lucius0.github.io/images/qiniu/18712982379123.png">
+<meta property="og:image" content="https://lucius0.github.io/images/qiniu/123823987231981-1.png">
+<meta property="og:image" content="https://lucius0.github.io/images/qiniu/987128731219231-2.png">
+<meta property="og:image" content="https://lucius0.github.io/images/qiniu/180720221541.png">
+<meta property="og:updated_time" content="2019-01-05T03:48:12.386Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="GitLab CI &#x2F; CD 入门配置">
 <meta name="twitter:description" content="什么是CICI(Continuous integration)，持续集成。即开发成员在工作时不断的集成工作分支到主分支。这样做不仅可以提供开发效率，还可以自动测试和构建工作，快速迭代的同时还可以及时发现错误，一举多得。 什么是CDCD(Continuous Deployment)，持续交付。简单的说就是频繁地将集成后的产品交付给质量团队或用户进行下一步的评审，通过了则到生产阶段。 GitLab C">
-<meta name="twitter:image" content="http://ouazw12mz.bkt.clouddn.com/18712982379123.png">
+<meta name="twitter:image" content="https://lucius0.github.io/images/qiniu/18712982379123.png">
 
 
 
@@ -405,7 +405,7 @@
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; Please enter the gitlab-ci coordinator URL (e.g. https://gitlab.com )</span><br><span class="line">&gt;&gt;&gt; xxx-url</span><br><span class="line">&gt;&gt;&gt; Please enter the gitlab-ci token <span class="keyword">for</span> this runner</span><br><span class="line">&gt;&gt;&gt; xxx-token</span><br></pre></td></tr></table></figure>
 </li>
 </ol>
-<p>那么我们需要在项目中找到对应的信息。如下图中的4则对应xxx-url、5则对应xxx-token。<br><img src="http://ouazw12mz.bkt.clouddn.com/18712982379123.png" alt="1"><br>之后的步骤按照链接的执行，需要注意的是<strong>executor</strong>我们选<strong>shell</strong>。</p>
+<p>那么我们需要在项目中找到对应的信息。如下图中的4则对应xxx-url、5则对应xxx-token。<br><img src="/images/qiniu/18712982379123.png" alt="1"><br>之后的步骤按照链接的执行，需要注意的是<strong>executor</strong>我们选<strong>shell</strong>。</p>
 <ol>
 <li><p>启动服务</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; gitlab-runner install</span><br><span class="line">&gt;&gt;&gt; gitlab-runner start</span><br></pre></td></tr></table></figure>
@@ -421,14 +421,14 @@
 <h3 id="gitlab-ci-yml"><a href="#gitlab-ci-yml" class="headerlink" title=".gitlab-ci.yml"></a>.gitlab-ci.yml</h3><p>介绍完基础概念，那么就是我们项目中需要的文件<code>.gitlab-ci.yml</code>。<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">// 定义在每个job之前运行的命令</span><br><span class="line">before_script:</span><br><span class="line">  - yarn</span><br><span class="line"> </span><br><span class="line">// 定义构建阶段，stages</span><br><span class="line">stages:</span><br><span class="line">  - build</span><br><span class="line">  - test</span><br><span class="line">  - deploy</span><br><span class="line"> </span><br><span class="line">// job1</span><br><span class="line">lint:</span><br><span class="line">  stage: test</span><br><span class="line">  script:</span><br><span class="line">    - echo "Running lint"</span><br><span class="line">    - yarn lint</span><br><span class="line"> </span><br><span class="line">// job2</span><br><span class="line">deploy_staging:</span><br><span class="line">  stage: deploy</span><br><span class="line">  script:</span><br><span class="line">    - echo "Deploy to staging environment"</span><br><span class="line">    - yarn build:stag</span><br><span class="line">    - yarn pub:stag</span><br><span class="line">  // 定义git分支，并为其创建job。这里表示只有release分支才会执行该job</span><br><span class="line">  only:</span><br><span class="line">    - release</span><br></pre></td></tr></table></figure></p>
 <p>更多的可以查看<a href="https://fennay.github.io/gitlab-ci-cn/gitlab-ci-yaml.html" target="_blank" rel="noopener">gitlab-ci-yaml</a>。</p>
 <h3 id="补充"><a href="#补充" class="headerlink" title="补充"></a>补充</h3><p>1、在某些时候，我们的runner假如是在本地运行的时候，会针对项目做一些环境变量的处理，例如<code>CONFIG_ENV=UAT</code>、<code>CONFIG_ENV=DEV</code>分别表示两个不同的环境。那么我们也可以通过<code>.gitlab-cli.yml</code>的配置让runner在不同的环境变量下执行。<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">// 修改 job2</span><br><span class="line">deploy_dev:</span><br><span class="line">  stage: deploy</span><br><span class="line">  script:</span><br><span class="line">    - echo "Deploy to dev environment"</span><br><span class="line">    // @1 表示设置runner执行的环境变量xxx_key为$xxx_key，会下面说明。</span><br><span class="line">    - export xxx_key=$xxx_key</span><br><span class="line">    // 表示设置runner执行的环境变量CONFIG_ENV为DEV</span><br><span class="line">    - export CONFIG_ENV=DEV</span><br><span class="line">    - yarn build:dev</span><br><span class="line">    - yarn pub:dev</span><br><span class="line">  only:</span><br><span class="line">    - release</span><br></pre></td></tr></table></figure></p>
-<p>其中，xxx_key为下图中的4，$xxx_key为下图中的5。例如xxx_key = 123456<br><img src="http://ouazw12mz.bkt.clouddn.com/123823987231981-1.png" alt="1-1"></p>
+<p>其中，xxx_key为下图中的4，$xxx_key为下图中的5。例如xxx_key = 123456<br><img src="/images/qiniu/123823987231981-1.png" alt="1-1"></p>
 <p>2、在有些情况下，我们在runner执行任务时，会想npmjs拉去npm包，但是因为墙的问题，往往会因为超时而拉取失败，这时候我们可以通过<code>.gitlab-cli.yml</code>的配置来指定runner来执行。<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">// 修改 job2</span><br><span class="line">deploy_dev:</span><br><span class="line">  // 新增tags属性，表示指定tag为xxx的runner</span><br><span class="line">  tags:</span><br><span class="line">    - xxx</span><br></pre></td></tr></table></figure></p>
-<p>xxx在哪里可以找到呢？下图中的<code>inernal</code>，<code>k8s</code>，<code>shared</code>，<code>test</code>即为该runner的tag。<br><img src="http://ouazw12mz.bkt.clouddn.com/987128731219231-2.png" alt="1-2"></p>
+<p>xxx在哪里可以找到呢？下图中的<code>inernal</code>，<code>k8s</code>，<code>shared</code>，<code>test</code>即为该runner的tag。<br><img src="/images/qiniu/987128731219231-2.png" alt="1-2"></p>
 <p>3、在补充2中说到，假如要翻墙时我们可以设置指定的runner来执行我们的任务，当然我们也可以在环境变量中设置(不)代理环境的配置。<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">// 修改 job2</span><br><span class="line">deploy_dev:</span><br><span class="line">  // 新增环境代理(表示该job在执行runner时的环境下代理)</span><br><span class="line">  - export http_proxy=http://xx.xx.xx.xx:xxxx</span><br><span class="line">  - export https_proxy=http://xx.xx.xx.xx:xxxx</span><br><span class="line">  // 新增环境不代理(表示当ip或域名为以下变量时，不执行代理)</span><br><span class="line">  - export no_proxy=123.123.123.123:1234,noproxy.com</span><br></pre></td></tr></table></figure></p>
 <h2 id="Q-amp-A-持续更新"><a href="#Q-amp-A-持续更新" class="headerlink" title="Q &amp; A(持续更新)"></a>Q &amp; A(持续更新)</h2><p>Q：为什么<code>yarn: not found</code>？<br>A：镜像里面找不到yarn，可以通过配置image为其指定镜像。</p>
 <p>Q：<code>error An unexpected error occurred: &quot;https://registry.npmjs.org/xxx: ETIMEDOUT&quot;.</code><br>A：npm访问不了，得翻墙。（可以通过个人电脑运行specific runner亦或找运维配置一个shared runner），详情可以参考补充2。</p>
 <p>Q：一直重复<code>Waiting for pod xxx to be running, status is Pending...</code>。<br>A：有时候受网络的影响，可能会拉取失败。这时候先自己<strong>尝试多几次</strong>，假如再不行，再看👆的解决方案。</p>
-<p>Q：起了本地服务之后，在gitlab上运行时，一直<code>pending</code>状态并且处于<code>stuck</code>。如下图：<br><img src="http://ouazw12mz.bkt.clouddn.com/180720221541.png?imageslim" alt=""><br>A：假如你成功起了本地服务之后，提示无法找到runner，那么你可以给配置<code>.gitlab-ci.yml</code>添加你本地添加的tag</p>
+<p>Q：起了本地服务之后，在gitlab上运行时，一直<code>pending</code>状态并且处于<code>stuck</code>。如下图：<br><img src="/images/qiniu/180720221541.png" alt=""><br>A：假如你成功起了本地服务之后，提示无法找到runner，那么你可以给配置<code>.gitlab-ci.yml</code>添加你本地添加的tag</p>
 
       
     </div>
@@ -451,13 +451,13 @@
     <div id="QR" style="display: none;">
       
         <div id="wechat" style="display: inline-block">
-          <img id="wechat_qr" src="http://ouazw12mz.bkt.clouddn.com/IMG_4838.jpg" alt="Lucius WeChat Pay"/>
+          <img id="wechat_qr" src="https://bbucket-1257297990.cos.ap-guangzhou.myqcloud.com/IMG_4838.jpg" alt="Lucius WeChat Pay"/>
           <p>微信打赏</p>
         </div>
       
       
         <div id="alipay" style="display: inline-block">
-          <img id="alipay_qr" src="http://ouazw12mz.bkt.clouddn.com/171226222918.png?imageslim" alt="Lucius Alipay"/>
+          <img id="alipay_qr" src="https://bbucket-1257297990.cos.ap-guangzhou.myqcloud.com/171226222918.png" alt="Lucius Alipay"/>
           <p>支付宝打赏</p>
         </div>
       
@@ -671,7 +671,7 @@
         <div class="copyright" >
   
   &copy; 
-  <span itemprop="copyrightYear">2018</span>
+  <span itemprop="copyrightYear">2019</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>

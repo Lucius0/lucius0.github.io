@@ -90,13 +90,13 @@
 <meta property="og:site_name" content="Lucius&#39;s Blog">
 <meta property="og:description" content="在上一篇我们只是分析了fmp4的结构，也就是box的结构组成，但是还是需要进行remuxer才可以将flv转成fmp4。 Metadata在flv那边我们有提到parseAACAudioSpecificConfig、parseAVCDecoderConfigurationRecord，其实在那里会通过this._onTrackMetadata这个方法将对应的音视频的metadata传给mp4-re">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="http://ouazw12mz.bkt.clouddn.com/180127162635.png?imageslim">
-<meta property="og:image" content="http://ouazw12mz.bkt.clouddn.com/180127162849.png?imageslim">
-<meta property="og:updated_time" content="2018-01-27T08:35:13.606Z">
+<meta property="og:image" content="https://lucius0.github.io/images/180127162635.png">
+<meta property="og:image" content="https://lucius0.github.io/images/180127162849.png">
+<meta property="og:updated_time" content="2019-01-05T03:46:22.232Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="音视频学习-flvjs中FLV转FMP4简单概括">
 <meta name="twitter:description" content="在上一篇我们只是分析了fmp4的结构，也就是box的结构组成，但是还是需要进行remuxer才可以将flv转成fmp4。 Metadata在flv那边我们有提到parseAACAudioSpecificConfig、parseAVCDecoderConfigurationRecord，其实在那里会通过this._onTrackMetadata这个方法将对应的音视频的metadata传给mp4-re">
-<meta name="twitter:image" content="http://ouazw12mz.bkt.clouddn.com/180127162635.png?imageslim">
+<meta name="twitter:image" content="https://lucius0.github.io/images/180127162635.png">
 
 
 
@@ -399,7 +399,7 @@
 <p>生成  moof box。<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">-&gt; moof</span><br><span class="line">  -&gt; mfhd: sequence number</span><br><span class="line">  -&gt; traf</span><br><span class="line">    -&gt; tfhd: trackId</span><br><span class="line">    -&gt; tfdt: baseMediaDecodeTime，也就是一次 packets 的firstDts</span><br><span class="line">    -&gt; sdtp: isLeading，dependsOn，isDependedOn，hasRedundancy</span><br><span class="line">    -&gt; trun: sampleCount，offset，sample(duration，size，flags，cts)</span><br></pre></td></tr></table></figure></p>
 <p>生成完之后需要对这一次的 sample list 清空。<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">track.samples = [];</span><br><span class="line">track.length = <span class="number">0</span>;</span><br></pre></td></tr></table></figure></p>
 <p>最后将数据box合并，并将此次的数据派发出去。</p>
-<h3 id="Audio-Data"><a href="#Audio-Data" class="headerlink" title="Audio Data"></a>Audio Data</h3><p>Audio这里分为AAC跟MP3这两类音频解码格式。我们就针对AAC这一类来，MP3也是大同小异的，因为只有Firefox支持<code>&#39;audio/mp4,codecs=&quot;mp3&quot;&#39;</code>。<br><code>calculate dtsCorrection</code> 这部分就不多讲了。跟上面 Video Data 道理一样。但是这里作者做了一个兼容处理，就是为了解决 Edge seek 后卡住的 bug。作者这一块是这样解释的：<br><img src="http://ouazw12mz.bkt.clouddn.com/180127162635.png?imageslim" alt=""><br>这里注意一下：<code>videoSegment.beginDts &lt; firstSampleDts</code>，假如该空音频是在第一帧，那么就没必要补帧了(AAC.getSilentFrame)，补帧的道理也是为了使其数据连续性。<code>Correct dts for each sample</code>这一步跟Video的处理差不多，只是多了一个<code>large timestamp gap</code>的处理，这个会产生音视频不同步。剩余的后面不讲。因为看注释以及跟Video data差不多。</p>
+<h3 id="Audio-Data"><a href="#Audio-Data" class="headerlink" title="Audio Data"></a>Audio Data</h3><p>Audio这里分为AAC跟MP3这两类音频解码格式。我们就针对AAC这一类来，MP3也是大同小异的，因为只有Firefox支持<code>&#39;audio/mp4,codecs=&quot;mp3&quot;&#39;</code>。<br><code>calculate dtsCorrection</code> 这部分就不多讲了。跟上面 Video Data 道理一样。但是这里作者做了一个兼容处理，就是为了解决 Edge seek 后卡住的 bug。作者这一块是这样解释的：<br><img src="/images/180127162635.png" alt=""><br>这里注意一下：<code>videoSegment.beginDts &lt; firstSampleDts</code>，假如该空音频是在第一帧，那么就没必要补帧了(AAC.getSilentFrame)，补帧的道理也是为了使其数据连续性。<code>Correct dts for each sample</code>这一步跟Video的处理差不多，只是多了一个<code>large timestamp gap</code>的处理，这个会产生音视频不同步。剩余的后面不讲。因为看注释以及跟Video data差不多。</p>
 <h2 id="音视频同步原理"><a href="#音视频同步原理" class="headerlink" title="音视频同步原理"></a>音视频同步原理</h2><p>最后讲一下音视频同步的原理。<strong>每一帧视频或音频都有一个duration</strong>，认识这一点很重要。然后<strong>采样率(sample rate)</strong>指的是每秒钟对音频信号的采样次数，采样频率越高声音还原度越高，声音更加自然。单位是赫兹 Hz。这里我们拿44.1kHz来讲，实际还有其他的，具体可以看<a href="https://lucius0.github.io/2017/12/27/archivers/media-study-03/">FLV解析-AudioTag(1)</a>。</p>
 <p>视频帧播放时间：</p>
 <ul>
@@ -411,7 +411,7 @@
 <li>MP3：<code>duration = 1152 / sample_rate</code>，MP3音频一帧跟AAC不同，只有1152个采样样本，同样假设 sample rate 为 44.1kHz，那么 duration 为 26.12ms。</li>
 </ul>
 <p>那么理论下的音视频同步如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">--------------------------------------------------------------</span><br><span class="line">时间轴：| 0 | 23.22 | 40 | 46.44 | 69.66 | 80 | ... | 116.1 |</span><br><span class="line">--------------------------------------------------------------</span><br><span class="line">音  频：| 0 | 23.22 |    | 46.44 | 69.66 |    | ... | 116.1 | </span><br><span class="line">--------------------------------------------------------------</span><br><span class="line">视  频：| 0 |       | 40 |               | 80 | ... |       |</span><br><span class="line">--------------------------------------------------------------</span><br></pre></td></tr></table></figure></p>
-<p>可以看得出，音视频的排列是按照<strong>起始时间戳</strong>从小到大来排序的，当然这部分可以允许些许波动，但也要注意一旦出现过大就会发现音视频不同步。例如：<br><img src="http://ouazw12mz.bkt.clouddn.com/180127162849.png?imageslim" alt=""><br>当然这是理论上，还需要考虑到其他的影响因素，例如硬件，网速之类的情况。</p>
+<p>可以看得出，音视频的排列是按照<strong>起始时间戳</strong>从小到大来排序的，当然这部分可以允许些许波动，但也要注意一旦出现过大就会发现音视频不同步。例如：<br><img src="/images/180127162849.png" alt=""><br>当然这是理论上，还需要考虑到其他的影响因素，例如硬件，网速之类的情况。</p>
 
       
     </div>
@@ -434,13 +434,13 @@
     <div id="QR" style="display: none;">
       
         <div id="wechat" style="display: inline-block">
-          <img id="wechat_qr" src="http://ouazw12mz.bkt.clouddn.com/IMG_4838.jpg" alt="Lucius WeChat Pay"/>
+          <img id="wechat_qr" src="https://bbucket-1257297990.cos.ap-guangzhou.myqcloud.com/IMG_4838.jpg" alt="Lucius WeChat Pay"/>
           <p>微信打赏</p>
         </div>
       
       
         <div id="alipay" style="display: inline-block">
-          <img id="alipay_qr" src="http://ouazw12mz.bkt.clouddn.com/171226222918.png?imageslim" alt="Lucius Alipay"/>
+          <img id="alipay_qr" src="https://bbucket-1257297990.cos.ap-guangzhou.myqcloud.com/171226222918.png" alt="Lucius Alipay"/>
           <p>支付宝打赏</p>
         </div>
       
@@ -654,7 +654,7 @@
         <div class="copyright" >
   
   &copy; 
-  <span itemprop="copyrightYear">2018</span>
+  <span itemprop="copyrightYear">2019</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>

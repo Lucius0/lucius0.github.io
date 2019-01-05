@@ -90,12 +90,12 @@
 <meta property="og:site_name" content="Lucius&#39;s Blog">
 <meta property="og:description" content="初次学习有关音视频这一块的开发，主要是基于 flv.js 的学习。这一块的知识概念实在是太多太深了，所以本人是先在本地做记录，后面会整理慢慢地上传与各位分享，假如有地方说错，请勘误。谢谢指点。 什么是FLV？ Flash Video（简称FLV），是一种网络视频格式，用作串流媒体格式，它的出现有效地解决了视频文件导入Flash后，使导出的SWF文件体积庞大，不能在网络上有效使用等缺点。一般FLV文">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="http://ouazw12mz.bkt.clouddn.com/171225224159.png?imageslim">
-<meta property="og:updated_time" content="2018-01-12T05:23:46.730Z">
+<meta property="og:image" content="https://lucius0.github.io/images/qiniu/171225224159.png">
+<meta property="og:updated_time" content="2019-01-05T03:40:39.874Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="音视频学习-flv初认识">
 <meta name="twitter:description" content="初次学习有关音视频这一块的开发，主要是基于 flv.js 的学习。这一块的知识概念实在是太多太深了，所以本人是先在本地做记录，后面会整理慢慢地上传与各位分享，假如有地方说错，请勘误。谢谢指点。 什么是FLV？ Flash Video（简称FLV），是一种网络视频格式，用作串流媒体格式，它的出现有效地解决了视频文件导入Flash后，使导出的SWF文件体积庞大，不能在网络上有效使用等缺点。一般FLV文">
-<meta name="twitter:image" content="http://ouazw12mz.bkt.clouddn.com/171225224159.png?imageslim">
+<meta name="twitter:image" content="https://lucius0.github.io/images/qiniu/171225224159.png">
 
 
 
@@ -392,7 +392,7 @@
 </blockquote>
 <h2 id="FLV的分类"><a href="#FLV的分类" class="headerlink" title="FLV的分类"></a>FLV的分类</h2><p>除了 flv（H264视频格式、AAC音频格式），还有 f4v，主要是为了突破 flv 的限制。 f4v 支持 H.264 视频格式之外，还支持 GIF、PNG 以及 JPEG；音频格式则有 AAC 以及 MP3 。<br><strong>PS：</strong> Adobe的规范中，UB 表示Unsigned Bit，UB(2)表示2个bit，UI 表示Unsigned Integer，UI24 表示24位整数，也就是3个Byte。</p>
 <h2 id="FLV的结构"><a href="#FLV的结构" class="headerlink" title="FLV的结构"></a>FLV的结构</h2><p>先看一下flv的一小片段，这是一份二进制文件。<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">464</span>c <span class="number">5601</span> <span class="number">0500</span> <span class="number">0000</span> <span class="number">0900</span> <span class="number">0000</span> <span class="number">0012</span> <span class="number">0000</span></span><br><span class="line"><span class="number">3</span>f00 <span class="number">0000</span> <span class="number">0000</span> <span class="number">0000</span> <span class="number">0200</span> <span class="number">0</span>a6f <span class="number">6e4</span>d <span class="number">6574</span></span><br><span class="line"><span class="number">6144</span> <span class="number">6174</span> <span class="number">6108</span> <span class="number">0000</span> <span class="number">0002</span> <span class="number">0008</span> <span class="number">6475</span> <span class="number">7261</span></span><br><span class="line"><span class="number">7469</span> <span class="number">6</span>f6e <span class="number">0040</span> <span class="number">27</span>c8 b439 <span class="number">5810</span> <span class="number">6200</span> <span class="number">0</span>c76</span><br><span class="line"><span class="number">6964</span> <span class="number">656</span>f <span class="number">636</span>f <span class="number">6465</span> <span class="number">6369</span> <span class="number">6400</span> <span class="number">4000</span> <span class="number">0000</span></span><br><span class="line"><span class="number">0000</span> <span class="number">0000</span> <span class="number">0000</span> <span class="number">0900</span> <span class="number">0000</span> <span class="number">4</span>a08 <span class="number">0000</span> <span class="number">0400</span></span><br><span class="line"><span class="number">0000</span> <span class="number">0000</span> <span class="number">0000</span> af00 <span class="number">1208</span> <span class="number">0000</span> <span class="number">000</span>f <span class="number">0900</span></span><br><span class="line"><span class="number">0043</span> <span class="number">0000</span> <span class="number">0000</span> <span class="number">0000</span> <span class="number">0017</span> <span class="number">0000</span> <span class="number">0000</span> <span class="number">0142</span></span><br><span class="line"><span class="number">001</span>f <span class="number">0301</span> <span class="number">002</span>f <span class="number">6742</span> <span class="number">801</span>f <span class="number">9652</span> <span class="number">0283</span> f602</span><br><span class="line">a100 <span class="number">0003</span> <span class="number">0001</span> <span class="number">0000</span> <span class="number">0300</span> <span class="number">32e0</span> <span class="number">6003</span> <span class="number">0</span>d40</span><br><span class="line"><span class="number">0046</span> <span class="number">30</span>ff <span class="number">18e3</span> <span class="number">0300</span> <span class="number">186</span>a <span class="number">0002</span> <span class="number">3187</span> f8c7</span><br><span class="line"><span class="number">0</span>ed0 a152 <span class="number">4001</span> <span class="number">0004</span> <span class="number">68</span>cb <span class="number">8</span>d48 <span class="number">0000</span> <span class="number">004</span>e</span><br><span class="line"><span class="number">0900</span> <span class="number">0</span>d1c <span class="number">0000</span> <span class="number">0000</span> <span class="number">0000</span> <span class="number">0017</span> <span class="number">0100</span> <span class="number">029</span>d</span><br><span class="line"><span class="number">0000</span> <span class="number">0</span>d13 <span class="number">6588</span> <span class="number">8040</span> <span class="number">0</span>db1 <span class="number">185</span>c <span class="number">0008</span> <span class="number">2</span>d1f</span><br><span class="line"><span class="number">7893</span> de24 f789 f785 c2c4 f8a6 d3e2 <span class="number">43</span>fa</span><br><span class="line">f177 <span class="number">85</span>ea f377 a930 f991 ea7c <span class="number">4</span>f2a f0b9</span><br></pre></td></tr></table></figure></p>
-<p>它的结构图是这样的。<br><img src="http://ouazw12mz.bkt.clouddn.com/171225224159.png?imageslim" alt=""></p>
+<p>它的结构图是这样的。<br><img src="/images/qiniu/171225224159.png" alt=""></p>
 <p>FLV Header自然时不用多说，上面的结构图都一目了然。重点讲下Flv Body下的Tag的三种类型。</p>
 <h3 id="Script-Tag"><a href="#Script-Tag" class="headerlink" title="Script Tag"></a>Script Tag</h3><p><strong>KEY</strong><br>1、第1个字节为AMF类型，一般有以下的类型：</p>
 <ul>
@@ -504,13 +504,13 @@
     <div id="QR" style="display: none;">
       
         <div id="wechat" style="display: inline-block">
-          <img id="wechat_qr" src="http://ouazw12mz.bkt.clouddn.com/IMG_4838.jpg" alt="Lucius WeChat Pay"/>
+          <img id="wechat_qr" src="https://bbucket-1257297990.cos.ap-guangzhou.myqcloud.com/IMG_4838.jpg" alt="Lucius WeChat Pay"/>
           <p>微信打赏</p>
         </div>
       
       
         <div id="alipay" style="display: inline-block">
-          <img id="alipay_qr" src="http://ouazw12mz.bkt.clouddn.com/171226222918.png?imageslim" alt="Lucius Alipay"/>
+          <img id="alipay_qr" src="https://bbucket-1257297990.cos.ap-guangzhou.myqcloud.com/171226222918.png" alt="Lucius Alipay"/>
           <p>支付宝打赏</p>
         </div>
       
@@ -724,7 +724,7 @@
         <div class="copyright" >
   
   &copy; 
-  <span itemprop="copyrightYear">2018</span>
+  <span itemprop="copyrightYear">2019</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>

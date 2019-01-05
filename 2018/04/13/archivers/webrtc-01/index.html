@@ -90,17 +90,17 @@
 <meta property="og:site_name" content="Lucius&#39;s Blog">
 <meta property="og:description" content="什么是WebRTCWebRTC(Web Real-Time Communication)，顾名思义，是基于Web技术上实现实时通信技术。例如QQ视频，Facetime，但不需要在浏览器上安装任何的插件，根据其标准以及HTML5标签和JavaScript语法就可以实现这些功能。 WebRTC最大的特点有两点：浏览器与浏览器之间的对等连接，即一个浏览器通过标准协议与另一个浏览器进行实时通信；另一个特点">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="http://ouazw12mz.bkt.clouddn.com/180413121213.png?imageslim">
-<meta property="og:image" content="http://ouazw12mz.bkt.clouddn.com/180413121314.png?imageslim">
-<meta property="og:image" content="http://ouazw12mz.bkt.clouddn.com/180413121430.png?imageslim">
-<meta property="og:image" content="http://ouazw12mz.bkt.clouddn.com/180413121633.png?imageslim">
-<meta property="og:image" content="http://ouazw12mz.bkt.clouddn.com/180413121930.png?imageslim">
-<meta property="og:image" content="http://ouazw12mz.bkt.clouddn.com/180413122141.png?imageslim">
-<meta property="og:updated_time" content="2018-04-13T06:19:08.492Z">
+<meta property="og:image" content="https://lucius0.github.io/images/qiniu/180413121213.png">
+<meta property="og:image" content="https://lucius0.github.io/images/qiniu/180413121314.png">
+<meta property="og:image" content="https://lucius0.github.io/images/qiniu/180413121430.png">
+<meta property="og:image" content="https://lucius0.github.io/images/qiniu/180413121633.png">
+<meta property="og:image" content="https://lucius0.github.io/images/qiniu/180413121930.png">
+<meta property="og:image" content="https://lucius0.github.io/images/qiniu/180413122141.png">
+<meta property="og:updated_time" content="2019-01-05T03:47:13.221Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="WebRTC-初探">
 <meta name="twitter:description" content="什么是WebRTCWebRTC(Web Real-Time Communication)，顾名思义，是基于Web技术上实现实时通信技术。例如QQ视频，Facetime，但不需要在浏览器上安装任何的插件，根据其标准以及HTML5标签和JavaScript语法就可以实现这些功能。 WebRTC最大的特点有两点：浏览器与浏览器之间的对等连接，即一个浏览器通过标准协议与另一个浏览器进行实时通信；另一个特点">
-<meta name="twitter:image" content="http://ouazw12mz.bkt.clouddn.com/180413121213.png?imageslim">
+<meta name="twitter:image" content="https://lucius0.github.io/images/qiniu/180413121213.png">
 
 
 
@@ -394,12 +394,12 @@
         <h2 id="什么是WebRTC"><a href="#什么是WebRTC" class="headerlink" title="什么是WebRTC"></a>什么是WebRTC</h2><p>WebRTC(Web Real-Time Communication)，顾名思义，是基于Web技术上实现实时通信技术。例如QQ视频，Facetime，但不需要在浏览器上安装任何的插件，根据其标准以及HTML5标签和JavaScript语法就可以实现这些功能。</p>
 <p>WebRTC最大的特点有两点：浏览器与浏览器之间的对等连接，即一个浏览器通过标准协议与另一个浏览器进行实时通信；另一个特点是WebRTC提供了信令服务器，该服务器在浏览器和对等连接另一端之间提供信令通道，关于这一点下面会讲到。目前是1.0版本，之后可能会有更多的特性。</p>
 <p>一个最简单的WebRTC结构，但实际上情况比这个复杂更多，例如多个浏览器互相建立对等连接的对方会话。</p>
-<p><img src="http://ouazw12mz.bkt.clouddn.com/180413121213.png?imageslim" alt=""></p>
+<p><img src="/images/qiniu/180413121213.png" alt=""></p>
 <h2 id="如何使用WebRTC"><a href="#如何使用WebRTC" class="headerlink" title="如何使用WebRTC"></a>如何使用WebRTC</h2><p>建立一个简单的WebRTC会话，只需要以下四个步骤：<br>1）获取本地媒体。<code>window.navigator.getUserMedia</code>，获取单个本地<code>MediaStream</code>；<br>2）在浏览器和对等端(其他浏览器)建立连接，简单来说就是不通过服务器通信，而是浏览器与浏览器之间的媒体连接。<code>new RTCPeerConnection(c)</code>，简单的说明下c为ICE打洞通过NAT设备和防火墙需要的配置信息；<br>3）将媒体和数据通道关联至此连接，<code>new RTCSessionDescription</code>；<br>4）交换会话描述；<br>5）关闭连接。<br>结构图如以下左边图，若添加了信令通道，则如右边图。</p>
-<p><img src="http://ouazw12mz.bkt.clouddn.com/180413121314.png?imageslim" alt=""></p>
+<p><img src="/images/qiniu/180413121314.png" alt=""></p>
 <p>这里简单说下3）跟4）。当建立完连接之后，本地以及远程都会通过<code>RTCPeerConnection</code>交换<code>RTCSessionDescription</code>，而<code>RTCSessionDescription</code>的意义是为了两端之间协商如何建立媒体信息，例如编解码器。交换完毕之后，即可建立媒体或数据会话。此时，两个浏览器开始打洞(穿透NAT设备和防火墙)。打洞完毕之后，即可开始协商<code>RTCSessionDescription</code>交换的信息。为了确保安全，交换密钥。最后开始媒体或数据通话。</p>
 <p>WebRTC的体系结构如下，有必要提醒的是，浏览器A发起的1、2和浏览器B发起的3、4是不排先后的。而且实际上的体系结构是根据需求改变的，而并非以下图的一成不变。</p>
-<p><img src="http://ouazw12mz.bkt.clouddn.com/180413121430.png?imageslim" alt=""></p>
+<p><img src="/images/qiniu/180413121430.png" alt=""></p>
 <ol>
 <li>浏览器A向服务器请求网页；</li>
 <li>服务器返回携带WebRTC应用的网页给浏览器A；</li>
@@ -413,10 +413,10 @@
 <li>打完洞之后，就开始协商密钥以确保之后的会话安全；</li>
 <li>两端开始互相传输视频，语音以及数据。</li>
 </ol>
-<h2 id="目前兼容情况-2018-04"><a href="#目前兼容情况-2018-04" class="headerlink" title="目前兼容情况(2018-04)"></a>目前兼容情况(2018-04)</h2><p><img src="http://ouazw12mz.bkt.clouddn.com/180413121633.png?imageslim" alt=""></p>
+<h2 id="目前兼容情况-2018-04"><a href="#目前兼容情况-2018-04" class="headerlink" title="目前兼容情况(2018-04)"></a>目前兼容情况(2018-04)</h2><p><img src="/images/qiniu/180413121633.png" alt=""></p>
 <h2 id="本地媒体"><a href="#本地媒体" class="headerlink" title="本地媒体"></a>本地媒体</h2><p>MediaStreamTrack，是WebRTC的基本单位，可以是自源的原始媒体，也可以是浏览器转换过的。例如，MediaStreamTrack可以是摄像头以高分辨率录制的低采样率版本。MediaStreamTrack中的readyState有<code>new、live、ended</code>，可通过<code>enabled=false</code>禁用。而MediaStream是MediaStreamTrack的集合，目前通过<code>window.navigator.getUserMedia</code>获取的或使用对等连接接收的流，未来说不定还有其他的获取方式。<a href="https://developer.mozilla.org/en-US/docs/Web/API/MediaStreamTrack" target="_blank" rel="noopener">MediaStreamTrack - Web APIs | MDN</a></p>
 <p>下面有简单的代码示例下如何获取本地媒体。<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">navigator.getUserMedia(&#123;<span class="string">'audio'</span>: <span class="literal">true</span>, <span class="string">'video'</span>: <span class="literal">true</span>&#125;, gotUserMedia, didntGetUserMedia);</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">didntGetUserMedia</span>(<span class="params">s</span>) </span>&#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">gotUserMedia</span>(<span class="params">s</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> videoEle = <span class="built_in">document</span>.getElementById(<span class="string">'videoEle'</span>);</span><br><span class="line">  videoEle.srcObject = s; <span class="comment">// 目前还无法使用Blob</span></span><br><span class="line">  <span class="built_in">console</span>.log(s.getVideoTracks(), s.getAudioTracks());</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 约束，是指浏览器会将媒体流尽可能的满足约束的条件，如宽高，比例，帧率等约束条件。</span></span><br><span class="line">  <span class="keyword">var</span> constraints = &#123;</span><br><span class="line">    width: &#123;<span class="attr">min</span>: <span class="number">640</span>, <span class="attr">ideal</span>: <span class="number">1280</span>&#125;,</span><br><span class="line">    height: &#123;<span class="attr">min</span>: <span class="number">480</span>, <span class="attr">ideal</span>: <span class="number">720</span>&#125;,</span><br><span class="line">    advanced: [</span><br><span class="line">      &#123;<span class="attr">width</span>: <span class="number">1920</span>, <span class="attr">height</span>: <span class="number">1280</span>&#125;,</span><br><span class="line">      &#123;<span class="attr">aspectRatio</span>: <span class="number">1.333</span>&#125;</span><br><span class="line">    ]</span><br><span class="line">  &#125;;</span><br><span class="line">  <span class="keyword">var</span> t = (s.getVideoTracks())[<span class="number">0</span>];</span><br><span class="line">    t.applyConstraints(constraints).then(<span class="function">(<span class="params">v</span>) =&gt;</span> &#123;</span><br><span class="line">      <span class="comment">// t.getSettings：返回所有设定的约束值</span></span><br><span class="line">      <span class="comment">// t.getConstraints：返回当前约束的值</span></span><br><span class="line">      <span class="built_in">console</span>.log(t.getSettings(), t.getConstraints());</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>而<code>s.getTracks()</code>的信息如下图。<br><img src="http://ouazw12mz.bkt.clouddn.com/180413121930.png?imageslim" alt=""></p>
+<p>而<code>s.getTracks()</code>的信息如下图。<br><img src="/images/qiniu/180413121930.png" alt=""></p>
 <p>通过以上代码可以看出<code>gotUserMedia</code>可以正常的返回音视频轨道，但是还无法正常的播放。</p>
 <h2 id="信令-signaling"><a href="#信令-signaling" class="headerlink" title="信令(signaling)"></a>信令(signaling)</h2><p>其作用主要体现以下几点：</p>
 <ul>
@@ -428,7 +428,7 @@
 <h3 id="媒体协商"><a href="#媒体协商" class="headerlink" title="媒体协商"></a>媒体协商</h3><p>因为必备，所以来简单说明下。这一步主要的工作是在参与对等连接的两个浏览器之间交换SDP(Session Description Protocol)对象中包含的信息，例如音视频数据、编解码器以及有关的带宽信息等。此外还用于交换<strong>候选地址</strong>，便于ICE打洞。<strong>候选地址</strong>表示浏览器可从中接收潜在的媒体数据包的IP地址和UDP端口。另外还必须在信令通道交换<strong>密钥</strong>。只有交换完候选地址才能开始ICE打洞，之后才能建立对等连接。</p>
 <h3 id="信令传输"><a href="#信令传输" class="headerlink" title="信令传输"></a>信令传输</h3><p>常见的信令传输有：HTTP轮询、WebSocket和数据通道。由于前两种比较常见，我们就只说说数据通道的原理。</p>
 <p>在最初建立数据通道时，是无法传输WebRTC信令的，因为数据通道也需要信令才能建立，所以一开始，是通过HTTP或者WebSocket来传输最开始的信令的。当两个浏览器之间建立数据通道之后，它会提供直接的低延迟连接，这时候就可以处理来往的信令了。</p>
-<p><img src="http://ouazw12mz.bkt.clouddn.com/180413122141.png?imageslim" alt=""></p>
+<p><img src="/images/qiniu/180413122141.png" alt=""></p>
 <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 伪代码</span></span><br><span class="line">funciton createSignalingChannel(msgHandler) &#123;</span><br><span class="line">  <span class="keyword">var</span> socket = <span class="keyword">new</span> WebSocket(<span class="string">'wss://192.168.0.1:49152/'</span>);</span><br><span class="line">  socket.addEventListener(<span class="string">'message'</span>, msgHandler, <span class="literal">false</span>);</span><br><span class="line">  <span class="keyword">return</span> &#123;<span class="string">'send'</span>: socket.send&#125;;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 打开WebSocket</span></span><br><span class="line">signalingChannel = createSignalingChannel(onMessage);</span><br><span class="line"><span class="comment">// 通过WebSocket发送消息</span></span><br><span class="line">signalingChannel.send(message);</span><br><span class="line"><span class="comment">// 处理通过WebSocket传入的消息</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">onMessage</span>(<span class="params">msg</span>) </span>&#123; <span class="comment">//... &#125;</span></span><br></pre></td></tr></table></figure>
 <h2 id="对等媒体"><a href="#对等媒体" class="headerlink" title="对等媒体"></a>对等媒体</h2><p>对等媒体，指的就是两个浏览器之间能够直接建立视频、音频和数据连接，能够节约带宽。但必须采用特殊的协议，如STUN服务器和TURN服务器。不然会受到NAT和防火墙的拦截。</p>
 <h3 id="对等媒体和网络地址转换-NAT"><a href="#对等媒体和网络地址转换-NAT" class="headerlink" title="对等媒体和网络地址转换(NAT)"></a>对等媒体和网络地址转换(NAT)</h3><p>所谓NAT，简单来说就是将私有地址转换成公有地址的一种方式，例如内网IP:内网端口 -&gt; 外网IP:外网端口。常见设备如路由器。所以说，每个处于NAT的网络都是独立的，网络与网络之间的访问都是通过NAT来访问的。</p>
@@ -472,13 +472,13 @@
     <div id="QR" style="display: none;">
       
         <div id="wechat" style="display: inline-block">
-          <img id="wechat_qr" src="http://ouazw12mz.bkt.clouddn.com/IMG_4838.jpg" alt="Lucius WeChat Pay"/>
+          <img id="wechat_qr" src="https://bbucket-1257297990.cos.ap-guangzhou.myqcloud.com/IMG_4838.jpg" alt="Lucius WeChat Pay"/>
           <p>微信打赏</p>
         </div>
       
       
         <div id="alipay" style="display: inline-block">
-          <img id="alipay_qr" src="http://ouazw12mz.bkt.clouddn.com/171226222918.png?imageslim" alt="Lucius Alipay"/>
+          <img id="alipay_qr" src="https://bbucket-1257297990.cos.ap-guangzhou.myqcloud.com/171226222918.png" alt="Lucius Alipay"/>
           <p>支付宝打赏</p>
         </div>
       
@@ -694,7 +694,7 @@
         <div class="copyright" >
   
   &copy; 
-  <span itemprop="copyrightYear">2018</span>
+  <span itemprop="copyrightYear">2019</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>

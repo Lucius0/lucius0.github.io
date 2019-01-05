@@ -26,7 +26,7 @@ let soundType = (soundSpec & 1); // 第8位，音频类型
 ```
 
 这里我产生疑问了。flv不是只支持5500, 11025, 22050, 44100的采样率吗？为什么作者还多加了一个48000？ 这里可以查到采样率的信息[video_file_format_spec_v10](https://www.adobe.com/content/dam/acom/en/devnet/flv/video_file_format_spec_v10.pdf)，@1。有知道的胖友麻烦告知一下，谢谢。
-![](http://ouazw12mz.bkt.clouddn.com/171227220536.png?imageslim)
+![](/images/qiniu/171227220536.png)
 
 ## AAC
 
@@ -34,7 +34,7 @@ let soundType = (soundSpec & 1); // 第8位，音频类型
 > AAC是新一代的音频有损压缩技术，它通过一些附加的编码技术（比如PS,SBR等），衍生出了LC-AAC,HE-AAC,HE-AACv2三种主要的编码，LC-AAC就是比较传统的AAC。
 
 AAC即为上文提到的`soundFormat`为0xA的音频格式，而AACAudioData是在Flash Player 9以上支持的。
-![](http://ouazw12mz.bkt.clouddn.com/171227220925.png?imageslim)
+![](/images/qiniu/171227220925.png)
 代码如下：
 ```js
 // 减去 soundSpec
@@ -58,7 +58,7 @@ parseAACAudioSpecificConfig(arrayBuffer, dataOffset + 1, dataSize - 1);
 ```
 
 关于Audio Specific Config，可以看[ISO 14496-3](http://read.pudn.com/downloads98/doc/comm/401153/14496/ISO_IEC_14496-3%20Part%203%20Audio/C036083E_SUB1.PDF)，也可以在ffmpeg中找到对应的解析函数，`ff_mpeg4audio_get_config()`
-![](http://ouazw12mz.bkt.clouddn.com/171227221451.png?imageslim)
+![](/images/qiniu/171227221451.png)
 Audio Object Types和Sampling Frequency Index在[MPEG-4_Audio](https://wiki.multimedia.cx/index.php?title=MPEG-4_Audio)文章中有详细描述。
 
 ### Audio Object Types
@@ -149,7 +149,7 @@ channelConfig = (array[1] & 0x78) >>> 3;
 meta.refSampleDuration = 1024 / meta.audioSampleRate * meta.timescale
 ```
 可以参考下图：
-![](http://ouazw12mz.bkt.clouddn.com/171227222007.png?imageslim)
+![](/images/qiniu/171227222007.png)
 
 ## 参考资料
 - [video_file_format_spec_v10](https://www.adobe.com/content/dam/acom/en/devnet/flv/video_file_format_spec_v10.pdf)

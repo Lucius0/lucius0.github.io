@@ -19,10 +19,10 @@ MP4是由一个个的Box组成的，也就是可以说Box是MP4的最小单元�
 
 ## BOX
 以下是fmp4跟mp4的结构图，可以很清楚的看到两者的区别。
-![](http://ouazw12mz.bkt.clouddn.com/180114225134.png?imageslim)
+![](/images/qiniu/180114225134.png)
 
 从官方文档看，可以知道，除了Box，还有一种Full Box。Box的结构图如下：
-![](http://ouazw12mz.bkt.clouddn.com/180114225303.png?imageslim)
+![](/images/qiniu/180114225303.png)
 
 Box的官方示例代码如下：
 ```c++
@@ -436,11 +436,11 @@ Decoding Time to Sample Box。存储了sample的duration，描述了sample时序
 D(n+1) = D(n) + STTS(n)
 ```
 其中，STTS(n)是sample n的时间间隔，包含在表格中；D(n)是sample n的显示时间。
-![](http://ouazw12mz.bkt.clouddn.com/180114231843.png?imageslim)
+![](/images/qiniu/180114231843.png)
 因此有DT(2) = DT(1) + STTS(1)，其中STTS就是Decode delta(1)=10。那么sample_count跟sample_delta的关系就是如下表：
-![](http://ouazw12mz.bkt.clouddn.com/180114231904.png?imageslim)
+![](/images/qiniu/180114231904.png)
 那么entry_count是什么？假如这个媒体流存在9个samples，这里的entry和chunk不是对应的。sample 4、5和6在同一个chunk中，但是，由于他们的时长不一样，sample 4的时长为3，而sample 5和6的时长为1，因此，通过不同的entry来描述。
-![](http://ouazw12mz.bkt.clouddn.com/180114231922.png?imageslim)
+![](/images/qiniu/180114231922.png)
 ```c++
 // 官方文档代码
 aligned(8) class TimeToSampleBox
@@ -459,7 +459,7 @@ Composition Time to Sample Box。每一个视频sample都有一个解码顺序�
   1. 如果解码顺序和显示顺序是一致的，CTTS就不会出现。STTS既提供了解码顺序也提供了显示顺序，并能够计算出每个sample的开始时间和结束时间。
   2. 如果解码顺序和显示顺序不一致，那么STTS既提供解码顺序，CTTS则通过差值的形式来提供显示时间。
 依旧看**Table 2**，那么sample_count跟sample_offset的关系如下：
-![](http://ouazw12mz.bkt.clouddn.com/180114232102.png?imageslim)
+![](/images/qiniu/180114232102.png)
 ```c++
 // 官方文档代码
 aligned(8) class CompositionOffsetBox extends FullBox(‘ctts’, version = 0, 0) { 
@@ -481,7 +481,7 @@ aligned(8) class CompositionOffsetBox extends FullBox(‘ctts’, version = 0, 0
 
 ### MOOV::TRAK::MDIA::MINF::STBL::STCO
 Chunk Offset Box。Chunk的偏移量表，指定了每个chunk在文件中的位置。如下图：
-![](http://ouazw12mz.bkt.clouddn.com/180114232325.png?imageslim)
+![](/images/qiniu/180114232325.png)
 需要注意的是，box中只是给出了每个chunk的偏移量，并没有给出每个sample的偏移量。因此，如果要获得每个sample的偏移量，还需要用到Sample Size Box和Sample-To-Chunk Box。
 
 stco 有两种形式，如果你的视频过大的话，就有可能造成 chunkoffset 超过 32bit 的限制。所以，这里针对大 Video 额外创建了一个 co64 的 Box。它的功效等价于 stco，也是用来表示 sample 在 mdat box 中的位置。只是，里面 chunk_offset 是 64bit 的。基本格式为：
@@ -507,10 +507,10 @@ for (i=1; i u entry_count; i++) {
 
 ### MOOV::TRAK::MDIA::MINF::STBL::STSC
 Sample To Chunk Box。用chunk组织sample可以方便优化数据获取，一个chunk包含一个或多个sample。“stsc”中用一个表描述了sample与chunk的映射关系，查看这张表就可以找到包含指定sample的thunk，从而找到这个sample，当然每个table entry可能包含一个或者多个chunk。以下是table entry布局。
-![](http://ouazw12mz.bkt.clouddn.com/180114232505.png?imageslim)
+![](/images/qiniu/180114232505.png)
 每个table entry包含一组chunk，enrty中的每个chunk包含相同数目的sample。而且，这些chunk中的每个sample都必须使用相同的sample description。任何时候，如果chunk中的sample数目或者sample description改变，必须创建一个新的table entry。如果所有的chunk包含的sample数目相同，那么该table只有一个entry。
 一个简单的例子，如图所示。图中看不出来总共有多少个chunk，因为entry中只包含第一个chunk号，因此，对于最后一个entry，在某些情况下需要特殊的处理，因为无法判断什么时候结束。
-![](http://ouazw12mz.bkt.clouddn.com/180114232522.png?imageslim)
+![](/images/qiniu/180114232522.png)
 ```c++
 // 官方文档代码
 aligned(8) class SampleToChunkBox
@@ -538,7 +538,7 @@ sample_description_index: 1
 ```
 也就是说，从第一个 chunk 开始，每通过切分 4 个 sample 划分为一个 chunk，并且每个 sample 的表述信息都是 1。它会按照这样划分方法一直持续到最后。当然，如果你的 sample 最后不能被 4 整除，最后的几段 sample 就会当做特例进行处理。
 通常情况下，stsc 的值是不一样的：
-![](http://ouazw12mz.bkt.clouddn.com/180114232618.png?imageslim)
+![](/images/qiniu/180114232618.png)
 按照上面的情况就是，第 1 个 chunk 包含 2 个 samples。第 2-4 个 chunk 包含 1 个 sample，第 5 个 chunk 包含两个 chunk，第 6 个到最后一个 chunk 包含一个 sample。
 
 ### MOOV::TRAK::MDIA::MINF::STBL::STSZ

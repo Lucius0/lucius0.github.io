@@ -41,7 +41,8 @@ a100 0003 0001 0000 0300 32e0 6003 0d40
 f177 85ea f377 a930 f991 ea7c 4f2a f0b9
 ```
 它的结构图是这样的。
-![](http://ouazw12mz.bkt.clouddn.com/171225224159.png?imageslim)
+![](/images/qiniu/171225224159.png)
+
 
 FLV Header自然时不用多说，上面的结构图都一目了然。重点讲下Flv Body下的Tag的三种类型。
 

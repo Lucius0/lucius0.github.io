@@ -9,7 +9,7 @@ tags: [js, node]
 
 ## 什么是脚手架？
 当我们建造房子的时候，工地上会先搭个架子，然后工人们会在这个的基础上添砖加瓦，直到房屋成型。那么我们程序也是这样的道理，会在我们开发之前有一套相对成熟且适用的架子(配置项、技术栈)，然后我们会在这基础上直接产出需求功能，而需求重复的造架子。脚手架在我们开发项目中也是极其重要，能够提高我们的开发。
-![](http://ouazw12mz.bkt.clouddn.com/180718232750.png?imageslim)
+![](/images/qiniu/180718232750.png)
 
 那么我们开发中有用到哪些脚手架呢？有`vue-cli`、`create-react-app`、`yeoman`等。
 
@@ -105,7 +105,7 @@ module.exports = class extends Generator {
 
 ### 执行
 `yo testcli`，会出现如下图信息。
-![](http://ouazw12mz.bkt.clouddn.com/180718233135.png?imageslim)
+![](/images/qiniu/180718233135.png)
 
 到这里一个小小的官方demo已经执行完成了，更多的可以查看[Writing Your Own Yeoman Generator | Yeoman](http://yeoman.io/authoring/index.html)
 
@@ -171,7 +171,7 @@ if (!program.args.length) {
 ```
 
 然后在根目录执行`npm link`或`sudo npm link`。打开另一个terminal标签执行`messi`命令。
-![](http://ouazw12mz.bkt.clouddn.com/180718233522.png?imageslim)
+![](/images/qiniu/180718233522.png)
 
 ### 添加init模版
 我们在根目录创建`command`文件夹，然后在其文件夹创建我们的主角`init.js`。目的是想通过`init`从远端仓库拉取一个项目模板。
@@ -236,7 +236,7 @@ module.exports = () => {
 ```
 
 emmm。是不是感觉有些缺少什么？是的，我们如何能做到跟`vue-cli`一样优秀，可以自主选择自己想要的选择(有点拗口)。
-![](http://ouazw12mz.bkt.clouddn.com/180718233622.png?imageslim)
+![](/images/qiniu/180718233622.png)
 
 ### inquirer
 
@@ -317,6 +317,6 @@ module.exports = () => {
 ```
 
 接下来一步就是构建项目`npm link`，然后执行`messi ini2`。
-![](http://ouazw12mz.bkt.clouddn.com/180718234154.png?imageslim)
+![](/images/qiniu/180718234154.png)
 
 好了。。。。。。睡觉。。。。。。。

@@ -12,21 +12,21 @@ tags: debug
 http代理不用说了。没啥问题。这里是以pc端为例。
 
 1. 安装证书。Help ->  SSL Proxying -> Install Charles Root Certificate。并打开keychain进行安全信任。
-![](http://ouazw12mz.bkt.clouddn.com/180118191654.png?imageslim)
+![](/images/qiniu/180118191654.png)
 
 2. Proxy -> macOS Proxy
-![](http://ouazw12mz.bkt.clouddn.com/180118191836.png?imageslim)
+![](/images/qiniu/180118191836.png)
 
 3. 注意一点的是。开启shadowsocks会影响Charles。
-![](http://ouazw12mz.bkt.clouddn.com/180118191953.png?imageslim)
+![](/images/qiniu/180118191953.png)
 所以要改成下面，或者关了shadowsocks再重新打开Charles。
-![](http://ouazw12mz.bkt.clouddn.com/180118192057.png?imageslim)
+![](/images/qiniu/180118192057.png)
 
 4. 其实这时候已经可以用了，右键你要代理的 https 地址。例如我们抓`https://www.google.com`
-![](http://ouazw12mz.bkt.clouddn.com/180118192154.png?imageslim)
+![](/images/qiniu/180118192154.png)
 
 5. 这时候你就会在 Proxy -> SSL Proxying Settings 看到如下信息。（这里我不喜欢网上说的`*:443`，因为这样会把其他无关的都带进来，出现一些莫名其妙现象，例如样式）
-![](http://ouazw12mz.bkt.clouddn.com/180118192313.png?imageslim)
+![](/images/qiniu/180118192313.png)
 
 6. 到这里为止，你应该就可以按照http的方式去代理你想要的文件了。**但是，我遇到了一个很奇怪的问题，就是我代理到本地，文件居然是不完整的。这让我很郁闷。当然我最后找到解决方法，就是开启本地服务器，不采取Map Local，而采取Map Remote，将服务器文件代理到我的localhost这里，就可以了**
 
@@ -39,13 +39,13 @@ http代理不用说了。没啥问题。这里是以pc端为例。
 2. 安装whistle `npm install -g whistle`
 
 3. 运行whistle，回出现下面的信息 `w2 start`
-![](http://ouazw12mz.bkt.clouddn.com/180118192521.png?imageslim)
+![](/images/qiniu/180118192521.png)
 
 4. 代理SwitchyOmega新建情景模式 -> 代理服务器(whistle) -> 
-![](http://ouazw12mz.bkt.clouddn.com/180118192606.png?imageslim)
+![](/images/qiniu/180118192606.png)
 
 5. 这时候就可以打开`http://local.whistlejs.com/`
-![](http://ouazw12mz.bkt.clouddn.com/180118223728.png?imageslim)
+![](/images/qiniu/180118223728.png)
 
 6. ws拦截，[WebSocket · GitBook](https://avwo.github.io/whistle/webui/websocket.html)。假如没有执行这一步，会看到ws的协议都是显示`tunnel`。
 
@@ -60,7 +60,7 @@ http代理不用说了。没啥问题。这里是以pc端为例。
 3. 打开浏览器并且输入你的地址 `your-local-host:8899`
 
 4. 然后会出现下面的图
-![](http://ouazw12mz.bkt.clouddn.com/180118224316.png?imageslim)
+![](/images/qiniu/180118224316.png)
 
 5. 将Example下的地址复制到你要测试的页面去。
 

@@ -111,24 +111,24 @@ DTS主要用于视频的解码,在解码阶段使用.PTS主要用于视频的同
 
 例子:
 下面给出一个GOP为15的例子,其解码的参照frame及其解码的顺序都在里面:
-![](http://ouazw12mz.bkt.clouddn.com/180108004838.png?imageslim)
+![](/images/qiniu/180108004838.png)
 如上图：I frame 的解码不依赖于任何的其它的帧.而p frame的解码则依赖于其前面的I frame或者P frame.B frame的解码则依赖于其前的最近的一个I frame或者P frame 及其后的最近的一个P frame.
 
 ## H.264流数据
 在H.264的语法中，有一个最基础的层，叫做Network Abstraction Layer, 简称为NAL。H.264流数据正是由一系列的NAL单元(NAL Unit, 简称NAUL)组成的。
-![](http://ouazw12mz.bkt.clouddn.com/180108004954.png?imageslim)
+![](/images/qiniu/180108004954.png)
 H264的码流由NALU单元组成,一个NALU可能包含有：
 - **视频帧**
 视频帧也就是视频片段，具体有 P帧, I帧，B帧
-![](http://ouazw12mz.bkt.clouddn.com/180108005022.png?imageslim)
+![](/images/qiniu/180108005022.png)
 
 - **H.264属性合集-FormatDesc(包含 SPS和PPS)**
 流数据中，属性集合可能是这样的：
-![](http://ouazw12mz.bkt.clouddn.com/180108005131.png?imageslim)
+![](/images/qiniu/180108005131.png)
 
 ### NALU header
 对于流数据来说，一个NAUL的Header中，可能是`0x00 00 01`或者是`0x00 00 00 01`作为开头(两者都有可能，下面以0x00 00 01作为例子)。0x00 00 01因此被称为开始码(Start code).
-![](http://ouazw12mz.bkt.clouddn.com/180108005156.png?imageslim)
+![](/images/qiniu/180108005156.png)
 
 总结以上知识，我们知道H264的码流由NALU单元组成，NALU单元包含视频图像数据和H264的参数信息。具体来说参数信息包含SPS（Sequence Parameter Set）和PPS（Picture Parameter Set）.如下图显示了一个H.264码流结构：
-![](http://ouazw12mz.bkt.clouddn.com/180108005317.png?imageslim)
+![](/images/qiniu/180108005317.png)

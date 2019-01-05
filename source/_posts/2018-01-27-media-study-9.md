@@ -148,7 +148,7 @@ track.length = 0;
 ### Audio Data
 Audio这里分为AAC跟MP3这两类音频解码格式。我们就针对AAC这一类来，MP3也是大同小异的，因为只有Firefox支持`'audio/mp4,codecs="mp3"'`。
 `calculate dtsCorrection` 这部分就不多讲了。跟上面 Video Data 道理一样。但是这里作者做了一个兼容处理，就是为了解决 Edge seek 后卡住的 bug。作者这一块是这样解释的：
-![](http://ouazw12mz.bkt.clouddn.com/180127162635.png?imageslim)
+![](/images/180127162635.png)
 这里注意一下：`videoSegment.beginDts < firstSampleDts`，假如该空音频是在第一帧，那么就没必要补帧了(AAC.getSilentFrame)，补帧的道理也是为了使其数据连续性。`Correct dts for each sample`这一步跟Video的处理差不多，只是多了一个`large timestamp gap`的处理，这个会产生音视频不同步。剩余的后面不讲。因为看注释以及跟Video data差不多。
 
 ## 音视频同步原理
@@ -172,5 +172,5 @@ Audio这里分为AAC跟MP3这两类音频解码格式。我们就针对AAC这一
 --------------------------------------------------------------
 ```
 可以看得出，音视频的排列是按照**起始时间戳**从小到大来排序的，当然这部分可以允许些许波动，但也要注意一旦出现过大就会发现音视频不同步。例如：
-![](http://ouazw12mz.bkt.clouddn.com/180127162849.png?imageslim)
+![](/images/180127162849.png)
 当然这是理论上，还需要考虑到其他的影响因素，例如硬件，网速之类的情况。

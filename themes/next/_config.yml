@@ -453,8 +453,8 @@ vendors:
   algolia_instant_css:
 
 reward_comment: 我只是试下能不能被赞赏😳
-wechatpay: http://ouazw12mz.bkt.clouddn.com/IMG_4838.jpg
-alipay: http://ouazw12mz.bkt.clouddn.com/171226222918.png?imageslim
+wechatpay: https://bbucket-1257297990.cos.ap-guangzhou.myqcloud.com/IMG_4838.jpg
+alipay: https://bbucket-1257297990.cos.ap-guangzhou.myqcloud.com/171226222918.png
 
 # Assets
 css: css

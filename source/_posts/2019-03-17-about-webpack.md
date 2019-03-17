@@ -100,7 +100,9 @@ module.exports = {
   }
 }
 ```
+
 ---
+
 ### 见招 - Typescript
 **Type**script 是 Javascript **类型**的超集，它可以编译成纯 Javascript。[TypeScript—JavaScript的超集](https://www.tslang.cn/)
 
@@ -136,7 +138,9 @@ module.exports = {
   devtool: 'source-map',
 }
 ```
+
 ---
+
 ### 见招 - SASS/LESS
 SASS 和 LESS 都是 CSS 的预处理器，它们都是可以方便的管理代码，抽离样式公共部分，通过逻辑来书写更加灵活的样式代码，从而提高效率。关于他们更多的信息可以[Sass: Syntactically Awesome Style Sheets](https://sass-lang.com/)和[Getting started | Less.js](http://lesscss.org/)去查看。
 
@@ -183,6 +187,7 @@ React 中主要是因为其代码中使用了 JSX 和 Class 特性，因此我�
 至于 Webpack 的配置，其实不用太多的改动，只需要支持下`/\.tsx/`后缀文件就行。
 
 ---
+
 ### 见招 - Vue
 Vue 没有 React 那样会内置专属语法，但它和 React 一样，都推崇组件化和由数据驱动的思想。话不多说，直接拆招。
 
@@ -231,6 +236,7 @@ module: {
   ]
 }
 ```
+
 ---
 
 到这里为止，我们就可以通过 webpack 来进行我们的开发工作了。但是实际项目中有很多的痛点，例如代码检查，热更新，CDN发布等。我们不可能每次都手动的来配置，这样太繁琐太浪费时间了。接下来我们通过 webpack 来优化我们的开发体验。

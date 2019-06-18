@@ -263,10 +263,19 @@ mathjax:
 # duoshuo_shortname: lucius0
 
 # Disqus
-disqus_shortname: lucius0
+# disqus_shortname: lucius0
 # enable: true
 # shortname: lucius0
 # count: true
+
+gitalk:
+  enable: true
+  githubID: lucius0
+  repo: lucius0.github.io
+  ClientID: c35834931d268e5c17c6
+  ClientSecret: c80a4f57c98a6cf8d87e0c7d306201814a0dc745
+  adminUser: lucius0
+  distractionFreeMode: true
 
 
 # Hypercomments

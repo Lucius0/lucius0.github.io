@@ -20,6 +20,8 @@
       </div>
     {% elseif theme.hypercomments_id %}
       <div id="hypercomments_widget"></div>
+    {% elseif theme.gitalk.enable %}
+      <div id="gitalk-container"></div>
     {% endif %}
   </div>
 {% endif %}

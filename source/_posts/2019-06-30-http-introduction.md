@@ -328,3 +328,8 @@ HTTPS 则采用对称加密和非对称加密两者并用的**混合加密机制
 - [HTTP 协议入门 - 阮一峰的网络日志](http://www.ruanyifeng.com/blog/2016/08/http.html)
 - [OSI模型 - 维基百科，自由的百科全书](https://zh.wikipedia.org/wiki/OSI%E6%A8%A1%E5%9E%8B)
 - [超文本传输协议 - 维基百科，自由的百科全书](https://zh.wikipedia.org/wiki/%E8%B6%85%E6%96%87%E6%9C%AC%E4%BC%A0%E8%BE%93%E5%8D%8F%E8%AE%AE) 
+- [通俗大白话来理解TCP协议的三次握手和四次分手](https://github.com/jawil/blog/issues/14)
+
+
+
+

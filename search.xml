@@ -4985,6 +4985,31 @@ $ npm install -D webpack webpack-dev-server</code></p>
     </entry>
     
     <entry>
+      <title><![CDATA[JavaScript之二 - 表达式]]></title>
+      <url>https://lucius0.github.io/2016/08/07/archivers/javascript-expression/</url>
+      <content type="html"><![CDATA[<h2 id="1-delete"><a href="#1-delete" class="headerlink" title="1. delete"></a>1. <strong>delete</strong></h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> obj = &#123;<span class="attr">x</span>:<span class="number">1</span>&#125;;</span><br><span class="line">obj.x; <span class="comment">// 1</span></span><br><span class="line"><span class="keyword">delete</span> obj.x;</span><br><span class="line">obj.x; <span class="comment">// undefined</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> obj1 = &#123;&#125;;</span><br><span class="line"><span class="built_in">Object</span>.defineProperty(obj1, <span class="string">"x"</span>, &#123;</span><br><span class="line">	configurable: <span class="literal">false</span>, <span class="comment">// configurable为false表示该值无法删除</span></span><br><span class="line">	value: <span class="number">1</span></span><br><span class="line">&#125;);</span><br><span class="line"><span class="keyword">delete</span> obj1.x; <span class="comment">// false</span></span><br><span class="line">obj1.x; <span class="comment">// 1</span></span><br></pre></td></tr></table></figure>
+<h2 id="2-in"><a href="#2-in" class="headerlink" title="2. in"></a>2. <strong>in</strong></h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">window</span>.x = <span class="number">1</span>; <span class="comment">//全局变量</span></span><br><span class="line"><span class="string">"x"</span> <span class="keyword">in</span> <span class="built_in">window</span>; <span class="comment">// true</span></span><br></pre></td></tr></table></figure>
+<h2 id="3-new"><a href="#3-new" class="headerlink" title="3. new"></a>3. <strong>new</strong></h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Foo</span>(<span class="params"></span>)</span>&#123;&#125;</span><br><span class="line">Foo.prototype.x = <span class="number">1</span>;</span><br><span class="line"><span class="keyword">var</span> obj = <span class="keyword">new</span> Foo();</span><br><span class="line">obj.x; <span class="comment">// 1</span></span><br><span class="line">obj.hasOwnProperty(<span class="string">"x"</span>); <span class="comment">// false</span></span><br><span class="line">obj.__proto__.hasOwnProperty(<span class="string">"x"</span>); <span class="comment">// true</span></span><br></pre></td></tr></table></figure>
+<h2 id="4-this"><a href="#4-this" class="headerlink" title="4. this"></a>4. <strong>this</strong></h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">this</span>; <span class="comment">// window</span></span><br><span class="line"><span class="keyword">var</span> obj = &#123;<span class="attr">fun</span>:<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123; <span class="keyword">return</span> <span class="keyword">this</span>; &#125;&#125;;</span><br><span class="line">obj.func(); <span class="comment">// obj</span></span><br></pre></td></tr></table></figure>
+<h2 id="5-void"><a href="#5-void" class="headerlink" title="5. void"></a>5. <strong>void</strong></h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">void</span> <span class="number">0</span>; <span class="comment">// undefined</span></span><br><span class="line"><span class="keyword">void</span> (<span class="number">0</span>); <span class="comment">// undefined</span></span><br></pre></td></tr></table></figure>
+]]></content>
+      
+        <categories>
+            
+            <category> front-end </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> javascript </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
       <title><![CDATA[JavaScript之一 - 数据类型]]></title>
       <url>https://lucius0.github.io/2016/08/07/archivers/javascript-data-types/</url>
       <content type="html"><![CDATA[<p>以下笔记是观看<a href="http://www.imooc.com/view/277" target="_blank" rel="noopener">《深入浅出javascript》</a>所记下的。</p>
@@ -5022,31 +5047,6 @@ $ npm install -D webpack webpack-dev-server</code></p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">Object</span>.prototype.toString.apply([]); <span class="comment">// [object Array]</span></span><br><span class="line"><span class="built_in">Object</span>.prototype.toString.apply(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;&#125;); <span class="comment">// [object Function]</span></span><br><span class="line"><span class="built_in">Object</span>.prototype.toString.apply(<span class="literal">null</span>); <span class="comment">// [object Null]</span></span><br><span class="line"><span class="built_in">Object</span>.prototype.toString.apply(<span class="literal">undefined</span>); <span class="comment">// [object Undefined]</span></span><br></pre></td></tr></table></figure>
 <p> <strong>注意</strong>：IE/6/7/8 <code>Object.prototype.toString.apply(null); // [object Object]</code></p>
 <p> <strong>总结：</strong> typeof 适合基本类型及function检测，遇到null失效；Class通过{}.toString拿到，适合内置对象和基本类型，遇到null和undefined失效(IE 6/7/8返回[object Object])；instanceof适用自定义对象，也可以用来检测原生对象，在不同iframe和window间检测时失效。<br> <!-- ![](/images/javascript/JavaScript-data-types-01.png) --></p>
-]]></content>
-      
-        <categories>
-            
-            <category> front-end </category>
-            
-        </categories>
-        
-        
-        <tags>
-            
-            <tag> javascript </tag>
-            
-        </tags>
-        
-    </entry>
-    
-    <entry>
-      <title><![CDATA[JavaScript之二 - 表达式]]></title>
-      <url>https://lucius0.github.io/2016/08/07/archivers/javascript-expression/</url>
-      <content type="html"><![CDATA[<h2 id="1-delete"><a href="#1-delete" class="headerlink" title="1. delete"></a>1. <strong>delete</strong></h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> obj = &#123;<span class="attr">x</span>:<span class="number">1</span>&#125;;</span><br><span class="line">obj.x; <span class="comment">// 1</span></span><br><span class="line"><span class="keyword">delete</span> obj.x;</span><br><span class="line">obj.x; <span class="comment">// undefined</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> obj1 = &#123;&#125;;</span><br><span class="line"><span class="built_in">Object</span>.defineProperty(obj1, <span class="string">"x"</span>, &#123;</span><br><span class="line">	configurable: <span class="literal">false</span>, <span class="comment">// configurable为false表示该值无法删除</span></span><br><span class="line">	value: <span class="number">1</span></span><br><span class="line">&#125;);</span><br><span class="line"><span class="keyword">delete</span> obj1.x; <span class="comment">// false</span></span><br><span class="line">obj1.x; <span class="comment">// 1</span></span><br></pre></td></tr></table></figure>
-<h2 id="2-in"><a href="#2-in" class="headerlink" title="2. in"></a>2. <strong>in</strong></h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">window</span>.x = <span class="number">1</span>; <span class="comment">//全局变量</span></span><br><span class="line"><span class="string">"x"</span> <span class="keyword">in</span> <span class="built_in">window</span>; <span class="comment">// true</span></span><br></pre></td></tr></table></figure>
-<h2 id="3-new"><a href="#3-new" class="headerlink" title="3. new"></a>3. <strong>new</strong></h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Foo</span>(<span class="params"></span>)</span>&#123;&#125;</span><br><span class="line">Foo.prototype.x = <span class="number">1</span>;</span><br><span class="line"><span class="keyword">var</span> obj = <span class="keyword">new</span> Foo();</span><br><span class="line">obj.x; <span class="comment">// 1</span></span><br><span class="line">obj.hasOwnProperty(<span class="string">"x"</span>); <span class="comment">// false</span></span><br><span class="line">obj.__proto__.hasOwnProperty(<span class="string">"x"</span>); <span class="comment">// true</span></span><br></pre></td></tr></table></figure>
-<h2 id="4-this"><a href="#4-this" class="headerlink" title="4. this"></a>4. <strong>this</strong></h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">this</span>; <span class="comment">// window</span></span><br><span class="line"><span class="keyword">var</span> obj = &#123;<span class="attr">fun</span>:<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123; <span class="keyword">return</span> <span class="keyword">this</span>; &#125;&#125;;</span><br><span class="line">obj.func(); <span class="comment">// obj</span></span><br></pre></td></tr></table></figure>
-<h2 id="5-void"><a href="#5-void" class="headerlink" title="5. void"></a>5. <strong>void</strong></h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">void</span> <span class="number">0</span>; <span class="comment">// undefined</span></span><br><span class="line"><span class="keyword">void</span> (<span class="number">0</span>); <span class="comment">// undefined</span></span><br></pre></td></tr></table></figure>
 ]]></content>
       
         <categories>

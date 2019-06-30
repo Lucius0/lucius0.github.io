@@ -4,6 +4,461 @@
   
     
     <entry>
+      <title><![CDATA[HTTP 入门体检]]></title>
+      <url>https://lucius0.github.io/2019/06/30/archivers/http-introduction/</url>
+      <content type="html"><![CDATA[<p>无论是大系统还是小项目，无论是移动端还是PC端，无论是大数据还是云计算，从整体到个人，网络协议一直都是绕不过去的坎，它在我们职业生涯中有着举足轻重的地位。技术浪潮一浪接一浪，很多时候我们盲目追求新技术却忘记了新技术的出现都是要依赖于繁琐复杂且难啃的基层技术，新技术只是为了更好更快更稳的开发，针对业务需求相对进行了封装罢了，一层一层剥下来，它还是原来的它。我们先来入门一下 HTTP，OSI模型的应用层。</p>
+<h2 id="网络协议层"><a href="#网络协议层" class="headerlink" title="网络协议层"></a>网络协议层</h2><p>网络有七层协议层：应用层、表示层、会话层、(安全层 - SSL/TLS)、传输层、网络层、数据链路层、物理层。由于表示层跟会话层没有独立实现过，而是跟应用层一起实现的</p>
+<h3 id="应用层"><a href="#应用层" class="headerlink" title="应用层"></a>应用层</h3><p>应用层决定了向用户提供应用服务时通信的活动。(DNS、HTTP、HTTPS、RTMP、FTP)；</p>
+<h3 id="传输层"><a href="#传输层" class="headerlink" title="传输层"></a>传输层</h3><p>传输层对上层应用层，提供处于网络连接中的两台计算机之间的数据传输。(TCP、UDP)。</p>
+<h3 id="网络层"><a href="#网络层" class="headerlink" title="网络层"></a>网络层</h3><p>网络层用来处理在网络上流动的数据包。数据包是网络传输额最小单位。(IP)</p>
+<h3 id="链路层"><a href="#链路层" class="headerlink" title="链路层"></a>链路层</h3><p>链路层是用来连接网络的硬件部分。包括控制操作系统、驱动、网卡等。</p>
+<h3 id="物理层"><a href="#物理层" class="headerlink" title="物理层"></a>物理层</h3><p>物理层主要是定义物理设备如何传输数据。</p>
+<h3 id="栗子"><a href="#栗子" class="headerlink" title="栗子"></a>栗子</h3><p>当我们购物时，会先去 DNS 或 HTTPDNS 查找 IP 地址。<strong>知道目标 IP 地址，浏览器就会打包请求，如果使用 HTTPS ，则采取加密传输。</strong></p>
+<p>1、应用层：浏览器通过 socket 编程，将其打包传输给下一层传输层；<br>2、传输层：这里采用TCP协议(PS:它有两个端口，一个是浏览器监听端口，一个是服务器监听端口，操作系统往往通过端口来判断数据包应该往哪个进程走)。TCP将应用层收到的数据包进行~分割~，并在报文上打上标记序号及端口号转发给网络层；<br>3、网络层：接收到传输层的数据包，在该层有 本地IP地址 以及 目标IP地址，将<strong>IP地址</strong>封装后转发给链路层；<br>4、链路层：通过<strong>ARP协议</strong>，获取本地<strong>MAC地址</strong>，发送给<strong>网关物理层(默认IP：192.168.1.1)</strong>。<br>5：物理层：由于有<strong>MAC地址</strong>，IP 数据包能达到网关。如路由器，会根据路由表，来判断目标 IP 怎么走。</p>
+<p><img src="/images/http/http-01.png" alt=""></p>
+<p><strong>注</strong></p>
+<blockquote>
+<p>IP 地址：指明了节点被分配到的地址，可变。<br>MAC 地址：指网卡所属的固定地址，基本不变。<br>IP 间的通信依赖 MAC 地址。</p>
+<p>ARP 协议：解析地址的协议，根据 IP地址 反查出对应的 MAC地址。</p>
+</blockquote>
+<h2 id="HTTP-协议请求报文-amp-响应报文"><a href="#HTTP-协议请求报文-amp-响应报文" class="headerlink" title="HTTP 协议请求报文&amp;响应报文"></a>HTTP 协议请求报文&amp;响应报文</h2><p><img src="/images/http/http-02.png" alt=""></p>
+<h3 id="常见的方法"><a href="#常见的方法" class="headerlink" title="常见的方法"></a>常见的方法</h3><table>
+<thead>
+<tr>
+<th style="text-align:center">方法</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">GET</td>
+<td>获取指定资源，一般来说 GET 请求只用于资源数据的请求。</td>
+</tr>
+<tr>
+<td style="text-align:center">POST</td>
+<td>传输实体主体，向指定资源提交数据，如表单提交、资源创建等。</td>
+</tr>
+<tr>
+<td style="text-align:center">PUT</td>
+<td>传输资源，向指定资源位置上传最新内容，如资源更新等。</td>
+</tr>
+<tr>
+<td style="text-align:center">DELETE</td>
+<td>请求服务器删除置顶的 URI 所标识的资源，简单来说就是删除资源。</td>
+</tr>
+<tr>
+<td style="text-align:center">PATCH</td>
+<td>跟 PUT 方法有些类似，都是更新资源。但是 PATCH 主要是更新部分资源， 而 PUT 则是整体更新；当资源不存在时，PATCH 会创建新资源，而 PUT只会 在已有的资源进行更新。</td>
+</tr>
+<tr>
+<td style="text-align:center">HEAD</td>
+<td>同 GET 方法，但 HEAD 常用于获取报文首部，查看服务器性能。</td>
+</tr>
+<tr>
+<td style="text-align:center">OPTIONS</td>
+<td>该方法同 HEAD，但是 OPTIONS 用来询问服务器返回该资源所支持的方法。</td>
+</tr>
+</tbody>
+</table>
+<h3 id="常见状态码"><a href="#常见状态码" class="headerlink" title="常见状态码"></a>常见状态码</h3><table>
+<thead>
+<tr>
+<th style="text-align:center">状态码大类</th>
+<th style="text-align:center">状态码小类</th>
+<th style="text-align:left">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">1xx</td>
+<td style="text-align:center"></td>
+<td style="text-align:left">信息性状态码，接收到请求并且继续处理。</td>
+</tr>
+<tr>
+<td style="text-align:center">2xx</td>
+<td style="text-align:center"></td>
+<td style="text-align:left">成功状态码。</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center">200</td>
+<td style="text-align:left">服务器已成功处理了请求。</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center">201</td>
+<td style="text-align:left">服务器已接收请求，但尚未处理，客户端可以通过该状态码进行轮询。</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center">203</td>
+<td style="text-align:left">服务器已成功处理了请求，但可能未授权。</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center">204</td>
+<td style="text-align:left">服务器成功处理了请求，但没有返回任何内容，如删除成功。</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center">206</td>
+<td style="text-align:left">服务器成功处理了部分 GET 请求，如媒体多端请求。</td>
+</tr>
+<tr>
+<td style="text-align:center">3xx</td>
+<td style="text-align:center"></td>
+<td style="text-align:left">重定向状态码。</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center">301</td>
+<td style="text-align:left">永久性重定向。</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center">302</td>
+<td style="text-align:left">临时性重定向。</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center">303</td>
+<td style="text-align:left">同302，但多了一个标准，就是明确要求客户端采用 GET 方法。</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center"></td>
+<td style="text-align:left">注：301、302、303 响应后，浏览器都会把 POST 改为 GET，并删除请求主体，等到再次请求时才发送。</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center">304</td>
+<td style="text-align:left">资源没有发生变化，该状态码跟重定向没有什么关系。</td>
+</tr>
+<tr>
+<td style="text-align:center">4xx</td>
+<td style="text-align:center"></td>
+<td style="text-align:left">客户端错误状态码。</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center">400</td>
+<td style="text-align:left">请求错误，服务器不理解请求的语法，简单来说就是错误的传参导致的报错。</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center">401</td>
+<td style="text-align:left">请求不通过身份验证，如未登录或令牌错误。</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center">403</td>
+<td style="text-align:left">请求通过身份验证，但是未授权，如权限管理越级访问。</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center">404</td>
+<td style="text-align:left">请求服务器不存在的资源。</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center">405</td>
+<td style="text-align:left">请求方法不通过，如该用 POST 方法的请求用了 PUT。</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center">406</td>
+<td style="text-align:left">请求的资源格式不正确，如请求 JSON 格式数据，服务器只有 XML 格式数据。</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center">409</td>
+<td style="text-align:left">请求发生冲突，常见于修改内容在服务器上是唯一的，如身份证ID。</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center">410</td>
+<td style="text-align:left">请求的资源曾经存在过，如下架的视频。</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center">413</td>
+<td style="text-align:left">请求体超过服务器的限制，如上传资源 10M，服务器限制 5M。</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center">414</td>
+<td style="text-align:left">请求 URI 过长。</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center">415</td>
+<td style="text-align:left">不支持媒体类型，如上传 PNG 文件，而服务器规定 JPG。</td>
+</tr>
+<tr>
+<td style="text-align:center">5xx</td>
+<td style="text-align:center"></td>
+<td style="text-align:left">服务端错误状态码。</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center">500</td>
+<td style="text-align:left">服务器发生错误，但原因未明。</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center">502</td>
+<td style="text-align:left">网关错误，如请求需转发到B服务器，而B服务器报错时就会报网关错误。</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center">503</td>
+<td style="text-align:left">服务不可用，服务器重启或维护之类不在状态。</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center">504</td>
+<td style="text-align:left">网关超时，同502，只是B服务器久久不回应。</td>
+</tr>
+</tbody>
+</table>
+<h2 id="HTTP-首部"><a href="#HTTP-首部" class="headerlink" title="HTTP 首部"></a>HTTP 首部</h2><p><strong>q</strong>，表示权重值，默认值1.0，区间在0～1。如 <code>Accept-Language:zh-CN,en-US;q=0.8,en;q=0.6</code>，表示浏览器优先支持 zh-CN 。</p>
+<h3 id="通用首部字段"><a href="#通用首部字段" class="headerlink" title="通用首部字段"></a>通用首部字段</h3><p>通用首部字段指的是请求报文以及响应报文都会使用到的首部。</p>
+<ul>
+<li>Cache-Control：通过如下指令，来操作缓存的工作机制。<strong>未完待续，篇幅太多，不在这里赘述，之后给实例。</strong></li>
+</ul>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">常见缓存请求指令</th>
+<th style="text-align:center">说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">no-cache</td>
+<td style="text-align:center">强制向服务器再次验证</td>
+</tr>
+<tr>
+<td style="text-align:center">no-store</td>
+<td style="text-align:center">不缓存请求或响应的任何内容</td>
+</tr>
+<tr>
+<td style="text-align:center">max-age=(秒)</td>
+<td style="text-align:center">响应的最大 Age 值</td>
+</tr>
+<tr>
+<td style="text-align:center">max-stale=[秒]</td>
+<td style="text-align:center">接收已过期的响应</td>
+</tr>
+<tr>
+<td style="text-align:center">min-fresh=(秒)</td>
+<td style="text-align:center">期望在指定时间内的响应仍有效</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">常见缓存响应指令</th>
+<th style="text-align:center">说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">public</td>
+<td style="text-align:center">可向任意方提供响应的缓存</td>
+</tr>
+<tr>
+<td style="text-align:center">private</td>
+<td style="text-align:center">仅向特定用户返回响应</td>
+</tr>
+<tr>
+<td style="text-align:center">no-cache</td>
+<td style="text-align:center">缓存前必须先确认其有效性</td>
+</tr>
+<tr>
+<td style="text-align:center">no-store</td>
+<td style="text-align:center">不缓存请求或响应的任何内容</td>
+</tr>
+<tr>
+<td style="text-align:center">max-age=(秒)</td>
+<td style="text-align:center">响应的最大 Age 值</td>
+</tr>
+<tr>
+<td style="text-align:center">s-maxage=(秒)</td>
+<td style="text-align:center">公共缓存服务器响应的最大 Age 值</td>
+</tr>
+<tr>
+<td style="text-align:center">must-revalidate</td>
+<td style="text-align:center">可缓存但必须再向源服务器进行确认</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>Connection：Connection 本身只与当前连接有关，当客户端与服务器之间存在代理，那么从客户端的请求报文会逐段发给服务器，服务器也会逐段返回客户端，通常就算有层层代理请求头以及响应头都会<strong>保持原封不动。</strong>但是刚才提到，Connection 只与当前连接有关，那么在报文转给下个节点之前删除，否则就会出现不可预期的问题。其他不传递的 Header 可以看<a href="https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Headers/Connection" target="_blank" rel="noopener">Connection 的 hop-by-hop</a><ul>
+<li><code>Connection: Close</code>：断开时将 Connection 设置为Close；</li>
+<li><code>Connection: Keep-Alive</code>：连接保持持久化；</li>
+</ul>
+</li>
+<li>Date：创建报文的日期时间；</li>
+<li>Pragma：no-cache。指令唯一，为<strong>兼容</strong> HTTP/1.1 之前的版本；</li>
+<li>Trailer：简单来说，该字段主要是说明<strong>报文末尾</strong>记录了哪些字段；</li>
+<li>Transfer-Encoding：传输编码方式，如 chunk；</li>
+<li>Upgrade：升级为其他的协议；</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Upgrade: TLS/<span class="number">1.0</span></span><br><span class="line">Connection: Upgrade (必须指定为Upgrade)</span><br></pre></td></tr></table></figure>
+<h3 id="请求首部字段"><a href="#请求首部字段" class="headerlink" title="请求首部字段"></a>请求首部字段</h3><ul>
+<li>Accept：客户端能处理的媒体类型，如<code>text/html</code>、<code>image/jpeg</code>；</li>
+<li>Accept-Charset：内容支持的字符集，如<code>ios-8895-5,utf-8;q=0.8</code>；</li>
+<li>Accept-Encoding：内容支持的编码，如<code>gzip,deflate</code>；</li>
+<li>Accept-Language：内容支持的语言，如<code>zh-cn,zh;q=0.7</code>；</li>
+<li>Authorization：认证信息，用来认证用户的身份；</li>
+<li>Host：请求资源的服务器，如<code>www.baidu.com</code>；</li>
+<li>If-Match / If-Modified-Since / If-None-Match：参考缓存机制；</li>
+<li>If-Range：资源未更新时发送实体 Byte 的范围请求，如 If-Range 字段值若是跟 ETag 值或更新日期时间匹配一致，那么就作为<strong>范围请求</strong>处理，若不一致，则返回全部资源；</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// request body</span></span><br><span class="line">GET /index.html</span><br><span class="line">If-Range: <span class="string">"123456"</span></span><br><span class="line">Range: bytes=<span class="number">5001</span><span class="number">-10000</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// response body(匹配情况下)</span></span><br><span class="line"><span class="number">206</span> Partial Content</span><br><span class="line">Content-Range: bytes <span class="number">5001</span><span class="number">-10000</span>/<span class="number">1000</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// response body(不匹配情况下)</span></span><br><span class="line"><span class="number">200</span> OK</span><br><span class="line">ETag: <span class="string">"45678"</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>Range：获取部分范围资源请求，服务器接收后会返回 206 状态码；</li>
+<li>Referer：告知服务器请求的原始资源的 URI；</li>
+<li>User-Agent：将创建请求的浏览器和用户代理名称等信息传送给服务器。</li>
+<li>Via：用来追踪客户端与服务器之间的请求和响应报文的传输路径；</li>
+<li>Warning：错误通知；</li>
+</ul>
+<h3 id="响应首部字段"><a href="#响应首部字段" class="headerlink" title="响应首部字段"></a>响应首部字段</h3><ul>
+<li>Accept-Ranges：bytes 和 none。bytes 是用来告知客户端，服务器是否能处理范围请求；</li>
+<li>Age：告知客户端，服务器在多久前创建了响应，单位为秒。<strong>若响应的为缓存服务器，Age 是指缓存后的响应再次发起认证到认证完成的时间</strong>；</li>
+<li>ETag：资源的唯一标志，当资源更新，资源的标志也会随之更新；<ul>
+<li>强ETag：实体发生多么细微的变化都会改变值；</li>
+<li>弱ETag：只有资源发生根本变化，产生差异才会改变，这时会在开始附加 <code>W/</code>，如:<code>ETag: W/&quot;xxx-1234&quot;</code>；</li>
+</ul>
+</li>
+<li>Location：将客户端重定向至指定 URI；</li>
+<li>Retry-After：对再次发起请求的时机要求，单位秒，常配合状态码 503 或 3xx 重定向，如<code>Retry-After: 120</code>；</li>
+<li>Server：当前服务器上的HTTP服务器应用程序信息，如<code>Server: Apache/xxxx (Unix)</code>；</li>
+<li>Vary：可对缓存进行控制，源服务器会向代理服务器传达关于本地缓存使用方法的命令，简单来说，就是指定不可缓存的请求头列表。</li>
+</ul>
+<h3 id="实体首部字段"><a href="#实体首部字段" class="headerlink" title="实体首部字段"></a>实体首部字段</h3><p>实体首部字段是包含在请求报文和响应报文中的实体部分所使用的首部，用于<strong>补充内容的更新时间等与实体相关的信息，这里主要列举下响应报文补充字段</strong>。</p>
+<ul>
+<li>Allow：用于通知客户端能够支持 <strong>Request-URI 指定资源</strong> 的所有 HTTP 方法，当服务器收不到不支持的 HTTP 方法时，会以 405 状态码返回。与此同时，还会把所有支持的 HTTP 方法写入首部字段 Allow 后返回。</li>
+<li>Content-Encoding：告知客户端服务器对实体内容的编码方式，有gzip、compress、deflate、identity；</li>
+<li>Content-Language：告知客户端实体内容使用的自然语言，如 <code>zh-cn</code>；</li>
+<li>Content-Length：实体内容的大小(单位字节)；</li>
+<li>Content-Location：返回资源对应的 URI，如访问 <code>https://www.baidu.com/</code>，返回资源 <code>https://www.baidu.com/index.html</code>；</li>
+<li>Content-Range：范围请求，如 <code>Content-Range: bytes 5001-10000/10000</code>，单位字节；</li>
+<li>Content-Type：同 <code>Accept</code>；</li>
+<li>Expires：资源的实效日期，但是假如首部字段 <code>Cache-Control</code> 有指定 <code>max-age</code> 指令时，会优先处理 <code>max-age</code>；</li>
+<li>Last-Modified：资源最后的修改时间；</li>
+</ul>
+<h3 id="其他常用响应首部字段-X"><a href="#其他常用响应首部字段-X" class="headerlink" title="其他常用响应首部字段 X-"></a>其他常用响应首部字段 X-</h3><ul>
+<li>X-Frame-Options：控制网站内容在其他 Web 网站的 Frame 标签内的显示问题。<code>DENY</code>为拒绝；<code>SAMEORIGIN</code>：尽在同源域名下匹配时许可；</li>
+<li>X-XSS-Protection：针对跨站脚本攻击的一种对策，<code>0</code> 为将XSS过滤设置成无效状态，<code>1</code> 则相反；</li>
+<li>Content-Security-Policy,<em>X-Content-Security-Policy</em>：内容安全策略，为了防御XSS、CSRF等代码注入攻击，阻止恶意内容在源网页中执行；</li>
+<li>X-UA-Compatible：推荐指定的渲染引擎来展示网站内容；</li>
+</ul>
+<h3 id="其他常用请求首部字段-X"><a href="#其他常用请求首部字段-X" class="headerlink" title="其他常用请求首部字段 X-"></a>其他常用请求首部字段 X-</h3><ul>
+<li>X-Requested-With：主要用于标识 Ajax 请求。大部分的JavaScript框架会发送这个字段，如 <code>X-Requested-With: XMLHttpRequest</code>；</li>
+<li>DNT：同 <code>X-Do-Not-Track</code>，请求某个网页应用程序停止跟踪某个用户。<code>0</code> 表示 <code>DNT</code> 被禁用，<code>1</code> 则相反；</li>
+<li>X-Csrf-Token：用于防止 CSRF 攻击，如 <code>X-Csrf-Token:i8XNjC4b8KVok4uw5RftR38Wgp2BFwql</code>；</li>
+</ul>
+<h2 id="HTTP-协议通信"><a href="#HTTP-协议通信" class="headerlink" title="HTTP 协议通信"></a>HTTP 协议通信</h2><p>在 HTTP 1.1 之前，每个 HTTP 请求都要求打开一次 TCP 连接，并且使用一次之后就断开这个 TCP 连接，每次这样都会造成资源的浪费。</p>
+<h3 id="持久连接"><a href="#持久连接" class="headerlink" title="持久连接"></a>持久连接</h3><p><code>HTTP/1.1 keep-alive</code>：只要任意一端没有明确提出断开连接，则保持 <strong>TCP 连接状态</strong>，即在一次 TCP 连接中可以持续发送多份数据而不会断开连接，这样就可以减少 TCP 连接建立的次数，意味着可以减少 TIME_WAIT 状态连接。<strong>但是，长时间的 TCP 连接容易导致系统资源无效占用，所以正确地设置 keep-alive timeout 时间非常重要。</strong></p>
+<p>为什么需要持久连接？为什么 TCP 的建立耗费时间？这里就需要说到 TCP 的三次握手跟四次挥手了。</p>
+<h3 id="TCP-三次握手"><a href="#TCP-三次握手" class="headerlink" title="TCP 三次握手"></a>TCP 三次握手</h3><p>在客户端和服务器建立 HTTP 请求的发送和返回的过程中，在这过程中是需要创建 TCP Connection，因为 HTTP 只有请求和响应这个概念，而 TCP 起到了传输数据包的作用。在 HTTP 1.0 版本，TCP 传输完毕之后就关闭了，而在 HTTP 1.1 版本，则 TCP 上面是可以有多个 HTTP 请求的。</p>
+<p><img src="/images/http/http-03.png" alt=""></p>
+<p><strong>seq(Sequence Number)</strong>：序列号；<br><strong>ack(Acknowledgement Number)</strong>：确认序号</p>
+<ol>
+<li><code>SYN=1, seq=X</code>：客户端发送一个 TCP 的 SYN 标志位为1的包，指明客户端准备连接服务器的端口。而 seq，为初始序列号X，X是随机的，这样为了网络安全。发送完毕之后客户端就进入 <code>SYN_SEND</code> 状态；</li>
+<li><code>SYN=1, ACK=1, seq=y, ack=x+1</code>：服务器返回确认包(SYN=1, ACK=1)，同时服务器随机生成 seq 序列号，并将确认序号 ack 设置为客户请求序号加1，即 ack=x+1。完毕之后，服务器进入 <code>SYN_RCVD</code> 状态；</li>
+<li><code>ACK=1, ack=y+1, seq=x+1</code>：客户端收到服务器的数据后，会检查 ack 是否等于 x+1，ACK标志位为1。如果正确则会再次发送确认包(ACK=1)，并且把服务器发来的 ack 序号在 seq 的基础上加1，即 <code>ack=y+1</code>，然后再设置 <code>seq=x+1</code>。发送完毕后，客户端和服务器都进入了 <code>ESTABLISHED</code> 状态，TCP握手结束。</li>
+</ol>
+<h3 id="TCP-四次挥手"><a href="#TCP-四次挥手" class="headerlink" title="TCP 四次挥手"></a>TCP 四次挥手</h3><p>关闭TCP连接，无论是客户端还是服务器，只要执行 <code>close</code> 操作，就可以发起挥手行为。之所以有4次，是因为 TCP 连接的拆除需要发送4个包。我们在以下视图默认为客户端向服务器发起 <code>close</code> 操作。其中<code>seq</code>/<code>ack</code>同上。</p>
+<p><img src="/images/http/http-04.png" alt=""></p>
+<ol>
+<li><code>FIN=1, seq=x</code>：客户端发送 FIN 包，表示客户端已经没有数据可以发送了，但是仍然可以接收数据，这时候客户端进入 <code>FIN+WAIT_1</code> 状态；</li>
+<li><code>ACK=1, ack=X+1</code>：服务器收到客户端的 FIN 包，随后反手就是一个确认包，表示服务器已经收到客户端关闭连接的请求，但是还没做到真正的关闭；</li>
+<li><code>FIN=1, seq=y</code>：服务器准备关闭连接时，再次向客户端发送结束连接的响应。发送完毕之后，服务器进入 <code>LAST_ACK</code> 状态，等待客户端最后的确认包<code>ACK</code>；</li>
+<li><code>ACK=1, ack=y+1</code>：客户端收到服务器的结束响应，然后客户端就发送最后的确认包 <code>ACK</code>，服务器收到后就开始关闭连接，进入 <code>CLOSED</code> 状态；客户端等待 <strong>2MSL(MSL(Maximum Segment Lifetime): 报文段最大生存时间)</strong>后，再也没有收到服务器的 <code>ACK</code>，认为服务器已经正常关闭了，随后客户端也关闭连接，进入<code>CLOSED</code> 状态。</li>
+</ol>
+<h2 id="HTTPS"><a href="#HTTPS" class="headerlink" title="HTTPS"></a>HTTPS</h2><p>不仅仅 HTTP，任何未加密的协议都存在以下的不足：</p>
+<ul>
+<li>通信使用不加密明文，内容可能会被窃听；</li>
+<li>不验证通信方的身份，有可能遭遇伪装；</li>
+<li>无法证明报文的完整性，所以有可能已遭篡改；</li>
+</ul>
+<p><strong>-&gt; HTTP 加密处理 + 认证 + 完整性保护 = HTTPS</strong><br>在上面提到网络协议层的时候，有一层是安全层，该层就是 SSL协议/TLS协议。HTTP 是直接与TCP通信，而HTTPS，则演变成了先和 SSL 通信，再由 SSL 和 TCP 通信了。</p>
+<p><strong>注</strong></p>
+<blockquote>
+<p>SSL 还可以配合其他应用层协议，如SMTP，Telnet；</p>
+</blockquote>
+<h3 id="HTTPS-加密方式"><a href="#HTTPS-加密方式" class="headerlink" title="HTTPS 加密方式"></a>HTTPS 加密方式</h3><p>加密和解密共用一个密钥称为<strong>对称加密</strong>，而使用公开密钥+私有密钥则为<strong>非对称加密</strong>。</p>
+<p>HTTPS 则采用对称加密和非对称加密两者并用的<strong>混合加密机制</strong>。因为无论是对称加密还是非对称加密，都是无法直接保证通信的安全性，如无法证明公开密钥就是货真价实的。因此需要<strong>数字证书认证机构</strong>。</p>
+<h3 id="证书申请流程"><a href="#证书申请流程" class="headerlink" title="证书申请流程"></a>证书申请流程</h3><ol>
+<li>服务器运营人员向数字证书认证机构提出<strong>公开密钥申请</strong>；</li>
+<li>机构判明申请者的身份后，对<strong>公开密钥做数字签名</strong>，然后将其跟公钥证书绑定在一起；</li>
+<li>服务器将该公钥证书发给客户端，以进行加密通信；</li>
+<li>客户端对证书上的数字签名进行验证，验证其有效且信赖</li>
+</ol>
+<p><strong>注</strong></p>
+<blockquote>
+<p>多数浏览器开发商发布版本会事先植入常用认证机关的公开密钥。</p>
+</blockquote>
+<h3 id="通信机制"><a href="#通信机制" class="headerlink" title="通信机制"></a>通信机制</h3><p><img src="/images/http/http-05.png" alt=""></p>
+<ol>
+<li>Client Hello 报文：包含SSL指定版本、加密组件(Cipher Suite)、列表(密钥长度、加密算法等)；</li>
+<li>Server Hello 报文：同 Client Hello 报文，在报文中包含 SSL 版本以及加密组件(筛选自 Client Hello 报文)；</li>
+<li>Certificate 报文：包含公开密钥证书；</li>
+<li>Client Key Exchange 报文：步骤3的公开密钥已对该报文进行加密，并含有 <code>Pre-master secret</code> 的随机字符串；</li>
+<li>Change Cipher Spec 报文：该报文会提示服务器，此报文后的通信采用 <code>Pre-master secret</code>密钥加密；</li>
+<li>Finished 报文：包含连接至今为止的所有校验值；</li>
+<li>到这一步说明 Finished 报文交换完毕，SSL 连接建立完成，开始 HTTP 通信；</li>
+</ol>
+<p><strong>注</strong></p>
+<blockquote>
+<p>在应用层发送数据时会附加 MAC(Message Authentication Code)的报文摘要来检查报文是否遭到篡改，从而保护报文的完整性。</p>
+</blockquote>
+<p>安全性在网络通信得到了保证，但是HTTPS也存在<strong>HTTPS 处理速度慢(SSL 通信慢，而且消耗CUP和内存资源)</strong>以及<strong>证书认证贵</strong> 的缺点。</p>
+<h2 id="HTTP-1-1-与-HTTP-2"><a href="#HTTP-1-1-与-HTTP-2" class="headerlink" title="HTTP 1.1 与 HTTP 2"></a>HTTP 1.1 与 HTTP 2</h2><p>在这里简单的说下，相比之下，HTTP 1.1 和 HTTP 2有什么优化。</p>
+<h3 id="HTTP-1-1"><a href="#HTTP-1-1" class="headerlink" title="HTTP 1.1"></a>HTTP 1.1</h3><ol>
+<li>持久连接：由于创建 HTTP 连接需要<strong>三次握手</strong>，并且在每一次请求时需要在客户端和服务器之间创建 TCP 连接， 在服务器返回完内容后，该 TCP 连接就关闭，这样就会导致资源的浪费。因此 HTTP 1.1 的持久连接，就会再每一次请求建立完 HTTP 连接后不关闭；</li>
+<li>pipeline：可以在同一个连接发送多个请求。虽然说是可以发送多个，但是服务器接收处理的逻辑，依旧是并行的，所以返回的数据依旧是需要等待服务器处理完毕再进行下一个的；</li>
+<li>增加了首部字段和方法：如Host首部字段、OPTION请求方法；</li>
+</ol>
+<p><strong>注</strong></p>
+<blockquote>
+<p>HTTP 是一种不保存状态，即无状态协议，它不会对请求和响应做持久化处理。因此才会有了Cookie、Session技术的引进。</p>
+<p>Session的实现对Cookie有依赖关系，前者是保存在服务器，因为会占用服务器CPU和内存资源，但是相对安全；相反的后者是保存在客户端的，在响应报文内携带Set-Cookie首部字段，告知客户端保存，而且安全性较弱。</p>
+</blockquote>
+<h3 id="HTTP-2"><a href="#HTTP-2" class="headerlink" title="HTTP 2"></a>HTTP 2</h3><ol>
+<li>二进制数据传输：在之前的 HTTP 版本，大部分的数据传输是字符串，而在 HTTP 2 则会以数据帧来进行传输(有点像websocket)，这样同一个连接里的多个请求就不需要按照顺序来处理了；</li>
+<li>头信息压缩提高效率优化：在 HTTP 1.1版本，每一次的发送跟接收，头信息都需要完整的返回，因此会占用服务器资源以及带宽资源，因此压缩完后就可以提高利用率。</li>
+<li>推送：在之前的 HTTP 版本，都是客户端向服务器发送请求，而在 HTTP 2，服务器也可以主动的向客户端发送数据传输。</li>
+</ol>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>有关网络协议知识点太多了，在这里也只是借用巨人的肩膀来简单的理清网络协议的大概思路。每一个细节，每一个原理真真正正要较真起来，都可以单独写一篇文章，之所以有这篇文章的存在，是因为后续的文章都需要或多或少的网络协议知识，也是为了以后方便自己记忆，不用到处查找资料。这里的知识点可能会有所纰漏错误，也有可能在这里说得不明不白模糊不清，这之后会慢慢优化补上。</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li><a href="https://zh.wikipedia.org/wiki/HTTP%E5%A4%B4%E5%AD%97%E6%AE%B5" target="_blank" rel="noopener">HTTP头字段 - 维基百科，自由的百科全书</a></li>
+<li><a href="http://www.ruanyifeng.com/blog/2016/08/http.html" target="_blank" rel="noopener">HTTP 协议入门 - 阮一峰的网络日志</a></li>
+<li><a href="https://zh.wikipedia.org/wiki/OSI%E6%A8%A1%E5%9E%8B" target="_blank" rel="noopener">OSI模型 - 维基百科，自由的百科全书</a></li>
+<li><a href="https://zh.wikipedia.org/wiki/%E8%B6%85%E6%96%87%E6%9C%AC%E4%BC%A0%E8%BE%93%E5%8D%8F%E8%AE%AE" target="_blank" rel="noopener">超文本传输协议 - 维基百科，自由的百科全书</a> </li>
+</ul>
+]]></content>
+      
+        <categories>
+            
+            <category> webpack </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> http </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
       <title><![CDATA[Webpack 之常见的见招拆招]]></title>
       <url>https://lucius0.github.io/2019/03/17/archivers/about-webpack/</url>
       <content type="html"><![CDATA[<p>前端的发展，大致的发展路线可以看黄玄的<a href="https://huangxuan.me/js-module-7day/#/" target="_blank" rel="noopener">JavaScript 模块化七日谈</a>。从最初的全局污染式的注入到ES6模块化，打包工具的不断迭代替换。主要的原因都是因为前端发展越来越复杂庞大所导致。</p>
@@ -4112,38 +4567,6 @@ $ npm install -D webpack webpack-dev-server</code></p>
     </entry>
     
     <entry>
-      <title><![CDATA[JavaScript之五 - 数组]]></title>
-      <url>https://lucius0.github.io/2016/08/11/archivers/javascript-array/</url>
-      <content type="html"><![CDATA[<p>有序，弱类型(多类型)集合。数组是有长度限制的，即0~2^23 - 1</p>
-<p>数组的原型链：<code>[] -&gt; Array.prototype</code>; 对象的原型链：<code>{} -&gt; Object.prototype</code></p>
-<p><strong>常用方法</strong></p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">Array</span>.prototype.join</span><br><span class="line"><span class="built_in">Array</span>.prototype.reverse</span><br><span class="line"><span class="built_in">Array</span>.prototype.sort</span><br><span class="line"><span class="built_in">Array</span>.prototype.concat</span><br><span class="line"><span class="built_in">Array</span>.prototype.slice</span><br><span class="line"><span class="built_in">Array</span>.prototype.splice</span><br><span class="line"><span class="built_in">Array</span>.prototype.foreach(ES5)</span><br><span class="line"><span class="built_in">Array</span>.prototype.map(ES5)</span><br><span class="line"><span class="built_in">Array</span>.prototype.filter(ES5)</span><br><span class="line"><span class="built_in">Array</span>.prototype.every(ES5)</span><br><span class="line"><span class="built_in">Array</span>.prototype.some(ES5)</span><br><span class="line"><span class="built_in">Array</span>.prototype.reduce/reduceRight(ES5)</span><br><span class="line"><span class="built_in">Array</span>.prototype.indexOf/<span class="built_in">Array</span>.prototype.lastIndexOf(ES5)</span><br><span class="line"><span class="built_in">Array</span>.isArray(ES5)</span><br></pre></td></tr></table></figure>
-<ul>
-<li>reduce</li>
-</ul>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> arr = [<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>];</span><br><span class="line"><span class="keyword">var</span> sum = arr.reduce(<span class="function"><span class="keyword">function</span>(<span class="params">x,y</span>) </span>&#123; <span class="keyword">return</span> x + y&#125;, <span class="number">0</span>); <span class="comment">// 6</span></span><br></pre></td></tr></table></figure>
-<p><em>解析：</em> reduce接受两个参数，第一个参数则是逻辑函数，第二个参数表明是否要跟首次传入逻辑函数的参数进行逻辑处理，例如上文例子，会先进行 0 + 1 = 1，1 + 2 = 3，3 + 3 = 6</p>
-<ul>
-<li>isArray</li>
-</ul>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">Array</span>.isArray([]); <span class="comment">// true</span></span><br><span class="line">[] <span class="keyword">instanceof</span> <span class="built_in">Array</span>; <span class="comment">// true</span></span><br><span class="line">(&#123;&#125;).toString.apply([]) === [<span class="string">"object Array"</span>]; <span class="comment">// true</span></span><br><span class="line">[].constructor === <span class="built_in">Array</span>; <span class="comment">// true</span></span><br></pre></td></tr></table></figure>]]></content>
-      
-        <categories>
-            
-            <category> front-end </category>
-            
-        </categories>
-        
-        
-        <tags>
-            
-            <tag> javascript </tag>
-            
-        </tags>
-        
-    </entry>
-    
-    <entry>
       <title><![CDATA[JavaScript之六 - 函数与作用域(1)]]></title>
       <url>https://lucius0.github.io/2016/08/11/archivers/javascript-function-01/</url>
       <content type="html"><![CDATA[<h2 id="1、调用方式"><a href="#1、调用方式" class="headerlink" title="1、调用方式"></a>1、调用方式</h2><ul>
@@ -4249,6 +4672,38 @@ $ npm install -D webpack webpack-dev-server</code></p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">foo</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">	<span class="keyword">this</span>.b = <span class="number">100</span>;</span><br><span class="line">	<span class="keyword">return</span> <span class="keyword">this</span>.a;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">var</span> func = foo.bind(&#123;<span class="attr">a</span>: <span class="number">1</span>&#125;);</span><br><span class="line">func(); <span class="comment">// 1</span></span><br><span class="line"><span class="keyword">new</span> func(); <span class="comment">// &#123;b: 100&#125;</span></span><br></pre></td></tr></table></figure>
 <p><em>解析：</em> foo函数中返回值除非是<strong>对象</strong>，否则就将<strong>this</strong>作为返回值返回，<strong>this</strong>会被初始化为默认的一个空对象，并且<strong>this</strong>的原型是<em>foo.prototype</em>，该空对象的b属性会赋值为100，然后整个对象会被作为返回值返回并且忽略return的返回值。</p>
 ]]></content>
+      
+        <categories>
+            
+            <category> front-end </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> javascript </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
+      <title><![CDATA[JavaScript之五 - 数组]]></title>
+      <url>https://lucius0.github.io/2016/08/11/archivers/javascript-array/</url>
+      <content type="html"><![CDATA[<p>有序，弱类型(多类型)集合。数组是有长度限制的，即0~2^23 - 1</p>
+<p>数组的原型链：<code>[] -&gt; Array.prototype</code>; 对象的原型链：<code>{} -&gt; Object.prototype</code></p>
+<p><strong>常用方法</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">Array</span>.prototype.join</span><br><span class="line"><span class="built_in">Array</span>.prototype.reverse</span><br><span class="line"><span class="built_in">Array</span>.prototype.sort</span><br><span class="line"><span class="built_in">Array</span>.prototype.concat</span><br><span class="line"><span class="built_in">Array</span>.prototype.slice</span><br><span class="line"><span class="built_in">Array</span>.prototype.splice</span><br><span class="line"><span class="built_in">Array</span>.prototype.foreach(ES5)</span><br><span class="line"><span class="built_in">Array</span>.prototype.map(ES5)</span><br><span class="line"><span class="built_in">Array</span>.prototype.filter(ES5)</span><br><span class="line"><span class="built_in">Array</span>.prototype.every(ES5)</span><br><span class="line"><span class="built_in">Array</span>.prototype.some(ES5)</span><br><span class="line"><span class="built_in">Array</span>.prototype.reduce/reduceRight(ES5)</span><br><span class="line"><span class="built_in">Array</span>.prototype.indexOf/<span class="built_in">Array</span>.prototype.lastIndexOf(ES5)</span><br><span class="line"><span class="built_in">Array</span>.isArray(ES5)</span><br></pre></td></tr></table></figure>
+<ul>
+<li>reduce</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> arr = [<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>];</span><br><span class="line"><span class="keyword">var</span> sum = arr.reduce(<span class="function"><span class="keyword">function</span>(<span class="params">x,y</span>) </span>&#123; <span class="keyword">return</span> x + y&#125;, <span class="number">0</span>); <span class="comment">// 6</span></span><br></pre></td></tr></table></figure>
+<p><em>解析：</em> reduce接受两个参数，第一个参数则是逻辑函数，第二个参数表明是否要跟首次传入逻辑函数的参数进行逻辑处理，例如上文例子，会先进行 0 + 1 = 1，1 + 2 = 3，3 + 3 = 6</p>
+<ul>
+<li>isArray</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">Array</span>.isArray([]); <span class="comment">// true</span></span><br><span class="line">[] <span class="keyword">instanceof</span> <span class="built_in">Array</span>; <span class="comment">// true</span></span><br><span class="line">(&#123;&#125;).toString.apply([]) === [<span class="string">"object Array"</span>]; <span class="comment">// true</span></span><br><span class="line">[].constructor === <span class="built_in">Array</span>; <span class="comment">// true</span></span><br></pre></td></tr></table></figure>]]></content>
       
         <categories>
             
@@ -4530,6 +4985,31 @@ $ npm install -D webpack webpack-dev-server</code></p>
     </entry>
     
     <entry>
+      <title><![CDATA[JavaScript之二 - 表达式]]></title>
+      <url>https://lucius0.github.io/2016/08/07/archivers/javascript-expression/</url>
+      <content type="html"><![CDATA[<h2 id="1-delete"><a href="#1-delete" class="headerlink" title="1. delete"></a>1. <strong>delete</strong></h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> obj = &#123;<span class="attr">x</span>:<span class="number">1</span>&#125;;</span><br><span class="line">obj.x; <span class="comment">// 1</span></span><br><span class="line"><span class="keyword">delete</span> obj.x;</span><br><span class="line">obj.x; <span class="comment">// undefined</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> obj1 = &#123;&#125;;</span><br><span class="line"><span class="built_in">Object</span>.defineProperty(obj1, <span class="string">"x"</span>, &#123;</span><br><span class="line">	configurable: <span class="literal">false</span>, <span class="comment">// configurable为false表示该值无法删除</span></span><br><span class="line">	value: <span class="number">1</span></span><br><span class="line">&#125;);</span><br><span class="line"><span class="keyword">delete</span> obj1.x; <span class="comment">// false</span></span><br><span class="line">obj1.x; <span class="comment">// 1</span></span><br></pre></td></tr></table></figure>
+<h2 id="2-in"><a href="#2-in" class="headerlink" title="2. in"></a>2. <strong>in</strong></h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">window</span>.x = <span class="number">1</span>; <span class="comment">//全局变量</span></span><br><span class="line"><span class="string">"x"</span> <span class="keyword">in</span> <span class="built_in">window</span>; <span class="comment">// true</span></span><br></pre></td></tr></table></figure>
+<h2 id="3-new"><a href="#3-new" class="headerlink" title="3. new"></a>3. <strong>new</strong></h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Foo</span>(<span class="params"></span>)</span>&#123;&#125;</span><br><span class="line">Foo.prototype.x = <span class="number">1</span>;</span><br><span class="line"><span class="keyword">var</span> obj = <span class="keyword">new</span> Foo();</span><br><span class="line">obj.x; <span class="comment">// 1</span></span><br><span class="line">obj.hasOwnProperty(<span class="string">"x"</span>); <span class="comment">// false</span></span><br><span class="line">obj.__proto__.hasOwnProperty(<span class="string">"x"</span>); <span class="comment">// true</span></span><br></pre></td></tr></table></figure>
+<h2 id="4-this"><a href="#4-this" class="headerlink" title="4. this"></a>4. <strong>this</strong></h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">this</span>; <span class="comment">// window</span></span><br><span class="line"><span class="keyword">var</span> obj = &#123;<span class="attr">fun</span>:<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123; <span class="keyword">return</span> <span class="keyword">this</span>; &#125;&#125;;</span><br><span class="line">obj.func(); <span class="comment">// obj</span></span><br></pre></td></tr></table></figure>
+<h2 id="5-void"><a href="#5-void" class="headerlink" title="5. void"></a>5. <strong>void</strong></h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">void</span> <span class="number">0</span>; <span class="comment">// undefined</span></span><br><span class="line"><span class="keyword">void</span> (<span class="number">0</span>); <span class="comment">// undefined</span></span><br></pre></td></tr></table></figure>
+]]></content>
+      
+        <categories>
+            
+            <category> front-end </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> javascript </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
       <title><![CDATA[JavaScript之一 - 数据类型]]></title>
       <url>https://lucius0.github.io/2016/08/07/archivers/javascript-data-types/</url>
       <content type="html"><![CDATA[<p>以下笔记是观看<a href="http://www.imooc.com/view/277" target="_blank" rel="noopener">《深入浅出javascript》</a>所记下的。</p>
@@ -4567,31 +5047,6 @@ $ npm install -D webpack webpack-dev-server</code></p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">Object</span>.prototype.toString.apply([]); <span class="comment">// [object Array]</span></span><br><span class="line"><span class="built_in">Object</span>.prototype.toString.apply(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;&#125;); <span class="comment">// [object Function]</span></span><br><span class="line"><span class="built_in">Object</span>.prototype.toString.apply(<span class="literal">null</span>); <span class="comment">// [object Null]</span></span><br><span class="line"><span class="built_in">Object</span>.prototype.toString.apply(<span class="literal">undefined</span>); <span class="comment">// [object Undefined]</span></span><br></pre></td></tr></table></figure>
 <p> <strong>注意</strong>：IE/6/7/8 <code>Object.prototype.toString.apply(null); // [object Object]</code></p>
 <p> <strong>总结：</strong> typeof 适合基本类型及function检测，遇到null失效；Class通过{}.toString拿到，适合内置对象和基本类型，遇到null和undefined失效(IE 6/7/8返回[object Object])；instanceof适用自定义对象，也可以用来检测原生对象，在不同iframe和window间检测时失效。<br> <!-- ![](/images/javascript/JavaScript-data-types-01.png) --></p>
-]]></content>
-      
-        <categories>
-            
-            <category> front-end </category>
-            
-        </categories>
-        
-        
-        <tags>
-            
-            <tag> javascript </tag>
-            
-        </tags>
-        
-    </entry>
-    
-    <entry>
-      <title><![CDATA[JavaScript之二 - 表达式]]></title>
-      <url>https://lucius0.github.io/2016/08/07/archivers/javascript-expression/</url>
-      <content type="html"><![CDATA[<h2 id="1-delete"><a href="#1-delete" class="headerlink" title="1. delete"></a>1. <strong>delete</strong></h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> obj = &#123;<span class="attr">x</span>:<span class="number">1</span>&#125;;</span><br><span class="line">obj.x; <span class="comment">// 1</span></span><br><span class="line"><span class="keyword">delete</span> obj.x;</span><br><span class="line">obj.x; <span class="comment">// undefined</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> obj1 = &#123;&#125;;</span><br><span class="line"><span class="built_in">Object</span>.defineProperty(obj1, <span class="string">"x"</span>, &#123;</span><br><span class="line">	configurable: <span class="literal">false</span>, <span class="comment">// configurable为false表示该值无法删除</span></span><br><span class="line">	value: <span class="number">1</span></span><br><span class="line">&#125;);</span><br><span class="line"><span class="keyword">delete</span> obj1.x; <span class="comment">// false</span></span><br><span class="line">obj1.x; <span class="comment">// 1</span></span><br></pre></td></tr></table></figure>
-<h2 id="2-in"><a href="#2-in" class="headerlink" title="2. in"></a>2. <strong>in</strong></h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">window</span>.x = <span class="number">1</span>; <span class="comment">//全局变量</span></span><br><span class="line"><span class="string">"x"</span> <span class="keyword">in</span> <span class="built_in">window</span>; <span class="comment">// true</span></span><br></pre></td></tr></table></figure>
-<h2 id="3-new"><a href="#3-new" class="headerlink" title="3. new"></a>3. <strong>new</strong></h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Foo</span>(<span class="params"></span>)</span>&#123;&#125;</span><br><span class="line">Foo.prototype.x = <span class="number">1</span>;</span><br><span class="line"><span class="keyword">var</span> obj = <span class="keyword">new</span> Foo();</span><br><span class="line">obj.x; <span class="comment">// 1</span></span><br><span class="line">obj.hasOwnProperty(<span class="string">"x"</span>); <span class="comment">// false</span></span><br><span class="line">obj.__proto__.hasOwnProperty(<span class="string">"x"</span>); <span class="comment">// true</span></span><br></pre></td></tr></table></figure>
-<h2 id="4-this"><a href="#4-this" class="headerlink" title="4. this"></a>4. <strong>this</strong></h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">this</span>; <span class="comment">// window</span></span><br><span class="line"><span class="keyword">var</span> obj = &#123;<span class="attr">fun</span>:<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123; <span class="keyword">return</span> <span class="keyword">this</span>; &#125;&#125;;</span><br><span class="line">obj.func(); <span class="comment">// obj</span></span><br></pre></td></tr></table></figure>
-<h2 id="5-void"><a href="#5-void" class="headerlink" title="5. void"></a>5. <strong>void</strong></h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">void</span> <span class="number">0</span>; <span class="comment">// undefined</span></span><br><span class="line"><span class="keyword">void</span> (<span class="number">0</span>); <span class="comment">// undefined</span></span><br></pre></td></tr></table></figure>
 ]]></content>
       
         <categories>
@@ -4668,15 +5123,15 @@ $ npm install -D webpack webpack-dev-server</code></p>
     </entry>
     
     <entry>
-      <title><![CDATA[categories]]></title>
-      <url>https://lucius0.github.io/categories/index.html</url>
-      <content type="html"></content>
-    </entry>
-    
-    <entry>
       <title><![CDATA[about]]></title>
       <url>https://lucius0.github.io/about/index.html</url>
       <content type="html"><![CDATA[<h1>WElCOME</h1>]]></content>
+    </entry>
+    
+    <entry>
+      <title><![CDATA[categories]]></title>
+      <url>https://lucius0.github.io/categories/index.html</url>
+      <content type="html"></content>
     </entry>
     
     <entry>

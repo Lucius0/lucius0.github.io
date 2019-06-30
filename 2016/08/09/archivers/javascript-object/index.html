@@ -350,13 +350,6 @@
 
           
             
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <a href="/2016/08/09/archivers/javascript-object/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2016/08/09//archivers/javascript-object/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
           
 
           
@@ -643,8 +636,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2016/08/11/archivers/javascript-function-01/" rel="prev" title="JavaScript之六 - 函数与作用域(1)">
-                JavaScript之六 - 函数与作用域(1) <i class="fa fa-chevron-right"></i>
+              <a href="/2016/08/11/archivers/javascript-array/" rel="prev" title="JavaScript之五 - 数组">
+                JavaScript之五 - 数组 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -671,12 +664,7 @@
           
   <div class="comments" id="comments">
     
-      <div id="disqus_thread">
-        <noscript>
-          Please enable JavaScript to view the
-          <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a>
-        </noscript>
-      </div>
+      <div id="gitalk-container"></div>
     
   </div>
 
@@ -720,7 +708,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">54</span>
+              <span class="site-state-item-count">55</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -737,7 +725,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">14</span>
+                <span class="site-state-item-count">15</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
@@ -921,37 +909,29 @@
 
   
 
-    <script type="text/javascript">
-      var disqus_shortname = 'lucius0';
-      var disqus_identifier = '2016/08/09//archivers/javascript-object/';
-
-      var disqus_title = "JavaScript之四 - 对象";
-
-
-      function run_disqus_script(disqus_script) {
-        var dsq = document.createElement('script');
-        dsq.type = 'text/javascript';
-        dsq.async = true;
-        dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
-        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-      }
-
-      run_disqus_script('count.js');
-
-      
-        var disqus_config = function () {
-            this.page.url = disqus_url;
-            this.page.identifier = disqus_identifier;
-            this.page.title = disqus_title;
-        };
-        run_disqus_script('embed.js');
-      
-
-    </script>
-  
 
 
 
+	
+
+
+
+
+  <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+
+  <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+   <script type="text/javascript">
+        var gitalk = new Gitalk({
+          clientID: 'c35834931d268e5c17c6',
+          clientSecret: 'c80a4f57c98a6cf8d87e0c7d306201814a0dc745',
+          repo: 'lucius0.github.io',
+          owner: 'lucius0',
+          admin: ['lucius0'],
+          id: location.pathname,
+          distractionFreeMode: 'true'
+        })
+        gitalk.render('gitalk-container')           
+       </script>
 
 
   

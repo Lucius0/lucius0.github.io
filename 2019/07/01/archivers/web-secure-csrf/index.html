@@ -1,0 +1,1080 @@
+<!doctype html>
+
+
+
+
+<html class="theme-next mist" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<script>
+  (adsbygoogle = window.adsbygoogle || []).push({
+    google_ad_client: "ca-pub-7371507374872885",
+    enable_page_level_ads: true
+  });
+</script>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="http,web-secure," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="在进入 web 安全知识之前，建议对 HTTP 有所了解，可以看HTTP 入门体检，会对以下的内容有所帮助。 CSRF(Cross-site request forgery) CSRF，跨站请求伪造。也被称为one-click attack或者session riding，通常缩写为CSRF或者XSRF。是一种挟制用户在当前已登录的Web应用程序上执行非本意的操作的攻击方法。  XSS(Cross">
+<meta name="keywords" content="http,web-secure">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Web 安全防御战 - 浅谈CSRF">
+<meta property="og:url" content="https://lucius0.github.io/2019/07/01//archivers/web-secure-csrf/index.html">
+<meta property="og:site_name" content="Lucius&#39;s Blog">
+<meta property="og:description" content="在进入 web 安全知识之前，建议对 HTTP 有所了解，可以看HTTP 入门体检，会对以下的内容有所帮助。 CSRF(Cross-site request forgery) CSRF，跨站请求伪造。也被称为one-click attack或者session riding，通常缩写为CSRF或者XSRF。是一种挟制用户在当前已登录的Web应用程序上执行非本意的操作的攻击方法。  XSS(Cross">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://lucius0.github.io/images/http/csrf-01.gif">
+<meta property="og:image" content="https://lucius0.github.io/images/http/csrf-02.gif">
+<meta property="og:updated_time" content="2019-06-30T10:45:26.101Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Web 安全防御战 - 浅谈CSRF">
+<meta name="twitter:description" content="在进入 web 安全知识之前，建议对 HTTP 有所了解，可以看HTTP 入门体检，会对以下的内容有所帮助。 CSRF(Cross-site request forgery) CSRF，跨站请求伪造。也被称为one-click attack或者session riding，通常缩写为CSRF或者XSRF。是一种挟制用户在当前已登录的Web应用程序上执行非本意的操作的攻击方法。  XSS(Cross">
+<meta name="twitter:image" content="https://lucius0.github.io/images/http/csrf-01.gif">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: false,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://lucius0.github.io/2019/07/01//archivers/web-secure-csrf/"/>
+
+
+
+
+
+  <title> Web 安全防御战 - 浅谈CSRF | Lucius's Blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Lucius's Blog</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            日志
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup">
+ <span class="search-icon fa fa-search"></span>
+ <input type="text" id="local-search-input">
+ <div id="local-search-result"></div>
+ <span class="popup-btn-close">close</span>
+</div>
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="https://lucius0.github.io/2019/07/01/archivers/web-secure-csrf/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="Lucius">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.jpg">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="Lucius's Blog">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="Lucius's Blog" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Web 安全防御战 - 浅谈CSRF
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-07-01T00:00:00+08:00">
+                2019-07-01
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/http/" itemprop="url" rel="index">
+                    <span itemprop="name">http</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/http/web-secure/" itemprop="url" rel="index">
+                    <span itemprop="name">web-secure</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i> 浏览
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>次
+            </span>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>在进入 web 安全知识之前，建议对 HTTP 有所了解，可以看<a href="https://lucius0.github.io/2019/06/30/archivers/http-introduction/">HTTP 入门体检</a>，会对以下的内容有所帮助。</p>
+<h2 id="CSRF-Cross-site-request-forgery"><a href="#CSRF-Cross-site-request-forgery" class="headerlink" title="CSRF(Cross-site request forgery)"></a>CSRF(Cross-site request forgery)</h2><blockquote>
+<p>CSRF，跨站请求伪造。也被称为<strong>one-click attack</strong>或者<strong>session riding</strong>，通常缩写为<strong>CSRF</strong>或者<strong>XSRF</strong>。是一种挟制用户在当前已登录的Web应用程序上执行非本意的操作的攻击方法。</p>
+</blockquote>
+<h3 id="XSS-Cross-Site-和-CSRF-Cross-Site-区别"><a href="#XSS-Cross-Site-和-CSRF-Cross-Site-区别" class="headerlink" title="XSS(Cross Site) 和 CSRF(Cross Site) 区别"></a>XSS(Cross Site) 和 CSRF(Cross Site) 区别</h3><p>XSS 的 <strong>Cross Site</strong>主要是指在本网站运行了来自其他网站的脚本，而 CSRF 的<strong>Cross Site</strong>则相反，指在其他网站对本网站造成了影响。跟 XSS 相比，XSS 利用的是用户对指定网站的信任，CSRF 利用的是网站对用户网页浏览器的信任。</p>
+<h3 id="简单栗子"><a href="#简单栗子" class="headerlink" title="简单栗子"></a>简单栗子</h3><p>我们在本地搭建两个破烂的网站，一个模拟 CSRF 攻击网站，另一个模拟博客网站。我们的博客网站是采取 <code>GET</code> 方法来发送评论(偷懒，不要模仿)。</p>
+<p>匿名信息的情况下：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 攻击网站攻击代码</span></span><br><span class="line">&lt;img src=<span class="string">"http://localhost:3000/?message=CSRF 攻击"</span> /&gt;</span><br></pre></td></tr></table></figure>
+<p><img src="/images/http/csrf-01.gif" alt=""></p>
+<p>诱引用户点击进行CSRF攻击的情况如下：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 攻击网站攻击代码</span></span><br><span class="line">&lt;img src=<span class="string">"http://localhost:3000/?message=&lt;a href=http://www.csrf.com/&gt;点了会有好事发生！&lt;/a&gt;"</span> /&gt;</span><br></pre></td></tr></table></figure>
+<p><img src="/images/http/csrf-02.gif" alt=""></p>
+<p>大概的流程如下：</p>
+<ul>
+<li>在 CSRF 网站，向博客网站发起了攻击评论<strong>CSRF 攻击</strong>(<code>GET</code>请求)；</li>
+<li>然后在博客网站就会发现了一条 <strong>匿名信息：CSRF 攻击</strong> 的评论；</li>
+<li>假如该 <strong>CSRF攻击</strong> 评论是~超链接~，那么用户点击了就会触发攻击，或者是自行运行的脚本，用户只要打开这个页面就会触发攻击；</li>
+</ul>
+<h3 id="CSRF-攻击原理"><a href="#CSRF-攻击原理" class="headerlink" title="CSRF 攻击原理"></a>CSRF 攻击原理</h3><ul>
+<li>用户登录存在漏洞的健康网站A；</li>
+<li>网站A 服务器验证了用户的身份之后，响应该用户的 Cookie 作为身份凭证；</li>
+<li>攻击网站B 检查到网站A 的漏洞或者引诱用户在 A网站 访问 B网站，这样攻击网站就可以带上用户的身份凭证向 网站A 发起请求(攻击)；</li>
+</ul>
+<h3 id="常见危害"><a href="#常见危害" class="headerlink" title="常见危害"></a>常见危害</h3><ul>
+<li>利用用户登录态盗取用户资金；</li>
+<li>在用户不知情的情况下冒充用户做违法乱纪的事情；</li>
+<li>私自完成业务请求，导致损坏网站名誉；</li>
+<li>…..</li>
+</ul>
+<h3 id="常见防御方法"><a href="#常见防御方法" class="headerlink" title="常见防御方法"></a>常见防御方法</h3><h4 id="Set-Cookie-SameSite"><a href="#Set-Cookie-SameSite" class="headerlink" title="Set-Cookie: SameSite"></a>Set-Cookie: SameSite</h4><p>禁止第三方网站带 Cookies，即在响应头 <code>Set-Cookie</code> 设置 SameSite 属性，表示该 Cookie 问同源网站而非来源第三方网站。如 Koa2 设置如下：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ctx.cookies.set([cookie_key], [cookie_value], &#123;<span class="attr">sameSite</span>: <span class="string">'strict'</span> | <span class="string">'lax'</span>&#125;;</span><br></pre></td></tr></table></figure>
+<p>其中 <code>strict</code> 与 <code>lax</code> 区别如下：<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// B网站 API 响应头设置如下：</span></span><br><span class="line"><span class="built_in">Set</span>-Cookie: foo=<span class="number">1</span>; Samesite=Strict</span><br><span class="line"><span class="built_in">Set</span>-Cookie: bar=<span class="number">2</span>; Samesite=Lax</span><br><span class="line"><span class="built_in">Set</span>-Cookie: baz=<span class="number">3</span></span><br></pre></td></tr></table></figure></p>
+<ol>
+<li>假如在 A网站 请求 B网站 的 API，那么 <code>foo=1</code> 这个 Cookie 是不会从 A网站 带到 B网站的；</li>
+<li><code>Lax</code>，只会在使用危险 HTTP 方法时发送跨域 Cookie 被阻止，如 POST 请求。假如 A 网站 有一个超链接 GET 请求 B网站的 API，那么这时候 Cookie 是可以从 A网站 带到 B网站的；</li>
+<li><code>baz=3</code> 是可以从 A网站 带到 B网站；</li>
+</ol>
+<p><strong>注意：</strong></p>
+<blockquote>
+<p>Lax 的防范有限，而 Strict 则一棒子打死，所以先对大多数 Cookie 设置为 Lax 作为 CSRF 攻击缓解措施，而针对某部分认为存在危险可能的 Cookie才设置 Strict。另外，SameSite Cookie 在子域不支持共享，也就是说父域登录后在子域还需要重新登录，这显然不够友好，而且还存在<strong>兼容性</strong>问题。</p>
+</blockquote>
+<h4 id="验证码校验-或-CSRF-Token"><a href="#验证码校验-或-CSRF-Token" class="headerlink" title="验证码校验 或 CSRF Token"></a>验证码校验 或 CSRF Token</h4><p>无论是验证码还是 CSRF Token，道理都是一样的，就是为了保证只有在本网站才能获得到的<strong>随机验证码</strong>。</p>
+<p><strong>验证码的原理：</strong></p>
+<ul>
+<li>用户在请求的地方，会去请求服务器申请一个验证码，一般来说是图片；</li>
+<li>服务器收到请求后，会随机生成验证码captcha，随后将其文本值以及对应的用户信息缓存下来，并且将图片二进制信息响应回去；</li>
+<li>用户得到图片验证码之后，将其文本信息跟随者请求一起带过去给服务器；</li>
+<li>服务器随后根据用户信息取出对应的验证码并且进行校验。</li>
+</ul>
+<p>验证码实现虽然简单，但是我们不能让用户请求的时候都提交验证码，这样会影响用户体验。</p>
+<p><strong>CSRF Token的原理：</strong></p>
+<ul>
+<li>服务器需要生成一个通过加密算法加密的 Token；</li>
+<li>将该 Token 保存至Cookie，更安全高效的是应该保存在 Session 或者 Redis；</li>
+<li>将该 Token 传给客户端，客户端在请求时要将其 Token 一并带上，如 <code>GET</code> 请求 <code>/api/message?token=xxx</code> 或 <code>POST</code> 请求在form表单追加 <code>&lt;input type=&quot;hidden&quot; name=&quot;token&quot; value=&quot;xxx&quot;/&gt;</code> 或 <code>Ajax</code> 请求在页面添加<code>&lt;meta name=&quot;csrf&quot; content=&quot;token&quot; /&gt;</code>，通过 JS 去获取该 meta 值；</li>
+<li>请求到服务器后，服务器就可以通过解密对比来判断该 Token 的有效性了。</li>
+</ul>
+<p><strong>注：</strong></p>
+<blockquote>
+<p>Token 虽然很有效的防御 CSRF，但是实现复杂，不仅需要前端这边的请求都带上 Token，而且后端也需要对每个接口都进行校验，因此工作量比较大。</p>
+</blockquote>
+<h4 id="同源策略"><a href="#同源策略" class="headerlink" title="同源策略"></a>同源策略</h4><p><code>Origin</code>、<code>Referer</code>，都是用来表示请求源地址。在大多数场景中，会跟随着请求头发送到服务器，然后服务器通过解析头部值，获取请求来源地址。一般来说，我们在服务器设置好<strong>允许请求地址</strong>通过的白名单，然后当服务器拿到请求的来源地址，就可以进行过滤了。</p>
+<p><strong>Origin</strong><br>说到 <code>Origin</code>，就不得不提 CORS 了。CORS 需要<strong>浏览器</strong>和<strong>服务器</strong>同时支持。目前，所有浏览器都支持该功能，~IE 浏览器不能低于IE10~。一旦请求发生 CORS，那么请求头部信息就会携带 <code>Origin</code>，<strong>但是假如发生302重定向，那么Origin也不会跟随着请求头部信息一起发送给服务器。</strong></p>
+<p><strong>Referer</strong><br><code>Referer</code> 的值是由浏览器提供的，每一次的 HTTP 请求首部中都会有该字段，不管是Ajax请求，还是图片。既然由浏览器提供，那么就存在被攻击者刻意隐藏，甚至伪造<code>Referer</code>的值。</p>
+<p>控制<code>Referer</code>的策略如下：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">旧策略属性值</th>
+<th style="text-align:center">新策略属性值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">never</td>
+<td style="text-align:center">no-referrer</td>
+</tr>
+<tr>
+<td style="text-align:center">default</td>
+<td style="text-align:center">no-referrer-when-downgrade</td>
+</tr>
+<tr>
+<td style="text-align:center">always</td>
+<td style="text-align:center">unsafe-url</td>
+</tr>
+<tr>
+<td style="text-align:center">origin-when-crossorigin</td>
+<td style="text-align:center">origin-when-cross-origin</td>
+</tr>
+</tbody>
+</table>
+<p>通过设置 HTTP 响应头 <code>Content-Security-Policy</code> 来指定 <code>Referrer</code>策略：<code>Content-Security-Policy: referrer no-referrer|no-referrer-when-downgrade|unsafe-url|origin-when-cross-origin;</code></p>
+<p>策略属性值说明：</p>
+<ul>
+<li><code>no-referrer</code>：任何情况都不发送 <code>Referer</code>；</li>
+<li><code>no-referrer-when-downgrade</code>：当协议发生降级（如 HTTPS 页面跳转/引入 HTTP 页面）时不发送<code>Referer</code>；</li>
+<li><code>unsafe-url</code>：不安全策略，无论什么情况都发送<code>Referer</code>；</li>
+<li><code>origin-when-crossorigin</code>：尽在发生<strong>跨域</strong>以及包含<strong>host</strong>的前提下发送<code>Referer</code>。</li>
+</ul>
+<p>隐藏<code>Referer</code>有以下几种情况：</p>
+<ul>
+<li>整体隐藏：<code>&lt;meta name=“referrer” content=“never” /&gt;</code> 或 <code>&lt;meta name=“referrer” content=“no-referrer” /&gt;</code>；</li>
+<li>特定元素隐藏：<code>a</code>、<code>area</code>、<code>link</code>、<code>iframe</code>和 <code>img</code> 可以通过 <code>referrerPolicy</code> 进行设置隐藏 <code>referrerPolicy=&quot;never&quot;</code> 或 <code>referrerPolicy=&quot;no-referrer&quot;</code>。其中 <code>a</code> 和 <code>link</code> 还可以通过设置<code>rel=&quot;noreferrer&quot;</code>；</li>
+<li>低版本IE(6、7)隐藏：<code>window.location.href=url</code> 或 <code>window.open</code> 时会丢失<code>Referer</code>。</li>
+</ul>
+<p>总的来说，CSRF 危害很大，而且还跟 XSS 一样很难防范。虽然说我们在上面罗列的接种防御策略可以很大程度上防御 CSRF 攻击，但是并非十全十美。所以我们只有根据自己的实际情况来选择最合适的策略，这样才能降低受到 CSRF 攻击的概率。哦，对了，在防御 CSRF 之前，需要先<a href="https://lucius0.github.io/2019/06/30/archivers/web-secure-xss/">防御 XSS</a>。</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li><a href="https://zh.wikipedia.org/wiki/%E8%B7%A8%E7%AB%99%E8%AF%B7%E6%B1%82%E4%BC%AA%E9%80%A0" target="_blank" rel="noopener">跨站请求伪造 - 维基百科，自由的百科全书</a></li>
+<li><a href="https://www.ibm.com/developerworks/cn/web/1102_niugang_csrf/index.html" target="_blank" rel="noopener">CSRF 攻击的应对之道</a></li>
+<li><a href="https://www.owasp.org/index.php/Cross-Site_Request_Forgery_(CSRF" target="_blank" rel="noopener">Cross-Site Request Forgery (CSRF) - OWASP</a>)</li>
+<li><a href="https://www.cnblogs.com/hyddd/archive/2009/04/09/1432744.html" target="_blank" rel="noopener">浅谈CSRF攻击方式 - hyddd - 博客园</a></li>
+</ul>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+  <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+    <div>我只是试下能不能被赞赏😳</div>
+    <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+      <span>赏</span>
+    </button>
+    <div id="QR" style="display: none;">
+      
+        <div id="wechat" style="display: inline-block">
+          <img id="wechat_qr" src="https://bbucket-1257297990.cos.ap-guangzhou.myqcloud.com/IMG_4838.jpg" alt="Lucius WeChat Pay"/>
+          <p>微信打赏</p>
+        </div>
+      
+      
+        <div id="alipay" style="display: inline-block">
+          <img id="alipay_qr" src="https://bbucket-1257297990.cos.ap-guangzhou.myqcloud.com/171226222918.png" alt="Lucius Alipay"/>
+          <p>支付宝打赏</p>
+        </div>
+      
+    </div>
+  </div>
+
+
+      
+    </div>
+
+    <div>    
+     
+     
+        <ul class="post-copyright">
+          <li class="post-copyright-author">
+              <strong>本文作者：</strong>Lucius
+          </li>
+          <li class="post-copyright-link">
+            <strong>本文链接：</strong>
+            <a href="/2019/07/01/archivers/web-secure-csrf/" title="Web 安全防御战 - 浅谈CSRF">2019/07/01//archivers/web-secure-csrf/</a>
+          </li>
+          <li class="post-copyright-license">
+            <strong>版权声明： </strong>
+            本博客所有文章除特别声明外，均采用 <a href="http://creativecommons.org/licenses/by-nc-sa/3.0/cn/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0 CN</a> 许可协议。转载请注明出处！
+          </li>
+        </ul>
+      
+    </div>
+    
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/http/" rel="tag"># http</a>
+          
+            <a href="/tags/web-secure/" rel="tag"># web-secure</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/06/30/archivers/http-introduction/" rel="next" title="HTTP 入门体检">
+                <i class="fa fa-chevron-left"></i> HTTP 入门体检
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+      <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-7371507374872885"
+     data-ad-slot="4569151502"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="gitalk-container"></div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.jpg"
+               alt="Lucius" />
+          <p class="site-author-name" itemprop="name">Lucius</p>
+          <p class="site-description motion-element" itemprop="description">stay hungry, stay foolish...</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">57</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">10</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">16</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/Lucius0" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#CSRF-Cross-site-request-forgery"><span class="nav-number">1.</span> <span class="nav-text">CSRF(Cross-site request forgery)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#XSS-Cross-Site-和-CSRF-Cross-Site-区别"><span class="nav-number">1.1.</span> <span class="nav-text">XSS(Cross Site) 和 CSRF(Cross Site) 区别</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#简单栗子"><span class="nav-number">1.2.</span> <span class="nav-text">简单栗子</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#CSRF-攻击原理"><span class="nav-number">1.3.</span> <span class="nav-text">CSRF 攻击原理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#常见危害"><span class="nav-number">1.4.</span> <span class="nav-text">常见危害</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#常见防御方法"><span class="nav-number">1.5.</span> <span class="nav-text">常见防御方法</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Set-Cookie-SameSite"><span class="nav-number">1.5.1.</span> <span class="nav-text">Set-Cookie: SameSite</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#验证码校验-或-CSRF-Token"><span class="nav-number">1.5.2.</span> <span class="nav-text">验证码校验 或 CSRF Token</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#同源策略"><span class="nav-number">1.5.3.</span> <span class="nav-text">同源策略</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考"><span class="nav-number">2.</span> <span class="nav-text">参考</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Lucius</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+
+<div class="busuanzi-count">
+
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv"><i class="fa fa-user"></i> 访问人数<span class="busuanzi-value" id="busuanzi_value_site_uv"></span></span>
+  
+
+  
+    <span class="site-pv"><i class="fa fa-eye"></i> 总访问量<span class="busuanzi-value" id="busuanzi_value_site_pv"></span>次</span>
+  
+  
+</div>
+
+
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+	
+
+
+
+
+  <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+
+  <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+   <script type="text/javascript">
+        var gitalk = new Gitalk({
+          clientID: 'c35834931d268e5c17c6',
+          clientSecret: 'c80a4f57c98a6cf8d87e0c7d306201814a0dc745',
+          repo: 'lucius0.github.io',
+          owner: 'lucius0',
+          admin: ['lucius0'],
+          id: location.pathname,
+          distractionFreeMode: 'true'
+        })
+        gitalk.render('gitalk-container')           
+       </script>
+
+
+  
+  
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length == 0) {
+      search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body").append('<div class="popoverlay">').css('overflow', 'hidden');
+      $('.popup').toggle();
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+      $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = $( "entry", xmlResponse ).map(function() {
+            return {
+              title: $( "title", this ).text(),
+              content: $("content",this).text(),
+              url: $( "url" , this).text()
+            };
+          }).get();
+          var $input = document.getElementById(search_id);
+          var $resultContent = document.getElementById(content_id);
+          $input.addEventListener('input', function(){
+            var matchcounts = 0;
+            var str='<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length > 1) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var content_index = [];
+                var data_title = data.title.trim().toLowerCase();
+                var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                var data_url = decodeURIComponent(data.url);
+                var index_title = -1;
+                var index_content = -1;
+                var first_occur = -1;
+                // only match artiles with not empty titles and contents
+                if(data_title != '') {
+                  keywords.forEach(function(keyword, i) {
+                    index_title = data_title.indexOf(keyword);
+                    index_content = data_content.indexOf(keyword);
+                    if( index_title >= 0 || index_content >= 0 ){
+                      isMatch = true;
+                      if (i == 0) {
+                        first_occur = index_content;
+                      }
+                    }
+
+                  });
+                }
+                // show search results
+                if (isMatch) {
+                  matchcounts += 1;
+                  str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                  var content = data.content.trim().replace(/<[^>]+>/g,"");
+                  if (first_occur >= 0) {
+                    // cut out 100 characters
+                    var start = first_occur - 20;
+                    var end = first_occur + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if(start == 0){
+                      end = 50;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    var match_content = content.substring(start, end);
+                    // highlight all keywords
+                    keywords.forEach(function(keyword){
+                      var regS = new RegExp(keyword, "gi");
+                      match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                    });
+
+                    str += "<p class=\"search-result\">" + match_content +"...</p>"
+                  }
+                  str += "</li>";
+                }
+              })};
+            str += "</ul>";
+            if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+            if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+            $resultContent.innerHTML = str;
+          });
+          proceedsearch();
+        }
+      });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".popoverlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+
+  
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+
+  <script type="text/javascript">
+    (function() {
+      // try {
+      //   var document = window.document;
+      //   document.oncontextmenu = function() {
+      //     return false;
+      //   }
+      //   document.onkeydown = function() {
+      //     if (window.event.ctrlKey && window.event.keyCode == 67) {
+      //       return false;
+      //     }
+      //     return false;
+      //   }
+      //   document.body.oncopy = function() {
+      //     return false;
+      //   }
+      //   document.onselectstart = function() {
+      //     return false;
+      //   }
+            
+      //   document.onselectstart=function(){return false};
+      //   // document.style.MozUserSelect && document.style.MozUserSelect="none";
+      //   document.onmousedown=function(){return false};
+      //   document.style.cursor = "default"; 
+      // } catch(e) {}
+    })();
+  </script>
+
+</body>
+</html>

@@ -271,6 +271,7 @@
             本博客所有文章除特别声明外，均采用 <a href="http://creativecommons.org/licenses/by-nc-sa/3.0/cn/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0 CN</a> 许可协议。转载请注明出处！
           </li>
         </ul>
+        {% include 'google_adsense.swig' %}
       {% endif %}
     </div>
     
@@ -309,7 +310,6 @@
       {% if is_index and not isLast %}
         <div class="post-eof"></div>
       {% endif %}
-      {% include 'google_adsense.swig' %}
     </footer>
   </article>
 

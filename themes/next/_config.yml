@@ -302,7 +302,7 @@ gitalk:
 
 
 # Google Analytics
-#google_analytics:
+google_analytics: UA-143360785-1
 
 # CNZZ count
 #cnzz_siteid:

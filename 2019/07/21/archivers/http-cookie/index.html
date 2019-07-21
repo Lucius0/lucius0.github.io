@@ -1,0 +1,1032 @@
+<!doctype html>
+
+
+
+
+<html class="theme-next mist" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<script>
+  (adsbygoogle = window.adsbygoogle || []).push({
+    google_ad_client: "ca-pub-7371507374872885",
+    enable_page_level_ads: true
+  });
+</script>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="http," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="在阅读该文章之前，建议对 HTTP 有所了解，可以看HTTP 入门体检，会对以下的内容有所帮助。 我们在前面说了那么多关于 Web 安全的问题，多多少少都会跟 Cookies 扯上关系。也就是说无论是 XSS 还是 CSRF，Cookies 都是我们无法绕过的坎。既然 Cookies 这么重要，那我们来好好的分析一下它。 介绍 Cookies 它是前端数据的“数据库”，保存在浏览器，且遵守同源策略">
+<meta name="keywords" content="http">
+<meta property="og:type" content="article">
+<meta property="og:title" content="来一块饼干吗？ - HTTP Cookie">
+<meta property="og:url" content="https://lucius0.github.io/2019/07/21//archivers/http-cookie/index.html">
+<meta property="og:site_name" content="Lucius&#39;s Blog">
+<meta property="og:description" content="在阅读该文章之前，建议对 HTTP 有所了解，可以看HTTP 入门体检，会对以下的内容有所帮助。 我们在前面说了那么多关于 Web 安全的问题，多多少少都会跟 Cookies 扯上关系。也就是说无论是 XSS 还是 CSRF，Cookies 都是我们无法绕过的坎。既然 Cookies 这么重要，那我们来好好的分析一下它。 介绍 Cookies 它是前端数据的“数据库”，保存在浏览器，且遵守同源策略">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://lucius0.github.io/images/http/cookie-01.png">
+<meta property="og:image" content="https://lucius0.github.io/images/http/cookie-02.png">
+<meta property="og:image" content="https://lucius0.github.io/images/http/session-01.png">
+<meta property="og:updated_time" content="2019-07-21T04:00:14.810Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="来一块饼干吗？ - HTTP Cookie">
+<meta name="twitter:description" content="在阅读该文章之前，建议对 HTTP 有所了解，可以看HTTP 入门体检，会对以下的内容有所帮助。 我们在前面说了那么多关于 Web 安全的问题，多多少少都会跟 Cookies 扯上关系。也就是说无论是 XSS 还是 CSRF，Cookies 都是我们无法绕过的坎。既然 Cookies 这么重要，那我们来好好的分析一下它。 介绍 Cookies 它是前端数据的“数据库”，保存在浏览器，且遵守同源策略">
+<meta name="twitter:image" content="https://lucius0.github.io/images/http/cookie-01.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: false,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://lucius0.github.io/2019/07/21//archivers/http-cookie/"/>
+
+
+
+
+
+  <title> 来一块饼干吗？ - HTTP Cookie | Lucius's Blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-143360785-1', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Lucius's Blog</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            日志
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup">
+ <span class="search-icon fa fa-search"></span>
+ <input type="text" id="local-search-input">
+ <div id="local-search-result"></div>
+ <span class="popup-btn-close">close</span>
+</div>
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="https://lucius0.github.io/2019/07/21/archivers/http-cookie/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="Lucius">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.jpg">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="Lucius's Blog">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="Lucius's Blog" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                来一块饼干吗？ - HTTP Cookie
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-07-21T00:00:00+08:00">
+                2019-07-21
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/http/" itemprop="url" rel="index">
+                    <span itemprop="name">http</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i> 浏览
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>次
+            </span>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>在阅读该文章之前，建议对 HTTP 有所了解，可以看<a href="https://lucius0.github.io/2019/06/30/archivers/http-introduction/">HTTP 入门体检</a>，会对以下的内容有所帮助。</p>
+<p>我们在前面说了那么多关于 Web 安全的问题，多多少少都会跟 Cookies 扯上关系。也就是说无论是 <a href="https://lucius0.github.io/2019/06/30/archivers/web-secure-xss/">XSS</a> 还是 <a href="https://lucius0.github.io/2019/07/01/archivers/web-secure-csrf/">CSRF</a>，Cookies 都是我们无法绕过的坎。既然 Cookies 这么重要，那我们来好好的分析一下它。</p>
+<h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><blockquote>
+<p>Cookies 它是前端数据的<strong>“数据库”</strong>，保存在浏览器，且遵守<strong>同源策略</strong>。它是由服务器通过设置 <strong>HTTP 响应头</strong>来设置 Cookies，然后在请求的时候由浏览器通过 <strong>HTTP 请求头</strong>发送给服务器。一般情况下，<strong>JS 可读写Cookies</strong>。</p>
+</blockquote>
+<p>所谓的同源策略，指的是从同一个源加载的文档或脚本如何与来自另一个源的资源进行交互，这样可以隔离潜在恶意文件。<strong>简单来说，就是协议、端口以及域名(无论一级域名或二级域名)相同构成同源地址。</strong> ——— <a href="https://developer.mozilla.org/zh-CN/docs/Web/Security/Same-origin_policy" target="_blank" rel="noopener">同源策略 - MDN</a> </p>
+<h2 id="属性"><a href="#属性" class="headerlink" title="属性"></a>属性</h2><p>其实属性我们在 <a href="https://lucius0.github.io/2019/06/30/archivers/http-introduction/">网络协议入门体检</a>已经说过了，在这里我们重新梳理一次。之前也讲过在 koa2 的设置方法，koa 2 中操作 Cookies 是使用了<a href="https://github.com/pillarjs/cookies" target="_blank" rel="noopener">Cookies</a>，因此使用方法也简单了不少：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ctx.cookies.set([cookie_key], [cookie_value], &#123; 属性: 值 &#125;;</span></span><br><span class="line"><span class="comment">// 如：</span></span><br><span class="line">ctx.cookies.set(<span class="string">'uid'</span>, <span class="string">'123'</span>, &#123; <span class="attr">httpOnly</span>: <span class="literal">false</span> &#125;);</span><br></pre></td></tr></table></figure>
+<p>那么在第一次响应时会返回 <code>Set-Cookie</code> 响应首部字段。</p>
+<p><img src="/images/http/cookie-01.png" alt=""></p>
+<p>而再次发送该请求时，就会自动带上 <code>Cookie</code> 请求首部字段了。</p>
+<p><img src="/images/http/cookie-02.png" alt=""></p>
+<p><strong>注：</strong></p>
+<blockquote>
+<p>Cookies 是可以设置多个 key，value 键值对的。假如是同一个key，多个value，则在第二次请求的时候携带的 Cookie 首部字段是后者覆盖前者。</p>
+<p>我们已经知道了如何如增改查一个 Cookie，但是 Cookie 的删除却是无法直接删除的，什么意思呢？简单的说，你只能设置它的有效时间为过期时间，即 <code>ctx.cookies.set(&#39;uid&#39;,&#39;&#39;,{ maxAge:0 })</code>。</p>
+</blockquote>
+<h3 id="max-age-expires"><a href="#max-age-expires" class="headerlink" title="max-age/expires"></a>max-age/expires</h3><p>过期时间，这个不用多解释，跟之前讲的 <code>Cache-Control</code> 是一个使用方法以及效果一样。</p>
+<h3 id="Secure"><a href="#Secure" class="headerlink" title="Secure"></a>Secure</h3><p>只允许在 HTTPS 协议下请求传输。</p>
+<h3 id="HttpOnly"><a href="#HttpOnly" class="headerlink" title="HttpOnly"></a>HttpOnly</h3><p>不允许使用 js 来操作 Cookies，也就是只允许服务器操作，包括增删改查，该属性可以在一定程度上防御 CSRF 攻击，详细可以查看 <a href="https://lucius0.github.io/2019/07/01/archivers/web-secure-csrf/">CSRF</a>。</p>
+<h3 id="Domain"><a href="#Domain" class="headerlink" title="Domain"></a>Domain</h3><p>由于 Cookies 有域名访问权限设定，也就是说该 Cookie 只能在当前域使用，例如在百度的 Cookies 只能在 <code>baidu.com</code> 域名下允许访问。那么假如是二级域名呢？如 <code>test.baidu.com</code>。其实二级域名是<strong>有办法共享</strong>一级域名的 Cookies 的，就是通过 <code>domain</code> 来实现的。</p>
+<p><code>domain</code> 的默认值为哪个域名访问则为哪个，不管你是几级域名。因此二级域名的访问的 <code>domain</code> 就为二级域名，如 <code>xxx.baidu.com</code>，既然 <code>domain</code> 是二级域名，那么就无法跟一级域名共享 Cookie，而且一级域名的<code>domain</code> 也无法设置成二级域名。<strong>所以要实现共享，只需要将一级域名以及二级域名均设置为一级域名.</strong></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 一级域名设置如下</span></span><br><span class="line">ctx.cookies.set(<span class="string">'uid'</span>, <span class="string">'123'</span>, &#123; <span class="attr">domain</span>: <span class="string">'baidu.com'</span> &#125;);</span><br><span class="line"><span class="comment">// 二级域名设置如下</span></span><br><span class="line">ctx.cookies.set(<span class="string">'uid'</span>, <span class="string">'123'</span>, &#123; <span class="attr">domain</span>: <span class="string">'baidu.com'</span> &#125;);</span><br></pre></td></tr></table></figure>
+<h3 id="SameSite"><a href="#SameSite" class="headerlink" title="SameSite"></a>SameSite</h3><p>禁止第三方网站带 Cookies，即在响应头 <code>Set-Cookie</code> 设置 SameSite 属性，表示该 Cookies 问同源网站而非来源第三方网站。如 Koa2 设置如下：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ctx.cookies.set([cookie_key], [cookie_value], &#123;<span class="attr">sameSite</span>: <span class="string">'strict'</span> | <span class="string">'lax'</span>&#125;;</span><br></pre></td></tr></table></figure>
+<p>其中 <code>strict</code> 与 <code>lax</code> 区别如下：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// B网站 API 响应头设置如下：</span></span><br><span class="line"><span class="built_in">Set</span>-Cookie: foo=<span class="number">1</span>; Samesite=Strict</span><br><span class="line"><span class="built_in">Set</span>-Cookie: bar=<span class="number">2</span>; Samesite=Lax</span><br><span class="line"><span class="built_in">Set</span>-Cookie: baz=<span class="number">3</span></span><br></pre></td></tr></table></figure>
+<ol>
+<li>假如在 A网站 请求 B网站 的 API，那么 <code>foo=1</code> 这个 Cookie 是不会从 A网站 带到 B网站的；</li>
+<li><code>Lax</code>，只会在使用危险 HTTP 方法时发送跨域 Cookie 被阻止，如 POST 请求。假如 A 网站 有一个超链接 GET 请求 B网站的 API，那么这时候 Cookie 是可以从 A网站 带到 B网站的；</li>
+<li><code>baz=3</code> 是可以从 A网站 带到 B网站；</li>
+</ol>
+<p><strong>注：</strong></p>
+<blockquote>
+<p>Lax 的防范有限，而 Strict 则一棒子打死，所以先对大多数 Cookie 设置为 Lax 作为 CSRF 攻击缓解措施，而针对某部分认为存在危险可能的 Cookie才设置 Strict。另外，SameSite Cookie 在子域不支持共享，也就是说父域登录后在子域还需要重新登录，这显然不够友好，而且还存在<strong>兼容性</strong>问题。</p>
+</blockquote>
+<h2 id="常见作用"><a href="#常见作用" class="headerlink" title="常见作用"></a>常见作用</h2><ul>
+<li>存储用户凭证，典型的有记住用户登录状态以及登录失效时间；</li>
+<li>存储业务数据，典型的有购物车物品的状态；</li>
+<li>记录用户习惯，典型的有在搜索物品后，会根据该记录给你精准推送；</li>
+<li>存储未登录用户的状态，典型的有论坛评论，填写你的邮箱地址然后进行评论，而且你不需要注册；</li>
+</ul>
+<h2 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h2><ul>
+<li>Cookies 作为客户端的数据库，那么敏感信息保存在客户端多多少少是不安全的，万一被拦截了呢？上 HTTPS；</li>
+<li>Cookies 的存储容量有限，在不同浏览器都是有不同的限制，但大多数浏览器每个<strong>域</strong>不超过50个 Cookie 且不超过4kb，也有的浏览器则是每个 Cookie 的大小不超过 4kb，详细可以查看 <a href="http://browsercookielimits.squawky.net/" target="_blank" rel="noopener">Browser Cookie Limits</a>；</li>
+</ul>
+<h2 id="Cookies-与安全"><a href="#Cookies-与安全" class="headerlink" title="Cookies 与安全"></a>Cookies 与安全</h2><h3 id="Cookies-amp-amp-XSS"><a href="#Cookies-amp-amp-XSS" class="headerlink" title="Cookies &amp;&amp; XSS"></a>Cookies &amp;&amp; XSS</h3><p>假如 Cookies 在允许 JS 操作的情况下，那么 XSS 可以偷取 Cookie，解决方法也已经在前面提到了，就是使用 <code>httpOnly</code>。</p>
+<h3 id="Cookies-amp-amp-CSRF"><a href="#Cookies-amp-amp-CSRF" class="headerlink" title="Cookies &amp;&amp; CSRF"></a>Cookies &amp;&amp; CSRF</h3><p>CSRF 攻击的来源就是利用了 Cookies，当用户向目标网站发起请求的时候，这时候是会带上 Cookies 的。虽然带上了 Cookies，但是 CSRF 攻击网站是无法读写 Cookies 的。当然，我们最好的方法是能禁止不在白名单的第三方网站访问 Cookies，与防御 CSRF 攻击有关的 Cookies 属性是<code>sameSite</code>。</p>
+<h2 id="Session"><a href="#Session" class="headerlink" title="Session"></a>Session</h2><p>这里作为补充知识点，因为很多时候都会听到 Cookies 以及 Session 一起讲，那 Cookies 是什么我们现在知道了。Session 又是什么呢？它跟 Cookies 的区别又是什么？欢迎走入今日扯淡。</p>
+<h3 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h3><blockquote>
+<p>Session 本身就是一个抽象的概念，也就是因为 HTTP 的无状态，为了绕开 Cookies 的限制，借助客户端存储(一般来说是Cookies，因为较为通用)和服务器的存储，来实现客户端与服务器之间的中断和继续等操作的一种更高级的会话实现。</p>
+</blockquote>
+<h3 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h3><p>流程图如下：</p>
+<p><img src="/images/http/session-01.png" alt=""></p>
+<p>简单的实现<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> Koa = <span class="built_in">require</span>(<span class="string">'koa'</span>);</span><br><span class="line"><span class="keyword">const</span> Redis = <span class="built_in">require</span>(<span class="string">"ioredis"</span>);</span><br><span class="line"><span class="keyword">const</span> session = <span class="built_in">require</span>(<span class="string">"koa-session2"</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> app = <span class="keyword">new</span> Koa();</span><br><span class="line"><span class="keyword">const</span> redisCfg = &#123;</span><br><span class="line">  port: <span class="number">6379</span>, <span class="comment">// Redis port</span></span><br><span class="line">  host: <span class="string">"127.0.0.1"</span>, <span class="comment">// Redis host</span></span><br><span class="line">  family: <span class="number">4</span>, <span class="comment">// 4 (IPv4) or 6 (IPv6)</span></span><br><span class="line">  password: <span class="string">"admin"</span>,</span><br><span class="line">  db: <span class="number">0</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">RedisStore</span> <span class="keyword">extends</span> <span class="title">session</span>.<span class="title">Store</span> </span>&#123;</span><br><span class="line">  <span class="keyword">constructor</span>() &#123;</span><br><span class="line">    <span class="keyword">super</span>();</span><br><span class="line">    <span class="keyword">this</span>.redis = <span class="keyword">new</span> Redis(redisCfg);</span><br><span class="line">  &#125;</span><br><span class="line"> </span><br><span class="line">  <span class="keyword">async</span> get(sessionId, ctx) &#123;</span><br><span class="line">    <span class="keyword">let</span> data = <span class="keyword">await</span> <span class="keyword">this</span>.redis.get(<span class="string">`SESSION:<span class="subst">$&#123;sessionId&#125;</span>`</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">JSON</span>.parse(data);</span><br><span class="line">  &#125;</span><br><span class="line"> </span><br><span class="line">  <span class="keyword">async</span> set(session, content, ctx) &#123;</span><br><span class="line">    <span class="keyword">let</span> &#123; sessionId, maxAge &#125; = content;</span><br><span class="line">    <span class="keyword">const</span> key = <span class="string">`SESSION:<span class="subst">$&#123;sessionId&#125;</span>`</span>;</span><br><span class="line">    <span class="keyword">const</span> value = <span class="built_in">JSON</span>.stringify(session);</span><br><span class="line">    <span class="keyword">const</span> command = <span class="string">'EX'</span>;</span><br><span class="line">    maxAge = maxAge / <span class="number">1000</span>;</span><br><span class="line">    <span class="keyword">await</span> <span class="keyword">this</span>.redis.set(key, value, command, maxAge);</span><br><span class="line">    <span class="keyword">return</span> sessionId;</span><br><span class="line">  &#125;</span><br><span class="line"> </span><br><span class="line">  <span class="keyword">async</span> destroy(sessionId, ctx) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">await</span> <span class="keyword">this</span>.redis.del(<span class="string">`SESSION:<span class="subst">$&#123;sessionId&#125;</span>`</span>);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">app.use(session(&#123;</span><br><span class="line">  store: <span class="keyword">new</span> RedisStore(),</span><br><span class="line">  key: <span class="string">"SESSION_ID"</span>,</span><br><span class="line">&#125;));</span><br></pre></td></tr></table></figure></p>
+<h3 id="区别"><a href="#区别" class="headerlink" title="区别"></a>区别</h3><ul>
+<li>Cookies 是存放在客户端的，通常为浏览器，而 Session 则是存在服务器；</li>
+<li>Cookies 作为登录凭证容易遭受到 CSRF 攻击，而 Session 相对来说较为安全；</li>
+<li>Cookies 只能存储 ASCII 字符串，假如是对象，还得通过 <code>JSON.parse</code> 转换，而 Session 可以存储对象，读写方便；</li>
+<li>保管在服务器的 Session 对服务器的压力有影响，一旦并发访问多，则会占用很多资源，因此不敏感的数据可以考虑储存在 Cookies；</li>
+<li>Cookies 可以与子域共享，而 Session 则没有这个说法；</li>
+</ul>
+<p><strong>注：</strong></p>
+<blockquote>
+<p>假如浏览器把 Cookies 禁用了，那么可以通过 Session 来与服务器进行交互，具体的做法就是在请求 URL 后附加相关信息，如<code>http://test.com?sessionId=abc123xxx</code></p>
+</blockquote>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>基本上我们讲完了 Cookies 的基本属性、Cookies 与安全的联系以及跟Session 之间的关系。Cookies 能做到安全防御的措施其实是很有限的，也就是那几个属性<code>httpOnly/Secure/sameSite</code>，再者可以在 Cookies 上加签名或者密钥，这样可以在一定程度上防止被修改。</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+  <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+    <div>我只是试下能不能被赞赏😳</div>
+    <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+      <span>赏</span>
+    </button>
+    <div id="QR" style="display: none;">
+      
+        <div id="wechat" style="display: inline-block">
+          <img id="wechat_qr" src="https://bbucket-1257297990.cos.ap-guangzhou.myqcloud.com/IMG_4838.jpg" alt="Lucius WeChat Pay"/>
+          <p>微信打赏</p>
+        </div>
+      
+      
+        <div id="alipay" style="display: inline-block">
+          <img id="alipay_qr" src="https://bbucket-1257297990.cos.ap-guangzhou.myqcloud.com/171226222918.png" alt="Lucius Alipay"/>
+          <p>支付宝打赏</p>
+        </div>
+      
+    </div>
+  </div>
+
+
+      
+    </div>
+
+    <div>    
+     
+     
+        <ul class="post-copyright">
+          <li class="post-copyright-author">
+              <strong>本文作者：</strong>Lucius
+          </li>
+          <li class="post-copyright-link">
+            <strong>本文链接：</strong>
+            <a href="/2019/07/21/archivers/http-cookie/" title="来一块饼干吗？ - HTTP Cookie">2019/07/21//archivers/http-cookie/</a>
+          </li>
+          <li class="post-copyright-license">
+            <strong>版权声明： </strong>
+            本博客所有文章除特别声明外，均采用 <a href="http://creativecommons.org/licenses/by-nc-sa/3.0/cn/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0 CN</a> 许可协议。转载请注明出处！
+          </li>
+        </ul>
+        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-7371507374872885"
+     data-ad-slot="4569151502"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+      
+    </div>
+    
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/http/" rel="tag"># http</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/07/13/archivers/http-cache/" rel="next" title="来杯一点点 - HTTP 缓存">
+                <i class="fa fa-chevron-left"></i> 来杯一点点 - HTTP 缓存
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="gitalk-container"></div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.jpg"
+               alt="Lucius" />
+          <p class="site-author-name" itemprop="name">Lucius</p>
+          <p class="site-description motion-element" itemprop="description">stay hungry, stay foolish...</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">59</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">10</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">16</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/Lucius0" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#介绍"><span class="nav-number">1.</span> <span class="nav-text">介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#属性"><span class="nav-number">2.</span> <span class="nav-text">属性</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#max-age-expires"><span class="nav-number">2.1.</span> <span class="nav-text">max-age/expires</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Secure"><span class="nav-number">2.2.</span> <span class="nav-text">Secure</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#HttpOnly"><span class="nav-number">2.3.</span> <span class="nav-text">HttpOnly</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Domain"><span class="nav-number">2.4.</span> <span class="nav-text">Domain</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SameSite"><span class="nav-number">2.5.</span> <span class="nav-text">SameSite</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#常见作用"><span class="nav-number">3.</span> <span class="nav-text">常见作用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#缺点"><span class="nav-number">4.</span> <span class="nav-text">缺点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Cookies-与安全"><span class="nav-number">5.</span> <span class="nav-text">Cookies 与安全</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Cookies-amp-amp-XSS"><span class="nav-number">5.1.</span> <span class="nav-text">Cookies &amp;&amp; XSS</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Cookies-amp-amp-CSRF"><span class="nav-number">5.2.</span> <span class="nav-text">Cookies &amp;&amp; CSRF</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Session"><span class="nav-number">6.</span> <span class="nav-text">Session</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#背景"><span class="nav-number">6.1.</span> <span class="nav-text">背景</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#实现"><span class="nav-number">6.2.</span> <span class="nav-text">实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#区别"><span class="nav-number">6.3.</span> <span class="nav-text">区别</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">7.</span> <span class="nav-text">总结</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Lucius</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+
+<div class="busuanzi-count">
+
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv"><i class="fa fa-user"></i> 访问人数<span class="busuanzi-value" id="busuanzi_value_site_uv"></span></span>
+  
+
+  
+    <span class="site-pv"><i class="fa fa-eye"></i> 总访问量<span class="busuanzi-value" id="busuanzi_value_site_pv"></span>次</span>
+  
+  
+</div>
+
+
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+	
+
+
+
+
+  <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+
+  <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+   <script type="text/javascript">
+        var gitalk = new Gitalk({
+          clientID: 'c35834931d268e5c17c6',
+          clientSecret: 'c80a4f57c98a6cf8d87e0c7d306201814a0dc745',
+          repo: 'lucius0.github.io',
+          owner: 'lucius0',
+          admin: ['lucius0'],
+          id: location.pathname,
+          distractionFreeMode: 'true'
+        })
+        gitalk.render('gitalk-container')           
+       </script>
+
+
+  
+  
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length == 0) {
+      search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body").append('<div class="popoverlay">').css('overflow', 'hidden');
+      $('.popup').toggle();
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+      $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = $( "entry", xmlResponse ).map(function() {
+            return {
+              title: $( "title", this ).text(),
+              content: $("content",this).text(),
+              url: $( "url" , this).text()
+            };
+          }).get();
+          var $input = document.getElementById(search_id);
+          var $resultContent = document.getElementById(content_id);
+          $input.addEventListener('input', function(){
+            var matchcounts = 0;
+            var str='<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length > 1) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var content_index = [];
+                var data_title = data.title.trim().toLowerCase();
+                var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                var data_url = decodeURIComponent(data.url);
+                var index_title = -1;
+                var index_content = -1;
+                var first_occur = -1;
+                // only match artiles with not empty titles and contents
+                if(data_title != '') {
+                  keywords.forEach(function(keyword, i) {
+                    index_title = data_title.indexOf(keyword);
+                    index_content = data_content.indexOf(keyword);
+                    if( index_title >= 0 || index_content >= 0 ){
+                      isMatch = true;
+                      if (i == 0) {
+                        first_occur = index_content;
+                      }
+                    }
+
+                  });
+                }
+                // show search results
+                if (isMatch) {
+                  matchcounts += 1;
+                  str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                  var content = data.content.trim().replace(/<[^>]+>/g,"");
+                  if (first_occur >= 0) {
+                    // cut out 100 characters
+                    var start = first_occur - 20;
+                    var end = first_occur + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if(start == 0){
+                      end = 50;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    var match_content = content.substring(start, end);
+                    // highlight all keywords
+                    keywords.forEach(function(keyword){
+                      var regS = new RegExp(keyword, "gi");
+                      match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                    });
+
+                    str += "<p class=\"search-result\">" + match_content +"...</p>"
+                  }
+                  str += "</li>";
+                }
+              })};
+            str += "</ul>";
+            if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+            if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+            $resultContent.innerHTML = str;
+          });
+          proceedsearch();
+        }
+      });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".popoverlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+
+  
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+
+  <script type="text/javascript">
+    (function() {
+      // try {
+      //   var document = window.document;
+      //   document.oncontextmenu = function() {
+      //     return false;
+      //   }
+      //   document.onkeydown = function() {
+      //     if (window.event.ctrlKey && window.event.keyCode == 67) {
+      //       return false;
+      //     }
+      //     return false;
+      //   }
+      //   document.body.oncopy = function() {
+      //     return false;
+      //   }
+      //   document.onselectstart = function() {
+      //     return false;
+      //   }
+            
+      //   document.onselectstart=function(){return false};
+      //   // document.style.MozUserSelect && document.style.MozUserSelect="none";
+      //   document.onmousedown=function(){return false};
+      //   document.style.cursor = "default"; 
+      // } catch(e) {}
+    })();
+  </script>
+
+</body>
+</html>

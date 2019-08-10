@@ -1,0 +1,1044 @@
+<!doctype html>
+
+
+
+
+<html class="theme-next mist" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<script>
+  (adsbygoogle = window.adsbygoogle || []).push({
+    google_ad_client: "ca-pub-7371507374872885",
+    enable_page_level_ads: true
+  });
+</script>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="http," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="在阅读该文章之前，建议对 HTTP 有所了解，可以看HTTP 入门体检，会对以下的内容有所帮助。 X-Frame-Options 响应首部字段是用来告诉浏览器该网页是否能被 frame，iframe，embed，object 元素嵌入。X-Frame-Option 可以确保站点不被这些元素嵌入，免得遭受点击劫持的攻击。 在说 X-Frame-Options 之前，当然要先简单的介绍下那几个嵌入元素">
+<meta name="keywords" content="http">
+<meta property="og:type" content="article">
+<meta property="og:title" content="HTTP X-Frame-Options">
+<meta property="og:url" content="https://lucius0.github.io/2019/08/10//archivers/http-x-frame-options/index.html">
+<meta property="og:site_name" content="Lucius&#39;s Blog">
+<meta property="og:description" content="在阅读该文章之前，建议对 HTTP 有所了解，可以看HTTP 入门体检，会对以下的内容有所帮助。 X-Frame-Options 响应首部字段是用来告诉浏览器该网页是否能被 frame，iframe，embed，object 元素嵌入。X-Frame-Option 可以确保站点不被这些元素嵌入，免得遭受点击劫持的攻击。 在说 X-Frame-Options 之前，当然要先简单的介绍下那几个嵌入元素">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://lucius0.github.io/images/http/x-frame-options.png">
+<meta property="og:updated_time" content="2019-08-10T07:16:54.028Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="HTTP X-Frame-Options">
+<meta name="twitter:description" content="在阅读该文章之前，建议对 HTTP 有所了解，可以看HTTP 入门体检，会对以下的内容有所帮助。 X-Frame-Options 响应首部字段是用来告诉浏览器该网页是否能被 frame，iframe，embed，object 元素嵌入。X-Frame-Option 可以确保站点不被这些元素嵌入，免得遭受点击劫持的攻击。 在说 X-Frame-Options 之前，当然要先简单的介绍下那几个嵌入元素">
+<meta name="twitter:image" content="https://lucius0.github.io/images/http/x-frame-options.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: false,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://lucius0.github.io/2019/08/10//archivers/http-x-frame-options/"/>
+
+
+
+
+
+  <title> HTTP X-Frame-Options | Lucius's Blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-143360785-1', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Lucius's Blog</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            日志
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup">
+ <span class="search-icon fa fa-search"></span>
+ <input type="text" id="local-search-input">
+ <div id="local-search-result"></div>
+ <span class="popup-btn-close">close</span>
+</div>
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="https://lucius0.github.io/2019/08/10/archivers/http-x-frame-options/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="Lucius">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.jpg">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="Lucius's Blog">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="Lucius's Blog" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                HTTP X-Frame-Options
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-08-10T00:00:00+08:00">
+                2019-08-10
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/http/" itemprop="url" rel="index">
+                    <span itemprop="name">http</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i> 浏览
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>次
+            </span>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>在阅读该文章之前，建议对 HTTP 有所了解，可以看<a href="https://lucius0.github.io/2019/06/30/archivers/http-introduction/">HTTP 入门体检</a>，会对以下的内容有所帮助。</p>
+<p><code>X-Frame-Options</code> 响应首部字段是用来告诉浏览器该网页是否能被 <code>frame</code>，<code>iframe</code>，<code>embed</code>，<code>object</code> 元素嵌入。<code>X-Frame-Option</code> 可以确保站点不被这些元素嵌入，免得遭受<a href="https://zh.wikipedia.org/wiki/%E7%82%B9%E5%87%BB%E5%8A%AB%E6%8C%81" target="_blank" rel="noopener">点击劫持</a>的攻击。</p>
+<p>在说 <code>X-Frame-Options</code> 之前，当然要先简单的介绍下那几个嵌入元素。</p>
+<h2 id="嵌入元素"><a href="#嵌入元素" class="headerlink" title="嵌入元素"></a>嵌入元素</h2><h3 id="frame"><a href="#frame" class="headerlink" title="frame"></a>frame</h3><p>已废弃。因为存在一些性能问题，以及使用屏幕阅读器的用户缺少可访问性。</p>
+<h3 id="embed"><a href="#embed" class="headerlink" title="embed"></a>embed</h3><p>将外部内容嵌入站点，比如插件，Flash <code>&lt;embed src=“test.swf” /&gt;</code>、视频 <code>&lt;embed type=“video/quicktime” src=“movie.mov” width=“640” height=“480”&gt;</code>。</p>
+<h3 id="object"><a href="#object" class="headerlink" title="object"></a>object</h3><p>嵌入对象元素，表示引入一个外部资源，这个资源可能是一张图片，一个嵌入的浏览上下文，亦或是一个插件所使用的资源。</p>
+<p>先在这里停住，乍看之下，<code>object</code> 和 <code>embed</code> 的作用是一模一样的，都是表示引入一个外部资源。但是实际上，可以说是相同作用的。<strong>但是，</strong> <code>object</code> 标签只支持 IE 系列的浏览器或者其他支持 <strong>ActiveX</strong> 控件的浏览器，而 <code>embed</code> 则可以被大多数浏览器识别。因此在嵌入 flash 时，为了让大多数浏览器能够正常显示 flash，需要把 <code>embed</code> 标签嵌套放在 <code>object</code> 标签内。</p>
+<p>简单来说，就是 IE 可以识别 <code>embed</code>，但是为了让其他浏览器也能识别，建议加上 <code>object</code></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;object width=<span class="string">"200"</span> height=<span class="string">"200"</span> classid=<span class="string">"clsid:D27CDB6E-AE6D-11cf-96B8-444553540000"</span>&gt;</span><br><span class="line">  &lt;param name=<span class="string">"src"</span> value=<span class="string">"test.swf"</span> /&gt;</span><br><span class="line">  &lt;param name=<span class="string">"quality"</span> value=<span class="string">"high"</span> /&gt;</span><br><span class="line">  &lt;embed src=<span class="string">"test.swf"</span> type=<span class="string">"application/x-shockwave-flash"</span> width=<span class="string">"200"</span> height=<span class="string">"200"</span> quality=<span class="string">"high"</span>&gt;<span class="xml"><span class="tag">&lt;/<span class="name">embed</span>&gt;</span></span></span><br><span class="line">&lt;<span class="regexp">/object&gt;</span></span><br></pre></td></tr></table></figure>
+<h3 id="iframe"><a href="#iframe" class="headerlink" title="iframe"></a>iframe</h3><p><code>iframe</code> 可以讲一大篇文章，但是不配合着讲 <code>iframe</code> 的来龙去脉，对<code>X-Frame-Option</code> 的理解可能会打折扣。<code>iframe</code> 出生在乱世(插件技术，也就是Flash、Java Applet)，现在也不建议使用，因为存在安全隐患。为什么会存在安全隐患呢？因为在没有加任何限制的情况下，<code>iframe</code> 嵌入的网站是可以被修改的。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// html</span></span><br><span class="line">&lt;iframe src=<span class="string">"http://www.test.com"</span> name=<span class="string">"test"</span>&gt;<span class="xml"><span class="tag">&lt;/<span class="name">iframe</span>&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">// js</span></span><br><span class="line"><span class="keyword">const</span> iwindow = <span class="built_in">window</span>.frames[<span class="string">'test'</span>].window;</span><br><span class="line"><span class="comment">// 或 iwindow = document.getElementById("test").contentWindow</span></span><br><span class="line"><span class="keyword">const</span> idoc = iwindow.document;</span><br><span class="line"><span class="keyword">const</span> ibody = idoc.body;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 因此我们可以修改 iframe 里面的样式</span></span><br><span class="line">ibody.style.backgroundColor=<span class="string">'red'</span></span><br></pre></td></tr></table></figure>
+<p><img src="/images/http/x-frame-options.png" alt=""></p>
+<p>因此可见，假如在我们没有做任何的防御措施的情况下，肯定是会存在安全问题，例如广告劫持，点击劫持等等。那就让我们来学习一下，遇到这类问题如何处理。</p>
+<h2 id="防范"><a href="#防范" class="headerlink" title="防范"></a>防范</h2><h3 id="sandbox"><a href="#sandbox" class="headerlink" title="sandbox"></a>sandbox</h3><p><code>sandbox</code> 是 <code>iframe</code> 的一个属性值，该属性对呈现在 <code>iframe</code> 框架中的内容启用一些额外的限制条件。属性值可以为空字符串（这种情况下会启用所有限制），也可以是用空格分隔的一系列指定的字符串。<strong>IE 9及其以下版本不支持。</strong></p>
+<table>
+<thead>
+<tr>
+<th>值</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>allow-downloads-without-user-activation</td>
+<td>允许在没有征求用户同意的情况下下载文件</td>
+</tr>
+<tr>
+<td>allow-forms</td>
+<td>允许嵌入的浏览上下文提交表单。如果该关键字未使用，该操作将不可用</td>
+</tr>
+<tr>
+<td>allow-modals</td>
+<td>允许内嵌浏览环境打开模态窗口</td>
+</tr>
+<tr>
+<td>allow-orientation-lock</td>
+<td>允许内嵌浏览环境禁用屏幕朝向锁定（手机、平台垂直或水平转向）</td>
+</tr>
+<tr>
+<td>allow-pointer-lock</td>
+<td>允许内嵌浏览环境使用<a href="https://developer.mozilla.org/zh-CN/docs/API/Pointer_Lock_API#iframe_.E7.9A.84.E9.99.90.E5.88.B6" target="_blank" rel="noopener">鼠标锁定</a></td>
+</tr>
+<tr>
+<td>allow-popups</td>
+<td>允许弹窗 (类似window.open, target=”_blank”, showModalDialog)，默认失效</td>
+</tr>
+<tr>
+<td>allow-popups-to-escape-sandbox</td>
+<td>允许沙箱文档打开新窗口，并且不强制要求新窗口设置沙箱标记。 例如，这将允许一个第三方的沙箱环境运行广告开启一个登陆页面，新页面不强制受到沙箱相关限制。</td>
+</tr>
+<tr>
+<td>allow-same-origin</td>
+<td>允许同源访问。</td>
+</tr>
+<tr>
+<td>allow-scripts</td>
+<td>允许嵌入的浏览上下文运行脚本（但不能创建弹窗）。</td>
+</tr>
+<tr>
+<td>allow-top-navigation</td>
+<td>允许嵌入的页面的上下文导航（加载）内容到顶级的浏览上下文环境（browsing context）。</td>
+</tr>
+<tr>
+<td>allow-top-navigation-by-user-activation</td>
+<td>允许嵌入的页面的上下文在经过用户允许后导航（加载）内容到顶级的浏览上下文环境</td>
+</tr>
+</tbody>
+</table>
+<p><code>sandbox</code> 的属性实在是太多了。但是我们用来防御 <code>iframe</code> 攻击的常用的属性有 <code>allow-scripts/allow-forms/allow-same-origin</code>，而其他的属性值视情况而定。<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;iframe sandbox=”allow-forms allow-same-origin allow-scripts” src=<span class="string">"http://www.test.com"</span> name=<span class="string">"test"</span>&gt;<span class="xml"><span class="tag">&lt;/<span class="name">iframe</span>&gt;</span></span></span><br></pre></td></tr></table></figure></p>
+<h3 id="window-top-location"><a href="#window-top-location" class="headerlink" title="window.top.location"></a>window.top.location</h3><p>因为在上面说过 <code>sandbox</code> 有浏览器兼容的问题，但是有时候我们需要在低版本浏览器运行程序，而且往往低版本浏览器存在的问题会相对比较多。因此除了 <code>sandbox</code> 之外，我们还可以通过原生JavaScript 代码来防止被嵌套。</p>
+<p>正常的网页<code>window.top === window</code>，但是一旦正常的网站被嵌套了之后，<code>window</code> 指向的是 <code>iframe</code>，也就是上面所说的 <code>iwindow</code>，而<code>window.top</code> 则是指嵌套网站的容器，因此我们可以利用<code>window.top === window</code> 来防止正常网站被嵌套。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">  <span class="comment">// 检测是否同域，假如不同域名的情况下访问则会报错</span></span><br><span class="line">  top.location.hostname;</span><br><span class="line">  <span class="comment">// 判断是否被嵌套，假如被嵌套则强制跳转到正常网站地址</span></span><br><span class="line">  <span class="keyword">if</span> (top.location.hostname !== <span class="built_in">window</span>.location.hostname) &#123;</span><br><span class="line">    top.location.href = <span class="built_in">window</span>.location.href;</span><br><span class="line">  &#125;</span><br><span class="line">&#125; <span class="keyword">catch</span> (e) &#123;</span><br><span class="line">  top.location.href = <span class="built_in">window</span>.location.href;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="X-Frame-Options"><a href="#X-Frame-Options" class="headerlink" title="X-Frame-Options"></a>X-Frame-Options</h3><p>这是我们本期的主角，但是它可以讲的内容其实并不多，只是因为归类在 HTTP 响应首部字段。它有三个值，<code>DENY/SAMEORIGIN/ALLOW-FROM xxx</code>。</p>
+<ul>
+<li><code>DENY</code>：禁止任何形式的嵌套；</li>
+<li><code>SAMEORIGIN</code>：只允许嵌入页和被嵌入页在同一个域名下，即受同源策略所限制；</li>
+<li><code>ALLOW-FROM xxx</code>：只允许指定的站点嵌入网页，如<code>ALLOW-FROM http://test.com</code>；</li>
+</ul>
+<p><code>X-Frame-Options</code> 只是把拦截 <code>iframe</code> 控制权交给了服务端，本质上跟我们之前通过 <code>window.top.location</code> 的效果一样的，它相当于 <code>SAMEORIGIN</code>，因此我们可以通过 JavaScript 也可以达到一样的作用。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// DENY</span></span><br><span class="line"><span class="keyword">if</span> (<span class="built_in">window</span> !== <span class="built_in">window</span>.top)&#123;</span><br><span class="line">    <span class="built_in">window</span>.top.location.href = <span class="built_in">window</span>.location.href;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// SAMEORIGIN</span></span><br><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">  <span class="comment">// 检测是否同域，假如不同域名的情况下访问则会报错</span></span><br><span class="line">  top.location.hostname;</span><br><span class="line">  <span class="comment">// 判断是否被嵌套，假如被嵌套则强制跳转到正常网站地址</span></span><br><span class="line">  <span class="keyword">if</span> (top.location.hostname !== <span class="built_in">window</span>.location.hostname) &#123;</span><br><span class="line">    top.location.href = <span class="built_in">window</span>.location.href;</span><br><span class="line">  &#125;</span><br><span class="line">&#125; <span class="keyword">catch</span> (e) &#123;</span><br><span class="line">  top.location.href = <span class="built_in">window</span>.location.href;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// ALLOW-FROM http://test.com</span></span><br><span class="line"><span class="comment">// 只是在上面的基础上加个白名单过滤判断一下就可以了。</span></span><br></pre></td></tr></table></figure>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p><code>iframe</code> 虽然可以做很多事情，也因为历史的车轮逐渐慢慢淘汰，但是不代表点击劫持我们就可以无视，除了 HTTP <code>X-FRAME-OPTIONS</code> 之外，还有 CSP 可以帮助我们拦截点击劫持，这个我们下一次再说。总而言之，能不用<code>iframe</code>  就不用 <code>iframe</code>，同时也要考虑自己的站点允不允许被嵌入防止攻击。</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+  <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+    <div>我只是试下能不能被赞赏😳</div>
+    <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+      <span>赏</span>
+    </button>
+    <div id="QR" style="display: none;">
+      
+        <div id="wechat" style="display: inline-block">
+          <img id="wechat_qr" src="https://bbucket-1257297990.cos.ap-guangzhou.myqcloud.com/IMG_4838.jpg" alt="Lucius WeChat Pay"/>
+          <p>微信打赏</p>
+        </div>
+      
+      
+        <div id="alipay" style="display: inline-block">
+          <img id="alipay_qr" src="https://bbucket-1257297990.cos.ap-guangzhou.myqcloud.com/171226222918.png" alt="Lucius Alipay"/>
+          <p>支付宝打赏</p>
+        </div>
+      
+    </div>
+  </div>
+
+
+      
+    </div>
+
+    <div>    
+     
+     
+        <ul class="post-copyright">
+          <li class="post-copyright-author">
+              <strong>本文作者：</strong>Lucius
+          </li>
+          <li class="post-copyright-link">
+            <strong>本文链接：</strong>
+            <a href="/2019/08/10/archivers/http-x-frame-options/" title="HTTP X-Frame-Options">2019/08/10//archivers/http-x-frame-options/</a>
+          </li>
+          <li class="post-copyright-license">
+            <strong>版权声明： </strong>
+            本博客所有文章除特别声明外，均采用 <a href="http://creativecommons.org/licenses/by-nc-sa/3.0/cn/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0 CN</a> 许可协议。转载请注明出处！
+          </li>
+        </ul>
+        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-7371507374872885"
+     data-ad-slot="4569151502"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+      
+    </div>
+    
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/http/" rel="tag"># http</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/07/21/archivers/http-cookie/" rel="next" title="来一块饼干吗？ - HTTP Cookie">
+                <i class="fa fa-chevron-left"></i> 来一块饼干吗？ - HTTP Cookie
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="gitalk-container"></div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.jpg"
+               alt="Lucius" />
+          <p class="site-author-name" itemprop="name">Lucius</p>
+          <p class="site-description motion-element" itemprop="description">stay hungry, stay foolish...</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">60</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">10</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">16</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/Lucius0" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#嵌入元素"><span class="nav-number">1.</span> <span class="nav-text">嵌入元素</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#frame"><span class="nav-number">1.1.</span> <span class="nav-text">frame</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#embed"><span class="nav-number">1.2.</span> <span class="nav-text">embed</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#object"><span class="nav-number">1.3.</span> <span class="nav-text">object</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#iframe"><span class="nav-number">1.4.</span> <span class="nav-text">iframe</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#防范"><span class="nav-number">2.</span> <span class="nav-text">防范</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#sandbox"><span class="nav-number">2.1.</span> <span class="nav-text">sandbox</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#window-top-location"><span class="nav-number">2.2.</span> <span class="nav-text">window.top.location</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#X-Frame-Options"><span class="nav-number">2.3.</span> <span class="nav-text">X-Frame-Options</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">3.</span> <span class="nav-text">总结</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Lucius</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+
+<div class="busuanzi-count">
+
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv"><i class="fa fa-user"></i> 访问人数<span class="busuanzi-value" id="busuanzi_value_site_uv"></span></span>
+  
+
+  
+    <span class="site-pv"><i class="fa fa-eye"></i> 总访问量<span class="busuanzi-value" id="busuanzi_value_site_pv"></span>次</span>
+  
+  
+</div>
+
+
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+	
+
+
+
+
+  <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+
+  <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+   <script type="text/javascript">
+        var gitalk = new Gitalk({
+          clientID: 'c35834931d268e5c17c6',
+          clientSecret: 'c80a4f57c98a6cf8d87e0c7d306201814a0dc745',
+          repo: 'lucius0.github.io',
+          owner: 'lucius0',
+          admin: ['lucius0'],
+          id: location.pathname,
+          distractionFreeMode: 'true'
+        })
+        gitalk.render('gitalk-container')           
+       </script>
+
+
+  
+  
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length == 0) {
+      search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body").append('<div class="popoverlay">').css('overflow', 'hidden');
+      $('.popup').toggle();
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+      $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = $( "entry", xmlResponse ).map(function() {
+            return {
+              title: $( "title", this ).text(),
+              content: $("content",this).text(),
+              url: $( "url" , this).text()
+            };
+          }).get();
+          var $input = document.getElementById(search_id);
+          var $resultContent = document.getElementById(content_id);
+          $input.addEventListener('input', function(){
+            var matchcounts = 0;
+            var str='<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length > 1) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var content_index = [];
+                var data_title = data.title.trim().toLowerCase();
+                var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                var data_url = decodeURIComponent(data.url);
+                var index_title = -1;
+                var index_content = -1;
+                var first_occur = -1;
+                // only match artiles with not empty titles and contents
+                if(data_title != '') {
+                  keywords.forEach(function(keyword, i) {
+                    index_title = data_title.indexOf(keyword);
+                    index_content = data_content.indexOf(keyword);
+                    if( index_title >= 0 || index_content >= 0 ){
+                      isMatch = true;
+                      if (i == 0) {
+                        first_occur = index_content;
+                      }
+                    }
+
+                  });
+                }
+                // show search results
+                if (isMatch) {
+                  matchcounts += 1;
+                  str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                  var content = data.content.trim().replace(/<[^>]+>/g,"");
+                  if (first_occur >= 0) {
+                    // cut out 100 characters
+                    var start = first_occur - 20;
+                    var end = first_occur + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if(start == 0){
+                      end = 50;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    var match_content = content.substring(start, end);
+                    // highlight all keywords
+                    keywords.forEach(function(keyword){
+                      var regS = new RegExp(keyword, "gi");
+                      match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                    });
+
+                    str += "<p class=\"search-result\">" + match_content +"...</p>"
+                  }
+                  str += "</li>";
+                }
+              })};
+            str += "</ul>";
+            if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+            if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+            $resultContent.innerHTML = str;
+          });
+          proceedsearch();
+        }
+      });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".popoverlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+
+  
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+
+  <script type="text/javascript">
+    (function() {
+      // try {
+      //   var document = window.document;
+      //   document.oncontextmenu = function() {
+      //     return false;
+      //   }
+      //   document.onkeydown = function() {
+      //     if (window.event.ctrlKey && window.event.keyCode == 67) {
+      //       return false;
+      //     }
+      //     return false;
+      //   }
+      //   document.body.oncopy = function() {
+      //     return false;
+      //   }
+      //   document.onselectstart = function() {
+      //     return false;
+      //   }
+            
+      //   document.onselectstart=function(){return false};
+      //   // document.style.MozUserSelect && document.style.MozUserSelect="none";
+      //   document.onmousedown=function(){return false};
+      //   document.style.cursor = "default"; 
+      // } catch(e) {}
+    })();
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,1101 @@
+<!doctype html>
+
+
+
+
+<html class="theme-next mist" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<script>
+  (adsbygoogle = window.adsbygoogle || []).push({
+    google_ad_client: "ca-pub-7371507374872885",
+    enable_page_level_ads: true
+  });
+</script>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="webpack," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="背景某一天，我突然发现构建项目会经常失败，直接报错：FATAL ERROR: CALL_AND_RETRY_LAST Allocation failed - JavaScript heap out of memory，这个错误很明显就是内存不足导致的构建失败。由于项目是在CI / CD  上构建的，而在此期间运维又调整了一下资源上限，因此什么原因导致的还得进一步排查，是由于真的内存不足还是存在内存">
+<meta name="keywords" content="webpack">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Webpack 3 - 从优化到放弃">
+<meta property="og:url" content="https://lucius0.github.io/2019/08/17//archivers/webpack3-optimize/index.html">
+<meta property="og:site_name" content="Lucius&#39;s Blog">
+<meta property="og:description" content="背景某一天，我突然发现构建项目会经常失败，直接报错：FATAL ERROR: CALL_AND_RETRY_LAST Allocation failed - JavaScript heap out of memory，这个错误很明显就是内存不足导致的构建失败。由于项目是在CI / CD  上构建的，而在此期间运维又调整了一下资源上限，因此什么原因导致的还得进一步排查，是由于真的内存不足还是存在内存">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://lucius0.github.io/images/webpack/webpack-05.png">
+<meta property="og:image" content="https://lucius0.github.io/images/webpack/webpack-06.png">
+<meta property="og:image" content="https://lucius0.github.io/images/webpack/webpack-07.png">
+<meta property="og:image" content="https://lucius0.github.io/images/webpack/webpack-08.png">
+<meta property="og:image" content="https://lucius0.github.io/images/webpack/webpack-09.gif">
+<meta property="og:image" content="https://lucius0.github.io/images/webpack/webpack-10.png">
+<meta property="og:image" content="https://lucius0.github.io/images/webpack/webpack-11.png">
+<meta property="og:image" content="https://lucius0.github.io/images/webpack/webpack-12.png">
+<meta property="og:image" content="https://lucius0.github.io/images/webpack/webpack-13.png">
+<meta property="og:image" content="https://lucius0.github.io/images/webpack/webpack-14.png">
+<meta property="og:image" content="https://lucius0.github.io/images/webpack/webpack-15.png">
+<meta property="og:image" content="https://lucius0.github.io/images/webpack/webpack-16.png">
+<meta property="og:image" content="https://lucius0.github.io/images/webpack/webpack-17.png">
+<meta property="og:image" content="https://lucius0.github.io/images/emoji/emoji-01.png">
+<meta property="og:updated_time" content="2019-08-17T04:50:28.598Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Webpack 3 - 从优化到放弃">
+<meta name="twitter:description" content="背景某一天，我突然发现构建项目会经常失败，直接报错：FATAL ERROR: CALL_AND_RETRY_LAST Allocation failed - JavaScript heap out of memory，这个错误很明显就是内存不足导致的构建失败。由于项目是在CI / CD  上构建的，而在此期间运维又调整了一下资源上限，因此什么原因导致的还得进一步排查，是由于真的内存不足还是存在内存">
+<meta name="twitter:image" content="https://lucius0.github.io/images/webpack/webpack-05.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: false,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://lucius0.github.io/2019/08/17//archivers/webpack3-optimize/"/>
+
+
+
+
+
+  <title> Webpack 3 - 从优化到放弃 | Lucius's Blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-143360785-1', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Lucius's Blog</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            日志
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup">
+ <span class="search-icon fa fa-search"></span>
+ <input type="text" id="local-search-input">
+ <div id="local-search-result"></div>
+ <span class="popup-btn-close">close</span>
+</div>
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="https://lucius0.github.io/2019/08/17/archivers/webpack3-optimize/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="Lucius">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.jpg">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="Lucius's Blog">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="Lucius's Blog" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Webpack 3 - 从优化到放弃
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-08-17T00:00:00+08:00">
+                2019-08-17
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/webpack/" itemprop="url" rel="index">
+                    <span itemprop="name">webpack</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i> 浏览
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>次
+            </span>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>某一天，我突然发现构建项目会经常失败，直接报错：<code>FATAL ERROR: CALL_AND_RETRY_LAST Allocation failed - JavaScript heap out of memory</code>，这个错误很明显就是内存不足导致的构建失败。由于项目是在<a href="https://lucius0.github.io/2018/07/09/archivers/gitlab-ci-cd-getting-started-guide/">CI / CD </a> 上构建的，而在此期间运维又调整了一下资源上限，因此什么原因导致的还得进一步排查，是由于真的内存不足还是存在内存泄漏？</p>
+<h2 id="内存问题"><a href="#内存问题" class="headerlink" title="内存问题"></a>内存问题</h2><h3 id="突破限制"><a href="#突破限制" class="headerlink" title="突破限制"></a>突破限制</h3><p>在64位计算机上，V8引擎的默认内存限制为约为1.5GB，就算有再多的RAM也无济于事，但是也不是没有办法，NodeJs允许我们设置节点进程的内存，也就是通过参数<code>max_old_space_size</code>，我们可以暂时先设置内存限制，至少能先让程序构建成功。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 增加上限至 4096 MB，该内存只要计算机支持就行。</span></span><br><span class="line">node --max_old_space_size=<span class="number">4096</span> build.js</span><br><span class="line"><span class="comment">// 或者 </span></span><br><span class="line"><span class="comment">// 增加上限至 4194304 KB</span></span><br><span class="line">node --max_new_space_size=<span class="number">4194304</span> build.js</span><br></pre></td></tr></table></figure>
+<h3 id="调查问题"><a href="#调查问题" class="headerlink" title="调查问题"></a>调查问题</h3><p>调整后发现再也没有出现问题了，但是莫名其妙的为啥会出现内存不足的问题呢？不过也可以理解，项目越来越大，难免会出现内存不足，CPU 暴增的问题。现在我们利用<strong>Chrome DevTools</strong>排查我们的构建程序。</p>
+<p>排查的过程比较考验耐心，因为电脑配置低跑起来都很慢。既然说到利用<strong>Chrome DevTools</strong>，那我们就要制造证据。推荐使用 <a href="https://webpack.docschina.org/contribute/debugging/" target="_blank" rel="noopener">node-nightly</a> 或者 <a href="https://www.npmjs.com/package/heapdump" target="_blank" rel="noopener">node-heapdump</a> 配合 <a href="https://www.npmjs.com/package/memwatch-next" target="_blank" rel="noopener">memwatch-next</a>。在这里我们使用 <code>node-nightly</code>。安装以及使用方法链接上有，就不多说了。</p>
+<p>我采集了<strong>堆内存分配样本</strong>和<strong>堆内存动态分配时间线</strong>。结果发现并没有异常的内存持续增长的情况。虽然说有少部分引用没有回收，但不至于内存泄漏。有两处突然增长的原因是1、实例化 <code>Compiler</code>，继承 <code>Tapable</code> 插件框架，实现注册和调用一系列插件；2、实例化插件，如 <code>UglifyJsPlugin</code>，然后读取源文件，编译并输出，在这里我们还输出了<code>sourcemap</code> (特殊原因，需要输出)。</p>
+<p><strong>堆内存分配样本</strong></p>
+<p><img src="/images/webpack/webpack-05.png" alt=""></p>
+<p><strong>堆内存动态分配时间线</strong></p>
+<p><img src="/images/webpack/webpack-06.png" alt=""></p>
+<h3 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h3><ul>
+<li><a href="https://tech.residebrokerage.com/debugging-node-js-memory-problems-d450787d9253" target="_blank" rel="noopener">Debugging Memory Leaks and Memory Bloat in Node.js - Tech @ Side</a></li>
+<li><a href="https://leokongwq.github.io/2016/11/08/nodejs-heapdump.html" target="_blank" rel="noopener">https://leokongwq.github.io/2016/11/08/nodejs-heapdump.html</a></li>
+<li><a href="https://developers.google.com/web/tools/chrome-devtools/memory-problems/" target="_blank" rel="noopener">https://developers.google.com/web/tools/chrome-devtools/memory-problems/</a></li>
+</ul>
+<h2 id="新的问题-打包速度"><a href="#新的问题-打包速度" class="headerlink" title="新的问题 - 打包速度"></a>新的问题 - 打包速度</h2><p>内存问题解决了之后发现在<strong>本地打包</strong>速度也异常的慢（<strong>注：构建环境会影响打包速度，但是线上的构建环境资源是共享的，因此拿本地电脑来测试，构建时间因人而异</strong>）。目前的打包图如下：</p>
+<p><img src="/images/webpack/webpack-07.png" alt=""></p>
+<p>而同事（高端程序员）的电脑在未优化前则是这样：</p>
+<p><img src="/images/webpack/webpack-08.png" alt=""></p>
+<p>话不多说，因为配置问题，才会导致我有优化的欲望，<strong>低端配置</strong>如下：</p>
+<ul>
+<li>型号：MacBook Air(13-inch, 2017)；</li>
+<li>处理器：1.8 GHz Intel Core i5</li>
+<li>内存：8 GB 1600 MHz DDR3</li>
+</ul>
+<p><strong>打包相关</strong>如下：</p>
+<ul>
+<li>脚手架：<code>create-react-app v1</code>；</li>
+<li>技术栈：<code>React / Typescript / Antd / Less</code>；</li>
+<li>打包优化上还处理了 Code Splitting，ExtractText，UglifyJs 等。</li>
+</ul>
+<h2 id="工欲善其事，必先利其器"><a href="#工欲善其事，必先利其器" class="headerlink" title="工欲善其事，必先利其器"></a>工欲善其事，必先利其器</h2><p>现在就开始选择工具，来对我们的项目进行分析。候选工具有<code>progress-bar-webpack-plugin/webpackbar/speed-measure-webpack-plugin</code>。我们想要的效果，是最好能分析出哪一个阶段的耗时。因此我们来比较一下这些工具是否匹配我们的需求。<strong>PS：webpack —progress，并不满足我们的需求，因为是信息太过于简单让我们无处排查问题。</strong></p>
+<h3 id="progress-bar-webpack-plugin"><a href="#progress-bar-webpack-plugin" class="headerlink" title="progress-bar-webpack-plugin"></a>progress-bar-webpack-plugin</h3><p>从下图可以看出  <a href="https://github.com/clessg/progress-bar-webpack-plugin#readme" target="_blank" rel="noopener">progress-bar-webpack-plugin</a>  跟 <code>webpack --progress</code>一样不满足我们的需求，它只是展示打包的进度信息。</p>
+<p><img src="/images/webpack/webpack-09.gif" alt=""></p>
+<h3 id="webpackbar"><a href="#webpackbar" class="headerlink" title="webpackbar"></a>webpackbar</h3><p><a href="https://github.com/nuxt/webpackbar" target="_blank" rel="noopener">webpackbar</a>  在不做任何的配置的前提下，也比 <code>progress-bar-webpack-plugin</code> 好，至少能知道卡在哪一步，加载 <code>node_modules</code> 依赖的过程。</p>
+<p><img src="/images/webpack/webpack-10.png" alt=""></p>
+<p>我们通过设置 <code>profile</code> 来获取更多的信息，当然展示信息只有<code>loaders</code>，而我们往往也需要 <code>plugins</code> 的耗时，当然你也可以通过自定义输出信息，在这里我们就不展开讨论，有兴趣的小伙伴可以自行尝试。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 通过配置 profile 展示详细的信息</span></span><br><span class="line">plugins: [</span><br><span class="line">  <span class="keyword">new</span> WebpackBar(&#123;</span><br><span class="line">    profile: <span class="literal">true</span>,</span><br><span class="line">    reporters: [<span class="string">'profile'</span>],  <span class="comment">// 注意这里的配置很关键，否则没信息</span></span><br><span class="line">  &#125;)</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+<p><img src="/images/webpack/webpack-11.png" alt=""></p>
+<h3 id="speed-measure-webpack-plugin（推荐）"><a href="#speed-measure-webpack-plugin（推荐）" class="headerlink" title="speed-measure-webpack-plugin（推荐）"></a>speed-measure-webpack-plugin（推荐）</h3><p><a href="https://www.npmjs.com/package/speed-measure-webpack-plugin" target="_blank" rel="noopener">speed-measure-webpack-plugin</a>  可以通过很简单的配置，就可以获取 <code>plugins</code>以及<code>loaders</code> 的耗时。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> SpeedMeasurePlugin = <span class="built_in">require</span>(<span class="string">'speed-measure-webpack-plugin'</span>);</span><br><span class="line"><span class="keyword">const</span> smp = <span class="keyword">new</span> SpeedMeasurePlugin();</span><br><span class="line"><span class="keyword">const</span> smpWrapperConfig = smp.wrap(&#123;</span><br><span class="line">  <span class="comment">// 将 webpack 的配置作为参数传给 SpeedMeasurePlugin</span></span><br><span class="line">  ...webpackConfig,</span><br><span class="line">&#125;);</span><br><span class="line"><span class="built_in">module</span>.exports = smpWrapperConfig;</span><br></pre></td></tr></table></figure>
+<p><img src="/images/webpack/webpack-12.png" alt=""></p>
+<h3 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h3><p>我们用 <code>speed-measure-webpack-plugin</code> 来检测下我们每个阶段的耗时，但是值得注意的是，我们只需要关注哪一个阶段的耗时最长，而不需要关注它跑了多长时间，因为 <code>speed-measure-webpack-plugin</code> 的加入也会拖慢我们构建的时间。（这是我反复测试的结果，假如有问题，麻烦请指出😂）</p>
+<p>我们使用 <code>speed-measure-webpack-plugin</code> 来测试一下，发现<code>UglifyJsPlugin</code> 占时最长，调研了一下发现 <a href="https://github.com/webpack-contrib/uglifyjs-webpack-plugin/issues/272" target="_blank" rel="noopener">github issue</a> 上有不少这样的问题，甚至出现了我们上文出现的 <code>FATAL ERROR: CALL_AND_RETRY_LAST Allocation failed - JavaScript heap out of memory</code> 的问题：</p>
+<p><img src="/images/webpack/webpack-13.png" alt=""></p>
+<h2 id="优化尝试"><a href="#优化尝试" class="headerlink" title="优化尝试"></a>优化尝试</h2><p>在上文提到，项目构建速度慢，<code>UglifyJsPlugin</code> 占一半。当然网上还有很多打包速度优化的手段，在这里不做展开，一是因为效果不明显，二是因为项目本身在早期也已经处理过，因此在这里我们针对性的优化一下。</p>
+<h3 id="webpack-parallel-uglify-plugin"><a href="#webpack-parallel-uglify-plugin" class="headerlink" title="webpack-parallel-uglify-plugin"></a>webpack-parallel-uglify-plugin</h3><p>我看网上有人推荐这个插件，但是其实在 CRA 中采用的 <code>uglifyjs-webpack-plugin</code> 也可以通过参数 <code>parallel: true</code> 来达到多线程的作用，我测试过其实两者在速度上没多大差别。更重要的是这个插件已经很久没更新了，所以这个就直接跳过了，不推荐使用。</p>
+<h3 id="happypack"><a href="#happypack" class="headerlink" title="happypack"></a>happypack</h3><p>关于 <code>happypack</code>，我相信网上已经能找到很多关于它的传闻，从单一进程构建模式到多进程模式，从而加速代码构建，关于更多话不多说，有兴趣的自行研究。<code>happypack</code> 支持的 <code>loaders</code> 可以看这里 <a href="https://github.com/amireh/happypack/wiki/Loader-Compatibility-List" target="_blank" rel="noopener">Loader Compatibility</a>，原理看这里<a href="https://juejin.im/entry/58493e1c128fe100690ba209" target="_blank" rel="noopener">happypack 原理解析</a>。部分配置如下：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> HappyPack = <span class="built_in">require</span>(<span class="string">'happypack'</span>);</span><br><span class="line"><span class="keyword">const</span> os = <span class="built_in">require</span>(<span class="string">'os'</span>);</span><br><span class="line"><span class="keyword">const</span> happyThreadPool = HappyPack.ThreadPool(&#123; <span class="attr">size</span>: os.cpus().length &#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">// module</span></span><br><span class="line">&#123;</span><br><span class="line">  test: <span class="regexp">/\.(ts|tsx)$/</span>,</span><br><span class="line">  include: resolveApp(<span class="string">'src'</span>),</span><br><span class="line">  exclude: <span class="regexp">/node_modules/</span>,</span><br><span class="line">  use:<span class="string">'happypack/loader?id=tsx'</span>,</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// less 的就不写了。</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// plugins</span></span><br><span class="line"><span class="keyword">new</span> HappyPack(&#123;</span><br><span class="line">  id: <span class="string">'tsx'</span>,</span><br><span class="line">  threadPool: happyThreadPool,</span><br><span class="line">  loaders: [</span><br><span class="line">    &#123;</span><br><span class="line">      loader: <span class="built_in">require</span>.resolve(<span class="string">'ts-loader'</span>),</span><br><span class="line">      options: &#123;</span><br><span class="line">        happyPackMode: <span class="literal">true</span>,</span><br><span class="line">        transpileOnly: <span class="literal">true</span>,</span><br><span class="line">        getCustomTransformers: <span class="function"><span class="params">()</span> =&gt;</span> (&#123;</span><br><span class="line">          before: [</span><br><span class="line">            tsImportPluginFactory([</span><br><span class="line">              &#123;</span><br><span class="line">                libraryName: <span class="string">'antd'</span>,</span><br><span class="line">                libraryDirectory: <span class="string">'es'</span>,</span><br><span class="line">                style: <span class="literal">true</span>,</span><br><span class="line">              &#125;,</span><br><span class="line">            ]),</span><br><span class="line">          ],</span><br><span class="line">        &#125;),</span><br><span class="line">      &#125;,</span><br><span class="line">    &#125;</span><br><span class="line">  ]</span><br><span class="line">&#125;),</span><br></pre></td></tr></table></figure>
+<p>不知道为什么，在我的电脑使用 <code>happypack</code> 之前的比使用 <code>happypack</code>  之后的首次速度还要快，但是缓存构建也是不分上下没差多少。这是因为 <code>happypack</code> 对电脑的内核有一定的要求，假如电脑的内核低的情况下又开启多线程，反而会让占满电脑的 CPU，整体速度变慢，因此这个方案也不是最好的选择（<strong>反正我的电脑烂</strong>）。</p>
+<p><img src="/images/webpack/webpack-14.png" alt=""></p>
+<h3 id="terser-webpack-plugin"><a href="#terser-webpack-plugin" class="headerlink" title="terser-webpack-plugin"></a>terser-webpack-plugin</h3><p><code>terser-webpack-plugin</code> 是 webpack4 用来取代 <code>uglifyjs-webpack-plugin</code> 的压缩插件，假如单纯结合 webpack3 和 <code>terser-webpack-plugin</code>，不知道能不能解决压缩速度的问题。</p>
+<p>在 webpack3 中，官方提供的插件是 <code>terser-webpack-plugin-legacy</code>（看起来像是妥协版本）。从下图可以看出 ，oh my god（麻烦自行脑补李佳琦），这也太神奇了吧，简直就是质的飞跃（不敢相信的我特意试了几次）。</p>
+<p><img src="/images/webpack/webpack-15.png" alt=""></p>
+<p>配置如下：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">new</span> TerserPlugin(&#123;</span><br><span class="line">  parallel: <span class="literal">true</span>,</span><br><span class="line">  cache: <span class="literal">true</span>,</span><br><span class="line">  terserOptions: &#123;</span><br><span class="line">    parse: &#123;</span><br><span class="line">      ecma: <span class="number">8</span>,</span><br><span class="line">    &#125;,</span><br><span class="line">    compress: &#123;</span><br><span class="line">      ecma: <span class="number">5</span>,</span><br><span class="line">      warnings: <span class="literal">false</span>,</span><br><span class="line">      comparisons: <span class="literal">false</span>,</span><br><span class="line">      inline: <span class="number">2</span>,</span><br><span class="line">    &#125;,</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;),</span><br></pre></td></tr></table></figure>
+<h3 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h3><p>经过一段时间（具体不详）的观察，在 webpack 3 提升构建速度的方法有如下的方法：</p>
+<ul>
+<li>设置缓存，可以有效的减少再次构建速度；</li>
+<li>使用 <code>terser-webpack-plugin</code> 替换 <code>uglifyjs-webpack-plugin</code>；</li>
+<li>假如你能确定某些模块没有依赖，可以设置<code>noParse</code>；</li>
+<li>使用 <code>alias</code>，这个能提升开发效率哦；</li>
+<li>使用 <code>webpack-bundle-analyzer</code> 剔除无关的依赖；</li>
+<li>在确定模块的情况下，可以配置 <code>resolve.modules</code>，如 <code>resolve.modules = [&#39;node_modules&#39;]</code>，可以减少搜索范围；</li>
+<li><code>loaders</code>  可以使用 <code>test/include/exclude</code> 来减少不必要的遍历；</li>
+<li>在构建环境允许的情况下，可以试试 <code>happypack</code>。</li>
+</ul>
+<h3 id="最后小彩蛋"><a href="#最后小彩蛋" class="headerlink" title="最后小彩蛋"></a>最后小彩蛋</h3><p>假如你的项目使用了类似 <a href="https://github.com/jamiebuilds/react-loadable" target="_blank" rel="noopener">React-Loadable</a>进行<strong>按需加载</strong>，那么请注意，<code>React-Loadable</code> 可以帮助我们<strong>根据路由来按需加载</strong>。它的原理是使用了<code>import()</code> 而非 <code>import</code> 是因为 <code>import</code> 是静态编译，而<code>import()</code> 同 <code>require</code>，是可以进行动态加载的。 但是<strong>千万要注意的是，引用过程中千万不要使用变量，这会导致编译通过但是编译时间长得令人发指又或者直接内存溢出。</strong> - <a href="https://medium.com/@oprearocks/es6-dynamic-import-and-webpack-memory-leaks-fa09f98f3243" target="_blank" rel="noopener">ES6 DYNAMIC IMPORT AND WEBPACK MEMORY LEAKS - Adrian Oprea - Medium</a></p>
+<h2 id="升级Webpack-4"><a href="#升级Webpack-4" class="headerlink" title="升级Webpack 4"></a>升级Webpack 4</h2><p>那么最后我们来尝试一下这个号称编译速度提升了 60% ~ 98% 的“黑科技”。由于我们是使用了<code>create-react-app</code>，因此我们在升级过程中会或多或少遇到很多问题，我在这里记录一下我升级过程中遇到的问题。</p>
+<p>由于项目中已经 <code>eject</code> 了 <code>create-react-app</code>，因此不能使用官方推荐且快速的升级 <code>react-scripts</code> （自己挖的坑自己填）。</p>
+<h3 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h3><p><code>yarn add -D webpack webpack-cli webpack-dev-server</code>，升级webpack4 必备的三件套，缺一不可。别慌，准备工作其实就这么多。慌的是如何处理升级后的兼容问题😂😂😂。</p>
+<h3 id="排除万难"><a href="#排除万难" class="headerlink" title="排除万难"></a>排除万难</h3><p>万事开头难，然后接着难，难上加难（满脸写着开心.jpg）。<strong>注意：每次解决问题就直接执行程序，即yarn  start/build，下面就不赘述。</strong></p>
+<blockquote>
+<p>_this.compiler.applyPluginsAsync is not a function</p>
+</blockquote>
+<p>👉🏻 升级 <code>fork-ts-checker-webpack-plugin</code>。</p>
+<blockquote>
+<p>Plugin could not be registered at ‘html-webpack-plugin-before-html-processing’. Hook was not found.<br>BREAKING CHANGE: There need to exist a hook at ‘this.hooks’. To create a compatibility layer for this hook, hook into ‘this._pluginCompat’.</p>
+</blockquote>
+<p>👉🏻 升级 <code>html-webpack-plugin@next</code> 以及 <code>react-dev-utils</code>；<br>👉🏻 同时对配置文件(<code>dev/prod</code>)做以下优化：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// plugins</span></span><br><span class="line">[</span><br><span class="line">  <span class="keyword">new</span> HtmlWebpackPlugin(&#123;</span><br><span class="line">    ... <span class="comment">// dev 和 prod 保持原来的配置</span></span><br><span class="line">  &#125;),</span><br><span class="line">  <span class="keyword">new</span> InterpolateHtmlPlugin(HtmlWebpackPlugin, env.raw)</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>webpack is not a function</p>
+</blockquote>
+<p>👉🏻 对 <code>start.js</code> 做以下优化：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 调整为对象结构</span></span><br><span class="line"><span class="keyword">const</span> compiler = createCompiler(&#123; webpack, config, appName, urls, useYarn &#125;);</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>When specified, “proxy” in package.json must be a string.<br>Instead, the type of “proxy” was “object”.<br>Either remove “proxy” from package.json, or make it a string.</p>
+</blockquote>
+<p>👉🏻 安装/升级 <code>http-proxy-middleware</code>；<br>👉🏻 将 <code>package.json</code> 中的 <code>proxy</code> 删除，并添加<code>src/setupProxy.js</code>，并将其添加到<code>paths.js</code>；<br>👉🏻 修改 <code>webpackDevServer.config.js</code></p>
+<p><strong>注意：</strong></p>
+<blockquote>
+<p>为什么要删除 <code>package.json</code> 中的 <code>proxy</code> 呢？因为 <code>proxy</code> 在 <code>package.json</code> 中虽然以字符串存在，但是在默认情况下还是会优先读取  <code>package.json</code> 中的 <code>proxy</code> 字段，其次才是 <code>setupProxy.js</code>。</p>
+</blockquote>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// paths.js</span></span><br><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">  ...,</span><br><span class="line">  proxySetup: resolveApp(<span class="string">'src/setupProxy.js'</span>),</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// webpackDevServer.config.js</span></span><br><span class="line">before(app, server) &#123;</span><br><span class="line">  <span class="keyword">if</span> (fs.existsSync(paths.proxySetup)) &#123;</span><br><span class="line">    <span class="built_in">require</span>(paths.proxySetup)(app);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// src/setupProxy.js</span></span><br><span class="line"><span class="keyword">const</span> proxy = <span class="built_in">require</span>(<span class="string">'http-proxy-middleware'</span>);</span><br><span class="line"></span><br><span class="line"><span class="built_in">module</span>.exports = <span class="function"><span class="keyword">function</span>(<span class="params">app</span>) </span>&#123;</span><br><span class="line">  app.use(proxy(<span class="string">'/api'</span>, &#123;</span><br><span class="line">    target: <span class="string">'https://xxx.xx.com'</span>,</span><br><span class="line">    changeOrigin: <span class="literal">true</span>,</span><br><span class="line">  &#125;));</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>this.htmlWebpackPlugin.getHooks is not a function<br>假如报这个错误，那么可以尝试以下操作：</p>
+</blockquote>
+<p>👉🏻 删除 <code>node_modules</code> 并重新安装；<br>👉🏻 重新安装 <code>html-webpack-plugin@next</code>；<br>👉🏻 确保 <code>new InterpolateHtmlPlugin(env.raw)</code> -&gt;<br><code>new InterpolateHtmlPlugin(HtmlWebpackPlugin, env.raw)</code></p>
+<blockquote>
+<p>DeprecationWarning: Pass resolveContext instead and use createInnerContext<br>DeprecationWarning: Resolver: The callback argument was splitted into resolveContext and callback<br>DeprecationWarning: Resolver#doResolve: The type arguments (string) is now a hook argument (Hook). Pass a reference to the hook instead.</p>
+</blockquote>
+<p>这个不是错误，你可以选择忽略，也可以做出以下处理：<br>👉🏻 升级 <code>tsconfig-paths-webpack-plugin</code></p>
+<blockquote>
+<p>Tapable.plugin is deprecated. Use new API on <code>.hooks</code> instead</p>
+</blockquote>
+<p>👉🏻 升级 <code>extract-text-webpack-plugin</code>，但是在webpack4 已经不推荐使用该插件了，可以使用 <code>mini-css-extract-plugin</code> 取代，值得注意的是使用 <code>mini-css-extract-plugin</code> 的同时可以不使用<code>style-loader</code>  ———<a href="https://github.com/webpack-contrib/mini-css-extract-plugin#advanced-configuration-example" target="_blank" rel="noopener">Advanced configuration example</a></p>
+<p>剩下的问题就是遇到什么插件不兼容直接升级就可以了，例如：</p>
+<blockquote>
+<p>TypeError: Cannot read property ‘ts’ of undefined<br>URIError: Failed to decode param ‘/%PUBLIC_URL%/favicon.ico’</p>
+</blockquote>
+<p>👉🏻 升级<code>ts-loader</code> 以及 <code>file-loader</code></p>
+<h3 id="extracting-one-single-css-file"><a href="#extracting-one-single-css-file" class="headerlink" title="extracting one single css file"></a>extracting one single css file</h3><p>如何使用 <code>mini-css-extract-plugin</code> 将所有的 css 文件都打包成一个css文件呢？其实有很多方法，我们就使用官方推荐的方法<a href="https://github.com/webpack-contrib/mini-css-extract-plugin#extracting-all-css-in-a-single-file" target="_blank" rel="noopener">Extracting all CSS in a single file</a>，但是在这过程可能会报 <code>Conflicting order between</code> 的warnings，我们可以关闭警告 <a href="https://github.com/webpack-contrib/mini-css-extract-plugin#remove-order-warnings" target="_blank" rel="noopener">Remove Order Warnings</a>。关于 <code>CommonsChunkPlugin</code> 可以看这里 <a href="https://gist.github.com/sokra/1522d586b8e5c0f5072d7565c2bee693" target="_blank" rel="noopener">RIP CommonsChunkPlugin.md · GitHub</a>。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 关于更多 splitChunks 可以查看 </span></span><br><span class="line"><span class="comment">// https://webpack.docschina.org/plugins/split-chunks-plugin/</span></span><br><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">  optimization: &#123;</span><br><span class="line">    splitChunks: &#123;</span><br><span class="line">      cacheGroups: &#123;</span><br><span class="line">        styles: &#123; <span class="comment">// entry 入口名称</span></span><br><span class="line">          name: <span class="string">'styles'</span>, <span class="comment">// 提取 chunk 的名称</span></span><br><span class="line">          test: <span class="regexp">/\.css$/</span>,</span><br><span class="line">          chunks: <span class="string">'all'</span>, <span class="comment">// initial | all | async，默认 async</span></span><br><span class="line">          enforce: <span class="literal">true</span>,</span><br><span class="line">        &#125;,</span><br><span class="line">      &#125;,</span><br><span class="line">    &#125;,</span><br><span class="line">  &#125;,</span><br><span class="line">  ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="替换依赖包"><a href="#替换依赖包" class="headerlink" title="替换依赖包"></a>替换依赖包</h3><p>配置完毕之后，将下面的依赖包替换成 webpack4 推荐的依赖包。</p>
+<ul>
+<li><code>extract-text-webpack-plugin</code> -&gt;  <code>mini-css-extract-plugin</code>；</li>
+<li><code>uglifyjs-webpack-plugin</code> -&gt; <code>terser-webpack-plugin</code>。</li>
+</ul>
+<h3 id="小结-1"><a href="#小结-1" class="headerlink" title="小结"></a>小结</h3><p>到此 webpack4 基本上已经解决完毕了，剩下的问题，都是根据个人需求来处理了。升级到 webpack4 的过程不算太顺利，但是这算是 webpack 的一个大版本，尝试一下说不定就成功，毕竟 webpack4 进行了多处优化，一些存在<strong>安全问题</strong>的依赖包也得到解决了，最后上一张升级后我本地和我同事构建的时间。</p>
+<p><strong>我的电脑</strong></p>
+<p><img src="/images/webpack/webpack-16.png" alt=""></p>
+<p><strong>别人家的电脑</strong></p>
+<p><img src="/images/webpack/webpack-17.png" alt=""></p>
+<p><img src="/images/emoji/emoji-01.png" alt="">卒～</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+  <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+    <div>我只是试下能不能被赞赏😳</div>
+    <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+      <span>赏</span>
+    </button>
+    <div id="QR" style="display: none;">
+      
+        <div id="wechat" style="display: inline-block">
+          <img id="wechat_qr" src="https://bbucket-1257297990.cos.ap-guangzhou.myqcloud.com/IMG_4838.jpg" alt="Lucius WeChat Pay"/>
+          <p>微信打赏</p>
+        </div>
+      
+      
+        <div id="alipay" style="display: inline-block">
+          <img id="alipay_qr" src="https://bbucket-1257297990.cos.ap-guangzhou.myqcloud.com/171226222918.png" alt="Lucius Alipay"/>
+          <p>支付宝打赏</p>
+        </div>
+      
+    </div>
+  </div>
+
+
+      
+    </div>
+
+    <div>    
+     
+     
+        <ul class="post-copyright">
+          <li class="post-copyright-author">
+              <strong>本文作者：</strong>Lucius
+          </li>
+          <li class="post-copyright-link">
+            <strong>本文链接：</strong>
+            <a href="/2019/08/17/archivers/webpack3-optimize/" title="Webpack 3 - 从优化到放弃">2019/08/17//archivers/webpack3-optimize/</a>
+          </li>
+          <li class="post-copyright-license">
+            <strong>版权声明： </strong>
+            本博客所有文章除特别声明外，均采用 <a href="http://creativecommons.org/licenses/by-nc-sa/3.0/cn/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0 CN</a> 许可协议。转载请注明出处！
+          </li>
+        </ul>
+        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-7371507374872885"
+     data-ad-slot="4569151502"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+      
+    </div>
+    
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/webpack/" rel="tag"># webpack</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/08/10/archivers/http-x-frame-options/" rel="next" title="HTTP X-Frame-Options">
+                <i class="fa fa-chevron-left"></i> HTTP X-Frame-Options
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="gitalk-container"></div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.jpg"
+               alt="Lucius" />
+          <p class="site-author-name" itemprop="name">Lucius</p>
+          <p class="site-description motion-element" itemprop="description">stay hungry, stay foolish...</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">61</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">10</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">16</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/Lucius0" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#背景"><span class="nav-number">1.</span> <span class="nav-text">背景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#内存问题"><span class="nav-number">2.</span> <span class="nav-text">内存问题</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#突破限制"><span class="nav-number">2.1.</span> <span class="nav-text">突破限制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#调查问题"><span class="nav-number">2.2.</span> <span class="nav-text">调查问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#参考资料"><span class="nav-number">2.3.</span> <span class="nav-text">参考资料</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#新的问题-打包速度"><span class="nav-number">3.</span> <span class="nav-text">新的问题 - 打包速度</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#工欲善其事，必先利其器"><span class="nav-number">4.</span> <span class="nav-text">工欲善其事，必先利其器</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#progress-bar-webpack-plugin"><span class="nav-number">4.1.</span> <span class="nav-text">progress-bar-webpack-plugin</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#webpackbar"><span class="nav-number">4.2.</span> <span class="nav-text">webpackbar</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#speed-measure-webpack-plugin（推荐）"><span class="nav-number">4.3.</span> <span class="nav-text">speed-measure-webpack-plugin（推荐）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#测试"><span class="nav-number">4.4.</span> <span class="nav-text">测试</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#优化尝试"><span class="nav-number">5.</span> <span class="nav-text">优化尝试</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#webpack-parallel-uglify-plugin"><span class="nav-number">5.1.</span> <span class="nav-text">webpack-parallel-uglify-plugin</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#happypack"><span class="nav-number">5.2.</span> <span class="nav-text">happypack</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#terser-webpack-plugin"><span class="nav-number">5.3.</span> <span class="nav-text">terser-webpack-plugin</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#小结"><span class="nav-number">5.4.</span> <span class="nav-text">小结</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#最后小彩蛋"><span class="nav-number">5.5.</span> <span class="nav-text">最后小彩蛋</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#升级Webpack-4"><span class="nav-number">6.</span> <span class="nav-text">升级Webpack 4</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#准备工作"><span class="nav-number">6.1.</span> <span class="nav-text">准备工作</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#排除万难"><span class="nav-number">6.2.</span> <span class="nav-text">排除万难</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#extracting-one-single-css-file"><span class="nav-number">6.3.</span> <span class="nav-text">extracting one single css file</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#替换依赖包"><span class="nav-number">6.4.</span> <span class="nav-text">替换依赖包</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#小结-1"><span class="nav-number">6.5.</span> <span class="nav-text">小结</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Lucius</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+
+<div class="busuanzi-count">
+
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv"><i class="fa fa-user"></i> 访问人数<span class="busuanzi-value" id="busuanzi_value_site_uv"></span></span>
+  
+
+  
+    <span class="site-pv"><i class="fa fa-eye"></i> 总访问量<span class="busuanzi-value" id="busuanzi_value_site_pv"></span>次</span>
+  
+  
+</div>
+
+
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+	
+
+
+
+
+  <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+
+  <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+   <script type="text/javascript">
+        var gitalk = new Gitalk({
+          clientID: 'c35834931d268e5c17c6',
+          clientSecret: 'c80a4f57c98a6cf8d87e0c7d306201814a0dc745',
+          repo: 'lucius0.github.io',
+          owner: 'lucius0',
+          admin: ['lucius0'],
+          id: location.pathname,
+          distractionFreeMode: 'true'
+        })
+        gitalk.render('gitalk-container')           
+       </script>
+
+
+  
+  
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length == 0) {
+      search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body").append('<div class="popoverlay">').css('overflow', 'hidden');
+      $('.popup').toggle();
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+      $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = $( "entry", xmlResponse ).map(function() {
+            return {
+              title: $( "title", this ).text(),
+              content: $("content",this).text(),
+              url: $( "url" , this).text()
+            };
+          }).get();
+          var $input = document.getElementById(search_id);
+          var $resultContent = document.getElementById(content_id);
+          $input.addEventListener('input', function(){
+            var matchcounts = 0;
+            var str='<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length > 1) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var content_index = [];
+                var data_title = data.title.trim().toLowerCase();
+                var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                var data_url = decodeURIComponent(data.url);
+                var index_title = -1;
+                var index_content = -1;
+                var first_occur = -1;
+                // only match artiles with not empty titles and contents
+                if(data_title != '') {
+                  keywords.forEach(function(keyword, i) {
+                    index_title = data_title.indexOf(keyword);
+                    index_content = data_content.indexOf(keyword);
+                    if( index_title >= 0 || index_content >= 0 ){
+                      isMatch = true;
+                      if (i == 0) {
+                        first_occur = index_content;
+                      }
+                    }
+
+                  });
+                }
+                // show search results
+                if (isMatch) {
+                  matchcounts += 1;
+                  str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                  var content = data.content.trim().replace(/<[^>]+>/g,"");
+                  if (first_occur >= 0) {
+                    // cut out 100 characters
+                    var start = first_occur - 20;
+                    var end = first_occur + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if(start == 0){
+                      end = 50;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    var match_content = content.substring(start, end);
+                    // highlight all keywords
+                    keywords.forEach(function(keyword){
+                      var regS = new RegExp(keyword, "gi");
+                      match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                    });
+
+                    str += "<p class=\"search-result\">" + match_content +"...</p>"
+                  }
+                  str += "</li>";
+                }
+              })};
+            str += "</ul>";
+            if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+            if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+            $resultContent.innerHTML = str;
+          });
+          proceedsearch();
+        }
+      });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".popoverlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+
+  
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+
+  <script type="text/javascript">
+    (function() {
+      // try {
+      //   var document = window.document;
+      //   document.oncontextmenu = function() {
+      //     return false;
+      //   }
+      //   document.onkeydown = function() {
+      //     if (window.event.ctrlKey && window.event.keyCode == 67) {
+      //       return false;
+      //     }
+      //     return false;
+      //   }
+      //   document.body.oncopy = function() {
+      //     return false;
+      //   }
+      //   document.onselectstart = function() {
+      //     return false;
+      //   }
+            
+      //   document.onselectstart=function(){return false};
+      //   // document.style.MozUserSelect && document.style.MozUserSelect="none";
+      //   document.onmousedown=function(){return false};
+      //   document.style.cursor = "default"; 
+      // } catch(e) {}
+    })();
+  </script>
+
+</body>
+</html>

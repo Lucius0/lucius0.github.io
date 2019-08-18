@@ -156,7 +156,7 @@ function escapeHtml (str) {
 - Angular / Vue / React，不建议使用 `[innerHTML]/v-html/dangerouslySetInnerHTML` 来插入 html 元素；
 - `eval()/setTimeout()/setInterval()`，都是可以直接将字符串当代码段运行；
 - 富文本内容转义，相对于节点内容转义跟 JavaScript 内容转义，富文本内容转义比较复杂，但是大多数处理的思路都是相同的，设置转义白名单，对用户输入的内容进行过滤，可以使用 `js-xss` 库；
-- CSP(Content-Security-Policy)，可以参考[内容安全策略( CSP ) - HTTP | MDN](https://developer.mozilla.org/zh-CN/docs/Web/HTTP/CSP)，后续会说明下CSP策略；
+- CSP(Content-Security-Policy)，可以参考[内容安全策略( CSP ) - HTTP | MDN](https://developer.mozilla.org/zh-CN/docs/Web/HTTP/CSP)，关于 CSP 入门教程，可以前往阮一峰老师的博客 - [CSP](http://www.ruanyifeng.com/blog/2016/09/csp.html)；
 
 总体来说，我们能做的只是降低 XSS 攻击的风险，XSS 的攻防战一直存在也十分复杂。最后给一下[XSS过滤绕过速查表](http://www.freebuf.com/articles/web/153055.html)，祝大家看得开心（溜了～
 

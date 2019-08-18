@@ -103,7 +103,7 @@
 <meta property="og:image" content="https://lucius0.github.io/images/http/xss-04.jpg">
 <meta property="og:image" content="https://lucius0.github.io/images/http/xss-05.png">
 <meta property="og:image" content="https://lucius0.github.io/images/http/xss-06.png">
-<meta property="og:updated_time" content="2019-07-04T15:29:01.107Z">
+<meta property="og:updated_time" content="2019-08-18T08:35:50.245Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Web 安全防御战 - 浅谈XSS">
 <meta name="twitter:description" content="在进入 web 安全知识之前，建议对 HTTP 有所了解，可以看HTTP 入门体检，会对以下的内容有所帮助。 XSS(Cross Site Scripting) XSS，跨站脚本攻击。很常见的一种攻击方式，主要是通过脚本注入的方式进行攻击用户。通常有：反射型 XSS 、存储型 XSS和 DOM 型 XSS。——跨站脚本 - 维基百科  反射型XSS 反射型 XSS，为非持久型，可以把它想象成反射弧">
@@ -460,7 +460,7 @@
 <li>Angular / Vue / React，不建议使用 <code>[innerHTML]/v-html/dangerouslySetInnerHTML</code> 来插入 html 元素；</li>
 <li><code>eval()/setTimeout()/setInterval()</code>，都是可以直接将字符串当代码段运行；</li>
 <li>富文本内容转义，相对于节点内容转义跟 JavaScript 内容转义，富文本内容转义比较复杂，但是大多数处理的思路都是相同的，设置转义白名单，对用户输入的内容进行过滤，可以使用 <code>js-xss</code> 库；</li>
-<li>CSP(Content-Security-Policy)，可以参考<a href="https://developer.mozilla.org/zh-CN/docs/Web/HTTP/CSP" target="_blank" rel="noopener">内容安全策略( CSP ) - HTTP | MDN</a>，后续会说明下CSP策略；</li>
+<li>CSP(Content-Security-Policy)，可以参考<a href="https://developer.mozilla.org/zh-CN/docs/Web/HTTP/CSP" target="_blank" rel="noopener">内容安全策略( CSP ) - HTTP | MDN</a>，关于 CSP 入门教程，可以前往阮一峰老师的博客 - <a href="http://www.ruanyifeng.com/blog/2016/09/csp.html" target="_blank" rel="noopener">CSP</a>；</li>
 </ul>
 <p>总体来说，我们能做的只是降低 XSS 攻击的风险，XSS 的攻防战一直存在也十分复杂。最后给一下<a href="http://www.freebuf.com/articles/web/153055.html" target="_blank" rel="noopener">XSS过滤绕过速查表</a>，祝大家看得开心（溜了～</p>
 <h2 id="实战-amp-amp-案例"><a href="#实战-amp-amp-案例" class="headerlink" title="实战 &amp;&amp; 案例"></a>实战 &amp;&amp; 案例</h2><p>是否你会存在这样的侥幸心理，看完上文后觉得只要进行转义就行了，是的，其实只要进行转义就行了，问题就是从<a href="http://www.freebuf.com/articles/web/153055.html" target="_blank" rel="noopener">XSS过滤绕过速查表</a>看出，过滤规则表还是蛮多的。我们来简单的实战一下。</p>
@@ -591,8 +591,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2019/03/17/archivers/about-webpack/" rel="next" title="Webpack 之常见的见招拆招">
-                <i class="fa fa-chevron-left"></i> Webpack 之常见的见招拆招
+              <a href="/2019/06/30/archivers/http-introduction/" rel="next" title="HTTP 入门体检">
+                <i class="fa fa-chevron-left"></i> HTTP 入门体检
               </a>
             
           </div>
@@ -601,8 +601,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2019/06/30/archivers/http-introduction/" rel="prev" title="HTTP 入门体检">
-                HTTP 入门体检 <i class="fa fa-chevron-right"></i>
+              <a href="/2019/07/01/archivers/web-secure-csrf/" rel="prev" title="Web 安全防御战 - 浅谈CSRF">
+                Web 安全防御战 - 浅谈CSRF <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>

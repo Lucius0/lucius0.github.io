@@ -100,7 +100,7 @@
 <meta property="og:image" content="https://lucius0.github.io/images/http/cookie-01.png">
 <meta property="og:image" content="https://lucius0.github.io/images/http/cookie-02.png">
 <meta property="og:image" content="https://lucius0.github.io/images/http/session-01.png">
-<meta property="og:updated_time" content="2019-07-21T04:00:14.810Z">
+<meta property="og:updated_time" content="2019-08-31T06:29:33.754Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="来一块饼干吗？ - HTTP Cookie">
 <meta name="twitter:description" content="在阅读该文章之前，建议对 HTTP 有所了解，可以看HTTP 入门体检，会对以下的内容有所帮助。 我们在前面说了那么多关于 Web 安全的问题，多多少少都会跟 Cookies 扯上关系。也就是说无论是 XSS 还是 CSRF，Cookies 都是我们无法绕过的坎。既然 Cookies 这么重要，那我们来好好的分析一下它。 介绍 Cookies 它是前端数据的“数据库”，保存在浏览器，且遵守同源策略">
@@ -431,7 +431,7 @@
 </ol>
 <p><strong>注：</strong></p>
 <blockquote>
-<p>Lax 的防范有限，而 Strict 则一棒子打死，所以先对大多数 Cookie 设置为 Lax 作为 CSRF 攻击缓解措施，而针对某部分认为存在危险可能的 Cookie才设置 Strict。另外，SameSite Cookie 在子域不支持共享，也就是说父域登录后在子域还需要重新登录，这显然不够友好，而且还存在<strong>兼容性</strong>问题。</p>
+<p>Lax 的防范有限，而 Strict 则一棒子打死，所以先对大多数 Cookie 设置为 Lax 作为 CSRF 攻击缓解措施，而针对某部分认为存在危险可能的 Cookie才设置 Strict。</p>
 </blockquote>
 <h2 id="常见作用"><a href="#常见作用" class="headerlink" title="常见作用"></a>常见作用</h2><ul>
 <li>存储用户凭证，典型的有记住用户登录状态以及登录失效时间；</li>
